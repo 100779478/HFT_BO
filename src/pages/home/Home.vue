@@ -1,0 +1,230 @@
+<style scoped lang='less'>
+.layout {
+  border: 1px solid #d7dde4;
+  background: #f5f7f9;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.layout-header-bar {
+  background: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+.layout-logo-left {
+  width: 90%;
+  height: 30px;
+  background: #5b6270;
+  border-radius: 3px;
+  margin: 15px auto;
+}
+.ivu-layout-sider {
+  .ivu-layout-sider-collapsed {
+    width: 100px !important;
+  }
+}
+
+.menu-icon {
+  transition: all 0.3s;
+}
+.rotate-icon {
+  transform: rotate(-90deg);
+}
+.menu-item {
+  background-color: #09357e;
+  color: #9ebdda;
+  margin-right: -0.5px;
+}
+.ivu-menu-item {
+  color: #9ebdda;
+}
+.menu-item span {
+  display: inline-block;
+  overflow: hidden;
+  width: 69px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  transition: width 0.2s ease 0.2s;
+}
+.menu-item i {
+  transform: translateX(0px);
+  transition: font-size 0.2s ease, transform 0.2s ease;
+  vertical-align: middle;
+  font-size: 16px;
+}
+.collapsed-menu span {
+  width: 0px;
+  transition: width 0.2s ease;
+}
+.collapsed-menu i {
+  transform: translateX(5px);
+  transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
+  vertical-align: middle;
+  font-size: 22px;
+  //   width: 100px;
+}
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
+  background-color: #3a5d98;
+  color: #02aff1;
+  border-radius: 5px solid #3a5d98;
+  border-radius: 5px;
+}
+.ivu-menu-light.ivu-menu-vertical
+  .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+  display: none;
+}
+</style>
+<template>
+  <div class="layout">
+    <Layout>
+      <Sider
+        ref="side1"
+        hide-trigger
+        collapsible
+        :collapsed-width="78"
+        v-model="isCollapsed"
+        width="260px"
+        style="background-color: #09357e"
+      >
+        <div style="margin: 15px 30px" v-if="!isCollapsed">
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAASCAYAAADhc3ZwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEASURBVHgB7ZeNDYIwEIUfxgFwAnET3UAnMG6gE8AIbqAj6AS4gW4gTqAb1KspCTlAIF4pol/ywk9Lw+Ou7QGVZ4yaUN+IPbsr6OOTQtKZdFf1ic3zHzOERWj8gA76ZQM4xJrJNwYfRlWkfZKSdt+oetyC6Iqkqz5nbTpV5xBC1ZgqKQPYY8quN57nHeAAKyZNqgbZe2RwD0fYjGRn+JvsC62ZVM2JIcRPRNJqxcM4oRkXCKFN6iohWzmMSDcIQ1vIDI7Q6cq/2BI9Q5s8sntrmvQhesSA0miLfDQjU2teSyRWg7ZBuvAskP9j4FU+WNvX8NpCKJoJaUKnKwiual3hCWhuZ7lJSEETAAAAAElFTkSuQmCC"
+            alt=""
+            style="-webkit-user-drag: none"
+            width="57px"
+            height="18px"
+          />
+          <span
+            style="
+              display: inline-block;
+              width: 1px;
+              height: 20px;
+              background: rgba(255, 255, 255, 0.7);
+              margin: 0px 12.5px;
+            "
+          ></span>
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAWCAYAAAA2CDmeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAATdSURBVHgB7VnLdeJAEGz8fIQAIAARAHtfAjAB4L3b98V3FIAdAA4A7sb3le8QwBIABAB3tktUo/asAAHy2vse9d6g0Wimp+bT8ylkvV63pQA0X13DYMe3QYHy4wPfaxpaBfLUpCBP2NMQM97WcCMlogifY3GloSfn40nOR1XD3YE8kZzO97eGNykXbQ1dKRHXeYk66qiko2GpYVapVKzDMfse9dnQMHXp6MgHlsX3mpXVkGi+Gb+hMyOWedD05Y76b1iHeQxsjFgPZmWs7/EennmAvbqGVy0XSTb44BZp2QfO9kdX5gncWU/DcYe3Y3C75Fs7UHdxhEsJXf7Fvffp+mm6uSiWBTZsa0OfHXa6ufMvW4b0OYENxu/YyLDegfseezuMt4J0z8fzzFuywO2O8RfHpRXw7zo+Q8ZjVzZy6VubZSHPQzATFqwIjW1K5uoLN6sX/O6Bzk8QQT614ZcIlF24snXZj4mzk+dJmAwrDV0OCnhONczlMCrGRZ9TLe/5C9veCMpMmX9W9r7hkTcg1vgxCaSuaDOqAKo74mXjHU/FMwevKM8UOZ2LiWCdv5B/jCuSalmQbPaC6OrQySdAoqFNt0a5hpQLDEKdnQieVeOpIXKd6zu5mtPpcyxNHDx/8sJANO2lYNsbZXrMNUl0+L6kC99LdppZMM+KTwPiNksT/GjZhORuZXOq8ctH4uJzV9bg7c+C72+0j+UCeXrc1EOe2Nix3CY8GLwxvRXUGZPjPXnNaX+MfYE2V47zNOCTuKcdEMrZ1MsGvaNOjzt4P/ksOJ69sjfmc3At5QMubzMyli8IejE8Ac+JesarXHDBBf8BKtzEDEtuzNjUxnbDPgW8kMHG1KWlp7dz7JYNXm6bQfLklCMvLpharsPTWUvjz3IksIf81DDiu90bhh90Bv8mmyP1lxkQ2ewj4IRONLnHjtWnYi4nthEDssoZyVvKA5g5dehInN0d5KW80JZMQ0rLBzrWXtBGap9lYh5r8R67rHHwBEb05HQmSqZ5wRsx43H/SRyvXL4APXjKk9YcGzxlmR65zdjmWDJ1IebxGu898vdXgho5vQbtBJ55tfDttMEbpm7mLoamTQ14JASxoek67jj76Dp2wHw7dSyX1+tJsdONtjapSYU6V5/3incaFu3FTI9Yp2lUlmerZzF9mHeRW2/0M6sD7dxqb0G+rmuD1/O8JtYK2ul1MGtnb/1eN0v1NXhIVbIZNhPnapQintKR24wsZsU3a4Bk7m42xq5cEanb6ppLdrvG7A49tmlptG23dCtrl8ZVoJdVaa/q+FYZDnnx1GxxYtlei/aaN0S2H3LW77Jp+ZeStRMDaf21YJt2LlkeEQ2C1MgZDrUukUCykK+Dv/gWBb2pr+GeHYeB2aWXHSOh5A7elewnY/sG/usAmbZsJJGmZFqX/UeAQWtzmbB1/BTAzi3tmG6VyEbqsFNR/YhDx3wH32OwYt2w8d2lz9yyc+wfVfCszjrT/dJVCgOS5GROSAKZTCuCF7XoovZnUd8MQQeSzWAhrc084Szwpw+vD3kdy8phrb33aZRibl16eJpJwjZw0za+PcmW5xCwswj58O8GlI9pY+TqRFqD+8LWC4u0k6vSjO2xZXAlF3we1pmedrPmn4IfoWVdUBzwViynWFl+IOEPTjgaNuzpi28AAAAASUVORK5CYII="
+            alt=""
+            style="-webkit-user-drag: none"
+          />
+        </div>
+        <div style="margin: 18px 20px" v-else>
+          <img
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAASCAYAAADhc3ZwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEASURBVHgB7ZeNDYIwEIUfxgFwAnET3UAnMG6gE8AIbqAj6AS4gW4gTqAb1KspCTlAIF4pol/ywk9Lw+Ou7QGVZ4yaUN+IPbsr6OOTQtKZdFf1ic3zHzOERWj8gA76ZQM4xJrJNwYfRlWkfZKSdt+oetyC6Iqkqz5nbTpV5xBC1ZgqKQPYY8quN57nHeAAKyZNqgbZe2RwD0fYjGRn+JvsC62ZVM2JIcRPRNJqxcM4oRkXCKFN6iohWzmMSDcIQ1vIDI7Q6cq/2BI9Q5s8sntrmvQhesSA0miLfDQjU2teSyRWg7ZBuvAskP9j4FU+WNvX8NpCKJoJaUKnKwiual3hCWhuZ7lJSEETAAAAAElFTkSuQmCC"
+            alt=""
+            style="-webkit-user-drag: none"
+            width="40px"
+            height="14px"
+          />
+        </div>
+        <Menu :class="menuitemClasses" theme="primary" width="auto">
+          <Submenu name="1">
+            <template slot="title">
+              <Icon type="ios-paper" />
+              <span v-if="!isCollapsed">内容管理</span>
+              <span v-else></span>
+            </template>
+            <MenuItem name="1-1">文章管理</MenuItem>
+            <MenuItem name="1-2">评论管理</MenuItem>
+            <MenuItem name="1-3">举报管理</MenuItem>
+          </Submenu>
+          <Submenu name="2">
+            <template slot="title">
+              <Icon type="ios-people" />
+              <span v-if="!isCollapsed">用户管理</span>
+              <span v-else></span>
+            </template>
+            <MenuItem name="2-1">新增用户</MenuItem>
+            <MenuItem name="2-2">活跃用户</MenuItem>
+          </Submenu>
+          <Submenu name="3">
+            <template slot="title">
+              <Icon type="ios-stats" />
+              <span v-if="!isCollapsed">统计分析</span>
+              <span v-else></span>
+            </template>
+            <MenuGroup title="使用">
+              <MenuItem name="3-1">新增和启动</MenuItem>
+              <MenuItem name="3-2">活跃分析</MenuItem>
+              <MenuItem name="3-3">时段分析</MenuItem>
+            </MenuGroup>
+            <MenuGroup title="留存">
+              <MenuItem name="3-4">用户留存</MenuItem>
+              <MenuItem name="3-5">流失用户</MenuItem>
+              <MenuItem name="3-6">流失用户</MenuItem>
+              <MenuItem name="3-7">流失用户</MenuItem>
+              <MenuItem name="3-8">流失用户</MenuItem>
+            </MenuGroup>
+          </Submenu>
+        </Menu>
+        <!-- <Menu
+          active-name="1-1"
+          theme="primary"
+          width="auto"
+          :class="menuitemClasses"
+        >
+          <MenuItem name="1-1" to="/home">
+            <Icon type="ios-navigate"></Icon>
+            <span>Option 1</span>
+          </MenuItem>
+        </Menu> -->
+        <div
+          style="position: absolute; bottom: 20%; right: 30px"
+          v-if="!isCollapsed"
+        >
+          <img
+            src="../../assets/menu_side_bg.png"
+            style="-webkit-user-drag: none"
+            alt=""
+          />
+        </div>
+      </Sider>
+      <Layout>
+        <Header :style="{ padding: 0 }" class="layout-header-bar">
+          <Icon
+            @click.native="collapsedSider"
+            :class="rotateIcon"
+            :style="{ margin: '0 20px', color: '#86909c' }"
+            type="md-menu"
+            size="20"
+          ></Icon>
+          <Icon
+            type="md-refresh"
+            size="20"
+            :style="{ margin: '0 20px', color: '#86909c' }"
+          ></Icon>
+        </Header>
+        <Content
+          :style="{ margin: '20px', background: '#fff', minHeight: '1000px' }"
+        >
+          Content111111
+        </Content>
+      </Layout>
+    </Layout>
+  </div>
+</template>
+<script>
+// import Login from '../login/Login.vue';
+export default {
+  //   components: { Login },
+  data() {
+    return {
+      isCollapsed: !false,
+    };
+  },
+  computed: {
+    rotateIcon() {
+      return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
+    },
+    menuitemClasses() {
+      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+    },
+  },
+  methods: {
+    collapsedSider() {
+      this.$refs.side1.toggleCollapse();
+    },
+  },
+};
+</script>

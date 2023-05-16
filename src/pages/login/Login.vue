@@ -12,17 +12,14 @@
             :rules="ruleInline"
             :label-width="10"
           >
-            <FormItem
-              prop="user"
-              style="margin-bottom: 30px"
-            >
+            <FormItem prop="username" style="margin-bottom: 30px">
               <Input
                 type="text"
-                v-model="formInline.user"
+                v-model="formInline.username"
                 placeholder="用户名"
                 style="width: 300px"
               >
-                <Icon type="ios-person-outline" slot="prepend"></Icon>
+                <Icon type="md-person" slot="prepend" style="fontsize: 20px" />
               </Input>
             </FormItem>
             <FormItem prop="password" style="margin-bottom: 40px">
@@ -32,31 +29,40 @@
                 placeholder="密码"
                 style="width: 300px"
               >
-                <Icon type="ios-lock-outline" slot="prepend"></Icon>
+                <Icon type="md-lock" slot="prepend" style="fontsize: 20px" />
               </Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="handleSubmit('formInline')"
+              <Button
+                type="info"
+                @click="handleSubmit('formInline')"
+                class="btn"
                 >登录</Button
               >
             </FormItem>
           </Form>
-          Copyright ©2022深圳市丽海弘金科技有限公司
+          <span class="copyfont"
+            >Copyright ©2023深圳市丽海弘金科技有限公司</span
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { AccountLogin } from "@/api/serverApi";
+import router from "@/router";
 export default {
   data() {
     return {
       formInline: {
-        user: "",
+        username: "",
         password: "",
       },
       ruleInline: {
-        user: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           {
@@ -73,16 +79,38 @@ export default {
     handleSubmit(name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success("Success!");
-        } else {
-          this.$Message.error("Fail!");
+          AccountLogin({
+            username: this.formInline.username,
+            password: this.formInline.password,
+          }).then((res) => {
+            if ((res != "success")) {
+              router.push("/home");
+            }
+          });
+          this.$Message.success("登陆成功!");
         }
+        //  else {
+        //   this.$Message.error("failed");
+        // }
       });
     },
   },
 };
 </script>
-<style scoped>
+<style scoped lang='less'>
+.page-account {
+  background-image: url("../../assets/login_bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+  position: relative;
+}
+
+.page-account-container {
+  position: absolute;
+  top: 25%;
+  right: 320px;
+}
 .login_form {
   height: 489px;
   width: 440px;
@@ -92,6 +120,7 @@ export default {
   box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
   padding-top: 65px;
+  text-align: center;
 }
 
 .login_form .ivu-input-prefix {
@@ -104,5 +133,19 @@ export default {
 }
 .head-font {
   font-size: 24px;
+  font-weight: bold;
+  color: black;
+  margin: 25px 0;
+}
+.btn {
+  width: 300px;
+  margin-right: 10px;
+  height: 35px;
+}
+.copyfont {
+  font-size: 12px;
+  color: gray;
+  display: inline-block;
+  margin-top: 50px;
 }
 </style>
