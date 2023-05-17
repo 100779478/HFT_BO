@@ -80,11 +80,11 @@ export default {
         if (valid) {
           AccountLogin({
             username: this.formInline.username,
-            password: this.formInline.password,
+            password: this.$md5(this.formInline.password),
           }).then((res) => {
             if (res == "success") {
-              this.$router.push("/home");
               this.$Message.success("登录成功!");
+              this.$router.push("/home");
             } else {
               this.$Message.error("登录失败，请重试!");
             }

@@ -5,9 +5,10 @@ import ViewUI from 'view-design';
 import 'view-design/dist/styles/iview.css';
 
 import Router from '@/router/index'
-
+import md5 from 'js-md5'
 Vue.config.productionTip = false
 Vue.use(ViewUI);
+Vue.prototype.$md5 = md5
 Router.beforeEach((to, from, next) => {
   if (!localStorage.getItem('token')) {
     if (to.path !== '/login') {

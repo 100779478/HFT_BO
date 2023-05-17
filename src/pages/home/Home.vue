@@ -10,10 +10,6 @@
 .ivu-layout {
   height: 100%;
 }
-.layout-header-bar {
-  background: #fff;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-}
 .layout-logo-left {
   width: 90%;
   height: 30px;
@@ -91,30 +87,7 @@
         </div>
       </Sider>
       <Layout>
-        <Header :style="{ padding: 0 }" class="layout-header-bar">
-          <!-- <Icon
-            @click.native="collapsedSider"
-            :class="rotateIcon"
-            :style="{ margin: '0 20px', color: '#86909c' }"
-            type="md-menu"
-            size="20"
-          ></Icon> -->
-          <Icon
-            type="md-refresh"
-            size="20"
-            :style="{ margin: '0 20px', color: '#86909c' }"
-          ></Icon>
-          <div
-            :style="{
-              float: 'right',
-              margin: '0 30px',
-            }"
-          >
-            <Avatar style="background-color: #00abe4" icon="md-person">
-            </Avatar>
-            <span style="margin-left: 10px">{{ "管理员" }}</span>
-          </div>
-        </Header>
+        <HeaderUser></HeaderUser>
         <Bread></Bread>
         <Content :style="{ margin: '20px', background: '#fff' }">
           <router-view></router-view>
@@ -127,8 +100,9 @@
 import UserManage from "../userManage/UserManage.vue";
 import Bread from "../../components/breadCrumb/Bread.vue";
 import MenuList from "@/components/menu/MenuList.vue";
+import HeaderUser from "@/components/header/HeaderUser.vue";
 export default {
-  components: { UserManage, Bread, MenuList },
+  components: { UserManage, Bread, MenuList, HeaderUser },
   data() {
     return {
       isCollapsed: false,

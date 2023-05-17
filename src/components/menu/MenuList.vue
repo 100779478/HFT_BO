@@ -90,6 +90,11 @@ a.ivu-menu-item {
 </template>
 <script>
 export default {
+  data() {
+    return {
+      isCollapsed: false,
+    };
+  },
   computed: {
     menuitemClasses() {
       return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
