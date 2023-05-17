@@ -8,15 +8,13 @@ import Router from '@/router/index'
 
 Vue.config.productionTip = false
 Vue.use(ViewUI);
-// Vue.use(VueRouter)
-// Router.beforeEach((to, from, next) => {
-//   if (!localStorage.getItem('username')) {
-//     if (to.path !== '/login') {
-//       next('/login')
-//     } else next()
-//   }
-//   next()
-// })
+Router.beforeEach((to, from, next) => {
+  if (!localStorage.getItem('token')) {
+    if (to.path !== '/login') {
+      next('/login')
+    } else next()
+  } next()
+})
 new Vue({
   render: h => h(App),
   router: Router

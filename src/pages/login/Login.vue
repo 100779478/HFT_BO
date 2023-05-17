@@ -51,7 +51,6 @@
 </template>
 <script>
 import { AccountLogin } from "@/api/serverApi";
-import router from "@/router";
 export default {
   data() {
     return {
@@ -83,11 +82,13 @@ export default {
             username: this.formInline.username,
             password: this.formInline.password,
           }).then((res) => {
-            if ((res != "success")) {
-              router.push("/home");
+            if (res == "success") {
+              this.$router.push("/home");
+              this.$Message.success("登录成功!");
+            } else {
+              this.$Message.error("登录失败，请重试!");
             }
           });
-          this.$Message.success("登陆成功!");
         }
         //  else {
         //   this.$Message.error("failed");

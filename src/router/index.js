@@ -8,7 +8,6 @@ const router = new VueRouter(
             {
                 path: '/',
                 redirect: '/login',
-                name: 'Login',
             },
             {
                 path: '/login',
@@ -16,9 +15,26 @@ const router = new VueRouter(
                 component: () => import('@/pages/login/Login')
             },
             {
+                path: '*',
+                name: 'NotFound',
+                component: () => import('@/pages/notFound/NotFound')
+            },
+            {
                 path: '/home',
                 name: 'Home',
-                component: () => import('@/pages/home/Home')
+                component: () => import('@/pages/home/Home'),
+                children: [
+                    {
+                        path: '/home/user-manage',
+                        name: 'UserManage',
+                        component: () => import('@/pages/userManage/UserManage')
+                    },
+                    {
+                        path: '/home/role-manage',
+                        name: 'RoleManage',
+                        component: () => import('@/pages/userManage/RoleManage')
+                    },
+                ]
             },
 
 

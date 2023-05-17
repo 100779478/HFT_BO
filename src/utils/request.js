@@ -6,7 +6,8 @@ export const METHOD = {
     delete: "delete"
 }
 const instance = axios.create({
-    baseURL: 'http://106.13.177.225:9090',
+    // baseURL: 'http://106.13.177.225:9090',
+    baseURL: 'http://192.168.50.71:9090',
     timeout: 3000,
 })
 // 请求拦截器
