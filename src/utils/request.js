@@ -1,75 +1,141 @@
 import axios from 'axios'
-export const METHOD = {
-    get: "get",
-    post: "post",
-    put: "put",
-    delete: "delete"
+import { getToken } from './token'
+import { Message } from 'view-design'
+
+const requestHost = "http://192.168.50.71"
+const requestContextPath = requestHost + "/hft-bos"
+
+const axiosInstance = axios.create({
+    timeout: 1000
+});
+
+export const URL = {
+    login: requestContextPath + '/user/login'
 }
-const instance = axios.create({
-    // baseURL: 'http://106.13.177.225:9090',
-    baseURL: 'http://192.168.50.71:9090',
-    timeout: 3000,
-})
-// 请求拦截器
-instance.interceptors.request.use(
+
+export const http = {
+    /**
+     * HTTP GET 请求
+     * @param {string} url - 请求地址
+     * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
+     * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
+     * @returns 请求响应
+     */
+    get: (url,
+        thenHandler = (response) => {
+        },
+        errorHandler = defaultErrorHandler) => {
+        return axiosInstance.get(url)
+            .then(thenHandler)
+            .catch(errorHandler)
+    },
+
+    /**
+     * HTTP POST 请求
+     * @param {string} url - 请求地址
+     * @param {object} data - 请求body参数
+     * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
+     * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
+     * @returns 请求响应
+     */
+    post: (url, data,
+        thenHandler = (response) => {
+        },
+        errorHandler = defaultErrorHandler) => {
+        return axiosInstance.post(url, data)
+            .then(thenHandler)
+            .catch(errorHandler)
+    },
+
+    /**
+     * HTTP PUT 请求
+     * @param {string} url - 请求地址
+     * @param {object} data - 请求body参数
+     * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
+     * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
+     * @returns 请求响应
+     */
+    put: (url, data,
+        thenHandler = (response) => {
+        },
+        errorHandler = defaultErrorHandler) => {
+        return axiosInstance.post(url, data)
+            .then(thenHandler)
+            .catch(errorHandler)
+    },
+
+    /**
+     * HTTP DELETE 请求
+     * @param {string} url - 请求地址
+     * @param {object} data - 请求body参数
+     * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
+     * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
+     * @returns 请求响应
+     */
+    delete: (url, data,
+        thenHandler = (response) => {
+        },
+        errorHandler = defaultErrorHandler) => {
+        return axiosInstance.post(url, data)
+            .then(thenHandler)
+            .catch(errorHandler)
+    }
+}
+
+/**
+ * 默认HTTP请求错误处理器
+ * @param {object} error - 错误返回结果
+ */
+export function defaultErrorHandler(error) {
+    let errorResponse = error.response.data;
+    let errorMessage = errorResponse.errorMessage;
+    console.log("Error ====> ", errorMessage)
+    if (null == errorMessage || undefined == errorMessage || "" === errorMessage) {
+        console.log("Error ====> ", errorResponse)
+        return;
+    }
+    Message.error(errorMessage);
+}
+
+/**
+ * axios 请求拦截器
+ */
+axiosInstance.interceptors.request.use(
     config => {
-        // 在请求发送之前做一些处理
-        const token = localStorage.getItem('token');
-        // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
+        let isLogin = config.url === URL.login
+        if (isLogin) {
+            return config
+        }
+        const token = getToken()
+        if (null == token || undefined == token || "" === token) {
+            Message.error('登录过期，请重新登录！')
+            this.$router.push("/login");
+        }
         config.headers['Authorization'] = `Bearer ${token}`;
         return config;
+    }
+)
+
+/**
+ * axios 响应拦截器
+ */
+axiosInstance.interceptors.response.use(
+    response => {
+        if(response.status === 200 && response.data.code === '0') {
+            return response
+        }
+        throw new Error(response)
     },
     error => {
-        // 发送失败
-        Promise.reject(error);
+        let httpStatus = error.response.status;
+        switch (httpStatus) {
+            case 503:
+            case 500:
+            case 502:
+                Message.error('服务器连接失败！')
+                return Promise.reject(error);
+            default:
+                return Promise.reject(error);
+        }
     }
-);
-// export const post = (url, data = {}) => {
-//     return new Promise((resolve, reject) => {
-//         instance.post(url, data, {
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             }
-//         })
-//             .then((response) => {
-//                 resolve(response.data)
-//             }).catch((err) => {
-//                 reject(err)
-//             })
-//     })
-// }
-// export const get = (url, params = {}) => {
-//     return new Promise((resolve, reject) => {
-//         instance.get(url, { params }
-//         ).then((response) => {
-//             resolve(response.data)
-//         }).catch((err) => {
-//             // reject(err)
-//             console.error(err)
-//         })
-//     })
-// }
-
-// 添加请求拦截器
-instance.interceptors.request.use(function (config) {
-    // 在发送请求之前做些什么
-    console.log(config, 222233)
-    return config;
-}, function (error) {
-    // 对请求错误做些什么
-    alert('请求失败')
-    return Promise.reject(error);
-});
-
-// 添加响应拦截器
-instance.interceptors.response.use(function (response) {
-    // 2xx 范围内的状态码都会触发该函数。
-    // 对响应数据做点什么
-    return response;
-}, function (error) {
-    // 超出 2xx 范围的状态码都会触发该函数。
-    // 对响应错误做点什么
-    // return Promise.reject(error);
-});
-
-export default instance;
+)
