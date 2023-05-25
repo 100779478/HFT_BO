@@ -6,7 +6,7 @@ const requestHost = "http://192.168.50.71"
 const requestContextPath = requestHost + "/hft-bos"
 
 const axiosInstance = axios.create({
-    timeout: 1000
+    timeout: 10000
 });
 
 export const URL = {
@@ -87,7 +87,11 @@ export const http = {
  * @param {object} error - 错误返回结果
  */
 export function defaultErrorHandler(error) {
-    let errorResponse = error.response.data;
+    let errorResponse = error.response;
+    if (undefined == errorResponse) {
+        console.log("Error ====> ", error)
+        return;
+    }
     let errorMessage = errorResponse.errorMessage;
     console.log("Error ====> ", errorMessage)
     if (null == errorMessage || undefined == errorMessage || "" === errorMessage) {
@@ -121,13 +125,19 @@ axiosInstance.interceptors.request.use(
  */
 axiosInstance.interceptors.response.use(
     response => {
-        if(response.status === 200 && response.data.code === '0') {
+        if (response.status === 200 && response.data.code === '0') {
             return response
         }
         throw new Error(response)
     },
     error => {
-        let httpStatus = error.response.status;
+        let errorResponse = error.response;
+        let httpStatus
+        if (undefined == errorResponse || null == errorResponse) {
+            httpStatus = 500
+        } else {
+            httpStatus = errorResponse.status
+        }
         switch (httpStatus) {
             case 503:
             case 500:
