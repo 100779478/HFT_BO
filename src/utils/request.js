@@ -2,15 +2,19 @@ import axios from 'axios'
 import { getToken } from './token'
 import { Message } from 'view-design'
 
-const requestHost = "http://192.168.50.71"
-const requestContextPath = requestHost + "/hft-bos"
-
+const requestContextPath = "http://192.168.50.199:80" + "/hft-bos"
 const axiosInstance = axios.create({
-    timeout: 10000
+    timeout: 10000,
+    baseURL: requestContextPath
 });
-
+// axiosInstance.defaults.baseURL = requestContextPath
 export const URL = {
-    login: requestContextPath + '/user/login'
+    //用户登录
+    login: '/user/login',
+    //修改密码
+    modification:'/user/modifacation',
+    //退出登录
+    logout:'/user/logout'
 }
 
 export const http = {
@@ -114,6 +118,7 @@ axiosInstance.interceptors.request.use(
         if (null == token || undefined == token || "" === token) {
             Message.error('登录过期，请重新登录！')
             this.$router.push("/login");
+            return config
         }
         config.headers['Authorization'] = `Bearer ${token}`;
         return config;

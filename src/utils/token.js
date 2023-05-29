@@ -21,5 +21,6 @@ export function getToken(){
  * 移除Token
  */
 export function removeToken() {
+    console.log(2222222)
     localStorage.removeItem(tokenKey)
 }

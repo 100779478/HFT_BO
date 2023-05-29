@@ -36,7 +36,7 @@
           <span style="margin-left: 10px; cursor: pointer">{{ "管理员" }}</span>
           <DropdownMenu slot="list">
             <DropdownItem name="changePassword">修改密码</DropdownItem>
-            <DropdownItem name="logOut">退出登录</DropdownItem>
+            <DropdownItem name="logout">退出登录</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
@@ -49,7 +49,12 @@
               &nbsp;&nbsp;&nbsp;
               <span style="color: red">*</span>原密码：
             </label>
-            <Input style="width: 200px" placeholder="请输入原密码"></Input>
+            <Input
+              style="width: 200px"
+              placeholder="请输入原密码"
+              v-model="oldPassword"
+              type="password"
+            ></Input>
           </Col>
         </Row>
         <Row style="margin: 10px 0">
@@ -58,17 +63,31 @@
               &nbsp;&nbsp;&nbsp;
               <span style="color: red">*</span>新密码：
             </label>
-            <Input style="width: 200px" placeholder="请输入新密码"></Input>
+            <Input
+              style="width: 200px"
+              placeholder="请输入新密码"
+              v-model="newPassword"
+              type="password"
+            ></Input>
           </Col>
         </Row>
       </Row>
+      <div slot="footer">
+        <Button type="text" @click="cancel">取消</Button>
+        <Button type="primary" @click="ok">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
 <script>
+import { URL, http, defaultErrorHandler } from "@/utils/request";
+import { removeToken } from "@/utils/token";
+
 export default {
   data() {
     return {
+      oldPassword: "",
+      newPassword: "",
       show: false,
     };
   },
@@ -76,15 +95,53 @@ export default {
     handleClick(name) {
       if (name == "changePassword") {
         this.show = true;
-      } else {
+      } else if (name == "logout") {
+        this.$Modal.confirm({
+          title: `退出登录确认`,
+          content: "<p>您确定退出登录当前账户吗？</p>",
+          onOk: () => {
+            http.delete(URL.logout, {}, removeToken);
+            // logout().then((res) => {
+            //   if (res.code !== "0") {
+            //     this.$Message.error("退出失败：" + res.msg);
+            //     return;
+            //   } else {
+            //     this.$Message.success("退出成功");
+            //     this.$router.push({
+            //       name: "login",
+            //     });
+            //     localStorage.clear();
+            //   }
+            // });
+          },
+        });
       }
     },
+    //页面刷新
     refresh() {
-      // this.$router.push('/home')
       location.reload();
     },
-    ok() {},
-    cancel() {},
+    //修改密码成功后，跳转登录页
+    modifaicationPasswordSuccess() {
+      this.show = false;
+      this.$Message.success("修改成功,请重新登录");
+      this.$router.push({ name: "Login" });
+    },
+    ok() {
+      if (this.newPassword == "" && this.oldPassword == "") {
+        this.$Message.warning("密码不可为空");
+        return;
+      }
+      let params = {
+        oldPassword: this.$md5(this.oldPassword),
+        newPassword: this.$md5(this.newPassword),
+      };
+      //修改密码http请求
+      http.post(URL.modification, params, this.modifaicationPasswordSuccess);
+    },
+    cancel() {
+      this.show = false;
+    },
   },
 };
 </script>
