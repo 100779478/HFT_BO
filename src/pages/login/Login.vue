@@ -25,6 +25,7 @@
             <FormItem prop="password" style="margin-bottom: 40px">
               <Input
                 type="password"
+                password
                 v-model="formInline.password"
                 placeholder="密码"
                 style="width: 300px"
@@ -42,7 +43,7 @@
               >
             </FormItem>
           </Form>
-          <span class="copyfont"
+          <span class="copy-font"
             >Copyright ©2023深圳市丽海弘金科技有限公司</span
           >
         </div>
@@ -51,7 +52,8 @@
   </div>
 </template>
 <script>
-import { URL, http, defaultErrorHandler } from "@/utils/request";
+import { http, defaultErrorHandler } from "@/utils/request";
+import { URL } from "@/api/serverApi";
 import { putToken } from "@/utils/token";
 import { Message } from "view-design";
 export default {
@@ -93,13 +95,14 @@ export default {
     },
     login(response) {
       this.closeLoading();
-      let token = response.data;
+      let token = response.data.token;
+      console.log(response,'22222')
       putToken(token);
       Message.success("登录成功！");
       this.$router.push({ name: "Home" });
     },
     loginError(error) {
-      Message.error(error.response.data.errorMessage);
+      Message.error(error.message || error.data.errorMessage);
       this.closeLoading();
       defaultErrorHandler(error);
     },
@@ -161,7 +164,7 @@ export default {
   height: 35px;
 }
 
-.copyfont {
+.copy-font {
   font-size: 12px;
   color: gray;
   display: inline-block;

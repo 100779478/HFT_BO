@@ -1,21 +1,11 @@
 import axios from 'axios'
 import { getToken } from './token'
 import { Message } from 'view-design'
-
-const requestContextPath = "http://192.168.50.199:80" + "/hft-bos"
+import { requestContextPath, URL } from '../api/serverApi';
 const axiosInstance = axios.create({
     timeout: 10000,
     baseURL: requestContextPath
 });
-// axiosInstance.defaults.baseURL = requestContextPath
-export const URL = {
-    //用户登录
-    login: '/user/login',
-    //修改密码
-    modification:'/user/modifacation',
-    //退出登录
-    logout:'/user/logout'
-}
 
 export const http = {
     /**
@@ -97,12 +87,15 @@ export function defaultErrorHandler(error) {
         return;
     }
     let errorMessage = errorResponse.errorMessage;
-    console.log("Error ====> ", errorMessage)
     if (null == errorMessage || undefined == errorMessage || "" === errorMessage) {
         console.log("Error ====> ", errorResponse)
+        Message.error(errorResponse.data.errorMessage);
         return;
     }
     Message.error(errorMessage);
+    // if(response.data.code === '100002'){
+    //     Message.error(response.data.errorMessage)
+    // }
 }
 
 /**
@@ -131,9 +124,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     response => {
         if (response.status === 200 && response.data.code === '0') {
-            return response
+            return response.data
         }
-        throw new Error(response)
+        throw response.data
+        // throw new Error(response)
     },
     error => {
         let errorResponse = error.response;

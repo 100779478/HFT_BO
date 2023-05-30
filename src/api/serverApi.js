@@ -1,18 +1,15 @@
-import request, { METHOD } from '../utils/request'
+//吴彦祖IP
+// export const requestContextPath = "http://192.168.50.199:80" + "/hft-bos"
+// 玺子哥IP
+export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 
-//登录接口
-export function AccountLogin(data) {
-    return request({
-        url: '/hft-bos/user/login',
-        method: METHOD.post,
-        data
-    });
-}
-//修改密码
-export function modificationPassword(data) {
-    return request({
-        url: '/hft-bos/user/modification',
-        method: METHOD.post,
-        data
-    });
+export const URL = {
+    //用户登录
+    login: '/user/login',
+    //修改密码
+    modification: '/user/modification',
+    //退出登录
+    logout: '/user/logout',
+    //用户菜单列表
+    menus: '/user/menus'
 }

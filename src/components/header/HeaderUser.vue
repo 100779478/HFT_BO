@@ -54,6 +54,7 @@
               placeholder="请输入原密码"
               v-model="oldPassword"
               type="password"
+              password
             ></Input>
           </Col>
         </Row>
@@ -68,6 +69,7 @@
               placeholder="请输入新密码"
               v-model="newPassword"
               type="password"
+              password
             ></Input>
           </Col>
         </Row>
@@ -80,7 +82,8 @@
   </div>
 </template>
 <script>
-import { URL, http, defaultErrorHandler } from "@/utils/request";
+import { http, defaultErrorHandler } from "@/utils/request";
+import { URL } from "@/api/serverApi";
 import { removeToken } from "@/utils/token";
 
 export default {
@@ -121,11 +124,9 @@ export default {
     refresh() {
       location.reload();
     },
-    //修改密码成功后，跳转登录页
-    modifaicationPasswordSuccess() {
+    modificationPasswordSuccess() {
       this.show = false;
       this.$Message.success("修改成功,请重新登录");
-      this.$router.push({ name: "Login" });
     },
     ok() {
       if (this.newPassword == "" && this.oldPassword == "") {
@@ -137,7 +138,7 @@ export default {
         newPassword: this.$md5(this.newPassword),
       };
       //修改密码http请求
-      http.post(URL.modification, params, this.modifaicationPasswordSuccess);
+      http.post(URL.modification, params, this.modificationPasswordSuccess);
     },
     cancel() {
       this.show = false;

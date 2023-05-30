@@ -2,13 +2,21 @@
   <div>
     <Breadcrumb style="padding: '20px 0 0 20px'">
       <BreadcrumbItem to="/">Home</BreadcrumbItem>
-      <BreadcrumbItem to="/home/user-manage">Components</BreadcrumbItem>
+      <!-- <BreadcrumbItem to="/home/user-manage">Components</BreadcrumbItem> -->
+      <BreadcrumbItem :to="{ name: 'RoleManage' }">Components</BreadcrumbItem>
       <BreadcrumbItem to="/home/role-manage">Breadcrumb</BreadcrumbItem>
     </Breadcrumb>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  data() {
+    return {};
+  },
+  mounted() {
+    
+  },
+};
 </script>
 <style lang="less">
 .ivu-breadcrumb {

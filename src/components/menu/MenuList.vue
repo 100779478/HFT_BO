@@ -46,58 +46,86 @@
 a.ivu-menu-item {
   color: #9ebdda;
 }
+.menu-item span {
+  text-overflow: unset;
+  overflow: unset;
+}
 </style>
 <template>
   <div>
-    <Menu :class="menuitemClasses" theme="primary" width="auto">
-      <Submenu name="1">
+    <Menu
+      :class="menuitemClasses"
+      theme="primary"
+      width="auto"
+      v-for="(item, index) in menuList"
+      :key="index"
+    >
+      <Submenu :name="item.title">
         <template slot="title">
-          <Icon type="ios-paper" />
-          <span v-if="!isCollapsed">内容管理</span>
+          <Icon :type="item.icon" />
+          <span v-if="!isCollapsed">{{ item.title }}</span>
           <span v-else></span>
         </template>
-        <MenuItem name="1-1" to="/home/user-manage">文章管理</MenuItem>
-        <MenuItem name="1-2" to="/home/role-manage">评论管理</MenuItem>
-        <MenuItem name="1-3">举报管理</MenuItem>
-      </Submenu>
-      <Submenu name="2">
-        <template slot="title">
-          <Icon type="ios-people" />
-          <span v-if="!isCollapsed">用户管理</span>
-          <span v-else></span>
-        </template>
-        <MenuItem name="2-1">新增用户</MenuItem>
-        <MenuItem name="2-2">活跃用户</MenuItem>
-      </Submenu>
-      <Submenu name="3">
-        <template slot="title">
-          <Icon type="ios-stats" />
-          <span v-if="!isCollapsed">统计分析</span>
-          <span v-else></span>
-        </template>
-        <MenuGroup title="使用">
-          <MenuItem name="3-1">新增和启动</MenuItem>
-          <MenuItem name="3-2">活跃分析</MenuItem>
-          <MenuItem name="3-3">时段分析</MenuItem>
-        </MenuGroup>
-        <MenuGroup title="留存">
-          <MenuItem name="3-4">用户留存</MenuItem>
-          <MenuItem name="3-5">流失用户</MenuItem>
-        </MenuGroup>
+        <MenuItem
+          :name="itemChild.title"
+          :to="{ name: itemChild.path }"
+          v-for="(itemChild, indexChild) in item.children"
+          :key="indexChild"
+        >
+          <Icon :type="itemChild.icon" />
+          {{ itemChild.title }}
+        </MenuItem>
       </Submenu>
     </Menu>
   </div>
 </template>
 <script>
+import { http } from "@/utils/request";
+import { URL } from "@/api/serverApi";
+
 export default {
   data() {
     return {
       isCollapsed: false,
+      menuList: [],
     };
   },
   computed: {
     menuitemClasses() {
       return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+    },
+  },
+  mounted() {
+    http.get(URL.menus, this.getMenuList);
+  },
+  methods: {
+    getMenuList(res) {
+      let dataInit = res.data;
+      const data = [];
+      dataInit.forEach((item) => {
+        if (item.parentId === null) {
+          data.push({
+            id: item.id,
+            icon: item.icon,
+            title: item.name,
+            path: item.code,
+            children: [],
+          });
+        } else {
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].id === item.parentId) {
+              data[i].children.push({
+                id: item.id,
+                icon: item.icon,
+                title: item.name,
+                path: item.code,
+                parentId: item.parentId,
+              });
+            }
+          }
+        }
+      });
+      this.menuList = data;
     },
   },
 };

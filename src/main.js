@@ -10,5 +10,9 @@ Vue.use(ViewUI);
 Vue.prototype.$md5 = md5
 new Vue({
   render: h => h(App),
-  router: Router
+  router: Router,
+  beforeCreate() {
+    Vue.prototype.$menuPath = this;
+  }
+
 }).$mount('#app')

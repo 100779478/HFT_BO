@@ -25,12 +25,12 @@ const router = new VueRouter(
                 component: () => import('@/pages/home/Home'),
                 children: [
                     {
-                        path: '/home/user-manage',
+                        path: '/home/manage/user-manage',
                         name: 'UserManage',
                         component: () => import('@/pages/userManage/UserManage')
                     },
                     {
-                        path: '/home/role-manage',
+                        path: '/home/manage/role-manage',
                         name: 'RoleManage',
                         component: () => import('@/pages/userManage/RoleManage')
                     },

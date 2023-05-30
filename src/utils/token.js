@@ -13,7 +13,7 @@ export function putToken(token) {
  * 获取Token
  * @returns {string} token - 登录之后获取的 Token
  */
-export function getToken(){
+export function getToken() {
     return localStorage.getItem(tokenKey)
 }
 
@@ -21,6 +21,5 @@ export function getToken(){
  * 移除Token
  */
 export function removeToken() {
-    console.log(2222222)
     localStorage.removeItem(tokenKey)
 }
