@@ -11,5 +11,7 @@ export const URL = {
     //退出登录
     logout: '/user/logout',
     //用户菜单列表
-    menus: '/user/menus'
+    menus: '/user/menus',
+    // 获取当前用户信息
+    current: '/user/current'
 }

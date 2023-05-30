@@ -33,7 +33,7 @@
             icon="md-person"
           >
           </Avatar>
-          <span style="margin-left: 10px; cursor: pointer">{{ "管理员" }}</span>
+          <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
           <DropdownMenu slot="list">
             <DropdownItem name="changePassword">修改密码</DropdownItem>
             <DropdownItem name="logout">退出登录</DropdownItem>
@@ -82,11 +82,12 @@
   </div>
 </template>
 <script>
-import { http, defaultErrorHandler } from "@/utils/request";
+import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
 import { removeToken } from "@/utils/token";
 
 export default {
+  props:['username'],
   data() {
     return {
       oldPassword: "",
