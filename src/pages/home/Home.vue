@@ -106,8 +106,6 @@ export default {
     currentUserInfo() {
       http.get(URL.current, (response) => {
         this.currentUser = response.data
-    console.log(this.currentUser)
-        
       })
     }
   },

@@ -4,9 +4,11 @@
   color: #9ebdda;
   margin-right: -0.5px;
 }
+
 .ivu-menu-item {
   color: #9ebdda;
 }
+
 .menu-item span {
   display: inline-block;
   overflow: hidden;
@@ -16,16 +18,19 @@
   vertical-align: bottom;
   transition: width 0.2s ease 0.2s;
 }
+
 .menu-item i {
   transform: translateX(0px);
   transition: font-size 0.2s ease, transform 0.2s ease;
   vertical-align: middle;
   font-size: 16px;
 }
+
 .collapsed-menu span {
   width: 0px;
   transition: width 0.2s ease;
 }
+
 .collapsed-menu i {
   transform: translateX(5px);
   transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
@@ -33,19 +38,22 @@
   font-size: 22px;
   //   width: 100px;
 }
+
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
   background-color: #3a5d98;
   color: #02aff1;
   border-radius: 5px solid #3a5d98;
   border-radius: 5px;
 }
-.ivu-menu-light.ivu-menu-vertical
-  .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
   display: none;
 }
+
 a.ivu-menu-item {
   color: #9ebdda;
 }
+
 .menu-item span {
   text-overflow: unset;
   overflow: unset;
@@ -53,27 +61,17 @@ a.ivu-menu-item {
 </style>
 <template>
   <div>
-    <Menu
-      :class="menuitemClasses"
-      theme="primary"
-      width="auto"
-      v-for="(item, index) in menuList"
-      :key="index"
-    >
+    <Menu :class="menuitemClasses" theme="primary" width="auto" v-for="(item, index) in menuList" :key="index"
+      :open-names="openNames" :active-name="activeName">
       <Submenu :name="item.title">
         <template slot="title">
           <Icon :type="item.icon" />
-          <span v-if="!isCollapsed">{{ item.title }}</span>
-          <span v-else></span>
+          <span>{{ item.title }}</span>
         </template>
-        <MenuItem
-          :name="itemChild.title"
-          :to="{ name: itemChild.path }"
-          v-for="(itemChild, indexChild) in item.children"
-          :key="indexChild"
-        >
-          <Icon :type="itemChild.icon" />
-          {{ itemChild.title }}
+        <MenuItem :name="itemChild.title" :to="{ name: itemChild.path }" v-for="(itemChild, indexChild) in item.children"
+          :key="indexChild">
+        <Icon :type="itemChild.icon" />
+        {{ itemChild.title }}
         </MenuItem>
       </Submenu>
     </Menu>
@@ -86,13 +84,16 @@ import { URL } from "@/api/serverApi";
 export default {
   data() {
     return {
-      isCollapsed: false,
+      // isCollapsed: false,
       menuList: [],
+      activeName: "",
+      openNames: []
     };
   },
   computed: {
     menuitemClasses() {
-      return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+      // return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
+      return ["menu-item", this.isCollapsed ? "" : ""];
     },
   },
   mounted() {

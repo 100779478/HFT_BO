@@ -105,18 +105,6 @@ export default {
           content: "<p>您确定退出登录当前账户吗？</p>",
           onOk: () => {
             http.delete(URL.logout, {}, removeToken);
-            // logout().then((res) => {
-            //   if (res.code !== "0") {
-            //     this.$Message.error("退出失败：" + res.msg);
-            //     return;
-            //   } else {
-            //     this.$Message.success("退出成功");
-            //     this.$router.push({
-            //       name: "login",
-            //     });
-            //     localStorage.clear();
-            //   }
-            // });
           },
         });
       }
