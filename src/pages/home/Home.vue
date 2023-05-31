@@ -66,7 +66,7 @@
       </Sider>
       <Layout>
         <HeaderUser :username="currentUser.customerName"></HeaderUser>
-        <Bread></Bread>
+        <!-- <Bread></Bread> -->
         <Content :style="{ margin: '20px', background: '#fff' }">
           <router-view></router-view>
         </Content>
@@ -83,6 +83,7 @@ import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi"
 export default {
   components: { UserManage, Bread, MenuList, HeaderUser },
+  props:['menuList'],
   data() {
     return {
       currentUser: {},

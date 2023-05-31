@@ -1,7 +1,7 @@
 //吴彦祖IP
-// export const requestContextPath = "http://192.168.50.199:80" + "/hft-bos"
+export const requestContextPath = "http://192.168.50.199:80" + "/hft-bos"
 // 玺子哥IP
-export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
+// export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 
 export const URL = {
     //用户登录

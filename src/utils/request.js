@@ -84,6 +84,7 @@ export function defaultErrorHandler(error) {
     let errorResponse = error.response;
     if (undefined == errorResponse) {
         console.log("Error ====> ", error)
+        Message.error(error.errorMessage);
         return;
     }
     let errorMessage = errorResponse.errorMessage;

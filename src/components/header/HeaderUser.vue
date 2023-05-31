@@ -33,7 +33,9 @@
             icon="md-person"
           >
           </Avatar>
-          <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
+          <span style="margin-left: 10px; cursor: pointer"
+            >你好, {{ username }}</span
+          >
           <DropdownMenu slot="list">
             <DropdownItem name="changePassword">修改密码</DropdownItem>
             <DropdownItem name="logout">退出登录</DropdownItem>
@@ -87,7 +89,7 @@ import { URL } from "@/api/serverApi";
 import { removeToken } from "@/utils/token";
 
 export default {
-  props:['username'],
+  props: ["username"],
   data() {
     return {
       oldPassword: "",
@@ -120,6 +122,10 @@ export default {
     ok() {
       if (this.newPassword == "" && this.oldPassword == "") {
         this.$Message.warning("密码不可为空");
+        return;
+      }
+      if (this.newPassword.length < 6) {
+        this.$Message.warning("新密码长度不可小于6位");
         return;
       }
       let params = {

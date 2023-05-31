@@ -46,7 +46,8 @@
   border-radius: 5px;
 }
 
-.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+.ivu-menu-light.ivu-menu-vertical
+  .ivu-menu-item-active:not(.ivu-menu-submenu):after {
   display: none;
 }
 
@@ -61,20 +62,52 @@ a.ivu-menu-item {
 </style>
 <template>
   <div>
-    <Menu :class="menuitemClasses" theme="primary" width="auto" v-for="(item, index) in menuList" :key="index"
-      :open-names="openNames" :active-name="activeName">
+    <Menu
+      :class="menuitemClasses"
+      theme="primary"
+      width="auto"
+      v-for="(item, index) in menuList"
+      :key="index"
+      :open-names="openNames"
+      :active-name="activeName"
+    >
       <Submenu :name="item.title">
         <template slot="title">
           <Icon :type="item.icon" />
           <span>{{ item.title }}</span>
         </template>
-        <MenuItem :name="itemChild.title" :to="{ name: itemChild.path }" v-for="(itemChild, indexChild) in item.children"
-          :key="indexChild">
-        <Icon :type="itemChild.icon" />
-        {{ itemChild.title }}
+        <MenuItem
+          :name="itemChild.title"
+          :to="{ name: itemChild.path }"
+          v-for="(itemChild, indexChild) in item.children"
+          :key="indexChild"
+        >
+          <Icon :type="itemChild.icon" />
+          {{ itemChild.title }}
         </MenuItem>
       </Submenu>
     </Menu>
+    <!-- 手风琴模式 -->
+    <!-- <Menu :class="menuitemClasses" theme="primary" width="auto">
+      <template v-for="item in menuList">
+        <Submenu :name="item.title" :key="item.title">
+          <template slot="title">
+            <Icon :type="item.icon" />
+            <span>{{ item.title }}</span>
+          </template>
+          <template v-for="itemChild in item.children">
+            <MenuItem
+              :name="itemChild.title"
+              :to="{ name: itemChild.path }"
+              :key="itemChild.title"
+            >
+              <Icon :type="itemChild.icon" />
+              {{ itemChild.title }}
+            </MenuItem>
+          </template>
+        </Submenu>
+      </template>
+    </Menu> -->
   </div>
 </template>
 <script>
@@ -85,9 +118,10 @@ export default {
   data() {
     return {
       // isCollapsed: false,
-      menuList: [],
       activeName: "",
-      openNames: []
+      menuList: [],
+      openNames: [],
+      pathName: "",
     };
   },
   computed: {
@@ -127,7 +161,27 @@ export default {
         }
       });
       this.menuList = data;
+      let openArr = [];
+      let activeArr = [];
+      this.menuList.map((d) => {
+        if (!d.path) {
+          openArr.push(d.title);
+          d.children.map((i, index) => {
+            if (i.path) {
+              activeArr.push(i);
+              return;
+            }
+          });
+        }
+      });
+      this.openNames = [openArr[0]];
+      this.activeName = activeArr[0].title;
+      this.pathName = activeArr[0].path;
     },
+  },
+  updated() {
+    console.log(this.activeName, this.pathName, this.openNames);
+    this.$router.push({ name: this.pathName });
   },
 };
 </script>

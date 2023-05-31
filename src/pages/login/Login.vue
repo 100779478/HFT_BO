@@ -96,7 +96,6 @@ export default {
     login(response) {
       this.closeLoading();
       let token = response.data.token;
-      console.log(response,'22222')
       putToken(token);
       Message.success("登录成功！");
       this.$router.push({ name: "Home" });
