@@ -25,6 +25,11 @@ const router = new VueRouter(
                 component: () => import('@/pages/home/Home'),
                 children: [
                     {
+                        path: '/home/dashboard',
+                        name: 'Dashboard',
+                        component: () => import('@/pages/dashboard/Dashboard')
+                    },
+                    {
                         path: '/home/manage/user-manage',
                         name: 'UserManage',
                         component: () => import('@/pages/userManage/UserManage')

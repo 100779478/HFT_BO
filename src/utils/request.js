@@ -53,7 +53,7 @@ export const http = {
         thenHandler = (response) => {
         },
         errorHandler = defaultErrorHandler) => {
-        return axiosInstance.post(url, data)
+        return axiosInstance.put(url, data)
             .then(thenHandler)
             .catch(errorHandler)
     },
@@ -70,7 +70,7 @@ export const http = {
         thenHandler = (response) => {
         },
         errorHandler = defaultErrorHandler) => {
-        return axiosInstance.post(url, data)
+        return axiosInstance.delete(url, data)
             .then(thenHandler)
             .catch(errorHandler)
     }
@@ -94,9 +94,6 @@ export function defaultErrorHandler(error) {
         return;
     }
     Message.error(errorMessage);
-    // if(response.data.code === '100002'){
-    //     Message.error(response.data.errorMessage)
-    // }
 }
 
 /**

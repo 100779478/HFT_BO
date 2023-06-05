@@ -107,6 +107,7 @@ export default {
           content: "<p>您确定退出登录当前账户吗？</p>",
           onOk: () => {
             http.delete(URL.logout, {}, removeToken);
+            this.$router.push({ name: "Login" });
           },
         });
       }

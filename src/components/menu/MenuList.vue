@@ -62,7 +62,7 @@ a.ivu-menu-item {
 </style>
 <template>
   <div>
-    <Menu
+    <!-- <Menu
       :class="menuitemClasses"
       theme="primary"
       width="auto"
@@ -86,9 +86,19 @@ a.ivu-menu-item {
           {{ itemChild.title }}
         </MenuItem>
       </Submenu>
-    </Menu>
+    </Menu> -->
     <!-- 手风琴模式 -->
-    <!-- <Menu :class="menuitemClasses" theme="primary" width="auto">
+    <Menu
+      :class="menuitemClasses"
+      theme="primary"
+      width="auto"
+      accordion
+      active-name="Dashboard"
+    >
+      <MenuItem name="Dashboard" :to="{ name: 'Dashboard' }">
+        <Icon type="md-home" />
+        首页
+      </MenuItem>
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
           <template slot="title">
@@ -107,7 +117,7 @@ a.ivu-menu-item {
           </template>
         </Submenu>
       </template>
-    </Menu> -->
+    </Menu>
   </div>
 </template>
 <script>
@@ -118,10 +128,7 @@ export default {
   data() {
     return {
       // isCollapsed: false,
-      activeName: "",
       menuList: [],
-      openNames: [],
-      pathName: "",
     };
   },
   computed: {
@@ -161,27 +168,11 @@ export default {
         }
       });
       this.menuList = data;
-      let openArr = [];
-      let activeArr = [];
-      this.menuList.map((d) => {
-        if (!d.path) {
-          openArr.push(d.title);
-          d.children.map((i, index) => {
-            if (i.path) {
-              activeArr.push(i);
-              return;
-            }
-          });
-        }
-      });
-      this.openNames = [openArr[0]];
-      this.activeName = activeArr[0].title;
-      this.pathName = activeArr[0].path;
     },
   },
   updated() {
-    console.log(this.activeName, this.pathName, this.openNames);
-    this.$router.push({ name: this.pathName });
+    // this.$router.push({ name: 'Dashboard' });
+    this.$router.push({ name: 'UserManage' });
   },
 };
 </script>
