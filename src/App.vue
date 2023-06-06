@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!-- <Login style="height:100%" /> -->
     <router-view style="height: 100%"></router-view>
   </div>
 </template>

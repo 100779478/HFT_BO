@@ -172,7 +172,7 @@ export default {
   },
   updated() {
     // this.$router.push({ name: 'Dashboard' });
-    this.$router.push({ name: 'UserManage' });
+    this.$router.push({ name: "UserManage" });
   },
 };
 </script>

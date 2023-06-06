@@ -20,5 +20,6 @@ export const URL = {
     user: '/user',
     // 获取所有角色列表
     role: '/role',
-    
+    // 查询环境列表
+    environment: '/env/list',
 }

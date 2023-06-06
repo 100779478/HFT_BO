@@ -118,16 +118,18 @@ export default {
 <style scoped lang='less'>
 .page-account {
   background-image: url("../../assets/login_bg.png");
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100%;
   position: relative;
+  width: 100%;
 }
 
 .page-account-container {
   position: absolute;
   top: 25%;
-  right: 320px;
+  right: 15%;
 }
 
 .login_form {

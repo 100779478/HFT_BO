@@ -3,7 +3,7 @@ import { getToken } from './token'
 import { Message } from 'view-design'
 import { requestContextPath, URL } from '../api/serverApi';
 const axiosInstance = axios.create({
-    timeout: 10000,
+    timeout: 1000,
     baseURL: requestContextPath
 });
 
@@ -84,7 +84,9 @@ export function defaultErrorHandler(error) {
     let errorResponse = error.response;
     if (undefined == errorResponse) {
         console.log("Error ====> ", error)
-        Message.error(error.errorMessage);
+        if (error.errorMessage) {
+            Message.error(error.errorMessage);
+        }
         return;
     }
     let errorMessage = errorResponse.errorMessage;
@@ -93,6 +95,7 @@ export function defaultErrorHandler(error) {
         Message.error(errorResponse.data.errorMessage);
         return;
     }
+
     Message.error(errorMessage);
 }
 
@@ -112,10 +115,6 @@ axiosInstance.interceptors.request.use(
             return config
         }
         config.headers['Authorization'] = `Bearer ${token}`;
-        let envId
-        if (envId) {
-            config.headers['Environment'] = `${1}`;
-        }
         return config;
     }
 )

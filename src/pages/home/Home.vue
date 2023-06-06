@@ -93,8 +93,9 @@
       <Layout>
         <HeaderUser :username="currentUser.customerName"></HeaderUser>
         <!-- <Bread></Bread> -->
-        <Content :style="{ margin: '20px', background: '#fff' }">
-          <router-view></router-view>
+        <Content :style="{ margin: '20px', background: '#fff'}">
+          <!-- 控制router-view的显示或隐藏，从而控制页面的再次加载 -->
+          <router-view v-if="isRouterAlive"></router-view>
         </Content>
       </Layout>
     </Layout>
@@ -111,16 +112,22 @@ import { setUserInfo } from "@/utils/token";
 export default {
   components: { UserManage, Bread, MenuList, HeaderUser },
   props: ["menuList"],
+  provide() {
+    return {
+      reload: this.reload,
+    };
+  },
   data() {
     return {
       currentUser: {},
       isCollapsed: false,
+      isRouterAlive: true,
     };
   },
   created() {
-    console.log(this.$router.options.routes);
     // 加载当前用户信息
     this.currentUserInfo();
+    console.log(window.innerHeight,222)
   },
   computed: {
     rotateIcon() {
@@ -128,13 +135,20 @@ export default {
     },
   },
   methods: {
+    // 通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(() => {
+        this.isRouterAlive = true;
+      });
+    },
     collapsedSider() {
       this.$refs.side.toggleCollapse();
     },
     currentUserInfo() {
       http.get(URL.current, (response) => {
         this.currentUser = response.data;
-        setUserInfo(response.data.userId)
+        setUserInfo(response.data.userId);
       });
     },
   },

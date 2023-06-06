@@ -3,6 +3,10 @@
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
+.select-style {
+  width: 100px;
+  margin-right: 20px;
+}
 </style>
 <template>
   <div>
@@ -21,12 +25,22 @@
         @click="refresh"
       >
       </Icon>
+
       <div
         :style="{
           float: 'right',
           margin: '0 30px',
         }"
       >
+        <span style="font-size: 17px; font-weight: bold">环境：</span>
+        <Select class="select-style" @on-change="postEnvironmentList">
+          <Option
+            v-for="item in environmentList"
+            :key="item.id"
+            :value="item.name"
+            >{{ item.name }}</Option
+          >
+        </Select>
         <Dropdown @on-click="handleClick">
           <Avatar
             style="background-color: #00abe4; cursor: pointer"
@@ -90,15 +104,26 @@ import { removeToken } from "@/utils/token";
 import router from "@/router";
 
 export default {
+  // 引用Home组件中reload方法
+  inject: ["reload"],
   props: ["username"],
   data() {
     return {
       oldPassword: "",
       newPassword: "",
       show: false,
+      environmentList: [],
     };
   },
+  mounted() {
+    this.getEnvironmentList();
+  },
   methods: {
+    getEnvironmentList() {
+      http.get(`${URL.environment}?name`, (res) => {
+        this.environmentList = res.data;
+      });
+    },
     handleClick(name) {
       if (name == "changePassword") {
         this.show = true;
@@ -117,8 +142,7 @@ export default {
     refresh() {
       // location.reload();
       // this.$router.go(0)
-      console.log(this.$route.name);
-      this.$router.push('/refresh');
+      this.$router.push("/refresh");
     },
     modificationPasswordSuccess() {
       this.show = false;

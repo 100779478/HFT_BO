@@ -112,10 +112,10 @@
       :columns="columns1"
       :data="tableData"
       style="border: 1px solid #e8eaec"
-      height="700"
+      :height="tableHeight"
+      ref="table"
     >
       <template slot="operator" slot-scope="{ row, index }">
-        <!-- style="display: flex" -->
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div
             @click="() => modalUser('modify', row)"
@@ -207,17 +207,10 @@ export default {
         width: 240,
         render: (h, params) => {
           const roleName = h(
-            "span",
+            "Tooltip",
             {
-              style: {
-                paddingRight: "50px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                display: "block",
-              },
               attrs: {
-                title: params.row.roleName,
+                content: params.row.roleName,
               },
             },
             [params.row.roleName]
@@ -225,7 +218,6 @@ export default {
           return roleName;
         },
       },
-      // { title: "最大登录次数", key: "roleName", minWidth: 120 },
       {
         title: "状态",
         key: "active",
@@ -268,6 +260,7 @@ export default {
       username: "",
     };
     return {
+      tableHeight: 0,
       userValidRules: {
         username: [{ required: true, message: "请输入用户账号" }],
         customerName: [{ required: true, message: "请输入用户名称" }],
@@ -292,6 +285,8 @@ export default {
     };
   },
   mounted() {
+    // 动态高度
+    this.tableHeight = window.innerHeight - 260;
     this.getUserData();
     this.getAllRoleData();
   },
