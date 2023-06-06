@@ -10,6 +10,10 @@
         <Button type="info" @click="modalUser('new')"
           ><Icon type="md-add" /> 新增用户</Button
         >
+        &nbsp;
+        <Button type="success" @click="refresh()"
+          ><Icon type="md-refresh" /> 刷新</Button
+        >
         <Modal
           v-model="showAddModal"
           draggable
@@ -68,6 +72,7 @@
             </Col>
             <Col :span="18">
               <FormItem label="用户角色" prop="roles">
+                <!-- 下拉框中v-model的数据格式为['测试角色1','测试角色二',....] -->
                 <Select multiple :max-tag-count="4" v-model="userInfo.roleStr">
                   <Option
                     v-for="item in userInfo.roles"
@@ -91,6 +96,7 @@
           style="float: right; width: 160px; border-radius: 20px"
           placeholder="用户代码"
           @on-keydown.enter="handleSearch"
+          @on-change="handleSearch"
         >
           <Icon
             type="ios-search"
@@ -108,11 +114,8 @@
       style="border: 1px solid #e8eaec"
       height="700"
     >
-      <template
-        slot="operator"
-        slot-scope="{ row, index }"
-        style="display: flex"
-      >
+      <template slot="operator" slot-scope="{ row, index }">
+        <!-- style="display: flex" -->
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div
             @click="() => modalUser('modify', row)"
@@ -460,6 +463,16 @@ export default {
           break;
         default:
       }
+    },
+    // 刷新
+    refresh() {
+      this.pagination = {
+        total: 0,
+        pageSize: 20,
+        pageNumber: 1,
+        username: "",
+      };
+      this.getUserData();
     },
   },
 };

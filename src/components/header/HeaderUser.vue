@@ -87,6 +87,7 @@
 import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
 import { removeToken } from "@/utils/token";
+import router from "@/router";
 
 export default {
   props: ["username"],
@@ -114,7 +115,10 @@ export default {
     },
     //页面刷新
     refresh() {
-      location.reload();
+      // location.reload();
+      // this.$router.go(0)
+      console.log(this.$route.name);
+      this.$router.push('/refresh');
     },
     modificationPasswordSuccess() {
       this.show = false;

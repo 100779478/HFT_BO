@@ -41,7 +41,18 @@ const router = new VueRouter(
                     },
                 ]
             },
-
+            // 刷新页面 必须保留
+            {
+                path: '/refresh',
+                name: 'Refresh',
+                hidden: true,
+                component: {
+                    beforeRouteEnter(to, from, next) {
+                        next(instance => instance.$router.replace(from.fullPath));
+                    },
+                    render: h => h()
+                }
+            },
 
         ],
         mode: 'history',

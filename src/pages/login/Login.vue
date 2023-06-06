@@ -29,6 +29,7 @@
                 v-model="formInline.password"
                 placeholder="密码"
                 style="width: 300px"
+                @on-keydown.enter="handleSubmit('formInline')"
               >
                 <Icon type="md-lock" slot="prepend" style="fontsize: 20px" />
               </Input>

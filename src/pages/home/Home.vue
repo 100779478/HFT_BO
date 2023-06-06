@@ -1,9 +1,9 @@
 <style scoped lang='less'>
 .layout {
-  border: 1px solid #d7dde4;
+  // border: 1px solid #d7dde4;
+  // border-radius: 4px;
   background: #f5f7f9;
   position: relative;
-  border-radius: 4px;
   overflow: hidden;
   height: 100%;
 }

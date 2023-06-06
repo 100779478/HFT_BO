@@ -112,6 +112,10 @@ axiosInstance.interceptors.request.use(
             return config
         }
         config.headers['Authorization'] = `Bearer ${token}`;
+        let envId
+        if (envId) {
+            config.headers['Environment'] = `${1}`;
+        }
         return config;
     }
 )
