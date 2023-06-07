@@ -106,8 +106,8 @@
       <Col span="8" offset="8">
         <Input
           v-model="pagination.username"
-          style="float: right; width: 160px; border-radius: 20px"
-          placeholder="用户代码"
+          style="float: right; width: 180px; border-radius: 20px"
+          placeholder="用户名称"
           @on-keydown.enter="handleSearch"
           @on-change="handleSearch"
         >

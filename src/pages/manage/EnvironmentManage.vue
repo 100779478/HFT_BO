@@ -17,7 +17,7 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="info" @click="modalUser('new')"
-          ><Icon type="md-add" /> 新建环境</Button
+          ><Icon type="md-add" /> 新增环境</Button
         >
         &nbsp;
         <Button type="success" @click="refresh()"
@@ -30,66 +30,33 @@
           mask
           :width="600"
           :mask-closable="false"
-          :title="isNew ? '新增用户' : '编辑用户'"
+          :title="isNew ? '新增环境' : '编辑环境'"
         >
           <Form
             ref="ruleForm"
-            :model="userInfo"
+            :model="environmentInfo"
             :label-width="210"
             label-colon
-            :rules="userValidRules"
             autocomplete="off"
           >
             <Col :span="18">
-              <FormItem label="用户账号" prop="username">
+              <FormItem label="环境名称" prop="name">
                 <Input
-                  v-model="userInfo.username"
-                  :disabled="!isNew"
-                  placeholder="请输入用户账号"
+                  v-model="environmentInfo.name"
+                  placeholder="请输入环境名称"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="用户名称" prop="customerName">
+              <FormItem label="备注" prop="name">
                 <Input
-                  v-model="userInfo.customerName"
-                  placeholder="请输入用户名称"
+                  v-model="environmentInfo.comment"
+                  placeholder="请输入备注"
                   autocomplete="off"
                   :maxlength="32"
                 ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="密码" prop="password" v-show="isNew">
-                <Input
-                  v-model="userInfo.password"
-                  placeholder="请输入密码"
-                  type="password"
-                  autocomplete="new-password"
-                  maxlength="20"
-                  password
-                >
-                </Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="状态" prop="active">
-                <i-Switch v-model="userInfo.active" style="margin-top: 5px" />
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="用户角色" prop="roles">
-                <!-- 下拉框中v-model的数据格式为['测试角色1','测试角色二',....] -->
-                <Select multiple :max-tag-count="4" v-model="userInfo.roleStr">
-                  <Option
-                    v-for="item in userInfo.roles"
-                    :value="item.name"
-                    :key="item.id"
-                    >{{ item.name }}</Option
-                  >
-                </Select>
               </FormItem>
             </Col>
           </Form>
@@ -101,7 +68,6 @@
       </Col>
       <Col span="8" offset="8">
         <Input
-          v-model="pagination.username"
           style="float: right; width: 160px; border-radius: 20px"
           placeholder="环境名称"
           @on-keydown.enter="handleSearch"
@@ -126,12 +92,25 @@
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
-          <div @click="() => modalUser('modify', row)" class="table-operate">
+          <Button
+            type="info"
+            size="small"
+            @click="() => modalUser('modify', row)"
+            >编辑</Button
+          >
+          &nbsp;
+          <Button
+            type="error"
+            size="small"
+            @click="() => deleteEnvironment(row)"
+            >删除</Button
+          >
+          <!-- <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
           <div @click="() => deleteEnvironment(row)" class="table-operate">
             {{ "删除" }}
-          </div>
+          </div> -->
         </div>
       </template>
     </Table>
@@ -140,7 +119,6 @@
 <script>
 import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
-import { getUserInfo } from "@/utils/token";
 export default {
   props: ["userId"],
   data() {
@@ -148,7 +126,7 @@ export default {
       {
         title: "环境ID",
         key: "id",
-        minWidth: 100,
+        minWidth: 80,
       },
       {
         title: "环境名称",
@@ -162,33 +140,15 @@ export default {
       },
       { title: "操作", slot: "operator", width: 150 },
     ];
-    let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      username: "",
-    };
     return {
       tableHeight: 0,
-      userValidRules: {
-        username: [{ required: true, message: "请输入用户账号" }],
-        customerName: [{ required: true, message: "请输入用户名称" }],
-        roles: [{ required: false, message: "请选择用户角色" }],
-        active: [{ required: false, message: "请选择状态" }],
-      },
-      userInfo: {
-        username: "",
-        customerName: "",
-        password: "",
-        roles: [],
-        active: true,
-        roleStr: "",
+      environmentInfo: {
+        name: "",
+        comment: "",
       },
       tableData: [],
       columns1,
-      pagination,
       showAddModal: false,
-      allRoleList: [],
       isNew: true,
     };
   },
@@ -212,8 +172,16 @@ export default {
     },
     // 删除环境
     deleteEnvironment(row) {
-      console.log(row, 333);
-      this.getEnvironmentData();
+      this.$Modal.confirm({
+        title: `确认删除环境吗？`,
+        content: "<p>此操作不可逆</p>",
+        onOk: () => {
+          http.delete(`${URL.deleteEnvironment}/${row.id}`, {}, () => {
+            this.getEnvironmentData();
+          });
+        },
+        okText: "删除",
+      });
     },
     // 用户弹窗
     modalUser(type, row) {
@@ -223,43 +191,31 @@ export default {
         this.isNew = true;
         this.showAddModal = true;
         const info = {
-          username: "",
-          customerName: "",
-          password: "",
-          active: true,
-          roleStr: "",
+          name: "",
+          comment: "",
         };
-        Object.assign(this.userInfo, info, { roles: this.allRoleList });
+        this.environmentInfo = info;
       } else {
         this.isNew = false;
         this.showAddModal = true;
-        this.userInfo = { ...row, roles: this.allRoleList };
-        this.userInfo.roleStr = row.roleName.split(",");
+        this.environmentInfo = { ...row };
       }
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      let arr = (this.userInfo.roleStr || []).map((item, index) => ({
-        id: "",
-        name: item || "",
-      }));
-      for (let i = 0; i < this.userInfo.roles.length; i++) {
-        for (let j = 0; j < arr.length; j++) {
-          if (this.userInfo.roles[i].name == arr[j].name) {
-            arr[j].id = this.userInfo.roles[i].id;
-          }
-        }
-      }
-      this.userInfo.roles = arr;
       if (isNew) {
-        this.userInfo.password = this.$md5(this.userInfo.password);
-        http.put(URL.user, this.userInfo, () => {
+        console.log(this.environmentInfo);
+        http.put(URL.addEnvironment, this.environmentInfo, () => {
           this.getEnvironmentData(), this.cancel();
         });
       } else {
-        http.post(`${URL.user}/${this.userInfo.userId}`, this.userInfo, () => {
-          this.getEnvironmentData(), this.cancel();
-        });
+        http.post(
+          `${URL.modificationEnvironment}`,
+          this.environmentInfo,
+          () => {
+            this.getEnvironmentData(), this.cancel();
+          }
+        );
       }
     },
     // 新增弹窗关闭
@@ -268,12 +224,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        username: "",
-      };
       this.getEnvironmentData();
     },
   },

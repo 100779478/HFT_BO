@@ -23,5 +23,15 @@ export const URL = {
     // 查询环境列表
     environment: '/env/list',
     // 切换环境
-    setEnvironment:'/env/set'
+    setEnvironment: '/env/set',
+    // 删除环境
+    deleteEnvironment: '/env',
+    // 新增环境
+    addEnvironment: '/env',
+    // 修改环境
+    modificationEnvironment: '/env',
+    // 角色列表
+    role: '/role',
+    // 获取所有权限列表
+    permission: '/permission',
 }
