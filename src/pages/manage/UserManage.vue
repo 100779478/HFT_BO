@@ -2,6 +2,19 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+.page-bottom {
+  float: right;
+  margin-top: 20px;
+}
+.table-content {
+  border: 1px solid #e8eaec;
+  .table-operate {
+    font-size: 12px;
+    color: rgb(2, 175, 241);
+    margin-right: 6px;
+    cursor: pointer;
+  }
+}
 </style>
 <template>
   <div>
@@ -111,42 +124,19 @@
     <Table
       :columns="columns1"
       :data="tableData"
-      style="border: 1px solid #e8eaec"
+      class="table-content"
       :height="tableHeight"
       ref="table"
     >
       <template slot="operator" slot-scope="{ row, index }">
         <div @click.stop style="display: flex; justify-content: flex-start">
-          <div
-            @click="() => modalUser('modify', row)"
-            style="
-              font-size: 12px;
-              color: rgb(2, 175, 241);
-              margin-right: 6px;
-              cursor: pointer;
-            "
-          >
+          <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div
-            @click="() => changeUserStatus(row)"
-            style="
-              font-size: 12px;
-              color: rgb(2, 175, 241);
-              margin-right: 6px;
-              cursor: pointer;
-            "
-          >
+          <div @click="() => changeUserStatus(row)" class="table-operate">
             {{ !row.active ? "启用" : "禁用" }}
           </div>
-          <div
-            style="
-              font-size: 12px;
-              color: rgb(2, 175, 241);
-              margin-right: 6px;
-              cursor: pointer;
-            "
-          >
+          <div class="table-operate">
             <Dropdown
               trigger="hover"
               transfer
@@ -168,7 +158,7 @@
       </template>
     </Table>
     <template>
-      <div style="float: right; margin-top: 20px">
+      <div class="page-bottom">
         <Page
           :total="pagination.total"
           :current="pagination.pageNumber"

@@ -22,4 +22,6 @@ export const URL = {
     role: '/role',
     // 查询环境列表
     environment: '/env/list',
+    // 切换环境
+    setEnvironment:'/env/set'
 }

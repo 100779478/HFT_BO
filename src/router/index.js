@@ -32,12 +32,16 @@ const router = new VueRouter(
                     {
                         path: '/home/manage/user-manage',
                         name: 'UserManage',
-                        component: () => import('@/pages/userManage/UserManage')
+                        component: () => import('@/pages/manage/UserManage')
                     },
                     {
                         path: '/home/manage/role-manage',
                         name: 'RoleManage',
-                        component: () => import('@/pages/userManage/RoleManage')
+                        component: () => import('@/pages/manage/RoleManage')
+                    }, {
+                        path: '/home/manage/environment-manage',
+                        name: 'EnvironmentManage',
+                        component: () => import('@/pages/manage/EnvironmentManage')
                     },
                 ]
             },

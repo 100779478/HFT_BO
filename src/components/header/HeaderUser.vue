@@ -33,11 +33,15 @@
         }"
       >
         <span style="font-size: 17px; font-weight: bold">环境：</span>
-        <Select class="select-style" @on-change="postEnvironmentList">
+        <Select
+          class="select-style"
+          @on-change="postEnvironmentList"
+          :value="environmentId"
+        >
           <Option
             v-for="item in environmentList"
             :key="item.id"
-            :value="item.name"
+            :value="item.id"
             >{{ item.name }}</Option
           >
         </Select>
@@ -113,6 +117,7 @@ export default {
       newPassword: "",
       show: false,
       environmentList: [],
+      environmentId: "",
     };
   },
   mounted() {
@@ -122,6 +127,19 @@ export default {
     getEnvironmentList() {
       http.get(`${URL.environment}?name`, (res) => {
         this.environmentList = res.data;
+      });
+    },
+    postEnvironmentList(val) {
+      let data = {
+        id: val,
+      };
+      http.post(URL.setEnvironment, { ...data }, (res) => {
+        if (res.code == "0") {
+          this.$Message.success("环境设置成功");
+          this.environmentId = res.data.id;
+          // 重载当前路由页面
+          this.reload();
+        }
       });
     },
     handleClick(name) {

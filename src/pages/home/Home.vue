@@ -102,7 +102,6 @@
   </div>
 </template>
 <script>
-import UserManage from "../userManage/UserManage.vue";
 import Bread from "../../components/breadCrumb/Bread.vue";
 import MenuList from "@/components/menu/MenuList.vue";
 import HeaderUser from "@/components/header/HeaderUser.vue";
@@ -110,7 +109,7 @@ import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
 import { setUserInfo } from "@/utils/token";
 export default {
-  components: { UserManage, Bread, MenuList, HeaderUser },
+  components: { Bread, MenuList, HeaderUser },
   props: ["menuList"],
   provide() {
     return {
