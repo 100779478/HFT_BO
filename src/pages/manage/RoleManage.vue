@@ -2,9 +2,18 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+.ivu-modal-body {
+  margin: 0 50px;
+}
 .page-bottom {
   float: right;
   margin-top: 20px;
+}
+.title-font {
+  display: inline;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 .table-content {
   border: 1px solid #e8eaec;
@@ -39,11 +48,12 @@
           <Form
             ref="ruleForm"
             :model="roleInfo"
-            :label-width="210"
+            :label-width="80"
             label-colon
             autocomplete="off"
+            style="margin-left: -5px; font-weight: bold"
           >
-            <Col :span="18">
+            <Col :span="10">
               <FormItem label="角色名称" prop="name">
                 <Input
                   v-model="roleInfo.name"
@@ -64,23 +74,33 @@
             v-for="(item, index) in permissionList"
             :key="index"
           >
-            <span style="font-size: 15px; font-weight: bold">
+            <span class="title-font">
               {{ item[0].menuName }}
             </span>
+            <!-- :value="checkAll" -->
             <Checkbox
-              :indeterminate="indeterminate"
-              :value="checkAll"
+              :indeterminate="indeterminate[item[0].menuName]"
+              :value="checkAll[item[0].menuName]"
               @click.prevent.native="handleCheckAll(item[0].menuName)"
-              style="position: absolute; right: 0"
+              style="position: absolute; right: 60px"
               >全选</Checkbox
             >
-            <Row type="flex" style="">
+            <Row type="flex">
               <Col span="8" v-for="itemChild in item" :key="itemChild.id">
                 <CheckboxGroup
                   v-model="checkAllGroup"
-                  @on-change="checkAllGroupChange"
+                  @on-change="
+                    checkAllGroupChange(
+                      $event,
+                      itemChild.menuName,
+                      itemChild.description
+                    )
+                  "
                 >
-                  <Checkbox :label="itemChild.description"></Checkbox>
+                  <Checkbox
+                    :label="itemChild.description"
+                    style="margin: 5px"
+                  ></Checkbox>
                 </CheckboxGroup>
               </Col>
             </Row>
@@ -186,9 +206,14 @@ export default {
       //权限列表
       permissionInitData: [],
       permissionList: [],
+      // indeterminate: true,
+      // checkAll: false,
+      // checkAllGroup: [],
+      indeterminate: {},
+      checkAll: {},
       checkAllGroup: [],
-      indeterminate: true,
-      checkAll: false,
+      dataList: {},
+      typeArr: {},
     };
   },
   mounted() {
@@ -199,22 +224,40 @@ export default {
   },
   methods: {
     handleCheckAll(type) {
-      console.log(type,6666)
-      if (this.indeterminate) {
-        this.checkAll = false;
+      if (this.indeterminate[type]) {
+        this.checkAll[type] = false;
       } else {
-        this.checkAll = !this.checkAll;
+        this.checkAll[type] = !this.checkAll[type];
       }
-      this.indeterminate = false;
+      this.indeterminate[type] = false;
+      if (!Array.isArray(this.typeArr[type])) {
+        this.typeArr[type] = [];
+      }
+      if (this.checkAll[type]) {
+        this.permissionInitData.map((d) => {
+          if (d.menuName == type) {
+            this.typeArr[type].push(d.description);
+            console.log(this.typeArr);
+          }
+        });
+      } else {
+        this.typeArr[type] = [];
+      }
 
-      if (this.checkAll) {
-        this.checkAllGroup = ["香蕉", "苹果", "西瓜"];
-      } else {
-        this.checkAllGroup = [];
-      }
+      this.checkAllGroup = Object.values(this.typeArr).flat();
+      this.roleInfo.permissions = [];
+      this.permissionInitData.map((d) => {
+        for (let i = 0; i < this.checkAllGroup.length; i++) {
+          if (d.description === this.checkAllGroup[i]) {
+            this.roleInfo.permissions.push(d);
+          }
+        }
+      });
+      // 数组去重
+      let uniquePermissions = new Set(this.roleInfo.permissions);
+      this.roleInfo.permissions = Array.from(uniquePermissions);
     },
-    checkAllGroupChange(data) {
-      console.log(data, this.permissionInitData, 333);
+    checkAllGroupChange(data, type, opt) {
       this.roleInfo.permissions = [];
       this.permissionInitData.map((d) => {
         for (let i = 0; i < data.length; i++) {
@@ -226,20 +269,35 @@ export default {
       // 数组去重
       let uniquePermissions = new Set(this.roleInfo.permissions);
       this.roleInfo.permissions = Array.from(uniquePermissions);
-
-      // if (data.length === 3) {
-      //   this.indeterminate = false;
-      //   this.checkAll = true;
-      // } else
-      if (data.length > 0) {
-        this.indeterminate = true;
-        this.checkAll = false;
+      // this.roleInfo.permissions.map((d) => {
+      //   if (!Array.isArray(this.dataList[type])) {
+      //     this.dataList[type] = [];
+      //   }
+      //   if (d.description == opt) {
+      //     this.dataList[type].push(d.description);
+      //   }
+      // });
+      // if (data.length === this.dataList[type].length) {
+      //   this.indeterminate[type] = false;
+      //   this.checkAll[type] = true;
+      // } else if (data.length > 0) {
+      //   this.indeterminate[type] = true;
+      //   this.checkAll[type] = false;
+      // } else {
+      //   this.indeterminate[type] = false;
+      //   this.checkAll[type] = false;
+      // }
+      if (data.length === this.permissionList[type].length) {
+        this.indeterminate[type] = false;
+        this.checkAll[type] = true;
+      } else if (data.length > 0) {
+        this.indeterminate[type] = true;
+        this.checkAll[type] = false;
       } else {
-        this.indeterminate = false;
-        this.checkAll = false;
+        this.indeterminate[type] = false;
+        this.checkAll[type] = false;
       }
     },
-
     // 获取环境列表
     getRoleData(value) {
       this.pagination.roleName = value || "";
@@ -262,7 +320,6 @@ export default {
           return acc;
         }, {});
         this.permissionList = result;
-        console.log(this.permissionList);
       });
     },
     // 环境名称模糊查询
@@ -274,10 +331,11 @@ export default {
     // 删除环境
     deleteEnvironment(row) {
       this.$Modal.confirm({
-        title: `确认删除环境吗？`,
+        title: `确认删除角色吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.deleteEnvironment}/${row.id}`, {}, () => {
+          http.delete(`${URL.role}/${row.id}`, {}, () => {
+            this.$Message.success("删除成功");
             this.getRoleData();
           });
         },
@@ -304,6 +362,9 @@ export default {
         };
         this.roleInfo = info;
         this.checkAllGroup = [];
+        this.checkAll = {};
+        this.indeterminate = {};
+        this.typeArr = {};
       } else {
         this.isNew = false;
         this.showAddModal = true;
@@ -312,21 +373,43 @@ export default {
         row.permissions.forEach((val) => {
           arr.push(val.description);
         });
+        let arrList = {};
+        for (const k in this.permissionList) {
+          if (!Array.isArray(arrList[k])) {
+            arrList[k] = [];
+          }
+          row.permissions.map((d) => {
+            if (d.menuName == k) {
+              arrList[k].push(d.description);
+            }
+          });
+          if (arrList[k].length == this.permissionList[k].length) {
+            this.checkAll[k] = true;
+            this.indeterminate[k] = false;
+          } else if (arrList[k].length > 0) {
+            this.checkAll[k] = false;
+            this.indeterminate[k] = true;
+          } else {
+            this.checkAll[k] = false;
+            this.indeterminate[k] = false;
+          }
+        }
+        // 编辑时row.permissions转换格式赋值给typeArr{}
+        this.typeArr = arrList;
         this.checkAllGroup = arr;
       }
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      console.log(this.roleInfo);
-      // if (isNew) {
-      //   http.put(URL.role, this.roleInfo, () => {
-      //     this.getRoleData(), this.cancel();
-      //   });
-      // } else {
-      //   http.post(`${URL.modificationEnvironment}`, this.roleInfo, () => {
-      //     this.getRoleData(), this.cancel();
-      //   });
-      // }
+      if (isNew) {
+        http.put(URL.role, this.roleInfo, () => {
+          this.getRoleData(), this.cancel();
+        });
+      } else {
+        http.post(`${URL.role}/${this.roleInfo.id}`, this.roleInfo, () => {
+          this.getRoleData(), this.cancel();
+        });
+      }
     },
     // 新增弹窗关闭
     cancel() {
