@@ -28,6 +28,8 @@ export const URL = {
     deleteEnvironment: '/env',
     // 新增环境
     addEnvironment: '/env',
+    // 获取当前环境
+    environmentCurrent: '/env/current',
     // 修改环境
     modificationEnvironment: '/env',
     // 角色列表

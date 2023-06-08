@@ -237,7 +237,6 @@ export default {
         this.permissionInitData.map((d) => {
           if (d.menuName == type) {
             this.typeArr[type].push(d.description);
-            console.log(this.typeArr);
           }
         });
       } else {
@@ -269,24 +268,14 @@ export default {
       // 数组去重
       let uniquePermissions = new Set(this.roleInfo.permissions);
       this.roleInfo.permissions = Array.from(uniquePermissions);
-      // this.roleInfo.permissions.map((d) => {
-      //   if (!Array.isArray(this.dataList[type])) {
-      //     this.dataList[type] = [];
-      //   }
-      //   if (d.description == opt) {
-      //     this.dataList[type].push(d.description);
-      //   }
-      // });
-      // if (data.length === this.dataList[type].length) {
-      //   this.indeterminate[type] = false;
-      //   this.checkAll[type] = true;
-      // } else if (data.length > 0) {
-      //   this.indeterminate[type] = true;
-      //   this.checkAll[type] = false;
-      // } else {
-      //   this.indeterminate[type] = false;
-      //   this.checkAll[type] = false;
-      // }
+      this.roleInfo.permissions.map((d) => {
+        if (!Array.isArray(this.typeArr[type])) {
+          this.typeArr[type] = [];
+        }
+        if (d.description == opt) {
+          this.typeArr[type].push(d.description);
+        }
+      });
       if (data.length === this.permissionList[type].length) {
         this.indeterminate[type] = false;
         this.checkAll[type] = true;
@@ -297,6 +286,7 @@ export default {
         this.indeterminate[type] = false;
         this.checkAll[type] = false;
       }
+      // console.log(this.typeArr, opt, 8888);
     },
     // 获取环境列表
     getRoleData(value) {

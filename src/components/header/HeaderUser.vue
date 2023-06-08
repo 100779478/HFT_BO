@@ -36,7 +36,7 @@
         <Select
           class="select-style"
           @on-change="postEnvironmentList"
-          :value="environmentId"
+          v-model="environmentId"
         >
           <Option
             v-for="item in environmentList"
@@ -128,15 +128,14 @@ export default {
       http.get(`${URL.environment}?name`, (res) => {
         this.environmentList = res.data;
       });
+      http.get(URL.environmentCurrent, (res) => {
+        this.environmentId = res.data.id;
+      });
     },
     postEnvironmentList(val) {
-      let data = {
-        id: val,
-      };
-      http.post(URL.setEnvironment, { ...data }, (res) => {
+      http.post(`${URL.setEnvironment}/${val}`, {}, (res) => {
         if (res.code == "0") {
           this.$Message.success("环境设置成功");
-          this.environmentId = res.data.id;
           // 重载当前路由页面
           this.reload();
         }
