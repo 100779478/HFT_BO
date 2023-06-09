@@ -244,6 +244,12 @@ export default {
       }
 
       this.checkAllGroup = Object.values(this.typeArr).flat();
+      console.log(
+        this.checkAllGroup,
+        this.permissionInitData,
+        this.checkAll,
+        3333
+      );
       this.roleInfo.permissions = [];
       this.permissionInitData.map((d) => {
         for (let i = 0; i < this.checkAllGroup.length; i++) {
@@ -268,26 +274,49 @@ export default {
       // 数组去重
       let uniquePermissions = new Set(this.roleInfo.permissions);
       this.roleInfo.permissions = Array.from(uniquePermissions);
-      this.roleInfo.permissions.map((d) => {
-        if (!Array.isArray(this.typeArr[type])) {
-          this.typeArr[type] = [];
+      // this.roleInfo.permissions.map((d) => {
+      //   if (!Array.isArray(this.typeArr[type])) {
+      //     this.typeArr[type] = [];
+      //   }
+      //   for (let i = 0; i < data.length; i++) {}
+      //   if (d.description == opt) {
+      //     this.typeArr[type].push(d.description);
+      //   }
+      // });
+
+      let result = this.roleInfo.permissions.reduce((acc, curr) => {
+        if (acc[curr.menuName]) {
+          acc[curr.menuName].push(curr);
+        } else {
+          acc[curr.menuName] = [curr];
         }
-        if (d.description == opt) {
-          this.typeArr[type].push(d.description);
-        }
-      });
-      if (data.length === this.permissionList[type].length) {
+        return acc;
+      }, {});
+      let newObj = {};
+      for (const k in result) {
+        newObj[k] = Object.keys(result[k])
+          .map((key) => result[k][key].description)
+          .concat();
+      }
+      this.typeArr = newObj;
+      let newObjLength = newObj[type] ? newObj[type].length : 0;
+      console.log(newObj, this.permissionList, 9090);
+      console.log(newObjLength, this.permissionList[type].length, 9090);
+      if (newObjLength === this.permissionList[type].length) {
+        console.log(909011111);
         this.indeterminate[type] = false;
         this.checkAll[type] = true;
-      } else if (data.length > 0) {
+      } else if (newObjLength > 0) {
+        console.log(90902222);
         this.indeterminate[type] = true;
         this.checkAll[type] = false;
       } else {
+        console.log(90903333);
         this.indeterminate[type] = false;
         this.checkAll[type] = false;
       }
-      // console.log(this.typeArr, opt, 8888);
     },
+
     // 获取环境列表
     getRoleData(value) {
       this.pagination.roleName = value || "";
@@ -300,6 +329,7 @@ export default {
       http.get(URL.permission, (response) => {
         let dataInit = response.data;
         this.permissionInitData = response.data;
+        console.log(dataInit);
         // 将权限列表中menuName相同的项分别整理到一个数组
         const result = dataInit.reduce((acc, curr) => {
           if (acc[curr.menuName]) {
@@ -310,7 +340,17 @@ export default {
           return acc;
         }, {});
         this.permissionList = result;
+        // this.permissionList = {
+        //   角色管理: [
+        //     {
+        //       menuName: "角色管理",
+        //       description: "角色管理",
+        //     },
+        //   ],
+        // };
       });
+
+      // });
     },
     // 环境名称模糊查询
     handleSearch(e) {
