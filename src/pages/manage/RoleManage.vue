@@ -244,12 +244,6 @@ export default {
       }
 
       this.checkAllGroup = Object.values(this.typeArr).flat();
-      console.log(
-        this.checkAllGroup,
-        this.permissionInitData,
-        this.checkAll,
-        3333
-      );
       this.roleInfo.permissions = [];
       this.permissionInitData.map((d) => {
         for (let i = 0; i < this.checkAllGroup.length; i++) {
@@ -283,7 +277,7 @@ export default {
       //     this.typeArr[type].push(d.description);
       //   }
       // });
-
+      // roleInfo.permissions为最新的选中数据，每次修改时,转化格式后,赋值给typeArr
       let result = this.roleInfo.permissions.reduce((acc, curr) => {
         if (acc[curr.menuName]) {
           acc[curr.menuName].push(curr);
@@ -300,18 +294,13 @@ export default {
       }
       this.typeArr = newObj;
       let newObjLength = newObj[type] ? newObj[type].length : 0;
-      console.log(newObj, this.permissionList, 9090);
-      console.log(newObjLength, this.permissionList[type].length, 9090);
       if (newObjLength === this.permissionList[type].length) {
-        console.log(909011111);
         this.indeterminate[type] = false;
         this.checkAll[type] = true;
       } else if (newObjLength > 0) {
-        console.log(90902222);
         this.indeterminate[type] = true;
         this.checkAll[type] = false;
       } else {
-        console.log(90903333);
         this.indeterminate[type] = false;
         this.checkAll[type] = false;
       }
@@ -329,7 +318,6 @@ export default {
       http.get(URL.permission, (response) => {
         let dataInit = response.data;
         this.permissionInitData = response.data;
-        console.log(dataInit);
         // 将权限列表中menuName相同的项分别整理到一个数组
         const result = dataInit.reduce((acc, curr) => {
           if (acc[curr.menuName]) {
@@ -340,14 +328,6 @@ export default {
           return acc;
         }, {});
         this.permissionList = result;
-        // this.permissionList = {
-        //   角色管理: [
-        //     {
-        //       menuName: "角色管理",
-        //       description: "角色管理",
-        //     },
-        //   ],
-        // };
       });
 
       // });

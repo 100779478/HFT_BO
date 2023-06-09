@@ -36,4 +36,14 @@ export const URL = {
     role: '/role',
     // 获取所有权限列表
     permission: '/permission',
+    // 修改通道、添加通道
+    channel: '/channel',
+    // 查询通道列表
+    channelList: '/channel/list',
+    // 获取外部接口类型
+    apiType: '/channel/apiType',
+    // 获取交易通道
+    channelTrade: '/channel/tradeChannel',
+    // 获取通道类型
+    channelType:'/channel/channelType'
 }
