@@ -42,8 +42,14 @@ export const URL = {
     channelList: '/channel/list',
     // 获取外部接口类型
     apiType: '/channel/apiType',
-    // 获取交易通道
-    channelTrade: '/channel/tradeChannel',
+    // 获取指定外部接口类型下的通道类型
+    inApiType: '/channel/inApiType',
     // 获取通道类型
-    channelType:'/channel/channelType'
+    channelType: '/channel/channelType',
+    // 分页获取客户通道数据
+    channelTrade: '/cus-channel/list',
+    // 获取交易通道
+    tradeChannel: '/cus-channel/tradeChannel',
+    // 添加、修改、删除客户通道
+    customChannel: '/cus-channel',
 }

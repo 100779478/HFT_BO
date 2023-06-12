@@ -21,7 +21,7 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="info" @click="modalChannel('new')"
-          ><Icon type="md-add" /> 新增实体账户</Button
+          ><Icon type="md-add" /> 新增分帐户</Button
         >
         &nbsp;
         <Button type="success" @click="refresh()"
@@ -34,7 +34,7 @@
           mask
           :width="600"
           :mask-closable="false"
-          :title="isNew ? '新增实体账户' : '编辑实体账户'"
+          :title="isNew ? '新增分帐户' : '编辑分帐户'"
         >
           <Form
             ref="ruleForm"
@@ -45,95 +45,102 @@
             autocomplete="off"
           >
             <Col :span="18">
-              <FormItem label="通道ID" prop="channelId">
+              <FormItem label="用户代码" prop="customerId">
+                <Select
+                  v-model="channelInfo.customerId"
+                  placeholder="请选择用户代码"
+                  :maxlength="32"
+                >
+                  <Option
+                    v-for="item in userList"
+                    :key="item.username"
+                    :value="item.username"
+                    >{{ item.username }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col :span="18">
+              <FormItem label="交易通道" prop="tradeChannel">
+                <Select
+                  v-model="channelInfo.tradeChannel"
+                  placeholder="请选择交易通道"
+                  :maxlength="32"
+                  @on-change="getTradeChannelApi"
+                >
+                  <Option
+                    v-for="item in tradeChannel"
+                    :key="item.channelId"
+                    :value="item.channelId"
+                    >{{ item.channelId }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col :span="18">
+              <FormItem label="分帐号代码" prop="accountId">
                 <Input
-                  v-model="channelInfo.channelId"
-                  :disabled="!isNew"
-                  placeholder="请输入通道ID"
+                  v-model="channelInfo.accountId"
+                  placeholder="请输入分帐号代码"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="外部接口类型" prop="apiType">
-                <Select
-                  v-model="channelInfo.apiType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  @on-change="getApiTerminalType"
-                  :disabled="!isNew"
-                >
-                  <Option
-                    v-for="item in channelType"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="通道类型" prop="terminalType">
-                <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-if="isNew"
-                >
-                  <Option
-                    v-for="item in terminalType"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
-                  </Option>
-                </Select>
-                <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-else
-                >
-                  <Option
-                    v-for="item in channelTrade"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="交易账号" prop="userId">
+              <FormItem label="交易接口类型" prop="tradeApiTypeName">
                 <Input
-                  v-model="channelInfo.userId"
-                  placeholder="请输入交易账号"
+                  v-model="channelInfo.tradeApiTypeName"
+                  placeholder="请输入交易接口类型"
+                  :maxlength="16"
+                  show-message="false"
+                  :disabled="true"
+                ></Input>
+              </FormItem>
+            </Col>
+            <Col :span="18">
+              <FormItem label="资产账户" prop="assetNo">
+                <Input
+                  v-model="channelInfo.assetNo"
+                  placeholder="请输入资产账户"
+                  :maxlength="16"
+                  show-message="false"
+                ></Input>
+              </FormItem>
+              <FormItem label="组合账户" prop="combiNo">
+                <Input
+                  v-model="channelInfo.combiNo"
+                  placeholder="请输入组合账户"
+                  :maxlength="16"
+                  show-message="false"
+                ></Input>
+              </FormItem>
+              <FormItem label="基金账户" prop="apiAccountID">
+                <Input
+                  v-model="channelInfo.apiAccountID"
+                  placeholder="请输入基金账户"
+                  :maxlength="16"
+                  show-message="false"
+                ></Input>
+              </FormItem>
+              <FormItem label="交易员编码" prop="apiInvestorID">
+                <Input
+                  v-model="channelInfo.apiInvestorID"
+                  placeholder="请输入交易员编码"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="密码" prop="password">
+              <FormItem label="备注" prop="reserver5">
                 <Input
-                  v-model="channelInfo.password"
-                  placeholder="请输入密码"
-                  type="password"
-                  autocomplete="new-password"
-                  maxlength="20"
-                  password
-                >
-                </Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="状态" prop="active">
-                <i-Switch
-                  v-model="channelInfo.active"
-                  style="margin-top: 5px"
-                />
+                  v-model="channelInfo.reserver5"
+                  type="textarea"
+                  placeholder="请输入备注"
+                  show-message="false"
+                  :autosize="true"
+                ></Input>
               </FormItem>
             </Col>
           </Form>
@@ -145,9 +152,9 @@
       </Col>
       <Col span="8" offset="8">
         <Input
-          v-model="pagination.channelId"
+          v-model="pagination.accountId"
           style="float: right; width: 180px; border-radius: 20px"
-          placeholder="通道ID"
+          placeholder="分帐号代码"
           @on-keydown.enter="handleSearch"
           @on-change="handleSearch"
         >
@@ -209,47 +216,54 @@ export default {
   data() {
     let columns1 = [
       {
-        title: "通道ID",
-        key: "channelId",
+        title: "用户代码",
+        key: "customerId",
         minWidth: 100,
       },
       {
-        title: "外部接口类型",
+        title: "用户名称",
         key: "apiTypeName",
         minWidth: 100,
       },
       {
-        title: "通道类型",
-        key: "terminalName",
+        title: "交易通道",
+        key: "tradeChannel",
         minWidth: 150,
       },
       {
-        title: "交易账号",
-        key: "userId",
+        title: "分账号代码",
+        key: "accountId",
         minWidth: 150,
       },
       {
-        title: "是否启用",
-        key: "active",
+        title: "交易接口类型",
+        key: "tradeApiTypeName",
         minWidth: 150,
-        render(h, params) {
-          const iconOpen = h("Icon", {
-            props: {
-              type: "ios-radio-button-on",
-              color: "#19be6b",
-            },
-          });
-          const iconClose = h("Icon", {
-            props: {
-              type: "ios-radio-button-on",
-              color: "#ed4014",
-            },
-          });
-          return h("span", [
-            params.row.active ? iconOpen : iconClose,
-            params.row.active ? "  已启用" : "  已禁用",
-          ]);
-        },
+      },
+      {
+        title: "资产账户",
+        key: "assetNo",
+        minWidth: 150,
+      },
+      {
+        title: "组合账户",
+        key: "combiNo",
+        minWidth: 150,
+      },
+      {
+        title: "基金账户",
+        key: "apiAccountID",
+        minWidth: 150,
+      },
+      {
+        title: "交易员编号",
+        key: "apiInvestorID",
+        minWidth: 150,
+      },
+      {
+        title: "备注",
+        key: "reserver5",
+        minWidth: 150,
       },
       { title: "操作", slot: "operator", width: 150 },
     ];
@@ -257,33 +271,35 @@ export default {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
-      channelId: "",
+      accountId: "",
     };
     return {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        channelId: [{ required: true, message: "请输入通道ID" }],
-        apiType: [{ required: true, message: "请选择外部接口类型" }],
-        terminalType: [{ required: true, message: "请选择通道类型" }],
+        // channelId: [{ required: true, message: "请输入通道ID" }],
+        // apiType: [{ required: true, message: "请选择外部接口类型" }],
+        // terminalType: [{ required: true, message: "请选择通道类型" }],
         // password: [{ required: true, message: "请输入密码" }],
         // userId: [{ required: true, message: "请选择用户角色" }],
         // active: [{ required: false, message: "请选择状态" }],
       },
       channelInfo: {
-        channelId: "",
-        apiType: [],
-        terminalType: "",
-        active: true,
-        password: "",
-        userId: "",
+        customerId: "",
+        tradeChannel: "",
+        accountId: "",
+        tradeApiTypeName: "",
+        assetNo: "",
+        combiNo: "",
+        apiAccountID: "",
+        apiInvestorID: "",
+        reserver5: "",
       },
       tableData: [],
-      // 通道
-      channelTrade: [],
-      // 外部接口
-      channelType: [],
-      terminalType: [],
+      // 交易通道
+      tradeChannel: [],
+      // 用户列表
+      userList: [],
       columns1,
       pagination,
       showAddModal: false,
@@ -294,37 +310,40 @@ export default {
     // 动态高度
     this.tableHeight = window.innerHeight - 260;
     this.getChannelData();
-    // 获取外部接口类型
-    this.getAPIType();
-    // 获取通道类型
-    this.getTerminalType();
+    // 获取交易通道
+    this.getTradeChannel();
+    this.getUserData();
   },
   methods: {
-    // 获取实体帐户列表
+    // 获取分帐户列表
     getChannelData(value) {
-      this.pagination.channelId = value || "";
-      // 实体账户列表
-      http.post(URL.channelList, this.pagination, this.getChannelResponse);
+      this.pagination.accountId = value || "";
+      // 分帐户列表
+      http.post(URL.channelTrade, this.pagination, this.getChannelResponse);
     },
-    getAPIType() {
-      // 外部接口类型
-      http.get(URL.apiType, (res) => {
-        this.channelType = res.data;
+    getTradeChannel() {
+      // 获取交易通道
+      http.get(URL.tradeChannel, (res) => {
+        // 交易通道数组初始化
+        this.tradeChannel = res.data;
       });
     },
-    getTerminalType() {
-      http.get(URL.channelType, (res) => {
-        this.channelTrade = res.data;
+    getUserData() {
+      let params = {
+        pageSize: 500,
+        pageNumber: 1,
+        username: "",
+      };
+      http.post(URL.user, params, (res) => {
+        this.userList = res.data.dataList;
       });
     },
-    getApiTerminalType(e) {
-      // 通道类型
-      this.terminalType = [];
-      if (this.isNew && e) {
-        http.get(`${URL.inApiType}?code=${e}`, (res) => {
-          this.terminalType = res.data;
-        });
-      }
+    getTradeChannelApi(e) {
+      this.tradeChannel.map((d) => {
+        if (e == d.channelId) {
+          this.channelInfo.tradeApiTypeName = d.apiTypeName;
+        }
+      });
     },
     getChannelResponse(res) {
       setTimeout(() => {
@@ -355,12 +374,15 @@ export default {
         this.isNew = true;
         this.showAddModal = true;
         const info = {
-          channelId: "",
-          apiType: "",
-          terminalType: "",
-          active: true,
-          password: "",
-          userId: "",
+          customerId: "",
+          tradeChannel: "",
+          accountId: "",
+          tradeApiTypeName: "",
+          assetNo: "",
+          combiNo: "",
+          apiAccountID: "",
+          apiInvestorID: "",
+          reserver5: "",
           id: "",
         };
         Object.assign(this.channelInfo, info);
@@ -368,30 +390,30 @@ export default {
         this.isNew = false;
         this.showAddModal = true;
         Object.assign(this.channelInfo, row);
-        this.channelInfo.apiType = row.apiType;
-        this.channelInfo.terminalType = row.terminalType;
+        // this.channelInfo.customerId = row.customerId;
+        // this.channelInfo.tradeChannel = row.tradeChannel;
       }
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      if (!this.channelInfo.channelId) {
-        this.$Message.error("通道ID不能为空");
-        return;
-      }
-      if (!this.channelInfo.apiType) {
-        this.$Message.error("请选择外部接口类型");
-        return;
-      }
-      if (!this.channelInfo.terminalType) {
-        this.$Message.error("请选择通道类型");
-        return;
-      }
+      // if (!this.channelInfo.channelId) {
+      //   this.$Message.error("通道ID不能为空");
+      //   return;
+      // }
+      // if (!this.channelInfo.apiType) {
+      //   this.$Message.error("请选择外部接口类型");
+      //   return;
+      // }
+      // if (!this.channelInfo.terminalType) {
+      //   this.$Message.error("请选择通道类型");
+      //   return;
+      // }
       if (isNew) {
-        http.put(URL.channel, this.channelInfo, () => {
+        http.put(URL.customChannel, this.channelInfo, () => {
           this.getChannelData(), this.cancel();
         });
       } else {
-        http.post(URL.channel, this.channelInfo, () => {
+        http.post(URL.customChannel, this.channelInfo, () => {
           this.getChannelData(), this.cancel();
         });
       }
@@ -400,13 +422,13 @@ export default {
     cancel() {
       this.showAddModal = false;
     },
-    // 删除实体账户
+    // 删除分帐户
     deleteChannel(row) {
       this.$Modal.confirm({
-        title: `确认删除实体账户吗？`,
+        title: `确认删除分帐户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.channel}/${row.id}`, {}, () => {
+          http.delete(`${URL.customChannel}/${row.id}`, {}, () => {
             this.getChannelData();
           });
         },
@@ -420,11 +442,10 @@ export default {
         total: 0,
         pageSize: 20,
         pageNumber: 1,
-        channelId: "",
+        accountId: "",
       };
       this.getChannelData();
-      this.getAPIType();
-      this.getTerminalType();
+      this.getTradeChannel();
     },
   },
 };

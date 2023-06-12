@@ -204,7 +204,6 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (isNew) {
-        console.log(this.environmentInfo);
         http.put(URL.addEnvironment, this.environmentInfo, () => {
           this.getEnvironmentData(), this.cancel();
         });

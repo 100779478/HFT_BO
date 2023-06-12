@@ -52,6 +52,11 @@ const router = new VueRouter(
                         name: 'RealAccountManage',
                         component: () => import('@/pages/systemManage/RealAccount')
                     },
+                    {
+                        path: '/home/manage/sub-account-manage',
+                        name: 'SubAccountManage',
+                        component: () => import('@/pages/systemManage/SubAccount')
+                    },
                 ]
             },
             // 刷新页面 必须保留

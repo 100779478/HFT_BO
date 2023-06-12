@@ -1,6 +1,6 @@
 <template>
   <div class="contain">
-    <div class="notfound"></div>
+    <div class="not-found"></div>
     <div class="text">
       <div>404</div>
       <span class="font"> 抱歉你访问的页面不存在</span>
@@ -32,7 +32,7 @@ export default {
   margin-left: 500px;
   padding-bottom: 300px;
 }
-.notfound {
+.not-found {
   flex: 0 0 42.5%;
   width: 30.5%;
   height: 100%;

@@ -126,7 +126,6 @@ export default {
   created() {
     // 加载当前用户信息
     this.currentUserInfo();
-    console.log(window.innerHeight,222)
   },
   computed: {
     rotateIcon() {
