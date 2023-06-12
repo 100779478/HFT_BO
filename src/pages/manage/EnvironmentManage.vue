@@ -31,6 +31,7 @@
           :width="600"
           :mask-closable="false"
           :title="isNew ? '新增环境' : '编辑环境'"
+          :loading="loading"
         >
           <Form
             ref="ruleForm"
@@ -141,6 +142,7 @@ export default {
       { title: "操作", slot: "operator", width: 150 },
     ];
     return {
+      loading: true,
       tableHeight: 0,
       environmentInfo: {
         name: "",
@@ -162,6 +164,9 @@ export default {
     getEnvironmentData(value) {
       let id = value || "";
       http.get(`${URL.environment}?name=${id}`, (res) => {
+        setTimeout(() => {
+          this.loading = false;
+        }, 200);
         this.tableData = res.data || [];
       });
     },
@@ -223,6 +228,7 @@ export default {
     },
     // 刷新
     refresh() {
+      this.loading = true;
       this.getEnvironmentData();
     },
   },

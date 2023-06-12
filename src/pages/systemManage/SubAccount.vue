@@ -385,7 +385,8 @@ export default {
           reserver5: "",
           id: "",
         };
-        Object.assign(this.channelInfo, info);
+        this.channelInfo = info;
+        Object.assign(this.channelInfo);
       } else {
         this.isNew = false;
         this.showAddModal = true;
@@ -396,18 +397,26 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      // if (!this.channelInfo.channelId) {
-      //   this.$Message.error("通道ID不能为空");
-      //   return;
-      // }
-      // if (!this.channelInfo.apiType) {
-      //   this.$Message.error("请选择外部接口类型");
-      //   return;
-      // }
-      // if (!this.channelInfo.terminalType) {
-      //   this.$Message.error("请选择通道类型");
-      //   return;
-      // }
+      if (!this.channelInfo.customerId) {
+        this.$Message.error("用户代码不能为空");
+        return;
+      }
+      if (!this.channelInfo.tradeChannel) {
+        this.$Message.error("请选择交易通道");
+        return;
+      }
+      if (!this.channelInfo.accountId) {
+        this.$Message.error("请填写分帐号代码");
+        return;
+      }
+      if (!this.channelInfo.assetNo) {
+        this.$Message.error("资产账户不能为空");
+        return;
+      }
+      if (!this.channelInfo.combiNo) {
+        this.$Message.error("持仓账户不能为空");
+        return;
+      }
       if (isNew) {
         http.put(URL.customChannel, this.channelInfo, () => {
           this.getChannelData(), this.cancel();

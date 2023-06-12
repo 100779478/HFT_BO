@@ -10,9 +10,9 @@ body,
 /* span{
     cursor: default;
 } */
-.ivu-table-overflowX {
+/* .ivu-table-overflowX {
     overflow-x: hidden !important;
-}
+} */
 
 ::-webkit-scrollbar {
     height: 10px;

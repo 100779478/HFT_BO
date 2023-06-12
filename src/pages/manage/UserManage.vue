@@ -127,6 +127,7 @@
       class="table-content"
       :height="tableHeight"
       ref="table"
+      :loading="loading"
     >
       <template slot="operator" slot-scope="{ row, index }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -250,6 +251,7 @@ export default {
       username: "",
     };
     return {
+      loading: true,
       tableHeight: 0,
       userValidRules: {
         username: [{ required: true, message: "请输入用户账号" }],
@@ -290,6 +292,9 @@ export default {
       http.get(URL.role, this.getAllRoleResponse);
     },
     getUserResponse(res) {
+      setTimeout(() => {
+        this.loading = false;
+      }, 200);
       this.pagination.total = res.data.total;
       this.tableData = res.data.dataList || [];
       // 合并角色名称为一个字符串，用","分隔
@@ -451,6 +456,7 @@ export default {
     },
     // 刷新
     refresh() {
+      this.loading = true;
       this.pagination = {
         total: 0,
         pageSize: 20,

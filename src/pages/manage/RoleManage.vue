@@ -135,6 +135,7 @@
       class="table-content"
       :height="tableHeight"
       ref="table"
+      :loading="loading"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -191,6 +192,7 @@ export default {
       roleName: "",
     };
     return {
+      loading: true,
       pagination,
       tableHeight: 0,
       roleInfo: {
@@ -310,6 +312,9 @@ export default {
     getRoleData(value) {
       this.pagination.roleName = value || "";
       http.post(URL.role, this.pagination, (res) => {
+        setTimeout(() => {
+          this.loading = false;
+        }, 200);
         this.tableData = res.data.dataList || [];
       });
     },
@@ -427,6 +432,7 @@ export default {
     },
     // 刷新
     refresh() {
+      this.loading = true;
       this.pagination = {
         total: 0,
         pageSize: 20,
