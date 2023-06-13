@@ -398,13 +398,9 @@ export default {
           this.getUserStrategyData(), this.cancel();
         });
       } else {
-        http.post(
-          `${URL.rule}/${this.userStrategyInfo.id}`,
-          this.userStrategyInfo,
-          () => {
-            this.getUserStrategyData(), this.cancel();
-          }
-        );
+        http.post(URL.rule, this.userStrategyInfo, () => {
+          this.getUserStrategyData(), this.cancel();
+        });
       }
     },
     // 新增弹窗关闭
@@ -432,13 +428,9 @@ export default {
     changeUserStatus(row) {
       let data = row.id;
       if (!row.active) {
-        http.post(`${URL.rule}/${data}/enable`, data, this.handleActiveEnable);
+        http.post(`${URL.rule}/${data}/enable`, {}, this.handleActiveEnable);
       } else {
-        http.post(
-          `${URL.rule}/${data}/disable`,
-          data,
-          this.handleActiveDisable
-        );
+        http.post(`${URL.rule}/${data}/disable`, {}, this.handleActiveDisable);
       }
     },
     deleteStrategy(row) {

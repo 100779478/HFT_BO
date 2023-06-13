@@ -230,7 +230,7 @@ export default {
       },
       {
         title: "用户名称",
-        key: "apiTypeName",
+        key: "customName",
         minWidth: 100,
       },
       {
@@ -298,6 +298,7 @@ export default {
       },
       channelInfo: {
         customerId: "",
+        customName: "",
         tradeChannel: "",
         accountId: "",
         tradeApiTypeName: "",
@@ -408,6 +409,7 @@ export default {
         const info = {
           customerId: "",
           tradeChannel: "",
+          customName: "",
           accountId: "",
           tradeApiTypeName: "",
           assetNo: "",

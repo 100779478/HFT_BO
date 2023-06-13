@@ -110,7 +110,7 @@ import router from "@/router";
 export default {
   // 引用Home组件中reload方法
   inject: ["reload"],
-  props: ["username"],
+  props: ["username", "envList"],
   data() {
     return {
       oldPassword: "",
@@ -122,6 +122,11 @@ export default {
   },
   mounted() {
     this.getEnvironmentList();
+  },
+  watch: {
+    envList: function (params) {
+      this.environmentList = this.envList;
+    },
   },
   methods: {
     // collapsedSider() {

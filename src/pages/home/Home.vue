@@ -91,11 +91,17 @@
         </div>
       </Sider>
       <Layout>
-        <HeaderUser :username="currentUser.customerName"></HeaderUser>
+        <HeaderUser
+          :username="currentUser.customerName"
+          :envList="envList"
+        ></HeaderUser>
         <!-- <Bread></Bread> -->
-        <Content :style="{ margin: '20px', background: '#fff'}">
+        <Content :style="{ margin: '20px', background: '#fff' }">
           <!-- 控制router-view的显示或隐藏，从而控制页面的再次加载 -->
-          <router-view v-if="isRouterAlive"></router-view>
+          <router-view
+            v-if="isRouterAlive"
+            @child-event="toHeaderEnv"
+          ></router-view>
         </Content>
       </Layout>
     </Layout>
@@ -121,6 +127,7 @@ export default {
       currentUser: {},
       isCollapsed: false,
       isRouterAlive: true,
+      envList: [],
     };
   },
   created() {
@@ -133,6 +140,10 @@ export default {
     },
   },
   methods: {
+    // 将环境菜单传值给header组件
+    toHeaderEnv(ev) {
+      this.envList = ev;
+    },
     // 通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
     reload() {
       this.isRouterAlive = false;

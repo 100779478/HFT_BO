@@ -169,6 +169,10 @@ export default {
         }, 200);
         this.tableData = res.data || [];
       });
+      // 传值给header组件
+      http.get(`${URL.environment}?name`, (res) => {
+        this.$emit("child-event", res.data);
+      });
     },
     // 环境名称模糊查询
     handleSearch(e) {
