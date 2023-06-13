@@ -99,34 +99,42 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="资产账户" prop="assetNo">
+              <FormItem :label="assetLabel" prop="assetNo">
                 <Input
                   v-model="channelInfo.assetNo"
-                  placeholder="请输入资产账户"
+                  :placeholder="`请输入${this.assetLabel}`"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
-              <FormItem label="组合账户" prop="combiNo">
+              <FormItem :label="positionLabel" prop="combiNo">
                 <Input
                   v-model="channelInfo.combiNo"
-                  placeholder="请输入组合账户"
+                  :placeholder="`请输入${this.positionLabel}`"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
-              <FormItem label="基金账户" prop="apiAccountID">
+              <FormItem
+                :label="foundationLabel"
+                prop="apiAccountID"
+                v-if="showLabel"
+              >
                 <Input
                   v-model="channelInfo.apiAccountID"
-                  placeholder="请输入基金账户"
+                  :placeholder="`请输入${this.foundationLabel}`"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
               </FormItem>
-              <FormItem label="交易员编码" prop="apiInvestorID">
+              <FormItem
+                :label="traderLabel"
+                prop="apiInvestorID"
+                v-if="showLabel"
+              >
                 <Input
                   v-model="channelInfo.apiInvestorID"
-                  placeholder="请输入交易员编码"
+                  :placeholder="`请输入${this.traderLabel}`"
                   :maxlength="16"
                   show-message="false"
                 ></Input>
@@ -274,6 +282,10 @@ export default {
       accountId: "",
     };
     return {
+      assetLabel: "资产账户",
+      positionLabel: "组合帐户",
+      foundationLabel: "基金账户",
+      traderLabel: "交易员编码",
       loading: true,
       tableHeight: 0,
       userValidRules: {
@@ -304,6 +316,7 @@ export default {
       pagination,
       showAddModal: false,
       isNew: true,
+      showLabel: false,
     };
   },
   mounted() {
@@ -344,6 +357,25 @@ export default {
           this.channelInfo.tradeApiTypeName = d.apiTypeName;
         }
       });
+      if (this.channelInfo.tradeApiTypeName == "xQuant") {
+        this.showLabel = true;
+        this.assetLabel = "资产账户";
+        this.positionLabel = "内证";
+        this.foundationLabel = "基金账户";
+        this.traderLabel = "交易员编码";
+      } else if (this.channelInfo.tradeApiTypeName == "UFX") {
+        this.showLabel = true;
+        this.assetLabel = "资产单元";
+        this.positionLabel = "投资组合";
+        this.foundationLabel = "基金账户";
+        this.traderLabel = "股东帐号";
+      } else {
+        this.showLabel = false;
+        this.assetLabel = "资产账户";
+        this.positionLabel = "组合帐户";
+        this.foundationLabel = "基金账户";
+        this.traderLabel = "交易员编码";
+      }
     },
     getChannelResponse(res) {
       setTimeout(() => {
@@ -410,11 +442,11 @@ export default {
         return;
       }
       if (!this.channelInfo.assetNo) {
-        this.$Message.error("资产账户不能为空");
+        this.$Message.error(`${this.assetLabel}不能为空`);
         return;
       }
       if (!this.channelInfo.combiNo) {
-        this.$Message.error("持仓账户不能为空");
+        this.$Message.error(`${this.positionLabel}不能为空`);
         return;
       }
       if (isNew) {

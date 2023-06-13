@@ -134,7 +134,7 @@ export default {
   computed: {
     menuitemClasses() {
       // return ["menu-item", this.isCollapsed ? "collapsed-menu" : ""];
-      return ["menu-item", this.isCollapsed ? "" : ""];
+      return ["menu-item", !this.isCollapsed ? "" : ""];
     },
   },
   mounted() {
@@ -171,7 +171,7 @@ export default {
     },
   },
   updated() {
-    this.$router.push({ name: 'Dashboard' });
+    this.$router.push({ name: "Dashboard" });
     // this.$router.push({ name: "UserManage" });
   },
 };

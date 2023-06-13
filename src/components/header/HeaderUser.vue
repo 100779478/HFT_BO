@@ -12,12 +12,12 @@
   <div>
     <Header :style="{ padding: 0 }" class="layout-header-bar">
       <!-- <Icon
-            @click.native="collapsedSider"
-            :class="rotateIcon"
-            :style="{ margin: '0 20px', color: '#86909c' }"
-            type="md-menu"
-            size="20"
-          ></Icon> -->
+        @click.native="collapsedSider"
+        :class="rotateIcon"
+        :style="{ margin: '0 20px', color: '#86909c' }"
+        type="md-menu"
+        size="20"
+      ></Icon> -->
       <Icon
         type="md-refresh"
         size="20"
@@ -124,6 +124,9 @@ export default {
     this.getEnvironmentList();
   },
   methods: {
+    // collapsedSider() {
+    //   this.$refs.side.toggleCollapse();
+    // },
     getEnvironmentList() {
       http.get(`${URL.environment}?name`, (res) => {
         this.environmentList = res.data;

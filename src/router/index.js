@@ -43,19 +43,29 @@ const router = new VueRouter(
                     },
                     // 系统管理
                     {
-                        path: '/home/manage/environment-manage',
+                        path: '/home/sys-manage/environment-manage',
                         name: 'EnvironmentManage',
                         component: () => import('@/pages/manage/EnvironmentManage')
                     },
                     {
-                        path: '/home/manage/real-account-manage',
+                        path: '/home/sys-manage/real-account-manage',
                         name: 'RealAccountManage',
                         component: () => import('@/pages/systemManage/RealAccount')
                     },
                     {
-                        path: '/home/manage/sub-account-manage',
+                        path: '/home/sys-manage/sub-account-manage',
                         name: 'SubAccountManage',
                         component: () => import('@/pages/systemManage/SubAccount')
+                    },
+                    {
+                        path: '/home/sys-manage/user-strategy-manage',
+                        name: 'UserStrategyManage',
+                        component: () => import('@/pages/systemManage/UserStrategyManage')
+                    },
+                    {
+                        path: '/test',
+                        name: 'TradeCalendarManage',
+                        redirect: 'NotFound',
                     },
                 ]
             },

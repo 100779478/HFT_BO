@@ -2,8 +2,19 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+.modal {
+  height: 650px;
+  overflow: scroll;
+  overflow-x: unset;
+  margin-right: -60px;
+  padding-right: 30px;
+}
 .ivu-modal-body {
   margin: 0 50px;
+  // margin: 0 10px 0 50px;
+  // height: 650px;
+  // overflow: scroll;
+  // overflow-x: unset;
 }
 .page-bottom {
   float: right;
@@ -45,67 +56,68 @@
           :mask-closable="false"
           :title="isNew ? '新增角色' : '编辑角色'"
         >
-          <Form
-            ref="ruleForm"
-            :model="roleInfo"
-            :label-width="80"
-            label-colon
-            autocomplete="off"
-            style="margin-left: -5px; font-weight: bold"
-          >
-            <Col :span="10">
-              <FormItem label="角色名称" prop="name">
-                <Input
-                  v-model="roleInfo.name"
-                  placeholder="请输入角色名称"
-                  :maxlength="16"
-                  show-message="false"
-                ></Input>
-              </FormItem>
-            </Col>
-          </Form>
-          <!-- 权限复选框 -->
-          <div
-            style="
-              border-bottom: 1px solid #e9e9e9;
-              padding-bottom: 6px;
-              margin-bottom: 6px;
-            "
-            v-for="(item, index) in permissionList"
-            :key="index"
-          >
-            <span class="title-font">
-              {{ item[0].menuName }}
-            </span>
-            <!-- :value="checkAll" -->
-            <Checkbox
-              :indeterminate="indeterminate[item[0].menuName]"
-              :value="checkAll[item[0].menuName]"
-              @click.prevent.native="handleCheckAll(item[0].menuName)"
-              style="position: absolute; right: 60px"
-              >全选</Checkbox
+          <div class="modal">
+            <Form
+              ref="ruleForm"
+              :model="roleInfo"
+              :label-width="80"
+              label-colon
+              autocomplete="off"
+              style="margin-left: -5px; font-weight: bold"
             >
-            <Row type="flex">
-              <Col span="8" v-for="itemChild in item" :key="itemChild.id">
-                <CheckboxGroup
-                  v-model="checkAllGroup"
-                  @on-change="
-                    checkAllGroupChange(
-                      $event,
-                      itemChild.menuName,
-                      itemChild.description
-                    )
-                  "
-                >
-                  <Checkbox
-                    :label="itemChild.description"
-                    style="margin: 5px"
-                  ></Checkbox>
-                </CheckboxGroup>
+              <Col :span="10">
+                <FormItem label="角色名称" prop="name">
+                  <Input
+                    v-model="roleInfo.name"
+                    placeholder="请输入角色名称"
+                    :maxlength="16"
+                    show-message="false"
+                  ></Input>
+                </FormItem>
               </Col>
-            </Row>
+            </Form>
+            <!-- 权限复选框 -->
+            <div
+              style="
+                border-bottom: 1px solid #e9e9e9;
+                padding-bottom: 6px;
+                margin-bottom: 6px;
+              "
+              v-for="(item, index) in permissionList"
+              :key="index"
+            >
+              <span class="title-font">
+                {{ item[0].menuName }}
+              </span>
+              <!-- :value="checkAll" -->
+              <Checkbox
+                :indeterminate="indeterminate[item[0].menuName]"
+                :value="checkAll[item[0].menuName]"
+                @click.prevent.native="handleCheckAll(item[0].menuName)"
+                style="float: right"
+                >全选</Checkbox
+              >
+              <Row type="flex">
+                <Col span="8" v-for="itemChild in item" :key="itemChild.id">
+                  <CheckboxGroup
+                    v-model="checkAllGroup"
+                    @on-change="
+                      checkAllGroupChange(
+                        $event,
+                        itemChild.menuName,
+                        itemChild.description
+                      )
+                    "
+                  >
+                    <Checkbox
+                      :label="itemChild.description"
+                      style="margin: 5px"
+                    ></Checkbox>
+                  </CheckboxGroup>
+                </Col>
+              </Row>
+            </div>
           </div>
-
           <div slot="footer">
             <Button type="text" @click="cancel">取消</Button>
             <Button type="primary" @click="ok(isNew)">确定</Button>
@@ -181,9 +193,9 @@ export default {
       {
         title: "角色名称",
         key: "name",
-        minWidth: 100,
+        minWidth: 150,
       },
-      { title: "操作", slot: "operator", minWidth: 150 },
+      { title: "操作", slot: "operator", width: 200 },
     ];
     let pagination = {
       total: 0,

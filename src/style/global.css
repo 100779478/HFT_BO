@@ -7,12 +7,15 @@ body,
     font-family: '微软雅黑';
     width: 100%;
 }
+
 /* span{
     cursor: default;
 } */
-/* .ivu-table-overflowX {
-    overflow-x: hidden !important;
-} */
+
+.ivu-table-overflowX {
+    /* overflow-x: hidden !important; */
+    overflow-x: unset;
+}
 
 ::-webkit-scrollbar {
     height: 10px;
@@ -27,5 +30,5 @@ body,
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #7B7B7B;
+    background-color: #8f959b;
 }

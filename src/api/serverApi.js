@@ -52,4 +52,10 @@ export const URL = {
     tradeChannel: '/cus-channel/tradeChannel',
     // 添加、修改、删除客户通道
     customChannel: '/cus-channel',
+    // 分页获取用户策略
+    ruleList: '/rule/list',
+    // 添加、修改、删除用户策略
+    rule: '/rule',
+    // 获取策略类型列表
+    ruleType: '/rule/type',
 }
