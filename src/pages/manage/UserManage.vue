@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 .ivu-table-tip {
   font-size: 26px;
 }
@@ -9,11 +9,16 @@
 .table-content {
   border: 1px solid #e8eaec;
   .table-operate {
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(2, 175, 241);
     margin-right: 6px;
     cursor: pointer;
   }
+}
+.ivu-tooltip {
+  text-overflow: "ellipsis";
+  overflow: hidden;
+  white-space: "nowrap";
 }
 </style>
 <template>
@@ -143,7 +148,7 @@
               transfer
               @on-click="doOperate($event, row, index)"
             >
-              <a style="color: #02aff1; font-size: 12px">
+              <a style="color: #02aff1; font-size: 14px">
                 {{ "更多" }}
                 <Icon type="ios-arrow-down"></Icon>
               </a>
@@ -202,6 +207,10 @@ export default {
             {
               attrs: {
                 content: params.row.roleName,
+                maxWidth: 200,
+              },
+              style: {
+                maxWidth: 200,
               },
             },
             [params.row.roleName]
@@ -242,7 +251,7 @@ export default {
         key: "updateTime",
         minWidth: 150,
       },
-      { title: "操作", slot: "operator", width: 150 },
+      { title: "操作", slot: "operator", width: 180 },
     ];
     let pagination = {
       total: 0,

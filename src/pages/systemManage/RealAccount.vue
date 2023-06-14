@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 .ivu-table-tip {
   font-size: 26px;
 }
@@ -9,7 +9,7 @@
 .table-content {
   border: 1px solid #e8eaec;
   .table-operate {
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(2, 175, 241);
     margin-right: 6px;
     cursor: pointer;
@@ -171,7 +171,13 @@
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
-          <Button
+          <div @click="() => modalChannel('modify', row)" class="table-operate">
+            编辑
+          </div>
+          <div @click="() => deleteChannel(row)" class="table-operate">
+            删除
+          </div>
+          <!-- <Button
             type="info"
             size="small"
             @click="() => modalChannel('modify', row)"
@@ -180,7 +186,7 @@
           &nbsp;
           <Button type="error" size="small" @click="() => deleteChannel(row)"
             >删除</Button
-          >
+          > -->
         </div>
       </template>
     </Table>

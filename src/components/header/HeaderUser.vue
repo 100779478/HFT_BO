@@ -141,6 +141,9 @@ export default {
       });
     },
     postEnvironmentList(val) {
+      if (!val) {
+        return;
+      }
       http.post(`${URL.setEnvironment}/${val}`, {}, (res) => {
         if (res.code == "0") {
           this.$Message.success("环境设置成功");
@@ -171,7 +174,7 @@ export default {
     },
     modificationPasswordSuccess() {
       this.show = false;
-      this.$Message.success("修改成功,请重新登录");
+      this.$Message.success("修改成功");
     },
     ok() {
       if (this.newPassword == "" && this.oldPassword == "") {

@@ -29,7 +29,7 @@
 .table-content {
   border: 1px solid #e8eaec;
   .table-operate {
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(2, 175, 241);
     margin-right: 6px;
     cursor: pointer;
@@ -151,7 +151,13 @@
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
-          <Button
+          <div @click="() => modalUser('modify', row)" class="table-operate">
+            编辑
+          </div>
+          <div @click="() => deleteEnvironment(row)" class="table-operate">
+            删除
+          </div>
+          <!-- <Button
             type="info"
             size="small"
             @click="() => modalUser('modify', row)"
@@ -163,7 +169,7 @@
             size="small"
             @click="() => deleteEnvironment(row)"
             >删除</Button
-          >
+          > -->
         </div>
       </template>
     </Table>

@@ -95,7 +95,6 @@ export function defaultErrorHandler(error) {
         Message.error(errorResponse.data.errorMessage);
         return;
     }
-
     Message.error(errorMessage);
 }
 

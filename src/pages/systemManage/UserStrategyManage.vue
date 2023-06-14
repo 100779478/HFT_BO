@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 .ivu-table-tip {
   font-size: 26px;
 }
@@ -9,7 +9,7 @@
 .table-content {
   border: 1px solid #e8eaec;
   .table-operate {
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(2, 175, 241);
     margin-right: 6px;
     cursor: pointer;
@@ -43,7 +43,7 @@
             label-colon
             :rules="userValidRules"
             autocomplete="off"
-          >
+          > 
             <Col :span="18">
               <FormItem label="策略ID" prop="ruleId">
                 <Input

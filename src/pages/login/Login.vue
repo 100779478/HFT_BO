@@ -102,7 +102,10 @@ export default {
       this.$router.push({ name: "Home" });
     },
     loginError(error) {
-      Message.error(error.message || error.data.errorMessage);
+      console.log(error);
+      // Message.error(
+      //   error.message || error.errorMessage || error.data.errorMessage
+      // );
       this.closeLoading();
       defaultErrorHandler(error);
     },
