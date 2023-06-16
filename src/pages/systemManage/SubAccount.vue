@@ -236,7 +236,7 @@ export default {
       },
       {
         title: "用户名称",
-        key: "customName",
+        key: "customerName",
         minWidth: 100,
       },
       {

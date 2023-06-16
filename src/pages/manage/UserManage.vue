@@ -16,9 +16,13 @@
   }
 }
 .ivu-tooltip {
-  text-overflow: "ellipsis";
-  overflow: hidden;
-  white-space: "nowrap";
+  .ivu-tooltip-ref {
+    text-overflow: "ellipsis";
+    overflow: hidden;
+    width: 200px;
+    white-space: "nowrap";
+    color: red !important;
+  }
 }
 </style>
 <template>
@@ -210,10 +214,15 @@ export default {
                 maxWidth: 200,
               },
               style: {
-                maxWidth: 200,
+                whiteSpace: "nowrap",
               },
             },
-            [params.row.roleName]
+            [
+              // 省略号展示
+              params.row.roleName.length > 30
+                ? params.row.roleName.slice(0, 15) + "..."
+                : params.row.roleName,
+            ]
           );
           return roleName;
         },
