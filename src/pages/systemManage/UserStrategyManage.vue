@@ -43,7 +43,7 @@
             label-colon
             :rules="userValidRules"
             autocomplete="off"
-          > 
+          >
             <Col :span="18">
               <FormItem label="策略ID" prop="ruleId">
                 <Input
@@ -337,13 +337,8 @@ export default {
     },
     // 获取用户代码
     getUserList() {
-      let params = {
-        pageSize: 500,
-        pageNumber: 1,
-        username: "",
-      };
-      http.post(URL.user, params, (res) => {
-        this.userList = res.data.dataList;
+      http.get(URL.userList, (res) => {
+        this.userList = res.data;
       });
     },
     // 获取策略类型

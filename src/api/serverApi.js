@@ -16,8 +16,10 @@ export const URL = {
     menus: '/user/menus',
     // 获取当前用户信息
     current: '/user/current',
-    // 获取用户列表
+    // 获取分页用户列表
     user: '/user',
+    // GET获取用户列表,
+    userList: '/user/list',
     // 获取所有角色列表
     role: '/role',
     // 查询环境列表

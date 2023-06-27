@@ -349,13 +349,8 @@ export default {
       });
     },
     getUserData() {
-      let params = {
-        pageSize: 500,
-        pageNumber: 1,
-        username: "",
-      };
-      http.post(URL.user, params, (res) => {
-        this.userList = res.data.dataList;
+      http.get(URL.userList, (res) => {
+        this.userList = res.data;
       });
     },
     getTradeChannelApi(e) {
