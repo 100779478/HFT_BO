@@ -16,7 +16,7 @@
               <Input
                 type="text"
                 v-model="formInline.username"
-                placeholder="用户名"
+                placeholder="用户代码"
                 style="width: 300px"
               >
                 <Icon type="md-person" slot="prepend" style="fontsize: 20px" />
@@ -67,7 +67,7 @@ export default {
       },
       ruleInline: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
+          { required: true, message: "请输入用户代码", trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
@@ -115,6 +115,9 @@ export default {
     openLoading() {
       this.loading = true;
     },
+  },
+  setup(props, context) {
+    console.log(props, context, 2222);
   },
 };
 </script>

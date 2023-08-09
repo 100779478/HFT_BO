@@ -272,8 +272,8 @@ export default {
         channelId: [{ required: true, message: "请输入通道ID" }],
         apiType: [{ required: true, message: "请选择外部接口类型" }],
         terminalType: [{ required: true, message: "请选择通道类型" }],
-        // password: [{ required: true, message: "请输入密码" }],
-        // userId: [{ required: true, message: "请选择用户角色" }],
+        userId: [{ required: true, message: "请输入交易账号" }],
+        password: [{ required: true, message: "请输入密码" }],
         // active: [{ required: false, message: "请选择状态" }],
       },
       channelInfo: {
