@@ -1,20 +1,26 @@
 <template>
   <div>
     <Breadcrumb style="padding: '20px 0 0 20px'">
-      <BreadcrumbItem to="/">Home</BreadcrumbItem>
-      <!-- <BreadcrumbItem to="/home/user-manage">Components</BreadcrumbItem> -->
-      <BreadcrumbItem :to="{ name: 'RoleManage' }">Components</BreadcrumbItem>
-      <BreadcrumbItem to="/home/role-manage">Breadcrumb</BreadcrumbItem>
+      <BreadcrumbItem>{{ this.routeList.meta.title }}</BreadcrumbItem>
     </Breadcrumb>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      routeList: [],
+    };
   },
-  mounted() {
-    
+  mounted() {},
+  watch: {
+    // 监听 $route 对象的变化
+    $route: {
+      handler(to, from) {
+        this.routeList = to;
+      },
+      immediate: true,
+    },
   },
 };
 </script>

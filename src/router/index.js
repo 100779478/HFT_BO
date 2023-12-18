@@ -42,7 +42,7 @@ const router = new VueRouter(
                         name: 'UserManage',
                         component: () => import('@/pages/manage/UserManage'),
                         meta: {
-                            title: '用户管理'
+                            title: '用户角色管理/用户管理'
                         },
                     },
                     {
@@ -50,7 +50,7 @@ const router = new VueRouter(
                         name: 'RoleManage',
                         component: () => import('@/pages/manage/RoleManage'),
                         meta: {
-                            title: '角色管理'
+                            title: '用户角色管理/角色管理'
                         },
                     },
                     // 系统管理
@@ -59,7 +59,7 @@ const router = new VueRouter(
                         name: 'EnvironmentManage',
                         component: () => import('@/pages/manage/EnvironmentManage'),
                         meta: {
-                            title: '环境管理'
+                            title: '系统管理/环境管理'
                         },
                     },
                     {
@@ -67,7 +67,7 @@ const router = new VueRouter(
                         name: 'RealAccountManage',
                         component: () => import('@/pages/systemManage/RealAccount'),
                         meta: {
-                            title: '实体账户'
+                            title: '系统管理/实体账户'
                         },
                     },
                     {
@@ -75,7 +75,7 @@ const router = new VueRouter(
                         name: 'SubAccountManage',
                         component: () => import('@/pages/systemManage/SubAccount'),
                         meta: {
-                            title: '分帐户管理'
+                            title: '系统管理/分帐户管理'
                         },
                     },
                     {
@@ -107,7 +107,7 @@ const router = new VueRouter(
             // },
 
         ],
-        mode: 'history',
+        mode: 'hash',
     }
 )
 router.beforeEach((to, from, next) => {

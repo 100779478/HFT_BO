@@ -44,9 +44,7 @@
               >
             </FormItem>
           </Form>
-          <span class="copy-font"
-            >Copyright ©2023深圳市丽海弘金科技有限公司</span
-          >
+          <span class="copy-font">Copyright ©2023深圳市丽海弘金科技有限公司</span>
         </div>
       </div>
     </div>

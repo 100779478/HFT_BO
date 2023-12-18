@@ -170,15 +170,16 @@ export default {
     getEnvironmentData(value) {
       let id = value || "";
       http.get(`${URL.environment}?name=${id}`, (res) => {
+        this.$emit("child-event", res.data);
         setTimeout(() => {
           this.loading = false;
         }, 200);
         this.tableData = res.data || [];
       });
       // 传值给header组件
-      http.get(`${URL.environment}?name`, (res) => {
-        this.$emit("child-event", res.data);
-      });
+      // http.get(`${URL.environment}?name`, (res) => {
+      //   this.$emit("child-event", res.data);
+      // });
     },
     // 环境名称模糊查询r
     handleSearch(e) {

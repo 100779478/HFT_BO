@@ -125,7 +125,7 @@ export default {
   },
   watch: {
     envList: function (params) {
-      this.environmentList = this.envList;
+      this.environmentList = this.envList || [];
     },
   },
   methods: {

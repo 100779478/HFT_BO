@@ -1,9 +1,10 @@
 import axios from 'axios'
-import { getToken } from './token'
-import { Message } from 'view-design'
-import { requestContextPath, URL } from '../api/serverApi';
+import {getToken} from './token'
+import {Message} from 'view-design'
+import {requestContextPath, URL} from '../api/serverApi';
+
 const axiosInstance = axios.create({
-    timeout: 1000,
+    // timeout: 1000,
     baseURL: requestContextPath
 });
 
@@ -16,9 +17,9 @@ export const http = {
      * @returns 请求响应
      */
     get: (url,
-        thenHandler = (response) => {
-        },
-        errorHandler = defaultErrorHandler) => {
+          thenHandler = (response) => {
+          },
+          errorHandler = defaultErrorHandler) => {
         return axiosInstance.get(url)
             .then(thenHandler)
             .catch(errorHandler)
@@ -33,9 +34,9 @@ export const http = {
      * @returns 请求响应
      */
     post: (url, data,
-        thenHandler = (response) => {
-        },
-        errorHandler = defaultErrorHandler) => {
+           thenHandler = (response) => {
+           },
+           errorHandler = defaultErrorHandler) => {
         return axiosInstance.post(url, data)
             .then(thenHandler)
             .catch(errorHandler)
@@ -50,9 +51,9 @@ export const http = {
      * @returns 请求响应
      */
     put: (url, data,
-        thenHandler = (response) => {
-        },
-        errorHandler = defaultErrorHandler) => {
+          thenHandler = (response) => {
+          },
+          errorHandler = defaultErrorHandler) => {
         return axiosInstance.put(url, data)
             .then(thenHandler)
             .catch(errorHandler)
@@ -67,9 +68,9 @@ export const http = {
      * @returns 请求响应
      */
     delete: (url, data,
-        thenHandler = (response) => {
-        },
-        errorHandler = defaultErrorHandler) => {
+             thenHandler = (response) => {
+             },
+             errorHandler = defaultErrorHandler) => {
         return axiosInstance.delete(url, data)
             .then(thenHandler)
             .catch(errorHandler)
