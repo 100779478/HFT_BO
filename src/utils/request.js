@@ -5,7 +5,7 @@ import {requestContextPath, URL} from '../api/serverApi';
 
 const axiosInstance = axios.create({
     // timeout: 1000,
-    baseURL: requestContextPath
+    baseURL: requestContextPath,
 });
 
 export const http = {
@@ -25,6 +25,14 @@ export const http = {
             .catch(errorHandler)
     },
 
+    getImg: (url,
+             thenHandler = (response) => {
+             },
+             errorHandler = defaultErrorHandler) => {
+        return axiosInstance.get(url, {responseType: 'blob'})
+            .then(thenHandler)
+            .catch(errorHandler)
+    },
     /**
      * HTTP POST 请求
      * @param {string} url - 请求地址
