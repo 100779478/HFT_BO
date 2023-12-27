@@ -7,61 +7,58 @@
             <div class="head-font">HFT 后台管理系统</div>
           </div>
           <Form
-              ref="formInline"
-              :model="formInline"
-              :rules="ruleInline"
-              :label-width="10"
+            ref="formInline"
+            :model="formInline"
+            :rules="ruleInline"
+            :label-width="10"
           >
             <FormItem prop="username" style="margin-bottom: 30px">
               <Input
-                  type="text"
-                  v-model="formInline.username"
-                  placeholder="用户代码"
-                  style="width: 300px"
+                type="text"
+                v-model="formInline.username"
+                placeholder="用户代码"
+                style="width: 300px"
               >
-                <Icon type="md-person" slot="prepend" style="fontsize: 20px"/>
+                <Icon type="md-person" slot="prepend" style="fontsize: 20px" />
               </Input>
             </FormItem>
             <FormItem prop="password" style="margin-bottom: 30px">
               <Input
-                  type="password"
-                  password
-                  v-model="formInline.password"
-                  placeholder="密码"
-                  style="width: 300px"
-                  @on-keydown.enter="handleSubmit('formInline')"
+                type="password"
+                password
+                v-model="formInline.password"
+                placeholder="密码"
+                style="width: 300px"
+                @on-keydown.enter="handleSubmit('formInline')"
               >
-                <Icon type="md-lock" slot="prepend" style="fontsize: 20px"/>
+                <Icon type="md-lock" slot="prepend" style="fontsize: 20px" />
               </Input>
             </FormItem>
             <FormItem prop="verifyCode" style="margin-bottom: 40px">
-              <div style="display: flex;height: 30px">
+              <div style="display: flex; height: 30px">
                 <Input
-                    type="text"
-                    v-model="formInline.verifyCode"
-                    placeholder="验证码"
-                    style="width: 150px"
-                    @on-keydown.enter="handleSubmit('formInline')"
+                  type="text"
+                  v-model="formInline.verifyCode"
+                  placeholder="验证码"
+                  style="width: 150px"
+                  @on-keydown.enter="handleSubmit('formInline')"
                 >
-                  <Icon type="md-mail" slot="prepend" style="fontsize: 20px"/>
+                  <Icon type="md-mail" slot="prepend" style="fontsize: 20px" />
                 </Input>
-                <div
-                    class="verifyContent"
-                    @click="handleGetVerifyImg()">
-                  <img :src="imgUrl" alt="正在加载" style="height: 35px">
+                <div class="verifyContent" @click="handleGetVerifyImg()">
+                  <img :src="imgUrl" alt="正在加载" style="height: 35px" />
                   <span>看不清 换一张</span>
                 </div>
               </div>
             </FormItem>
             <FormItem>
               <Button
-                  type="info"
-                  @click="handleSubmit('formInline')"
-                  class="btn"
-                  :loading="loading"
-              >登录
-              </Button
-              >
+                type="info"
+                @click="handleSubmit('formInline')"
+                class="btn"
+                :loading="loading"
+                >登录
+              </Button>
             </FormItem>
           </Form>
         </div>
@@ -70,27 +67,27 @@
   </div>
 </template>
 <script>
-import {http, defaultErrorHandler} from "@/utils/request";
-import {URL} from "@/api/serverApi";
-import {putToken} from "@/utils/token";
-import {Message} from "view-design";
+import { http, defaultErrorHandler } from "@/utils/request";
+import { URL } from "@/api/serverApi";
+import { putToken } from "@/utils/token";
+import { Message } from "view-design";
 
 export default {
   data() {
     return {
-      imgUrl: '',
+      imgUrl: "",
       loading: false,
       formInline: {
         username: "",
         password: "",
-        verifyCode: ""
+        verifyCode: "",
       },
       ruleInline: {
         username: [
-          {required: true, message: "请输入用户代码", trigger: "blur"},
+          { required: true, message: "请输入用户代码", trigger: "blur" },
         ],
         password: [
-          {required: true, message: "请输入密码", trigger: "blur"},
+          { required: true, message: "请输入密码", trigger: "blur" },
           {
             type: "string",
             min: 6,
@@ -98,9 +95,7 @@ export default {
             trigger: "blur",
           },
         ],
-        verify: [
-          {required: true, message: "请输入验证码", trigger: "blur"}
-        ]
+        verify: [{ required: true, message: "请输入验证码", trigger: "blur" }],
       },
     };
   },
@@ -112,7 +107,7 @@ export default {
           let loginParam = {
             username: this.formInline.username,
             password: this.$md5(this.formInline.password),
-            verifyCode: this.formInline.verifyCode
+            verifyCode: this.formInline.verifyCode,
           };
           http.post(URL.login, loginParam, this.login, this.loginError);
         }
@@ -123,7 +118,7 @@ export default {
       let token = response.data.token;
       putToken(token);
       Message.success("登录成功！");
-      this.$router.push({name: "Home"});
+      this.$router.push({ name: "Home" });
     },
     loginError(error) {
       console.log(error);
@@ -132,7 +127,7 @@ export default {
       // );
       this.closeLoading();
       defaultErrorHandler(error);
-      this.handleGetVerifyImg()
+      this.handleGetVerifyImg();
     },
     closeLoading() {
       this.loading = false;
@@ -141,18 +136,22 @@ export default {
       this.loading = true;
     },
     handleGetVerifyImg() {
-      http.getImg(URL.verifyCode, () => {
-      }, (res) => {
-        let blob = new Blob([res], {type: 'image/png'})
-        this.imgUrl = window.URL.createObjectURL(blob)
-      });
+      http.getImg(
+        URL.verifyCode,
+        () => {},
+        (res) => {
+          console.log(res, 12222);
+          let blob = new Blob([res], { type: "image/png" });
+          this.imgUrl = window.URL.createObjectURL(blob);
+        }
+      );
     },
   },
   // setup(props, context) {
   //   console.log(props, context, 2222);
   // },
   mounted() {
-    this.handleGetVerifyImg()
+    this.handleGetVerifyImg();
   },
   // beforeDestroy() {
   //   if (this.imgUrl) {
@@ -218,7 +217,7 @@ export default {
   text-align: center;
   margin-left: 20px;
   color: #09357e;
-  cursor: pointer
+  cursor: pointer;
 }
 
 .copy-font {

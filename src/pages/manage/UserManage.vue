@@ -33,19 +33,14 @@
   <div>
     <Row style="margin: 10px">
       <Col span="8">
-        <Button type="info" @click="modalUser('new')"
-        >
-          <Icon type="md-add"/>
-          新增用户
-        </Button
-        >
-        &nbsp;
-        <Button type="success" @click="refresh()"
-        >
+<!--        <Button type="info" @click="modalUser('new')">-->
+<!--          <Icon type="md-add"/>-->
+<!--          新增用户-->
+<!--        </Button>-->
+        <Button type="success" @click="refresh()">
           <Icon type="md-refresh"/>
           刷新
-        </Button
-        >
+        </Button>
         <Modal
             v-model="showAddModal"
             draggable
@@ -149,7 +144,7 @@
         ref="table"
         :loading="loading"
     >
-      <template slot="operator" slot-scope="{ row, index }">
+      <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -157,25 +152,25 @@
           <div @click="() => changeUserStatus(row)" class="table-operate">
             {{ !row.active ? "启用" : "禁用" }}
           </div>
-          <div class="table-operate">
-            <Dropdown
-                trigger="hover"
-                transfer
-                @on-click="doOperate($event, row, index)"
-            >
-              <a style="color: #02aff1; font-size: 14px">
-                {{ "更多" }}
-                <Icon type="ios-arrow-down"></Icon>
-              </a>
-              <DropdownMenu slot="list">
-                <DropdownItem name="resetPassword">重置密码</DropdownItem>
-                <DropdownItem name="dele" style="color: #ed4014"
-                >删除用户
-                </DropdownItem
-                >
-              </DropdownMenu>
-            </Dropdown>
-          </div>
+<!--          <div class="table-operate">-->
+<!--            <Dropdown-->
+<!--                trigger="hover"-->
+<!--                transfer-->
+<!--                @on-click="doOperate($event, row, index)"-->
+<!--            >-->
+<!--              <a style="color: #02aff1; font-size: 14px">-->
+<!--                {{ "更多" }}-->
+<!--                <Icon type="ios-arrow-down"></Icon>-->
+<!--              </a>-->
+<!--              <DropdownMenu slot="list">-->
+<!--                <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
+<!--                <DropdownItem name="dele" style="color: #ed4014"-->
+<!--                >删除用户-->
+<!--                </DropdownItem-->
+<!--                >-->
+<!--              </DropdownMenu>-->
+<!--            </Dropdown>-->
+<!--          </div>-->
         </div>
       </template>
     </Table>

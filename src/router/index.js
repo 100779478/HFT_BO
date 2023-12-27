@@ -87,6 +87,14 @@ const router = new VueRouter(
                         },
                     },
                     {
+                        path: '/home/sys-monitor/channel-status',
+                        name: 'ChannelStatusManage',
+                        component: () => import('@/pages/systemMonitor/ChannelStatusManage'),
+                        meta: {
+                            title: '用户策略管理'
+                        },
+                    },
+                    {
                         path: '/test',
                         name: 'TradeCalendarManage',
                         redirect: 'NotFound',
