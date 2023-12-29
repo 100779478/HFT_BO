@@ -47,7 +47,7 @@
 }
 
 .ivu-menu-light.ivu-menu-vertical
-.ivu-menu-item-active:not(.ivu-menu-submenu):after {
+  .ivu-menu-item-active:not(.ivu-menu-submenu):after {
   display: none;
 }
 
@@ -58,6 +58,10 @@ a.ivu-menu-item {
 .menu-item span {
   text-overflow: unset;
   overflow: unset;
+}
+.ivu-menu {
+  padding: 2px;
+  margin: -1px;
 }
 </style>
 <template>
@@ -89,29 +93,29 @@ a.ivu-menu-item {
     </Menu> -->
     <!-- 手风琴模式 -->
     <Menu
-        :class="menuitemClasses"
-        theme="primary"
-        width="auto"
-        accordion
-        active-name="Dashboard"
+      :class="menuitemClasses"
+      theme="primary"
+      width="auto"
+      accordion
+      active-name="Dashboard"
     >
       <MenuItem name="Dashboard" :to="{ name: 'Dashboard' }">
-        <Icon type="md-home"/>
+        <Icon type="md-home" />
         首页
       </MenuItem>
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
           <template slot="title">
-            <Icon :type="item.icon"/>
+            <Icon :type="item.icon" />
             <span>{{ item.title }}</span>
           </template>
           <template v-for="itemChild in item.children">
             <MenuItem
-                :name="itemChild.title"
-                :to="{ name: itemChild.path }"
-                :key="itemChild.title"
+              :name="itemChild.title"
+              :to="{ name: itemChild.path }"
+              :key="itemChild.title"
             >
-              <Icon :type="itemChild.icon"/>
+              <Icon :type="itemChild.icon" />
               {{ itemChild.title }}
             </MenuItem>
           </template>
@@ -121,8 +125,8 @@ a.ivu-menu-item {
   </div>
 </template>
 <script>
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
+import { http } from "@/utils/request";
+import { URL } from "@/api/serverApi";
 
 export default {
   data() {
@@ -171,7 +175,7 @@ export default {
     },
   },
   updated() {
-    this.$router.push({name: "Dashboard"});
+    this.$router.push({ name: "Dashboard" });
     // this.$router.push({ name: "UserManage" });
   },
 };

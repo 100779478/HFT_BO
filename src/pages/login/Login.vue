@@ -136,15 +136,18 @@ export default {
       this.loading = true;
     },
     handleGetVerifyImg() {
-      http.getImg(
+      http.getBlob(
         URL.verifyCode,
-        () => {},
         (res) => {
-          console.log(res, 12222);
           let blob = new Blob([res], { type: "image/png" });
           this.imgUrl = window.URL.createObjectURL(blob);
         }
       );
+    },
+    handleGetDic() {
+      http.get(URL.dictionaryList, (res) => {
+        this.$store.commit("dictionaryList", res.data);
+      });
     },
   },
   // setup(props, context) {
@@ -152,6 +155,7 @@ export default {
   // },
   mounted() {
     this.handleGetVerifyImg();
+    this.handleGetDic();
   },
   // beforeDestroy() {
   //   if (this.imgUrl) {

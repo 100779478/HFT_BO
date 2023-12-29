@@ -10,6 +10,8 @@ export const requestContextPath =
   (env === "development" ? devUrl : location.origin) + "/hft-bos";
 console.log("current env :", env, requestContextPath);
 export const URL = {
+  // 数据字典
+  dictionaryList: "/config/static-enums",
   // 页面配置
   template: "/template",
   // 用户登录
@@ -52,14 +54,12 @@ export const URL = {
   channelList: "/channel/list",
   // 获取外部接口类型
   apiType: "/channel/apiType",
-  // 获取指定外部接口类型下的通道类型
-  inApiType: "/channel/inApiType",
   // 获取通道类型
   channelType: "/channel/channelType",
   // 分页获取客户通道数据
   channelTrade: "/cus-channel/list",
   // 获取交易通道
-  tradeChannel: "/cus-channel/tradeChannel",
+  tradeChannel: "/channel/current",
   // 添加、修改、删除客户通道
   customChannel: "/cus-channel",
   // 分页获取用户策略
@@ -70,4 +70,16 @@ export const URL = {
   ruleType: "/rule/type",
   // 获取连接状态
   channelStatus: "/channel-status",
+  // 获取订单列表
+  orders: "/order",
+  // 导出订单
+  ordersExport: "/order/export",
+  // 获取订单列表
+  deals: "/deal",
+  // 导出订单
+  dealsExport: "/deal/export",
+  // 获取订单列表
+  position: "/position",
+  // 导出订单
+  positionExport: "/position/export",
 };

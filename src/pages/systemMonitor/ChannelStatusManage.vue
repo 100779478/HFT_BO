@@ -35,6 +35,7 @@
 <script>
 import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
+import { getApiType, getChannelConnectStatus } from "@/common/common";
 export default {
   data() {
     let columns1 = [
@@ -52,6 +53,10 @@ export default {
         title: "接口类型",
         key: "apiType",
         minWidth: 100,
+        render: (h, { row }) => {
+          const result = getApiType(row.apiType);
+          return h("span", result.description);
+        },
       },
       // {
       //   title: "用途类型",
@@ -67,6 +72,26 @@ export default {
         title: "交易员运行时状态",
         key: "traderRunType",
         minWidth: 100,
+        render: (h, { row }) => {
+          const result = getChannelConnectStatus(row.traderRunType);
+          // 定义一个映射对象，将 code 映射到对应的颜色
+          const codeToColor = {
+            0: "#ff8000",
+            1: "#ff8000	",
+            2: "#19be6b",
+            3: "#ff0000",
+            9: "#ff0000",
+          };
+          const color = codeToColor[result.code] || "#ff0000"; // 默认颜色
+          const iconStatus = h("Icon", {
+            props: {
+              type: "ios-radio-button-on",
+              color: color,
+            },
+          });
+
+          return h("span", [iconStatus, result.description]);
+        },
       },
       // {
       //   title: "交易员当前连接是否活跃",

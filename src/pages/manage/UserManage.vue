@@ -33,68 +33,68 @@
   <div>
     <Row style="margin: 10px">
       <Col span="8">
-<!--        <Button type="info" @click="modalUser('new')">-->
-<!--          <Icon type="md-add"/>-->
-<!--          新增用户-->
-<!--        </Button>-->
+        <!--        <Button type="info" @click="modalUser('new')">-->
+        <!--          <Icon type="md-add"/>-->
+        <!--          新增用户-->
+        <!--        </Button>-->
         <Button type="success" @click="refresh()">
-          <Icon type="md-refresh"/>
+          <Icon type="md-refresh" />
           刷新
         </Button>
         <Modal
-            v-model="showAddModal"
-            draggable
-            sticky
-            mask
-            :width="600"
-            :mask-closable="false"
-            :title="isNew ? '新增用户' : '编辑用户'"
+          v-model="showAddModal"
+          draggable
+          sticky
+          mask
+          :width="600"
+          :mask-closable="false"
+          :title="isNew ? '新增用户' : '编辑用户'"
         >
           <Form
-              ref="ruleForm"
-              :model="userInfo"
-              :label-width="210"
-              label-colon
-              :rules="userValidRules"
-              autocomplete="off"
+            ref="ruleForm"
+            :model="userInfo"
+            :label-width="210"
+            label-colon
+            :rules="userValidRules"
+            autocomplete="off"
           >
             <Col :span="18">
               <FormItem label="用户账号" prop="username">
                 <Input
-                    v-model="userInfo.username"
-                    :disabled="!isNew"
-                    placeholder="请输入用户账号"
-                    :maxlength="16"
-                    show-message="false"
+                  v-model="userInfo.username"
+                  :disabled="!isNew"
+                  placeholder="请输入用户账号"
+                  :maxlength="16"
+                  show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="用户名称" prop="customerName">
                 <Input
-                    v-model="userInfo.customerName"
-                    placeholder="请输入用户名称"
-                    autocomplete="off"
-                    :maxlength="32"
+                  v-model="userInfo.customerName"
+                  placeholder="请输入用户名称"
+                  autocomplete="off"
+                  :maxlength="32"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="密码" prop="password" v-show="isNew">
                 <Input
-                    v-model="userInfo.password"
-                    placeholder="请输入密码"
-                    type="password"
-                    autocomplete="new-password"
-                    maxlength="20"
-                    password
+                  v-model="userInfo.password"
+                  placeholder="请输入密码"
+                  type="password"
+                  autocomplete="new-password"
+                  maxlength="20"
+                  password
                 >
                 </Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="状态" prop="active">
-                <i-Switch v-model="userInfo.active" style="margin-top: 5px"/>
+                <i-Switch v-model="userInfo.active" style="margin-top: 5px" />
               </FormItem>
             </Col>
             <Col :span="18">
@@ -102,12 +102,11 @@
                 <!-- 下拉框中v-model的数据格式为['测试角色1','测试角色二',....] -->
                 <Select multiple :max-tag-count="4" v-model="userInfo.roleStr">
                   <Option
-                      v-for="item in userInfo.roles"
-                      :value="item.name"
-                      :key="item.id"
-                  >{{ item.name }}
-                  </Option
-                  >
+                    v-for="item in userInfo.roles"
+                    :value="item.name"
+                    :key="item.id"
+                    >{{ item.name }}
+                  </Option>
                 </Select>
               </FormItem>
             </Col>
@@ -120,29 +119,29 @@
       </Col>
       <Col span="8" offset="8">
         <Input
-            v-model="pagination.username"
-            style="float: right; width: 180px; border-radius: 20px"
-            placeholder="用户名称"
-            @on-keydown.enter="handleSearch"
-            @on-change="handleSearch"
+          v-model="pagination.username"
+          style="float: right; width: 180px; border-radius: 20px"
+          placeholder="用户名称"
+          @on-keydown.enter="handleSearch"
+          @on-change="handleSearch"
         >
           <Icon
-              type="ios-search"
-              slot="suffix"
-              size="19"
-              @click.native="handleSearch"
-              style="cursor: pointer"
+            type="ios-search"
+            slot="suffix"
+            size="19"
+            @click.native="handleSearch"
+            style="cursor: pointer"
           />
         </Input>
       </Col>
     </Row>
     <Table
-        :columns="columns1"
-        :data="tableData"
-        class="table-content"
-        :height="tableHeight"
-        ref="table"
-        :loading="loading"
+      :columns="columns1"
+      :data="tableData"
+      class="table-content"
+      :height="tableHeight"
+      ref="table"
+      :loading="loading"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -152,49 +151,48 @@
           <div @click="() => changeUserStatus(row)" class="table-operate">
             {{ !row.active ? "启用" : "禁用" }}
           </div>
-<!--          <div class="table-operate">-->
-<!--            <Dropdown-->
-<!--                trigger="hover"-->
-<!--                transfer-->
-<!--                @on-click="doOperate($event, row, index)"-->
-<!--            >-->
-<!--              <a style="color: #02aff1; font-size: 14px">-->
-<!--                {{ "更多" }}-->
-<!--                <Icon type="ios-arrow-down"></Icon>-->
-<!--              </a>-->
-<!--              <DropdownMenu slot="list">-->
-<!--                <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
-<!--                <DropdownItem name="dele" style="color: #ed4014"-->
-<!--                >删除用户-->
-<!--                </DropdownItem-->
-<!--                >-->
-<!--              </DropdownMenu>-->
-<!--            </Dropdown>-->
-<!--          </div>-->
+          <!--          <div class="table-operate">-->
+          <!--            <Dropdown-->
+          <!--                trigger="hover"-->
+          <!--                transfer-->
+          <!--                @on-click="doOperate($event, row, index)"-->
+          <!--            >-->
+          <!--              <a style="color: #02aff1; font-size: 14px">-->
+          <!--                {{ "更多" }}-->
+          <!--                <Icon type="ios-arrow-down"></Icon>-->
+          <!--              </a>-->
+          <!--              <DropdownMenu slot="list">-->
+          <!--                <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
+          <!--                <DropdownItem name="dele" style="color: #ed4014"-->
+          <!--                >删除用户-->
+          <!--                </DropdownItem-->
+          <!--                >-->
+          <!--              </DropdownMenu>-->
+          <!--            </Dropdown>-->
+          <!--          </div>-->
         </div>
       </template>
     </Table>
     <template>
       <div class="page-bottom">
         <Page
-            :total="pagination.total"
-            :current="pagination.pageNumber"
-            :page-size="pagination.pageSize"
-            :page-size-opts="[20, 50, 100, 200]"
-            show-sizer
-            show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+          :total="pagination.total"
+          :current="pagination.pageNumber"
+          :page-size="pagination.pageSize"
+          :page-size-opts="[20, 50, 100, 200]"
+          show-sizer
+          show-total
+          @on-page-size-change="handleChangeSize"
+          @on-change="handleChangePage"
         />
       </div>
     </template>
   </div>
 </template>
 <script>
-
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
-import {getUserInfo} from "@/utils/token";
+import { http } from "@/utils/request";
+import { URL } from "@/api/serverApi";
+import { getUserInfo } from "@/utils/token";
 
 export default {
   props: ["userId"],
@@ -218,22 +216,22 @@ export default {
         width: 240,
         render: (h, params) => {
           const roleName = h(
-              "Tooltip",
-              {
-                attrs: {
-                  content: params.row.roleName,
-                  maxWidth: 200,
-                },
-                style: {
-                  whiteSpace: "nowrap",
-                },
+            "Tooltip",
+            {
+              attrs: {
+                content: params.row.roleName,
+                maxWidth: 200,
               },
-              [
-                // 省略号展示
-                params.row.roleName.length > 30
-                    ? params.row.roleName.slice(0, 15) + "..."
-                    : params.row.roleName,
-              ]
+              style: {
+                whiteSpace: "nowrap",
+              },
+            },
+            [
+              // 省略号展示
+              params.row.roleName.length > 30
+                ? params.row.roleName.slice(0, 15) + "..."
+                : params.row.roleName,
+            ]
           );
           return roleName;
         },
@@ -272,8 +270,9 @@ export default {
         minWidth: 150,
       },
       {
-        title: "操作", slot: "operator",
-        width: 180
+        title: "操作",
+        slot: "operator",
+        width: 180,
       },
     ];
     let pagination = {
@@ -286,11 +285,11 @@ export default {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        username: [{required: true, message: "请输入用户账号"}],
-        customerName: [{required: true, message: "请输入用户名称"}],
+        username: [{ required: true, message: "请输入用户账号" }],
+        customerName: [{ required: true, message: "请输入用户名称" }],
         // password: [{ required: true, message: "请输入密码" }],
-        roles: [{required: false, message: "请选择用户角色"}],
-        active: [{required: false, message: "请选择状态"}],
+        roles: [{ required: false, message: "请选择用户角色" }],
+        active: [{ required: false, message: "请选择状态" }],
       },
       userInfo: {
         username: "",
@@ -373,11 +372,11 @@ export default {
           active: true,
           roleStr: "",
         };
-        Object.assign(this.userInfo, info, {roles: this.allRoleList});
+        Object.assign(this.userInfo, info, { roles: this.allRoleList });
       } else {
         this.isNew = false;
         this.showAddModal = true;
-        this.userInfo = {...row, roles: this.allRoleList};
+        this.userInfo = { ...row, roles: this.allRoleList };
         this.userInfo.roleStr = row.roleName.split(",");
       }
     },
@@ -440,9 +439,9 @@ export default {
         http.post(`${URL.user}/${data}/enable`, data, this.handleActiveEnable);
       } else {
         http.post(
-            `${URL.user}/${data}/disable`,
-            data,
-            this.handleActiveDisable
+          `${URL.user}/${data}/disable`,
+          data,
+          this.handleActiveDisable
         );
       }
     },

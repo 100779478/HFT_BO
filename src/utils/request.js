@@ -2,6 +2,7 @@ import axios from "axios";
 import { getToken } from "./token";
 import { Message } from "view-design";
 import { requestContextPath, URL } from "../api/serverApi";
+import router from "@/router/index";
 
 const axiosInstance = axios.create({
   // timeout: 1000,
@@ -24,7 +25,7 @@ export const http = {
     return axiosInstance.get(url).then(thenHandler).catch(errorHandler);
   },
 
-  getImg: (
+  getBlob: (
     url,
     thenHandler = (response) => {},
     errorHandler = defaultErrorHandler
@@ -50,7 +51,17 @@ export const http = {
   ) => {
     return axiosInstance.post(url, data).then(thenHandler).catch(errorHandler);
   },
-
+  postBlob: (
+    url,
+    data,
+    thenHandler = (response) => {},
+    errorHandler = defaultErrorHandler
+  ) => {
+    return axiosInstance
+      .post(url, data, { responseType: "blob" })
+      .then(thenHandler)
+      .catch(errorHandler);
+  },
   /**
    * HTTP PUT 请求
    * @param {string} url - 请求地址
@@ -120,16 +131,17 @@ export function defaultErrorHandler(error) {
  */
 axiosInstance.interceptors.request.use((config) => {
   let isLogin = config.url === URL.login;
-  if (isLogin) {
-    return config;
-  }
-  if (config.url === URL.verifyCode) {
+  if (
+    isLogin ||
+    config.url === URL.verifyCode ||
+    config.url === URL.dictionaryList
+  ) {
     return config;
   }
   const token = getToken();
   if (null == token || undefined == token || "" === token) {
     Message.error("登录过期，请重新登录！");
-    this.$router.push("/login");
+    router.push("/login");
     return config;
   }
   config.headers["Authorization"] = `Bearer ${token}`;
@@ -141,21 +153,48 @@ axiosInstance.interceptors.request.use((config) => {
  */
 axiosInstance.interceptors.response.use(
   (response) => {
-    if (response.status === 200 && response.data.code === "0") {
+    // if (response.status === 200 && response.data.code === "100002") {
+    //   router.push({ name: "Login" });
+    // }
+    // if (response.status === 200 && response.data.code === "110020") {
+    //   Message.error(response.data.errorMessage);
+    //   return response.data;
+    // }
+    const code = response.data.code;
+    if (response.status === 200) {
+      if (code === "100002") {
+        router.push({ name: "Login" });
+      }
+      if (code === "110020" || code === "100001") {
+        Message.error(response.data.errorMessage);
+      }
       return response.data;
     }
+    if (response.status === 403) {
+      router.push({ name: "Login" });
+    }
+    // if (response.status === 200 && response.data.code === "0") {
+    //   return response.data;
+    // }
     throw response.data;
     // throw new Error(response)
   },
   (error) => {
-    let errorResponse = error.response;
+    // let errorResponse = error.response;
+    let errorResponse = error.request;
     let httpStatus;
+    console.log("errorResponse", errorResponse);
     if (undefined == errorResponse || null == errorResponse) {
       httpStatus = 500;
     } else {
       httpStatus = errorResponse.status;
     }
     switch (httpStatus) {
+      case 0:
+      case 403:
+        Message.error("登录信息已过期，请重新登录");
+        router.push({ name: "Login" });
+        break;
       case 503:
       case 500:
       case 502:
