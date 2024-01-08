@@ -161,7 +161,7 @@ export default {
     currentUserInfo() {
       http.get(URL.current, (response) => {
         this.currentUser = response.data;
-        setUserInfo(response.data.userId);
+        setUserInfo(response.data.customerId);
       });
     }
     ,

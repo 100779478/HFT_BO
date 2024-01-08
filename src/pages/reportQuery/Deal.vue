@@ -2,12 +2,15 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+
 .page-bottom {
   float: right;
   margin-top: 20px;
 }
+
 .table-content {
   border: 1px solid #e8eaec;
+
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);
@@ -15,6 +18,7 @@
     cursor: pointer;
   }
 }
+
 .ivu-tooltip {
   .ivu-tooltip-ref {
     text-overflow: "ellipsis";
@@ -24,6 +28,7 @@
     color: red !important;
   }
 }
+
 .mr3 {
   margin-right: 3px;
 }
@@ -42,84 +47,95 @@
         >
       </Col> -->
       <Col
-        span="19"
-        style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
+          span="19"
+          style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
         <Input
-          v-model="searchParams.orderSysId"
-          class="mr3"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="报单编号"
+            v-model="searchParams.orderSysId"
+            class="mr3"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="报单编号"
         >
         </Input>
         <Input
-          class="mr3"
-          v-model="searchParams.tradeId"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="成交编号"
+            class="mr3"
+            v-model="searchParams.tradeId"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="成交编号"
         >
         </Input>
         <Input
-          v-model="searchParams.ruleId"
-          class="mr3"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="策略编号"
+            v-model="searchParams.ruleId"
+            class="mr3"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="策略编号"
+            @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
         >
         </Input>
         <Input
-          v-model="searchParams.instrumentId"
-          class="mr3"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="合约编号"
+            v-model="searchParams.instrumentId"
+            class="mr3"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="合约代码"
         >
         </Input>
-        <DatePicker
-          class="mr3"
-          type="daterange"
-          placement="bottom-end"
-          placeholder="选择日期"
-          style="width: 225px"
-          format="yyyy-MM-dd"
-          v-model="dateRange"
-        ></DatePicker>
-        <TimePicker
-          class="mr3"
-          type="timerange"
-          placement="bottom-end"
-          placeholder="选择时间"
-          style="width: 168px"
-          v-model="timeRange"
-        ></TimePicker>
+        <form autocomplete="off">
+          <DatePicker
+              class="mr3"
+              type="daterange"
+              placement="bottom-end"
+              placeholder="选择日期"
+              style="width: 225px"
+              format="yyyy-MM-dd"
+              v-model="dateRange"
+              :transfer="true"
+          ></DatePicker>
+          <TimePicker
+              class="mr3"
+              type="timerange"
+              placement="bottom-end"
+              placeholder="选择时间"
+              style="width: 168px"
+              v-model="timeRange"
+              :transfer="true"
+          ></TimePicker>
+        </form>
       </Col>
       <Col span="" class="mr3" style="flex-shrink: 0">
         <Button type="info" @click="refresh()" class="mr3"
-          ><Icon type="md-search" /> 查询</Button
+        >
+          <Icon type="md-search"/>
+          查询
+        </Button
         >
         <Button type="success" @click="handleExportOrders()" class="mr3"
-          ><Icon type="md-download" /> 导出</Button
+        >
+          <Icon type="md-download"/>
+          导出
+        </Button
         >
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
     >
     </Table>
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
@@ -127,14 +143,15 @@
 </template>
 <script>
 import moment from "moment";
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
 import {
   time,
   getDirection,
   getOffsetType,
   getHedgeType,
 } from "@/common/common";
+
 export default {
   data() {
     let columns1 = [
@@ -169,7 +186,7 @@ export default {
         minWidth: 150,
       },
       {
-        title: "订单编号",
+        title: "报单编号",
         key: "orderSysId",
         minWidth: 150,
       },
@@ -187,16 +204,16 @@ export default {
         title: "买卖",
         key: "direction",
         minWidth: 150,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getDirection(row.direction);
           const color = {
             0: "#ff0000",
             1: "#19be6b",
           };
           return h(
-            "span",
-            { style: { color: color[result.code], fontWeight: "bold" } },
-            result.description
+              "span",
+              {style: {color: color[result.code], fontWeight: "bold"}},
+              result.description
           );
         },
       },
@@ -204,7 +221,7 @@ export default {
         title: "开平",
         key: "offsetFlag",
         minWidth: 150,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getOffsetType(row.offsetFlag);
           return h("span", result.description);
         },
@@ -213,7 +230,7 @@ export default {
         title: "投机套保标志",
         key: "hedgeFlag",
         minWidth: 150,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
         },
@@ -282,13 +299,16 @@ export default {
     // 获取订单列表
     getDealData() {
       this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-        ? moment(this.dateRange[0]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[0]).format("YYYYMMDD")
+          : null;
       this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-        ? moment(this.dateRange[1]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[1]).format("YYYYMMDD")
+          : null;
       this.searchParams.startTime = this.timeRange[0];
       this.searchParams.endTime = this.timeRange[1];
+      if (this.searchParams.ruleId) {
+        this.searchParams.ruleId = Number(this.searchParams.ruleId)
+      }
       const payload = {
         ...this.pagination,
         ...this.searchParams,
@@ -297,6 +317,7 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 200);
+        this.pagination.total = res.data.total;
         this.tableData = res.data.dataList;
       });
     },
@@ -327,35 +348,38 @@ export default {
     // 导出列表
     handleExportOrders() {
       this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-        ? moment(this.dateRange[0]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[0]).format("YYYYMMDD")
+          : null;
       this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-        ? moment(this.dateRange[1]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[1]).format("YYYYMMDD")
+          : null;
       this.searchParams.startTime = this.timeRange[0];
       this.searchParams.endTime = this.timeRange[1];
+      if (this.searchParams.ruleId) {
+        this.searchParams.ruleId = Number(this.searchParams.ruleId)
+      }
       http.postBlob(
-        URL.dealsExport,
-        this.searchParams,
-        (res) => {
-          // 创建blob
-          // const blob = new Blob([res.data], {
-          //   type: "application/vnd.ems-excel;charset=UTF-8",
-          // });
-          const blob = res;
-          // 创建link标签
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          // 设置链接元素的下载属性，指定文件名
-          const dateObj = time.dateToLocaleObject(new Date());
-          link.download = `成交单_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-          // 将链接元素添加到文档中
-          document.body.appendChild(link);
-          // 触发点击事件以开始下载
-          link.click();
-          // 移除链接元素
-          document.body.removeChild(link);
-        }
+          URL.dealsExport,
+          this.searchParams,
+          (res) => {
+            // 创建blob
+            // const blob = new Blob([res.data], {
+            //   type: "application/vnd.ems-excel;charset=UTF-8",
+            // });
+            const blob = res;
+            // 创建link标签
+            const link = document.createElement("a");
+            link.href = window.URL.createObjectURL(blob);
+            // 设置链接元素的下载属性，指定文件名
+            const dateObj = time.dateToLocaleObject(new Date());
+            link.download = `成交单_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+            // 将链接元素添加到文档中
+            document.body.appendChild(link);
+            // 触发点击事件以开始下载
+            link.click();
+            // 移除链接元素
+            document.body.removeChild(link);
+          }
       );
     },
   },

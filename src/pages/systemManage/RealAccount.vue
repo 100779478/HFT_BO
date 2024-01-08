@@ -88,7 +88,7 @@
                   v-if="isNew"
                 >
                   <Option
-                    v-for="item in terminalType"
+                    v-for="item in channelTrade"
                     :key="item.code"
                     :value="item.code"
                     >{{ item.name }}
@@ -231,7 +231,7 @@ export default {
       },
       {
         title: "通道类型",
-        key: "terminalName",
+        key: "terminalTypeName",
         minWidth: 150,
       },
       {
@@ -277,8 +277,8 @@ export default {
         channelId: [{ required: true, message: "请输入通道ID" }],
         apiType: [{ required: true, message: "请选择外部接口类型" }],
         terminalType: [{ required: true, message: "请选择通道类型" }],
-        userId: [{ required: true, message: "请输入交易账号" }],
-        password: [{ required: true, message: "请输入密码" }],
+        // userId: [{ required: true, message: "请输入交易账号" }],
+        // password: [{ required: true, message: "请输入密码" }],
         // active: [{ required: false, message: "请选择状态" }],
       },
       channelInfo: {
@@ -290,10 +290,10 @@ export default {
         userId: "",
       },
       tableData: [],
-      // 通道
-      channelTrade: [],
       // 外部接口
       channelType: [],
+      // 通道
+      channelTrade: [],
       terminalType: [],
       columns1,
       pagination,

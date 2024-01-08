@@ -103,3 +103,13 @@ export function getPositionDirection(code) {
   });
   return result;
 }
+// 用户类型
+export function getUserType(code) {
+  let result = {};
+  store.state.dictionaryList.UserType.forEach((i) => {
+    if (i.code === code) {
+      result = i;
+    }
+  });
+  return result;
+}

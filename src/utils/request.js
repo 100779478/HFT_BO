@@ -153,24 +153,30 @@ axiosInstance.interceptors.request.use((config) => {
  */
 axiosInstance.interceptors.response.use(
   (response) => {
-    // if (response.status === 200 && response.data.code === "100002") {
-    //   router.push({ name: "Login" });
-    // }
-    // if (response.status === 200 && response.data.code === "110020") {
-    //   Message.error(response.data.errorMessage);
-    //   return response.data;
-    // }
     const code = response.data.code;
     if (response.status === 200) {
       if (code === "100002") {
         router.push({ name: "Login" });
       }
-      if (code === "110020" || code === "100001") {
-        Message.error(response.data.errorMessage);
+      switch (code) {
+        case "100002":
+          router.push({ name: "Login" });
+        // case "110020":
+        // case "100001":
+        // case "110002":
+        // case "100000":
+        //   Message.error(response.data.errorMessage);
+        default:
+          if (response.data.errorMessage) {
+            Message.error(response.data.errorMessage);
+          }
       }
       return response.data;
     }
     if (response.status === 403) {
+      if (response.data.errorMessage) {
+        Message.error(response.data.errorMessage);
+      }
       router.push({ name: "Login" });
     }
     // if (response.status === 200 && response.data.code === "0") {

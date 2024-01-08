@@ -23,6 +23,7 @@ const getLocalDictionaryList = () => {
       ChannelType: [],
       ApiType: [],
       PositionDirection: [],
+      UserType: [],
     };
   }
 };

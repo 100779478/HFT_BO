@@ -59,9 +59,9 @@
             autocomplete="off"
           >
             <Col :span="18">
-              <FormItem label="用户账号" prop="username">
+              <FormItem label="用户账号" prop="customerId">
                 <Input
-                  v-model="userInfo.username"
+                  v-model="userInfo.customerId"
                   :disabled="!isNew"
                   placeholder="请输入用户账号"
                   :maxlength="16"
@@ -93,6 +93,24 @@
               </FormItem>
             </Col>
             <Col :span="18">
+              <FormItem label="用户类型" prop="active">
+                <Select
+                  v-model="userInfo.userType"
+                  class="mr3"
+                  style="width: 120px"
+                  placeholder="用户类型"
+                  :clearable="true"
+                >
+                  <Option
+                    v-for="item in this.$store.state.dictionaryList.UserType"
+                    :value="item.code"
+                    :key="item.code"
+                    >{{ item.description }}</Option
+                  >
+                </Select>
+              </FormItem>
+            </Col>
+            <Col :span="18">
               <FormItem label="状态" prop="active">
                 <i-Switch v-model="userInfo.active" style="margin-top: 5px" />
               </FormItem>
@@ -119,7 +137,7 @@
       </Col>
       <Col span="8" offset="8">
         <Input
-          v-model="pagination.username"
+          v-model="pagination.customerName"
           style="float: right; width: 180px; border-radius: 20px"
           placeholder="用户名称"
           @on-keydown.enter="handleSearch"
@@ -193,6 +211,7 @@
 import { http } from "@/utils/request";
 import { URL } from "@/api/serverApi";
 import { getUserInfo } from "@/utils/token";
+import { getUserType } from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -200,7 +219,7 @@ export default {
     let columns1 = [
       {
         title: "用户代码",
-        key: "username",
+        key: "customerId",
         minWidth: 100,
         width: null,
       },
@@ -209,6 +228,16 @@ export default {
         key: "customerName",
         minWidth: 100,
         width: null,
+      },
+      {
+        title: "用户类型",
+        key: "userType",
+        minWidth: 100,
+        width: null,
+        render: (h, { row }) => {
+          const result = getUserType(row.userType);
+          return h("span", result.description);
+        },
       },
       {
         title: "角色名称",
@@ -279,25 +308,27 @@ export default {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
-      username: "",
+      customerName: "",
     };
     return {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        username: [{ required: true, message: "请输入用户账号" }],
+        customerId: [{ required: true, message: "请输入用户账号" }],
         customerName: [{ required: true, message: "请输入用户名称" }],
         // password: [{ required: true, message: "请输入密码" }],
+        userType: [{ required: false, message: "请选择用户类型" }],
         roles: [{ required: false, message: "请选择用户角色" }],
         active: [{ required: false, message: "请选择状态" }],
       },
       userInfo: {
-        username: "",
+        customerId: "",
         customerName: "",
         password: "",
         roles: [],
         active: true,
         roleStr: "",
+        userType: "",
       },
       tableData: [],
       columns1,
@@ -366,7 +397,7 @@ export default {
         this.isNew = true;
         this.showAddModal = true;
         const info = {
-          username: "",
+          customerId: "",
           customerName: "",
           password: "",
           active: true,
@@ -386,23 +417,29 @@ export default {
         id: "",
         name: item || "",
       }));
+      let list = [];
       for (let i = 0; i < this.userInfo.roles.length; i++) {
         for (let j = 0; j < arr.length; j++) {
           if (this.userInfo.roles[i].name == arr[j].name) {
-            arr[j].id = this.userInfo.roles[i].id;
+            // arr[j].id = this.userInfo.roles[i].id;
+            list.push(this.userInfo.roles[i].id);
           }
         }
       }
-      this.userInfo.roles = arr;
+      this.userInfo.roleIds = list;
       if (isNew) {
         this.userInfo.password = this.$md5(this.userInfo.password);
         http.put(URL.user, this.userInfo, () => {
           this.getUserData(), this.cancel();
         });
       } else {
-        http.post(`${URL.user}/${this.userInfo.userId}`, this.userInfo, () => {
-          this.getUserData(), this.cancel();
-        });
+        http.post(
+          `${URL.user}/${this.userInfo.customerId}`,
+          this.userInfo,
+          () => {
+            this.getUserData(), this.cancel();
+          }
+        );
       }
     },
     // 新增弹窗关闭
@@ -412,7 +449,7 @@ export default {
     // 启用用户
     handleActiveEnable(res) {
       if (res.code !== "0") {
-        this.$Message.error("启用失败：" + res.msg);
+        // this.$Message.error("启用失败：" + res.msg);
         return;
       }
       this.$Message.success(`用户已启用`);
@@ -421,17 +458,17 @@ export default {
     // 🈲用用户
     handleActiveDisable(res) {
       if (res.code !== "0") {
-        this.$Message.error("禁用失败：" + res.msg);
+        // this.$Message.error("禁用失败：" + res.msg);
         return;
       }
       this.$Message.error(`用户已禁用`);
       this.getUserData();
     },
     changeUserStatus(row) {
-      let data = row.userId;
+      let data = row.customerId;
       // let customerName = row.customerName;
-      let userId = Number(getUserInfo());
-      if (data === userId) {
+      let customerId = Number(getUserInfo());
+      if (data == customerId) {
         this.$Message.error("无法禁用自己");
         return;
       }
@@ -492,7 +529,7 @@ export default {
         total: 0,
         pageSize: 20,
         pageNumber: 1,
-        username: "",
+        customerId: "",
       };
       this.getUserData();
     },

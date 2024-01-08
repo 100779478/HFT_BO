@@ -4,32 +4,34 @@
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
 // const devUrl = "http://106.13.177.225:8090";
-const devUrl = "http://192.168.50.29:9000";
+// const devUrl = "http://192.168.50.29:9000";
+const devUrl = "http://106.12.178.118:9000";
+const proUrl = location.origin;
 //服务器
 export const requestContextPath =
-  (env === "development" ? devUrl : location.origin) + "/hft-bos";
-console.log("current env :", env, requestContextPath);
+  (env === "development" ? devUrl : proUrl) + "/hft-bos";
+console.log("current env :", env, requestContextPath, proUrl);
 export const URL = {
   // 数据字典
   dictionaryList: "/config/static-enums",
   // 页面配置
   template: "/template",
   // 用户登录
-  login: "/user/login",
+  login: "/customer/login",
   // 修改密码
-  modification: "/user/modification",
+  // modification: "/user/modification",
   // 获取验证码图片
-  verifyCode: "/user/captcha",
+  verifyCode: "/customer/captcha",
   // 退出登录
-  logout: "/user/logout",
+  logout: "/customer/logout",
   // 用户菜单列表
-  menus: "/user/menus",
+  menus: "/customer/menus",
   // 获取当前用户信息
-  current: "/user/current",
+  current: "/customer/current",
   // 获取分页用户列表
-  user: "/user",
+  user: "/customer",
   // GET获取用户列表,
-  userList: "/user/list",
+  userList: "/customer/list",
   // 获取所有角色列表
   role: "/role",
   // 查询环境列表

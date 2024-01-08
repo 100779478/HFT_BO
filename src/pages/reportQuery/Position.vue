@@ -2,12 +2,15 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+
 .page-bottom {
   float: right;
   margin-top: 20px;
 }
+
 .table-content {
   border: 1px solid #e8eaec;
+
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);
@@ -15,6 +18,7 @@
     cursor: pointer;
   }
 }
+
 .ivu-tooltip {
   .ivu-tooltip-ref {
     text-overflow: "ellipsis";
@@ -24,6 +28,7 @@
     color: red !important;
   }
 }
+
 .mr3 {
   margin-right: 3px;
 }
@@ -42,63 +47,72 @@
         >
       </Col> -->
       <Col
-        span="19"
-        style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
+          span="19"
+          style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
         <Input
-          v-model="searchParams.instrumentId"
-          class="mr3"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="合约编号"
+            v-model="searchParams.instrumentId"
+            class="mr3"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="合约编号"
         >
         </Input>
         <Input
-          v-model="searchParams.combiNo"
-          class="mr3"
-          style="float: right; width: 145px; border-radius: 20px"
-          placeholder="持仓帐号"
+            v-model="searchParams.combiNo"
+            class="mr3"
+            style="float: right; width: 145px; border-radius: 20px"
+            placeholder="持仓账号"
         >
         </Input>
-        <DatePicker
-          class="mr3"
-          type="daterange"
-          placement="bottom-end"
-          placeholder="选择日期"
-          style="width: 225px"
-          format="yyyy-MM-dd"
-          v-model="dateRange"
-        ></DatePicker>
+        <form autocomplete="off">
+          <DatePicker
+              class="mr3"
+              type="daterange"
+              placement="bottom-end"
+              placeholder="选择日期"
+              style="width: 225px"
+              format="yyyy-MM-dd"
+              v-model="dateRange"
+              :transfer="true"
+          ></DatePicker>
+        </form>
       </Col>
       <Col span="" class="mr3" style="flex-shrink: 0">
         <Button type="info" @click="refresh()" class="mr3"
-          ><Icon type="md-search" /> 查询</Button
+        >
+          <Icon type="md-search"/>
+          查询
+        </Button
         >
         <Button type="success" @click="handleExportOrders()" class="mr3"
-          ><Icon type="md-download" /> 导出</Button
+        >
+          <Icon type="md-download"/>
+          导出
+        </Button
         >
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
-      :no-data-test="111"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        :no-data-test="111"
     >
     </Table>
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
@@ -106,12 +120,13 @@
 </template>
 <script>
 import moment from "moment";
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
 import {
   time,
   getHedgeType,
 } from "@/common/common";
+
 export default {
   data() {
     let columns1 = [
@@ -139,16 +154,16 @@ export default {
         title: "持仓方向",
         key: "positionDirection",
         minWidth: 150,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getPositionDirection(row.positionDirection);
           const color = {
             2: "#ff0000",
             3: "#19be6b",
           };
           return h(
-            "span",
-            { style: { color: color[result.code], fontWeight: "bold" } },
-            result.description
+              "span",
+              {style: {color: color[result.code], fontWeight: "bold"}},
+              result.description
           );
         },
       },
@@ -156,7 +171,7 @@ export default {
         title: "投机套保标志",
         key: "hedgeFlag",
         minWidth: 150,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
         },
@@ -204,11 +219,11 @@ export default {
     // 获取订单列表
     getPositionData() {
       this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-        ? moment(this.dateRange[0]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[0]).format("YYYYMMDD")
+          : null;
       this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-        ? moment(this.dateRange[1]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[1]).format("YYYYMMDD")
+          : null;
       const payload = {
         ...this.pagination,
         ...this.searchParams,
@@ -217,6 +232,7 @@ export default {
         setTimeout(() => {
           this.loading = false;
         }, 200);
+        this.pagination.total = res.data.total;
         this.tableData = res.data.dataList;
       });
     },
@@ -247,11 +263,11 @@ export default {
     // 导出列表
     handleExportOrders() {
       this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-        ? moment(this.dateRange[0]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[0]).format("YYYYMMDD")
+          : null;
       this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-        ? moment(this.dateRange[1]).format("YYYYMMDD")
-        : null;
+          ? moment(this.dateRange[1]).format("YYYYMMDD")
+          : null;
       http.postBlob(URL.positionExport, this.searchParams, (res) => {
         // 创建blob
         // const blob = new Blob([res.data], {

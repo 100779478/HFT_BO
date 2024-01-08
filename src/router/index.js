@@ -74,7 +74,7 @@ const router = new VueRouter({
           name: "SubAccountManage",
           component: () => import("@/pages/systemManage/SubAccount"),
           meta: {
-            title: "系统管理/分帐户管理",
+            title: "系统管理/分账户管理",
           },
         },
         {

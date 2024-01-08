@@ -2,12 +2,15 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+
 .page-bottom {
   float: right;
   margin-top: 20px;
 }
+
 .table-content {
   border: 1px solid #e8eaec;
+
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);
@@ -21,41 +24,47 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="info" @click="modalChannel('new')"
-          ><Icon type="md-add" /> 新增分帐户</Button
+        >
+          <Icon type="md-add"/>
+          新增分账户
+        </Button
         >
         &nbsp;
         <Button type="success" @click="refresh()"
-          ><Icon type="md-refresh" /> 刷新</Button
+        >
+          <Icon type="md-refresh"/>
+          刷新
+        </Button
         >
         <Modal
-          v-model="showAddModal"
-          draggable
-          sticky
-          mask
-          :width="600"
-          :mask-closable="false"
-          :title="isNew ? '新增分帐户' : '编辑分帐户'"
+            v-model="showAddModal"
+            draggable
+            sticky
+            mask
+            :width="600"
+            :mask-closable="false"
+            :title="isNew ? '新增分账户' : '编辑分账户'"
         >
           <Form
-            ref="ruleForm"
-            :model="channelInfo"
-            :label-width="210"
-            label-colon
-            :rules="userValidRules"
-            autocomplete="off"
+              ref="ruleForm"
+              :model="channelInfo"
+              :label-width="210"
+              label-colon
+              :rules="userValidRules"
+              autocomplete="off"
           >
             <Col :span="18">
               <FormItem label="用户代码" prop="customerId">
                 <Select
-                  v-model="channelInfo.customerId"
-                  placeholder="请选择用户代码"
-                  :maxlength="32"
+                    v-model="channelInfo.customerId"
+                    placeholder="请选择用户代码"
+                    :maxlength="32"
                 >
                   <Option
-                    v-for="item in userList"
-                    :key="item.username"
-                    :value="item.username"
-                    >{{ item.username }}
+                      v-for="item in userList"
+                      :key="item.customerId"
+                      :value="item.customerId"
+                  >{{ item.customerId }}
                   </Option>
                 </Select>
               </FormItem>
@@ -63,91 +72,91 @@
             <Col :span="18">
               <FormItem label="交易通道" prop="tradeChannel">
                 <Select
-                  v-model="channelInfo.tradeChannel"
-                  placeholder="请选择交易通道"
-                  :maxlength="32"
-                  @on-change="getTradeChannelApi"
+                    v-model="channelInfo.tradeChannel"
+                    placeholder="请选择交易通道"
+                    :maxlength="32"
+                    @on-change="getTradeChannelApi"
                 >
                   <Option
-                    v-for="item in tradeChannel"
-                    :key="item.channelId"
-                    :value="item.channelId"
-                    >{{ item.channelId }}
+                      v-for="item in tradeChannel"
+                      :key="item.channelId"
+                      :value="item.channelId"
+                  >{{ item.channelId }}
                   </Option>
                 </Select>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="分帐号代码" prop="accountId">
+              <FormItem label="分账号代码" prop="accountId">
                 <Input
-                  v-model="channelInfo.accountId"
-                  placeholder="请输入分帐号代码"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.accountId"
+                    placeholder="请输入分账号代码"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="交易接口类型" prop="tradeApiTypeName">
                 <Input
-                  v-model="channelInfo.tradeApiTypeName"
-                  placeholder="请输入交易接口类型"
-                  :maxlength="16"
-                  show-message="false"
-                  :disabled="true"
+                    v-model="channelInfo.tradeApiTypeName"
+                    placeholder="请输入交易接口类型"
+                    :maxlength="16"
+                    show-message="false"
+                    :disabled="true"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem :label="assetLabel" prop="assetNo">
                 <Input
-                  v-model="channelInfo.assetNo"
-                  :placeholder="`请输入${this.assetLabel}`"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.assetNo"
+                    :placeholder="`请输入${this.assetLabel}`"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
               <FormItem :label="positionLabel" prop="combiNo">
                 <Input
-                  v-model="channelInfo.combiNo"
-                  :placeholder="`请输入${this.positionLabel}`"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.combiNo"
+                    :placeholder="`请输入${this.positionLabel}`"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
               <FormItem
-                :label="foundationLabel"
-                prop="apiAccountID"
-                v-if="showLabel"
+                  :label="foundationLabel"
+                  prop="apiAccountId"
+                  v-if="showLabel"
               >
                 <Input
-                  v-model="channelInfo.apiAccountID"
-                  :placeholder="`请输入${this.foundationLabel}`"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.apiAccountId"
+                    :placeholder="`请输入${this.foundationLabel}`"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
               <FormItem
-                :label="traderLabel"
-                prop="apiInvestorID"
-                v-if="showLabel"
+                  :label="traderLabel"
+                  prop="apiInvestorId"
+                  v-if="showLabel"
               >
                 <Input
-                  v-model="channelInfo.apiInvestorID"
-                  :placeholder="`请输入${this.traderLabel}`"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.apiInvestorId"
+                    :placeholder="`请输入${this.traderLabel}`"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="备注" prop="reserver5">
+              <FormItem label="备注" prop="remark">
                 <Input
-                  v-model="channelInfo.reserver5"
-                  type="textarea"
-                  placeholder="请输入备注"
-                  show-message="false"
-                  :autosize="true"
+                    v-model="channelInfo.remark"
+                    type="textarea"
+                    placeholder="请输入备注"
+                    show-message="false"
+                    :autosize="true"
                 ></Input>
               </FormItem>
             </Col>
@@ -160,29 +169,29 @@
       </Col>
       <Col span="8" offset="8">
         <Input
-          v-model="pagination.accountId"
-          style="float: right; width: 180px; border-radius: 20px"
-          placeholder="分帐号代码"
-          @on-keydown.enter="handleSearch"
-          @on-change="handleSearch"
+            v-model="pagination.accountId"
+            style="float: right; width: 180px; border-radius: 20px"
+            placeholder="分账号代码"
+            @on-keydown.enter="handleSearch"
+            @on-change="handleSearch"
         >
           <Icon
-            type="ios-search"
-            slot="suffix"
-            size="19"
-            @click.native="handleSearch"
-            style="cursor: pointer"
+              type="ios-search"
+              slot="suffix"
+              size="19"
+              @click.native="handleSearch"
+              style="cursor: pointer"
           />
         </Input>
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -208,23 +217,24 @@
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
-import { getUserInfo } from "@/utils/token";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {getUserInfo} from "@/utils/token";
+
 export default {
   props: ["userId"],
   data() {
@@ -234,11 +244,11 @@ export default {
         key: "customerId",
         minWidth: 100,
       },
-      {
-        title: "用户名称",
-        key: "customerName",
-        minWidth: 100,
-      },
+      // {
+      //   title: "用户名称",
+      //   key: "customerName",
+      //   minWidth: 100,
+      // },
       {
         title: "交易通道",
         key: "tradeChannel",
@@ -266,20 +276,20 @@ export default {
       },
       {
         title: "基金账户",
-        key: "apiAccountID",
+        key: "apiAccountId",
         minWidth: 150,
       },
       {
         title: "交易员编号",
-        key: "apiInvestorID",
+        key: "apiInvestorId",
         minWidth: 150,
       },
       {
         title: "备注",
-        key: "reserver5",
+        key: "remark",
         minWidth: 150,
       },
-      { title: "操作", slot: "operator", width: 150 },
+      {title: "操作", slot: "operator", width: 150},
     ];
     let pagination = {
       total: 0,
@@ -289,18 +299,18 @@ export default {
     };
     return {
       assetLabel: "资产账户",
-      positionLabel: "组合帐户",
+      positionLabel: "组合账户",
       foundationLabel: "基金账户",
       traderLabel: "交易员编码",
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        // channelId: [{ required: true, message: "请输入通道ID" }],
-        // apiType: [{ required: true, message: "请选择外部接口类型" }],
-        // terminalType: [{ required: true, message: "请选择通道类型" }],
-        // password: [{ required: true, message: "请输入密码" }],
-        // userId: [{ required: true, message: "请选择用户角色" }],
-        // active: [{ required: false, message: "请选择状态" }],
+        customerId: [{ required: true, message: "请选择用户代码" }],
+        tradeChannel: [{ required: true, message: "请选择交易通道" }],
+        accountId: [{ required: true, message: "请输入分账号代码" }],
+        tradeApiTypeName: [{ required: true, message: "请输入交易接口类型" }],
+        assetNo: [{ required: true, message: "请输入资产账户" }],
+        combiNo: [{ required: true, message: "请输入组合账户" }],
       },
       channelInfo: {
         customerId: "",
@@ -310,9 +320,9 @@ export default {
         tradeApiTypeName: "",
         assetNo: "",
         combiNo: "",
-        apiAccountID: "",
-        apiInvestorID: "",
-        reserver5: "",
+        apiAccountId: "",
+        apiInvestorId: "",
+        remark: "",
       },
       tableData: [],
       // 交易通道
@@ -335,10 +345,10 @@ export default {
     this.getUserData();
   },
   methods: {
-    // 获取分帐户列表
+    // 获取分账户列表
     getChannelData(value) {
       this.pagination.accountId = value || "";
-      // 分帐户列表
+      // 分账户列表
       http.post(URL.channelTrade, this.pagination, this.getChannelResponse);
     },
     getTradeChannel() {
@@ -370,11 +380,11 @@ export default {
         this.assetLabel = "资产单元";
         this.positionLabel = "投资组合";
         this.foundationLabel = "基金账户";
-        this.traderLabel = "股东帐号";
+        this.traderLabel = "股东账号";
       } else {
         this.showLabel = false;
         this.assetLabel = "资产账户";
-        this.positionLabel = "组合帐户";
+        this.positionLabel = "组合账户";
         this.foundationLabel = "基金账户";
         this.traderLabel = "交易员编码";
       }
@@ -415,9 +425,9 @@ export default {
           tradeApiTypeName: "",
           assetNo: "",
           combiNo: "",
-          apiAccountID: "",
-          apiInvestorID: "",
-          reserver5: "",
+          apiAccountId: "",
+          apiInvestorId: "",
+          remark: "",
           id: "",
         };
         this.channelInfo = info;
@@ -441,7 +451,7 @@ export default {
         return;
       }
       if (!this.channelInfo.accountId) {
-        this.$Message.error("请填写分帐号代码");
+        this.$Message.error("请填写分账号代码");
         return;
       }
       if (!this.channelInfo.assetNo) {
@@ -466,10 +476,10 @@ export default {
     cancel() {
       this.showAddModal = false;
     },
-    // 删除分帐户
+    // 删除分账户
     deleteChannel(row) {
       this.$Modal.confirm({
-        title: `确认删除分帐户吗？`,
+        title: `确认删除分账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
           http.delete(`${URL.customChannel}/${row.id}`, {}, () => {
