@@ -2,8 +2,10 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+
 .table-content {
   border: 1px solid #e8eaec;
+
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);
@@ -17,25 +19,30 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="success" @click="refresh()"
-          ><Icon type="md-refresh" /> 刷新</Button
+        >
+          <Icon type="md-refresh"/>
+          刷新
+        </Button
         >
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        border
     >
     </Table>
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
-import { getApiType, getChannelConnectStatus } from "@/common/common";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {getApiType, getChannelConnectStatus} from "@/common/common";
+
 export default {
   data() {
     let columns1 = [
@@ -48,12 +55,16 @@ export default {
         title: "通道代码",
         key: "channelId",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       {
         title: "接口类型",
         key: "apiType",
         minWidth: 100,
-        render: (h, { row }) => {
+        resizable: true,
+        width: null,
+        render: (h, {row}) => {
           const result = getApiType(row.apiType);
           return h("span", result.description);
         },
@@ -72,7 +83,9 @@ export default {
         title: "交易员运行时状态",
         key: "traderRunType",
         minWidth: 100,
-        render: (h, { row }) => {
+        resizable: true,
+        width: null,
+        render: (h, {row}) => {
           const result = getChannelConnectStatus(row.traderRunType);
           // 定义一个映射对象，将 code 映射到对应的颜色
           const codeToColor = {
@@ -102,11 +115,15 @@ export default {
         title: "更新时间",
         key: "updateTime",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       {
         title: "更新日期",
         key: "updateDate",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       // {
       //   title: "更新信息",

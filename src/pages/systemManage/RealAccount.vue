@@ -24,56 +24,56 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="info" @click="modalChannel('new')">
-          <Icon type="md-add" />
+          <Icon type="md-add"/>
           新增实体账户
         </Button>
         &nbsp;
         <Button type="success" @click="refresh()">
-          <Icon type="md-refresh" />
+          <Icon type="md-refresh"/>
           刷新
         </Button>
         <Modal
-          v-model="showAddModal"
-          draggable
-          sticky
-          mask
-          :width="600"
-          :mask-closable="false"
-          :title="isNew ? '新增实体账户' : '编辑实体账户'"
+            v-model="showAddModal"
+            draggable
+            sticky
+            mask
+            :width="600"
+            :mask-closable="false"
+            :title="isNew ? '新增实体账户' : '编辑实体账户'"
         >
           <Form
-            ref="ruleForm"
-            :model="channelInfo"
-            :label-width="210"
-            label-colon
-            :rules="userValidRules"
-            autocomplete="off"
+              ref="ruleForm"
+              :model="channelInfo"
+              :label-width="210"
+              label-colon
+              :rules="userValidRules"
+              autocomplete="off"
           >
             <Col :span="18">
               <FormItem label="通道ID" prop="channelId">
                 <Input
-                  v-model="channelInfo.channelId"
-                  :disabled="!isNew"
-                  placeholder="请输入通道ID"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.channelId"
+                    :disabled="!isNew"
+                    placeholder="请输入通道ID"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="外部接口类型" prop="apiType">
                 <Select
-                  v-model="channelInfo.apiType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  @on-change="getApiTerminalType"
-                  :disabled="!isNew"
+                    v-model="channelInfo.apiType"
+                    placeholder="请选择通道类型"
+                    :maxlength="32"
+                    @on-change="getApiTerminalType"
+                    :disabled="!isNew"
                 >
                   <Option
-                    v-for="item in channelType"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
+                      v-for="item in channelType"
+                      :key="item.code"
+                      :value="item.code"
+                  >{{ item.name }}
                   </Option>
                 </Select>
               </FormItem>
@@ -81,31 +81,31 @@
             <Col :span="18">
               <FormItem label="通道类型" prop="terminalType">
                 <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-if="isNew"
+                    v-model="channelInfo.terminalType"
+                    placeholder="请选择通道类型"
+                    :maxlength="32"
+                    :disabled="!isNew"
+                    v-if="isNew"
                 >
                   <Option
-                    v-for="item in channelTrade"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
+                      v-for="item in channelTrade"
+                      :key="item.code"
+                      :value="item.code"
+                  >{{ item.name }}
                   </Option>
                 </Select>
                 <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-else
+                    v-model="channelInfo.terminalType"
+                    placeholder="请选择通道类型"
+                    :maxlength="32"
+                    :disabled="!isNew"
+                    v-else
                 >
                   <Option
-                    v-for="item in channelTrade"
-                    :key="item.code"
-                    :value="item.code"
-                    >{{ item.name }}
+                      v-for="item in channelTrade"
+                      :key="item.code"
+                      :value="item.code"
+                  >{{ item.name }}
                   </Option>
                 </Select>
               </FormItem>
@@ -113,22 +113,22 @@
             <Col :span="18">
               <FormItem label="交易账号" prop="userId">
                 <Input
-                  v-model="channelInfo.userId"
-                  placeholder="请输入交易账号"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="channelInfo.userId"
+                    placeholder="请输入交易账号"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="密码" prop="password">
                 <Input
-                  v-model="channelInfo.password"
-                  placeholder="请输入密码"
-                  type="password"
-                  autocomplete="new-password"
-                  maxlength="20"
-                  password
+                    v-model="channelInfo.password"
+                    placeholder="请输入密码"
+                    type="password"
+                    autocomplete="new-password"
+                    maxlength="20"
+                    password
                 >
                 </Input>
               </FormItem>
@@ -136,8 +136,8 @@
             <Col :span="18">
               <FormItem label="状态" prop="active">
                 <i-Switch
-                  v-model="channelInfo.active"
-                  style="margin-top: 5px"
+                    v-model="channelInfo.active"
+                    style="margin-top: 5px"
                 />
               </FormItem>
             </Col>
@@ -149,30 +149,33 @@
         </Modal>
       </Col>
       <Col span="8" offset="8">
-        <Input
-          v-model="pagination.channelId"
-          style="float: right; width: 180px; border-radius: 20px"
-          placeholder="通道ID"
-          @on-keydown.enter="handleSearch"
-          @on-change="handleSearch"
-        >
-          <Icon
-            type="ios-search"
-            slot="suffix"
-            size="19"
-            @click.native="handleSearch"
-            style="cursor: pointer"
-          />
-        </Input>
+        <form autocomplete="off">
+          <Input
+              v-model="pagination.channelId"
+              style="float: right; width: 180px; border-radius: 20px"
+              placeholder="通道ID"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        border
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -198,22 +201,22 @@
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
 
 export default {
   props: ["userId"],
@@ -223,26 +226,36 @@ export default {
         title: "通道ID",
         key: "channelId",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       {
         title: "外部接口类型",
         key: "apiTypeName",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       {
         title: "通道类型",
         key: "terminalTypeName",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易账号",
         key: "userId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "是否启用",
         key: "active",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render(h, params) {
           const iconOpen = h("Icon", {
             props: {
@@ -262,7 +275,10 @@ export default {
           ]);
         },
       },
-      { title: "操作", slot: "operator", width: 150 },
+      {
+        title: "操作", slot: "operator", resizable: true,
+        width: null, minWidth: 80
+      },
     ];
     let pagination = {
       total: 0,
@@ -274,9 +290,9 @@ export default {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        channelId: [{ required: true, message: "请输入通道ID" }],
-        apiType: [{ required: true, message: "请选择外部接口类型" }],
-        terminalType: [{ required: true, message: "请选择通道类型" }],
+        channelId: [{required: true, message: "请输入通道ID"}],
+        apiType: [{required: true, message: "请选择外部接口类型"}],
+        terminalType: [{required: true, message: "请选择通道类型"}],
         // userId: [{ required: true, message: "请输入交易账号" }],
         // password: [{ required: true, message: "请输入密码" }],
         // active: [{ required: false, message: "请选择状态" }],

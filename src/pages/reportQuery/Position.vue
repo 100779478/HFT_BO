@@ -54,7 +54,7 @@
             v-model="searchParams.instrumentId"
             class="mr3"
             style="float: right; width: 145px; border-radius: 20px"
-            placeholder="合约编号"
+            placeholder="合约代码"
         >
         </Input>
         <Input
@@ -99,7 +99,7 @@
         :height="tableHeight"
         ref="table"
         :loading="loading"
-        :no-data-test="111"
+        border
     >
     </Table>
     <template>
@@ -134,26 +134,36 @@ export default {
         title: "合约代码",
         key: "instrumentId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "持仓账号",
         key: "combiNo",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "成交编号",
         key: "tradeId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易所代码",
         key: "exchangeId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "持仓方向",
         key: "positionDirection",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render: (h, {row}) => {
           const result = getPositionDirection(row.positionDirection);
           const color = {
@@ -171,6 +181,8 @@ export default {
         title: "投机套保标志",
         key: "hedgeFlag",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
@@ -180,11 +192,15 @@ export default {
         title: "持仓量",
         key: "position",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "昨持仓",
         key: "ydPosition",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
     ];
     let pagination = {

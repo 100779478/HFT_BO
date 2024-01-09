@@ -17,6 +17,8 @@
     margin-right: 6px;
     cursor: pointer;
   }
+
+
 }
 
 .ivu-tooltip {
@@ -38,56 +40,56 @@
         <!--          新增用户-->
         <!--        </Button>-->
         <Button type="success" @click="refresh()">
-          <Icon type="md-refresh" />
+          <Icon type="md-refresh"/>
           刷新
         </Button>
         <Modal
-          v-model="showAddModal"
-          draggable
-          sticky
-          mask
-          :width="600"
-          :mask-closable="false"
-          :title="isNew ? '新增用户' : '编辑用户'"
+            v-model="showAddModal"
+            draggable
+            sticky
+            mask
+            :width="600"
+            :mask-closable="false"
+            :title="isNew ? '新增用户' : '编辑用户'"
         >
           <Form
-            ref="ruleForm"
-            :model="userInfo"
-            :label-width="210"
-            label-colon
-            :rules="userValidRules"
-            autocomplete="off"
+              ref="ruleForm"
+              :model="userInfo"
+              :label-width="210"
+              label-colon
+              :rules="userValidRules"
+              autocomplete="off"
           >
             <Col :span="18">
               <FormItem label="用户账号" prop="customerId">
                 <Input
-                  v-model="userInfo.customerId"
-                  :disabled="!isNew"
-                  placeholder="请输入用户账号"
-                  :maxlength="16"
-                  show-message="false"
+                    v-model="userInfo.customerId"
+                    :disabled="!isNew"
+                    placeholder="请输入用户账号"
+                    :maxlength="16"
+                    show-message="false"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="用户名称" prop="customerName">
                 <Input
-                  v-model="userInfo.customerName"
-                  placeholder="请输入用户名称"
-                  autocomplete="off"
-                  :maxlength="32"
+                    v-model="userInfo.customerName"
+                    placeholder="请输入用户名称"
+                    autocomplete="off"
+                    :maxlength="32"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="密码" prop="password" v-show="isNew">
                 <Input
-                  v-model="userInfo.password"
-                  placeholder="请输入密码"
-                  type="password"
-                  autocomplete="new-password"
-                  maxlength="20"
-                  password
+                    v-model="userInfo.password"
+                    placeholder="请输入密码"
+                    type="password"
+                    autocomplete="new-password"
+                    maxlength="20"
+                    password
                 >
                 </Input>
               </FormItem>
@@ -95,24 +97,25 @@
             <Col :span="18">
               <FormItem label="用户类型" prop="active">
                 <Select
-                  v-model="userInfo.userType"
-                  class="mr3"
-                  style="width: 120px"
-                  placeholder="用户类型"
-                  :clearable="true"
+                    v-model="userInfo.userType"
+                    class="mr3"
+                    style="width: 120px"
+                    placeholder="用户类型"
+                    :clearable="true"
                 >
                   <Option
-                    v-for="item in this.$store.state.dictionaryList.UserType"
-                    :value="item.code"
-                    :key="item.code"
-                    >{{ item.description }}</Option
+                      v-for="item in this.$store.state.dictionaryList.UserType"
+                      :value="item.code"
+                      :key="item.code"
+                  >{{ item.description }}
+                  </Option
                   >
                 </Select>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="状态" prop="active">
-                <i-Switch v-model="userInfo.active" style="margin-top: 5px" />
+                <i-Switch v-model="userInfo.active" style="margin-top: 5px"/>
               </FormItem>
             </Col>
             <Col :span="18">
@@ -120,10 +123,10 @@
                 <!-- 下拉框中v-model的数据格式为['测试角色1','测试角色二',....] -->
                 <Select multiple :max-tag-count="4" v-model="userInfo.roleStr">
                   <Option
-                    v-for="item in userInfo.roles"
-                    :value="item.name"
-                    :key="item.id"
-                    >{{ item.name }}
+                      v-for="item in userInfo.roles"
+                      :value="item.name"
+                      :key="item.id"
+                  >{{ item.name }}
                   </Option>
                 </Select>
               </FormItem>
@@ -136,30 +139,33 @@
         </Modal>
       </Col>
       <Col span="8" offset="8">
-        <Input
-          v-model="pagination.customerName"
-          style="float: right; width: 180px; border-radius: 20px"
-          placeholder="用户名称"
-          @on-keydown.enter="handleSearch"
-          @on-change="handleSearch"
-        >
-          <Icon
-            type="ios-search"
-            slot="suffix"
-            size="19"
-            @click.native="handleSearch"
-            style="cursor: pointer"
-          />
-        </Input>
+        <form autocomplete="off">
+          <Input
+              v-model="pagination.customerName"
+              style="float: right; width: 180px; border-radius: 20px"
+              placeholder="用户名称"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        border
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -194,24 +200,24 @@
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
-import { getUserInfo } from "@/utils/token";
-import { getUserType } from "@/common/common";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {getUserInfo} from "@/utils/token";
+import {getUserType} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -222,19 +228,22 @@ export default {
         key: "customerId",
         minWidth: 100,
         width: null,
+        resizable: true,
       },
       {
         title: "用户名称",
         key: "customerName",
         minWidth: 100,
+        resizable: true,
         width: null,
       },
       {
         title: "用户类型",
         key: "userType",
         minWidth: 100,
+        resizable: true,
         width: null,
-        render: (h, { row }) => {
+        render: (h, {row}) => {
           const result = getUserType(row.userType);
           return h("span", result.description);
         },
@@ -242,25 +251,26 @@ export default {
       {
         title: "角色名称",
         key: "roleName",
+        resizable: true,
         width: 240,
         render: (h, params) => {
           const roleName = h(
-            "Tooltip",
-            {
-              attrs: {
-                content: params.row.roleName,
-                maxWidth: 200,
+              "Tooltip",
+              {
+                attrs: {
+                  content: params.row.roleName,
+                  maxWidth: 200,
+                },
+                style: {
+                  whiteSpace: "nowrap",
+                },
               },
-              style: {
-                whiteSpace: "nowrap",
-              },
-            },
-            [
-              // 省略号展示
-              params.row.roleName.length > 30
-                ? params.row.roleName.slice(0, 15) + "..."
-                : params.row.roleName,
-            ]
+              [
+                // 省略号展示
+                params.row.roleName.length > 30
+                    ? params.row.roleName.slice(0, 15) + "..."
+                    : params.row.roleName,
+              ]
           );
           return roleName;
         },
@@ -268,6 +278,8 @@ export default {
       {
         title: "状态",
         key: "active",
+        resizable: true,
+        width: null,
         minWidth: 90,
         render: (h, params) => {
           const iconOpen = h("Icon", {
@@ -291,11 +303,15 @@ export default {
       {
         title: "创建时间",
         key: "createTime",
+        resizable: true,
+        width: null,
         minWidth: 150,
       },
       {
         title: "更新时间",
         key: "updateTime",
+        resizable: true,
+        width: null,
         minWidth: 150,
       },
       {
@@ -314,12 +330,12 @@ export default {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        customerId: [{ required: true, message: "请输入用户账号" }],
-        customerName: [{ required: true, message: "请输入用户名称" }],
+        customerId: [{required: true, message: "请输入用户账号"}],
+        customerName: [{required: true, message: "请输入用户名称"}],
         // password: [{ required: true, message: "请输入密码" }],
-        userType: [{ required: false, message: "请选择用户类型" }],
-        roles: [{ required: false, message: "请选择用户角色" }],
-        active: [{ required: false, message: "请选择状态" }],
+        userType: [{required: false, message: "请选择用户类型"}],
+        roles: [{required: false, message: "请选择用户角色"}],
+        active: [{required: false, message: "请选择状态"}],
       },
       userInfo: {
         customerId: "",
@@ -403,11 +419,11 @@ export default {
           active: true,
           roleStr: "",
         };
-        Object.assign(this.userInfo, info, { roles: this.allRoleList });
+        Object.assign(this.userInfo, info, {roles: this.allRoleList});
       } else {
         this.isNew = false;
         this.showAddModal = true;
-        this.userInfo = { ...row, roles: this.allRoleList };
+        this.userInfo = {...row, roles: this.allRoleList};
         this.userInfo.roleStr = row.roleName.split(",");
       }
     },
@@ -434,11 +450,11 @@ export default {
         });
       } else {
         http.post(
-          `${URL.user}/${this.userInfo.customerId}`,
-          this.userInfo,
-          () => {
-            this.getUserData(), this.cancel();
-          }
+            `${URL.user}/${this.userInfo.customerId}`,
+            this.userInfo,
+            () => {
+              this.getUserData(), this.cancel();
+            }
         );
       }
     },
@@ -476,9 +492,9 @@ export default {
         http.post(`${URL.user}/${data}/enable`, data, this.handleActiveEnable);
       } else {
         http.post(
-          `${URL.user}/${data}/disable`,
-          data,
-          this.handleActiveDisable
+            `${URL.user}/${data}/disable`,
+            data,
+            this.handleActiveDisable
         );
       }
     },

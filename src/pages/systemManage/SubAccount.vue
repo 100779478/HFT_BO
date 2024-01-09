@@ -168,21 +168,23 @@
         </Modal>
       </Col>
       <Col span="8" offset="8">
-        <Input
-            v-model="pagination.accountId"
-            style="float: right; width: 180px; border-radius: 20px"
-            placeholder="分账号代码"
-            @on-keydown.enter="handleSearch"
-            @on-change="handleSearch"
-        >
-          <Icon
-              type="ios-search"
-              slot="suffix"
-              size="19"
-              @click.native="handleSearch"
-              style="cursor: pointer"
-          />
-        </Input>
+        <form autocomplete="off">
+          <Input
+              v-model="pagination.accountId"
+              style="float: right; width: 180px; border-radius: 20px"
+              placeholder="分账号代码"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
       </Col>
     </Row>
     <Table
@@ -192,6 +194,7 @@
         :height="tableHeight"
         ref="table"
         :loading="loading"
+        border
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -234,6 +237,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
+import {Message} from "view-design";
 
 export default {
   props: ["userId"],
@@ -243,6 +247,8 @@ export default {
         title: "用户代码",
         key: "customerId",
         minWidth: 100,
+        resizable: true,
+        width: null,
       },
       // {
       //   title: "用户名称",
@@ -253,43 +259,62 @@ export default {
         title: "交易通道",
         key: "tradeChannel",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "分账号代码",
         key: "accountId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易接口类型",
         key: "tradeApiTypeName",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "资产账户",
         key: "assetNo",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "组合账户",
         key: "combiNo",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "基金账户",
         key: "apiAccountId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易员编号",
         key: "apiInvestorId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "备注",
         key: "remark",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
-      {title: "操作", slot: "operator", width: 150},
+      {
+        title: "操作", slot: "operator", minWidth: 150, resizable: true,
+        width: null,
+      },
     ];
     let pagination = {
       total: 0,
@@ -305,12 +330,12 @@ export default {
       loading: true,
       tableHeight: 0,
       userValidRules: {
-        customerId: [{ required: true, message: "请选择用户代码" }],
-        tradeChannel: [{ required: true, message: "请选择交易通道" }],
-        accountId: [{ required: true, message: "请输入分账号代码" }],
-        tradeApiTypeName: [{ required: true, message: "请输入交易接口类型" }],
-        assetNo: [{ required: true, message: "请输入资产账户" }],
-        combiNo: [{ required: true, message: "请输入组合账户" }],
+        customerId: [{required: true, message: "请选择用户代码"}],
+        tradeChannel: [{required: true, message: "请选择交易通道"}],
+        accountId: [{required: true, message: "请输入分账号代码"}],
+        tradeApiTypeName: [{required: true, message: "请输入交易接口类型"}],
+        assetNo: [{required: true, message: "请输入资产账户"}],
+        combiNo: [{required: true, message: "请输入组合账户"}],
       },
       channelInfo: {
         customerId: "",
@@ -482,7 +507,8 @@ export default {
         title: `确认删除分账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.customChannel}/${row.id}`, {}, () => {
+          http.delete(`${URL.customChannel}/${row.accountId}`, {}, () => {
+            this.$Message.success("删除成功");
             this.getChannelData();
           });
         },

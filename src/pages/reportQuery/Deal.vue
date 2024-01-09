@@ -123,6 +123,7 @@
         :height="tableHeight"
         ref="table"
         :loading="loading"
+        border
     >
     </Table>
     <template>
@@ -159,51 +160,71 @@ export default {
         title: "交易日",
         key: "tradingDay",
         minWidth: 110,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易账号",
         key: "accountId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "用户编号",
         key: "customerId",
-        width: 100,
+        minWidth: 100,
+        resizable: true,
+        width: null,
       },
       {
         title: "资金账号",
         key: "assetNo",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "组合账号",
         key: "combiNo",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "成交编号",
         key: "tradeId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "报单编号",
         key: "orderSysId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "交易所代码",
         key: "exchangeId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "合约代码",
         key: "instrumentId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "买卖",
         key: "direction",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render: (h, {row}) => {
           const result = getDirection(row.direction);
           const color = {
@@ -221,6 +242,8 @@ export default {
         title: "开平",
         key: "offsetFlag",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render: (h, {row}) => {
           const result = getOffsetType(row.offsetFlag);
           return h("span", result.description);
@@ -230,6 +253,8 @@ export default {
         title: "投机套保标志",
         key: "hedgeFlag",
         minWidth: 150,
+        resizable: true,
+        width: null,
         render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
@@ -239,26 +264,36 @@ export default {
         title: "成交价格",
         key: "tradePrice",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "成交量",
         key: "volumeTraded",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "成交日期",
         key: "tradeDate",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "成交时间",
         key: "tradeTime",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
       {
         title: "策略编号",
         key: "ruleId",
         minWidth: 150,
+        resizable: true,
+        width: null,
       },
     ];
     let pagination = {

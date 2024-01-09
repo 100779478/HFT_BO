@@ -2,6 +2,7 @@
 .ivu-table-tip {
   font-size: 26px;
 }
+
 .modal {
   height: 650px;
   overflow: scroll;
@@ -9,6 +10,7 @@
   margin-right: -60px;
   padding-right: 30px;
 }
+
 .ivu-modal-body {
   margin: 0 50px;
   // margin: 0 10px 0 50px;
@@ -16,18 +18,22 @@
   // overflow: scroll;
   // overflow-x: unset;
 }
+
 .page-bottom {
   float: right;
   margin-top: 20px;
 }
+
 .title-font {
   display: inline;
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
 }
+
 .table-content {
   border: 1px solid #e8eaec;
+
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);
@@ -41,67 +47,80 @@
     <Row style="margin: 10px">
       <Col span="8">
         <Button type="info" @click="modalUser('new')"
-          ><Icon type="md-add" /> 新增角色</Button
+        >
+          <Icon type="md-add"/>
+          新增角色
+        </Button
         >
         &nbsp;
         <Button type="success" @click="refresh()"
-          ><Icon type="md-refresh" /> 刷新</Button
+        >
+          <Icon type="md-refresh"/>
+          刷新
+        </Button
         >
         <Modal
-          v-model="showAddModal"
-          draggable
-          sticky
-          mask
-          :width="1000"
-          :mask-closable="false"
-          :title="isNew ? '新增角色' : '编辑角色'"
+            v-model="showAddModal"
+            draggable
+            sticky
+            mask
+            :width="1000"
+            :mask-closable="false"
+            :title="isNew ? '新增角色' : '编辑角色'"
         >
           <div class="modal">
             <Form
-              ref="ruleForm"
-              :model="roleInfo"
-              :label-width="80"
-              label-colon
-              autocomplete="off"
-              style="margin-left: -5px; font-weight: bold"
+                ref="ruleForm"
+                :model="roleInfo"
+                :label-width="80"
+                label-colon
+                autocomplete="off"
+                style="margin-left: -5px; font-weight: bold"
             >
               <Col :span="10">
                 <FormItem label="角色名称" prop="name">
                   <Input
-                    v-model="roleInfo.name"
-                    placeholder="请输入角色名称"
-                    :maxlength="16"
-                    show-message="false"
+                      v-model="roleInfo.name"
+                      placeholder="请输入角色名称"
+                      :maxlength="16"
+                      show-message="false"
                   ></Input>
                 </FormItem>
               </Col>
             </Form>
+            <!--            <Checkbox-->
+            <!--                :value="checkALot"-->
+            <!--                @click.prevent.native="handleCheckboxClick"-->
+            <!--            >全选-->
+            <!--            </Checkbox-->
+            <!--            >-->
             <!-- 权限复选框 -->
             <div
-              style="
+                style="
                 border-bottom: 1px solid #e9e9e9;
                 padding-bottom: 6px;
                 margin-bottom: 6px;
               "
-              v-for="(item, index) in permissionList"
-              :key="index"
+                v-for="(item, index) in permissionList"
+                :key="index"
             >
               <span class="title-font">
                 {{ item[0].menuName }}
               </span>
               <!-- :value="checkAll" -->
               <Checkbox
-                :indeterminate="indeterminate[item[0].menuName]"
-                :value="checkAll[item[0].menuName]"
-                @click.prevent.native="handleCheckAll(item[0].menuName)"
-                style="float: right"
-                >全选</Checkbox
+                  :indeterminate="indeterminate[item[0].menuName]"
+                  :value="checkAll[item[0].menuName]"
+                  @click.prevent.native="handleCheckAll(item[0].menuName)"
+                  style="float: right"
+              >全选
+              </Checkbox
               >
               <Row type="flex">
                 <Col span="8" v-for="itemChild in item" :key="itemChild.id">
                   <CheckboxGroup
-                    v-model="checkAllGroup"
-                    @on-change="
+                      v-model="checkAllGroup"
+                      @on-change="
                       checkAllGroupChange(
                         $event,
                         itemChild.menuName,
@@ -110,8 +129,8 @@
                     "
                   >
                     <Checkbox
-                      :label="itemChild.description"
-                      style="margin: 5px"
+                        :label="itemChild.description"
+                        style="margin: 5px"
                     ></Checkbox>
                   </CheckboxGroup>
                 </Col>
@@ -125,29 +144,32 @@
         </Modal>
       </Col>
       <Col span="8" offset="8">
-        <Input
-          style="float: right; width: 160px; border-radius: 20px"
-          placeholder="角色名称"
-          @on-keydown.enter="handleSearch"
-          @on-change="handleSearch"
-        >
-          <Icon
-            type="ios-search"
-            slot="suffix"
-            size="19"
-            @click.native="handleSearch"
-            style="cursor: pointer"
-          />
-        </Input>
+        <form autocomplete="off">
+          <Input
+              style="float: right; width: 160px; border-radius: 20px"
+              placeholder="角色名称"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
       </Col>
     </Row>
     <Table
-      :columns="columns1"
-      :data="tableData"
-      class="table-content"
-      :height="tableHeight"
-      ref="table"
-      :loading="loading"
+        :columns="columns1"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        border
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -176,22 +198,23 @@
     <template>
       <div class="page-bottom">
         <Page
-          :total="pagination.total"
-          :current="pagination.pageNumber"
-          :page-size="pagination.pageSize"
-          :page-size-opts="[20, 50, 100, 200]"
-          show-sizer
-          show-total
-          @on-page-size-change="handleChangeSize"
-          @on-change="handleChangePage"
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
         />
       </div>
     </template>
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+
 export default {
   props: ["userId"],
   data() {
@@ -199,9 +222,14 @@ export default {
       {
         title: "角色名称",
         key: "name",
-        minWidth: 150,
+        minWidth: 1000,
+        resizable: true,
+        width: null,
       },
-      { title: "操作", slot: "operator", width: 200 },
+      {
+        title: "操作", slot: "operator", minWidth: 200,
+        resizable: true,
+      },
     ];
     let pagination = {
       total: 0,
@@ -234,6 +262,7 @@ export default {
       checkAllGroup: [],
       dataList: {},
       typeArr: {},
+      // checkALot: false
     };
   },
   mounted() {
@@ -309,8 +338,8 @@ export default {
       let newObj = {};
       for (const k in result) {
         newObj[k] = Object.keys(result[k])
-          .map((key) => result[k][key].description)
-          .concat();
+            .map((key) => result[k][key].description)
+            .concat();
       }
       this.typeArr = newObj;
       let newObjLength = newObj[type] ? newObj[type].length : 0;
@@ -401,7 +430,7 @@ export default {
       } else {
         this.isNew = false;
         this.showAddModal = true;
-        this.roleInfo = { ...row };
+        this.roleInfo = {...row};
         let arr = [];
         row.permissions.forEach((val) => {
           arr.push(val.description);
@@ -459,6 +488,14 @@ export default {
       };
       this.getRoleData();
     },
+    // 其他处理逻辑...
+    // handleCheckboxClick() {
+    //   this.checkALot = !this.checkALot
+    //   for (const permissionListKey in this.permissionList) {
+    //     this.handleCheckAll(this.permissionList[permissionListKey][0].menuName)
+    //     console.log(this.permissionList, 222)
+    //   }
+    // },
   },
 };
 </script>
