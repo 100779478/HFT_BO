@@ -32,7 +32,7 @@
 }
 
 .table-content {
-  border: 1px solid #e8eaec;
+  //border: 1px solid #e8eaec;
 
   .table-operate {
     font-size: 14px;

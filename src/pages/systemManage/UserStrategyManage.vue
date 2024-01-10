@@ -7,7 +7,7 @@
   margin-top: 20px;
 }
 .table-content {
-  border: 1px solid #e8eaec;
+  //border: 1px solid #e8eaec;
   .table-operate {
     font-size: 14px;
     color: rgb(2, 175, 241);

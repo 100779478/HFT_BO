@@ -3,8 +3,13 @@
   font-size: 26px;
 }
 
+.page-bottom {
+  float: right;
+  margin-top: 20px;
+}
+
 .table-content {
-  border: 1px solid #e8eaec;
+  //border: 1px solid #e8eaec;
 
   .table-operate {
     font-size: 14px;
@@ -78,6 +83,7 @@
       <Col span="8" offset="8">
         <form autocomplete="off">
           <Input
+              v-model="pagination.environmentName"
               style="float: right; width: 160px; border-radius: 20px"
               placeholder="环境名称"
               @on-keydown.enter="handleSearch"
@@ -87,7 +93,6 @@
                 type="ios-search"
                 slot="suffix"
                 size="19"
-                @click.native="handleSearch"
                 style="cursor: pointer"
             />
           </Input>
@@ -132,6 +137,20 @@
         </div>
       </template>
     </Table>
+    <template>
+      <div class="page-bottom">
+        <Page
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
+        />
+      </div>
+    </template>
   </div>
 </template>
 <script>
@@ -165,6 +184,12 @@ export default {
       },
       {title: "操作", slot: "operator", width: null, minWidth: 100,},
     ];
+    let pagination = {
+      total: 0,
+      pageSize: 20,
+      pageNumber: 1,
+      environmentName: "",
+    };
     return {
       loading: true,
       tableHeight: 0,
@@ -176,6 +201,7 @@ export default {
       columns1,
       showAddModal: false,
       isNew: true,
+      pagination
     };
   },
   mounted() {
@@ -185,24 +211,20 @@ export default {
   },
   methods: {
     // 获取环境列表
-    getEnvironmentData(value) {
-      let id = value || "";
-      http.get(`${URL.environment}?name=${id}`, (res) => {
-        this.$emit("child-event", res.data);
+    getEnvironmentData() {
+      // let id = value || "";
+      http.post(`${URL.environment}`, this.pagination, (res) => {
+        this.$emit("child-event", res.data.dataList);
         setTimeout(() => {
           this.loading = false;
         }, 200);
-        this.tableData = res.data || [];
+        this.pagination.total = res.data.total;
+        this.tableData = res.data.dataList || [];
       });
       // 传值给header组件
       // http.get(`${URL.environment}?name`, (res) => {
       //   this.$emit("child-event", res.data);
       // });
-    },
-    // 环境名称模糊查询r
-    handleSearch(e) {
-      let value = e.target.value;
-      this.getEnvironmentData(value);
     },
     // 删除环境
     deleteEnvironment(row) {
@@ -258,6 +280,17 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
+      this.getEnvironmentData();
+    },
+    handleSearch() {
+      this.getEnvironmentData()
+    },
+    handleChangePage(page) {
+      this.pagination.pageNumber = page;
+      this.getEnvironmentData();
+    },
+    handleChangeSize(size) {
+      this.pagination.pageSize = size;
       this.getEnvironmentData();
     },
   },

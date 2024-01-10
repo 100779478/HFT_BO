@@ -4,7 +4,7 @@
 }
 
 .table-content {
-  border: 1px solid #e8eaec;
+  //border: 1px solid #e8eaec;
 
   .table-operate {
     font-size: 14px;
@@ -80,7 +80,7 @@ export default {
       //   minWidth: 100,
       // },
       {
-        title: "交易员运行时状态",
+        title: "服务运行时状态",
         key: "traderRunType",
         minWidth: 100,
         resizable: true,

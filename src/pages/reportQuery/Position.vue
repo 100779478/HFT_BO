@@ -9,7 +9,6 @@
 }
 
 .table-content {
-  border: 1px solid #e8eaec;
 
   .table-operate {
     font-size: 14px;
@@ -24,7 +23,6 @@
     text-overflow: "ellipsis";
     overflow: hidden;
     width: 200px;
-    white-space: "nowrap";
     color: red !important;
   }
 }
