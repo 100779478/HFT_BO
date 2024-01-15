@@ -55,7 +55,7 @@
             >你好, {{ username }}</span
           >
           <DropdownMenu slot="list">
-            <DropdownItem name="changePassword">修改密码</DropdownItem>
+<!--            <DropdownItem name="changePassword">修改密码</DropdownItem>-->
             <DropdownItem name="logout">退出登录</DropdownItem>
           </DropdownMenu>
         </Dropdown>

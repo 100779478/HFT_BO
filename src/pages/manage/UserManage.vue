@@ -95,13 +95,12 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="用户类型" prop="active">
+              <FormItem label="用户类型" prop="userType">
                 <Select
                     v-model="userInfo.userType"
                     class="mr3"
                     style="width: 120px"
                     placeholder="用户类型"
-                    :clearable="true"
                 >
                   <Option
                       v-for="item in this.$store.state.dictionaryList.UserType"
@@ -331,9 +330,9 @@ export default {
       tableHeight: 0,
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
-        customerName: [{required: true, message: "请输入用户名称"}],
+        // customerName: [{required: true, message: "请输入用户名称"}],
         // password: [{ required: true, message: "请输入密码" }],
-        userType: [{required: false, message: "请选择用户类型"}],
+        userType: [{required: true, message: "请选择用户类型"}],
         roles: [{required: false, message: "请选择用户角色"}],
         active: [{required: false, message: "请选择状态"}],
       },
@@ -418,6 +417,7 @@ export default {
           password: "",
           active: true,
           roleStr: "",
+          userType: ""
         };
         Object.assign(this.userInfo, info, {roles: this.allRoleList});
       } else {
@@ -443,12 +443,16 @@ export default {
         }
       }
       this.userInfo.roleIds = list;
+      // if (!this.userInfo.userType) {
+      //   this.userInfo.userType = null
+      // }
       if (isNew) {
         this.userInfo.password = this.$md5(this.userInfo.password);
         http.put(URL.user, this.userInfo, () => {
           this.getUserData(), this.cancel();
         });
       } else {
+        console.log(this.userInfo, 2222)
         http.post(
             `${URL.user}/${this.userInfo.customerId}`,
             this.userInfo,
