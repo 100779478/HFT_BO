@@ -17,7 +17,6 @@ const getLocalDictionaryList = () => {
       ChannelConnectStatus: [],
       Direction: [],
       HedgeType: [],
-      Direction: [],
       OffsetType: [],
       OrderStatus: [],
       ChannelType: [],

@@ -48,20 +48,24 @@
           span="19"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
-        <Input
-            v-model="searchParams.instrumentId"
-            class="mr3"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="合约代码"
-        >
-        </Input>
-        <Input
-            v-model="searchParams.combiNo"
-            class="mr3"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="持仓账号"
-        >
-        </Input>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.instrumentId"
+              class="mr3"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="合约代码"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.combiNo"
+              class="mr3"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="持仓账号"
+          >
+          </Input>
+        </form>
         <form autocomplete="off">
           <DatePicker
               class="mr3"
@@ -123,6 +127,7 @@ import {URL} from "@/api/serverApi";
 import {
   time,
   getHedgeType,
+  getPositionDirection
 } from "@/common/common";
 
 export default {
@@ -138,13 +143,6 @@ export default {
       {
         title: "持仓账号",
         key: "combiNo",
-        minWidth: 150,
-        resizable: true,
-        width: null,
-      },
-      {
-        title: "成交编号",
-        key: "tradeId",
         minWidth: 150,
         resizable: true,
         width: null,

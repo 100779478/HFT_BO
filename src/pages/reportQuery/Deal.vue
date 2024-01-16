@@ -50,35 +50,43 @@
           span="19"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
-        <Input
-            v-model="searchParams.orderSysId"
-            class="mr3"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="报单编号"
-        >
-        </Input>
-        <Input
-            class="mr3"
-            v-model="searchParams.tradeId"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="成交编号"
-        >
-        </Input>
-        <Input
-            v-model="searchParams.ruleId"
-            class="mr3"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="策略编号"
-            @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
-        >
-        </Input>
-        <Input
-            v-model="searchParams.instrumentId"
-            class="mr3"
-            style="float: right; width: 145px; border-radius: 20px"
-            placeholder="合约代码"
-        >
-        </Input>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.orderSysId"
+              class="mr3"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="报单编号"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              class="mr3"
+              v-model="searchParams.tradeId"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="成交编号"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.ruleId"
+              class="mr3"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="策略编号"
+              @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.instrumentId"
+              class="mr3"
+              style="float: right; width: 145px; border-radius: 20px"
+              placeholder="合约代码"
+          >
+          </Input>
+        </form>
         <form autocomplete="off">
           <DatePicker
               class="mr3"
