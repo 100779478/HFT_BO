@@ -1,7 +1,7 @@
 import axios from "axios";
 import {getToken} from "./token";
 import {Message} from "view-design";
-import {requestContextPath, URL} from "../api/serverApi";
+import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store/store";
 
@@ -9,7 +9,8 @@ const axiosInstance = axios.create({
     // timeout: 1000,
     baseURL: requestContextPath,
 });
-
+axiosInstance.defaults.headers['Access-Control-Allow-Origin'] = '*'
+axiosInstance.defaults.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE'
 export const http = {
     /**
      * HTTP GET 请求
@@ -20,7 +21,7 @@ export const http = {
      */
     get: (
         url,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -29,7 +30,7 @@ export const http = {
 
     getBlob: (
         url,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -49,7 +50,7 @@ export const http = {
     post: (
         url,
         data,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -58,7 +59,7 @@ export const http = {
     postBlob: (
         url,
         data,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -78,7 +79,7 @@ export const http = {
     put: (
         url,
         data,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -96,7 +97,7 @@ export const http = {
     delete: (
         url,
         data,
-        thenHandler = (response) => {
+        thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
     ) => {
@@ -165,33 +166,32 @@ axiosInstance.interceptors.request.use((config) => {
 /**
  * axios 响应拦截器
  */
+let is403MessageShown = false;
 axiosInstance.interceptors.response.use(
     (response) => {
         const code = response.data.code;
         if (response.status === 200) {
-            if (code === "100002") {
-                router.push({name: "Login"});
+            is403MessageShown = false;
+            // switch (code) {
+            //     case "100002":
+            //         // router.push({name: "Login"});
+            //     // case "110020":
+            //     // case "100001":
+            //     // case "110002":
+            //     // case "100000":
+            //     //   Message.error(response.data.errorMessage);
+            //     default:
+            if (response.data.errorMessage) {
+                Message.error(response.data.errorMessage);
             }
-            switch (code) {
-                case "100002":
-                    router.push({name: "Login"});
-                // case "110020":
-                // case "100001":
-                // case "110002":
-                // case "100000":
-                //   Message.error(response.data.errorMessage);
-                default:
-                    if (response.data.errorMessage) {
-                        Message.error(response.data.errorMessage);
-                    }
-            }
+            // }
             return response.data;
         }
         if (response.status === 403) {
             if (response.data.errorMessage) {
                 Message.error(response.data.errorMessage);
             }
-            router.push({name: "Login"});
+            // router.push({name: "Login"});
         }
         // if (response.status === 200 && response.data.code === "0") {
         //   return response.data;
@@ -203,7 +203,7 @@ axiosInstance.interceptors.response.use(
         // let errorResponse = error.response;
         let errorResponse = error.request;
         let httpStatus;
-        console.log("errorResponse", errorResponse);
+        console.log('onRejected Error:', error)
         if (undefined == errorResponse || null == errorResponse) {
             httpStatus = 500;
         } else {
@@ -212,8 +212,13 @@ axiosInstance.interceptors.response.use(
         switch (httpStatus) {
             case 0:
             case 403:
-                Message.error("登录信息已过期，请重新登录");
-                router.push({name: "Login"});
+                if (!is403MessageShown) {
+                    is403MessageShown = true;
+                    router.push({name: "Login"});
+                }
+                break;
+            case 401:
+                Message.error("权限不足");
                 break;
             case 503:
             case 500:

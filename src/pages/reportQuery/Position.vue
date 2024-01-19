@@ -291,7 +291,7 @@ export default {
         link.href = window.URL.createObjectURL(blob);
         // 设置链接元素的下载属性，指定文件名
         const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `成交单_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        link.download = `持仓_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
         // 将链接元素添加到文档中
         document.body.appendChild(link);
         // 触发点击事件以开始下载

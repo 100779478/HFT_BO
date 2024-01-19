@@ -18,6 +18,14 @@
     cursor: pointer;
   }
 }
+
+/* 针对自动填充样式的选择器 */
+input:-webkit-autofill {
+
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  /* 更多样式设置 */
+}
+
 </style>
 <template>
   <div>
@@ -41,6 +49,7 @@
             :mask-closable="false"
             :title="isNew ? '新增实体账户' : '编辑实体账户'"
         >
+          <input type="password" autocomplete="new-password" style="position: absolute; top: -999px;">
           <Form
               ref="ruleForm"
               :model="channelInfo"
@@ -51,13 +60,15 @@
           >
             <Col :span="18">
               <FormItem label="通道ID" prop="channelId">
-                <Input
-                    v-model="channelInfo.channelId"
-                    :disabled="!isNew"
-                    placeholder="请输入通道ID"
-                    :maxlength="16"
-                    show-message="false"
-                ></Input>
+                <form autocomplete="off">
+                  <Input
+                      v-model="channelInfo.channelId"
+                      :disabled="!isNew"
+                      placeholder="请输入通道ID"
+                      :maxlength="16"
+                      show-message="false"
+                  ></Input>
+                </form>
               </FormItem>
             </Col>
             <Col :span="18">
@@ -112,25 +123,44 @@
             </Col>
             <Col :span="18">
               <FormItem label="交易账号" prop="userId">
-                <Input
-                    v-model="channelInfo.userId"
-                    placeholder="请输入交易账号"
-                    :maxlength="16"
-                    show-message="false"
-                ></Input>
+                <form autocomplete="off">
+                  <Input
+                      v-model="channelInfo.userId"
+                      placeholder="请输入交易账号"
+                      :maxlength="16"
+                      show-message="false"
+                  ></Input>
+                </form>
               </FormItem>
             </Col>
             <Col :span="18">
               <FormItem label="密码" prop="password">
-                <Input
-                    v-model="channelInfo.password"
-                    placeholder="请输入密码"
-                    type="password"
-                    autocomplete="new-password"
-                    maxlength="20"
-                    password
-                >
-                </Input>
+                <div style="position: relative; height: 34px; overflow: hidden;">
+                  <!-- 下面的 Input 覆盖上面的 Input -->
+                  <form autocomplete="off">
+                    <Input
+                        @on-focus="handleFocus"
+                        @on-blur="handleBlur"
+                        ref="password"
+                        v-model="channelInfo.password"
+                        type="text"
+                        placeholder="请输入密码"
+                        maxlength="20"
+                        :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
+                    ></Input>
+                  </form>
+
+                  <!-- 上面的 Input 隐藏 -->
+                  <Input
+                      @on-focus="handleFocus2"
+                      v-model="channelInfo.password"
+                      type="password"
+                      placeholder="请输入密码"
+                      maxlength="20"
+                      :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
+                  ></Input>
+
+                </div>
               </FormItem>
             </Col>
             <Col :span="18">
@@ -287,6 +317,7 @@ export default {
       channelId: "",
     };
     return {
+      typeInput: true,
       loading: true,
       tableHeight: 0,
       userValidRules: {
@@ -327,6 +358,29 @@ export default {
     this.getTerminalType();
   },
   methods: {
+    handleFocus() {
+      this.typeInput = true
+      // 在第一个输入框获得焦点时将光标移动到输入框末尾
+      // this.$nextTick(() => {
+      //   console.log(this.$refs.password,3333)
+      //   this.$refs.password.focus({
+      //     cursor: 'end'
+      //   });
+      // });
+      // this.$nextTick(() => {
+      //   const inputElement = this.$refs.password.$el.querySelector('Input');
+      //   inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
+      //   console.log(inputElement, 333322)
+      // });
+    },
+    handleFocus2() {
+      this.typeInput = true
+      this.$refs.password.focus();
+    },
+    handleBlur() {
+      console.log(222, this.typeInput)
+      this.typeInput = false
+    },
     // 获取实体账户列表
     getChannelData(value) {
       this.pagination.channelId = value || "";
@@ -431,7 +485,7 @@ export default {
         title: `确认删除实体账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.channel}/${row.id}`, {}, () => {
+          http.delete(`${URL.channel}/${row.channelId}`, {}, () => {
             this.getChannelData();
           });
         },
