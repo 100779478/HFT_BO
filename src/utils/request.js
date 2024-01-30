@@ -5,6 +5,8 @@ import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store/store";
 
+
+let is403MessageShown = false;
 const axiosInstance = axios.create({
     // timeout: 1000,
     baseURL: requestContextPath,
@@ -56,6 +58,18 @@ export const http = {
     ) => {
         return axiosInstance.post(url, data).then(thenHandler).catch(errorHandler);
     },
+    // postBlob: (
+    //     url,
+    //     data,
+    //     thenHandler = () => {
+    //     },
+    //     errorHandler = defaultErrorHandler
+    // ) => {
+    //     return axiosInstance
+    //         .post(url, data, {responseType: "blob"})
+    //         .then(thenHandler)
+    //         .catch(errorHandler);
+    // },
     postBlob: (
         url,
         data,
@@ -64,10 +78,41 @@ export const http = {
         errorHandler = defaultErrorHandler
     ) => {
         return axiosInstance
-            .post(url, data, {responseType: "blob"})
+            .post(url, data, {
+                responseType: "blob",  // 设置成功响应的数据类型为 blob
+            })
             .then(thenHandler)
-            .catch(errorHandler);
+            .catch(error => {
+                // 在这里处理错误，包括获取blob类型的数据
+                if (error.response && error.response.data instanceof Blob) {
+                    console.log("Blob 数据:", error.response.data);
+                    // 尝试将 Blob 数据转换为 JSON
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        try {
+                            const jsonData = JSON.parse(reader.result);
+                            console.log("成功转换为 JSON 数据:", jsonData);
+                            // 从 JSON 数据中取得 errorMessage，并在这里处理
+                            const errorMessage = jsonData.errorMessage;
+                            Message.error(jsonData.errorMessage)
+                            console.log("错误消息:", errorMessage);
+                            // 在这里处理 errorMessage，例如调用自定义错误处理函数
+                            // errorHandler(errorMessage);
+                        } catch (jsonError) {
+                            console.error("转换为 JSON 出错:", jsonError);
+                            // 转换失败，调用自定义的错误处理函数
+                            errorHandler(error);
+                        }
+                    };
+
+                    reader.readAsText(error.response.data);
+                } else {
+                    // 处理其他错误，调用自定义的错误处理函数
+                    return errorHandler(error);
+                }
+            });
     },
+
     /**
      * HTTP PUT 请求
      * @param {string} url - 请求地址
@@ -154,9 +199,12 @@ axiosInstance.interceptors.request.use((config) => {
         });
     }
     const token = getToken();
-    if (null == token || undefined == token || "" === token) {
-        Message.error("登录过期，请重新登录！");
-        router.push("/login");
+    if (!token) {
+        if (!is403MessageShown) {
+            Message.error("登录过期，请重新登录！");
+            router.push("/login");
+            is403MessageShown = true
+        }
         return config;
     }
     config.headers["Authorization"] = `Bearer ${token}`;
@@ -166,7 +214,6 @@ axiosInstance.interceptors.request.use((config) => {
 /**
  * axios 响应拦截器
  */
-let is403MessageShown = false;
 axiosInstance.interceptors.response.use(
     (response) => {
         const code = response.data.code;
@@ -188,19 +235,16 @@ axiosInstance.interceptors.response.use(
             return response.data;
         }
         if (response.status === 403) {
+            console.log(33333, response.data)
             if (response.data.errorMessage) {
                 Message.error(response.data.errorMessage);
             }
             // router.push({name: "Login"});
         }
-        // if (response.status === 200 && response.data.code === "0") {
-        //   return response.data;
-        // }
         throw response.data;
         // throw new Error(response)
     },
     (error) => {
-        // let errorResponse = error.response;
         let errorResponse = error.request;
         let httpStatus;
         console.log('onRejected Error:', error)
@@ -215,11 +259,11 @@ axiosInstance.interceptors.response.use(
                 if (!is403MessageShown) {
                     is403MessageShown = true;
                     router.push({name: "Login"});
+                    return Promise.reject(error);
                 }
-                break;
+                break
             case 401:
-                Message.error("权限不足");
-                break;
+                return Promise.reject(error);
             case 503:
             case 500:
             case 502:

@@ -396,8 +396,10 @@ export default {
         title: `确认删除角色吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.role}/${row.id}`, {}, () => {
-            this.$Message.success("删除成功");
+          http.delete(`${URL.role}/${row.id}`, {}, (res) => {
+            if (res.code === "0") {
+              this.$Message.success("删除成功");
+            }
             this.getRoleData();
           });
         },
