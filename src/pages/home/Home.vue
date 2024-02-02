@@ -12,6 +12,7 @@
   height: 100%;
 }
 
+
 .layout-logo-left {
   width: 90%;
   height: 30px;
@@ -19,6 +20,7 @@
   border-radius: 3px;
   margin: 15px auto;
 }
+
 
 .ivu-layout-sider {
   .ivu-layout-sider-collapsed {

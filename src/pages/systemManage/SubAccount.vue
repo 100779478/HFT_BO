@@ -189,6 +189,7 @@
     </Row>
     <Table
         :columns="columns1"
+        size="small"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -328,7 +329,7 @@ export default {
       foundationLabel: "基金账户",
       traderLabel: "交易员编码",
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请选择用户代码"}],
         tradeChannel: [{required: true, message: "请选择交易通道"}],
@@ -363,11 +364,17 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getChannelData();
     // 获取交易通道
     this.getTradeChannel();
     this.getUserData();
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+    })
   },
   methods: {
     // 获取分账户列表

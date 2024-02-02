@@ -192,7 +192,7 @@ export default {
     };
     return {
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       environmentInfo: {
         name: "",
         comment: "",
@@ -206,8 +206,14 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getEnvironmentData();
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+    })
   },
   methods: {
     // 获取环境列表

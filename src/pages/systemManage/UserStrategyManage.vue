@@ -288,7 +288,7 @@ export default {
     };
     return {
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       userValidRules: {
         // username: [{ required: true, message: "请输入用户策略账号" }],
         // customerName: [{ required: true, message: "请输入用户策略名称" }],
@@ -318,7 +318,9 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getUserStrategyData();
     this.getUserList();
     this.getStrategyType();

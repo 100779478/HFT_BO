@@ -133,14 +133,16 @@ export default {
     ];
     return {
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       tableData: [],
       columns1,
     };
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getChannelStatus();
   },
   methods: {

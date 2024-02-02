@@ -164,6 +164,7 @@
     </Row>
     <Table
         :columns="columns1"
+        size="small"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -240,7 +241,7 @@ export default {
     return {
       loading: true,
       pagination,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       roleInfo: {
         name: "",
         id: null,
@@ -267,9 +268,15 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+    window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getRoleData();
     this.getPermissionData();
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+    })
   },
   methods: {
     handleCheckAll(type) {

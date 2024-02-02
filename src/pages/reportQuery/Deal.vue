@@ -1,37 +1,5 @@
 <style lang="less" scoped>
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
-
-.ivu-tooltip {
-  .ivu-tooltip-ref {
-    text-overflow: "ellipsis";
-    overflow: hidden;
-    width: 200px;
-    //white-space: "nowrap";
-    color: red !important;
-  }
-}
-
-.mr3 {
-  margin-right: 3px;
-}
+@import url("@/style/manage.less");
 </style>
 <template>
   <div>
@@ -126,6 +94,7 @@
     </Row>
     <Table
         :columns="columns1"
+        size="small"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -323,7 +292,7 @@ export default {
     let timeRange = [];
     return {
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       tableData: [],
       columns1,
       pagination,
@@ -335,8 +304,14 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getDealData();
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+    })
   },
   methods: {
     // 获取订单列表

@@ -1,35 +1,6 @@
-<style lang="less" scoped>
-.ivu-table-tip {
-  font-size: 26px;
-}
+<style lang="less">
+@import url("@/style/manage.less");
 
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  ::v-deep .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-
-
-}
-
-.ivu-tooltip {
-  .ivu-tooltip-ref {
-    text-overflow: "ellipsis";
-    overflow: hidden;
-    width: 200px;
-    white-space: "nowrap";
-    color: red !important;
-  }
-}
 </style>
 <template>
   <div>
@@ -159,6 +130,7 @@
     </Row>
     <Table
         :columns="columns1"
+        size="small"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -327,7 +299,7 @@ export default {
     };
     return {
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
         // customerName: [{required: true, message: "请输入用户名称"}],
@@ -355,9 +327,16 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
     this.getUserData();
     this.getAllRoleData();
+    window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
   },
   methods: {
     // 获取用户列表

@@ -200,6 +200,7 @@ input:-webkit-autofill {
     </Row>
     <Table
         :columns="columns1"
+        size="small"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -319,7 +320,7 @@ export default {
     return {
       typeInput: true,
       loading: true,
-      tableHeight: 0,
+      tableHeight: window.innerHeight - 220,
       userValidRules: {
         channelId: [{required: true, message: "请输入通道ID"}],
         apiType: [{required: true, message: "请选择外部接口类型"}],
@@ -350,12 +351,18 @@ export default {
   },
   mounted() {
     // 动态高度
-    this.tableHeight = window.innerHeight - 260;
+     window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
     this.getChannelData();
     // 获取外部接口类型
     this.getAPIType();
     // 获取通道类型
     this.getTerminalType();
+  },
+  unMounted() {
+    window.removeEventListener('resize', () => {
+    })
   },
   methods: {
     handleFocus() {

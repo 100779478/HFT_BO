@@ -2,7 +2,10 @@
 .layout-header-bar {
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  height: 50px;
+  line-height: 50px;
 }
+
 .select-style {
   width: 100px;
   margin-right: 20px;
@@ -19,43 +22,44 @@
         size="20"
       ></Icon> -->
       <Icon
-        type="md-refresh"
-        size="20"
-        :style="{ margin: '0 20px', color: '#86909c', cursor: 'pointer' }"
-        @click="refresh"
+          type="md-refresh"
+          size="20"
+          :style="{ margin: '0 20px', color: '#86909c', cursor: 'pointer' }"
+          @click="refresh"
       >
       </Icon>
 
       <div
-        :style="{
+          :style="{
           float: 'right',
           margin: '0 30px',
         }"
       >
         <span style="font-size: 17px; font-weight: bold">环境：</span>
         <Select
-          class="select-style"
-          @on-change="postEnvironmentList"
-          v-model="environmentId"
+            class="select-style"
+            @on-change="postEnvironmentList"
+            v-model="environmentId"
         >
           <Option
-            v-for="item in environmentList"
-            :key="item.id"
-            :value="item.id"
-            >{{ item.name }}</Option
+              v-for="item in environmentList"
+              :key="item.id"
+              :value="item.id"
+          >{{ item.name }}
+          </Option
           >
         </Select>
         <Dropdown @on-click="handleClick">
           <Avatar
-            style="background-color: #00abe4; cursor: pointer"
-            icon="md-person"
+              style="background-color: #00abe4; cursor: pointer"
+              icon="md-person"
           >
           </Avatar>
           <span style="margin-left: 10px; cursor: pointer"
-            >你好, {{ username }}</span
+          >你好, {{ username }}</span
           >
           <DropdownMenu slot="list">
-<!--            <DropdownItem name="changePassword">修改密码</DropdownItem>-->
+            <!--            <DropdownItem name="changePassword">修改密码</DropdownItem>-->
             <DropdownItem name="logout">退出登录</DropdownItem>
           </DropdownMenu>
         </Dropdown>
@@ -70,11 +74,11 @@
               <span style="color: red">*</span>原密码：
             </label>
             <Input
-              style="width: 200px"
-              placeholder="请输入原密码"
-              v-model="oldPassword"
-              type="password"
-              password
+                style="width: 200px"
+                placeholder="请输入原密码"
+                v-model="oldPassword"
+                type="password"
+                password
             ></Input>
           </Col>
         </Row>
@@ -85,11 +89,11 @@
               <span style="color: red">*</span>新密码：
             </label>
             <Input
-              style="width: 200px"
-              placeholder="请输入新密码"
-              v-model="newPassword"
-              type="password"
-              password
+                style="width: 200px"
+                placeholder="请输入新密码"
+                v-model="newPassword"
+                type="password"
+                password
             ></Input>
           </Col>
         </Row>
@@ -102,9 +106,9 @@
   </div>
 </template>
 <script>
-import { http } from "@/utils/request";
-import { URL } from "@/api/serverApi";
-import { removeToken } from "@/utils/token";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {removeToken} from "@/utils/token";
 import router from "@/router";
 
 export default {
@@ -161,7 +165,7 @@ export default {
           content: "<p>您确定退出登录当前账户吗？</p>",
           onOk: () => {
             http.delete(URL.logout, {}, removeToken);
-            this.$router.push({ name: "Login" });
+            this.$router.push({name: "Login"});
           },
         });
       }
