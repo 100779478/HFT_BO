@@ -105,6 +105,13 @@ export default {
   data() {
     let columns1 = [
       {
+        title: "交易日",
+        key: "tradingDay",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+      },
+      {
         title: "合约代码",
         key: "instrumentId",
         minWidth: 150,

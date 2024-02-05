@@ -368,6 +368,7 @@ export default {
       http.post(URL.role, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
+          this.pagination.total = res.data.total;
         }, 200);
         this.tableData = res.data.dataList || [];
       });

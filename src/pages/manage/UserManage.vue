@@ -110,6 +110,10 @@
       </Col>
       <Col span="8" offset="8">
         <form autocomplete="off">
+          <Select v-model="pagination.actives" multiple style="width:180px;float: right;margin-left:5px"
+                  @on-change="handleSearch">
+            <Option v-for="item in activeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
           <Input
               v-model="pagination.customerName"
               style="float: right; width: 180px; border-radius: 20px"
@@ -146,25 +150,25 @@
           <div @click="() => changeUserStatus(row)" class="table-operate">
             {{ !row.active ? "启用" : "禁用" }}
           </div>
-          <!--          <div class="table-operate">-->
-          <!--            <Dropdown-->
-          <!--                trigger="hover"-->
-          <!--                transfer-->
-          <!--                @on-click="doOperate($event, row, index)"-->
-          <!--            >-->
-          <!--              <a style="color: #02aff1; font-size: 14px">-->
-          <!--                {{ "更多" }}-->
-          <!--                <Icon type="ios-arrow-down"></Icon>-->
-          <!--              </a>-->
-          <!--              <DropdownMenu slot="list">-->
-          <!--                <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
-          <!--                <DropdownItem name="dele" style="color: #ed4014"-->
-          <!--                >删除用户-->
-          <!--                </DropdownItem-->
-          <!--                >-->
-          <!--              </DropdownMenu>-->
-          <!--            </Dropdown>-->
-          <!--          </div>-->
+          <div class="table-operate">
+            <Dropdown
+                trigger="hover"
+                transfer
+                @on-click="doOperate($event, row, index)"
+            >
+              <a style="color: #02aff1; font-size: 14px">
+                {{ "更多" }}
+                <Icon type="ios-arrow-down"></Icon>
+              </a>
+              <DropdownMenu slot="list">
+                <!--                          <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
+                <DropdownItem name="dele" style="color: #ed4014"
+                >删除用户
+                </DropdownItem
+                >
+              </DropdownMenu>
+            </Dropdown>
+          </div>
         </div>
       </template>
     </Table>
@@ -296,8 +300,20 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       customerName: "",
+      actives: [],
     };
+    const activeList = [
+      {
+        value: true,
+        label: '已启用'
+      },
+      {
+        value: false,
+        label: '已禁用'
+      },
+    ]
     return {
+      activeList,
       loading: true,
       tableHeight: window.innerHeight - 220,
       userValidRules: {
@@ -396,7 +412,7 @@ export default {
           password: "",
           active: true,
           roleStr: "",
-          userType: ""
+          userType: "",
         };
         Object.assign(this.userInfo, info, {roles: this.allRoleList});
       } else {
@@ -431,7 +447,6 @@ export default {
           this.getUserData(), this.cancel();
         });
       } else {
-        console.log(this.userInfo, 2222)
         http.post(
             `${URL.user}/${this.userInfo.customerId}`,
             this.userInfo,
@@ -490,7 +505,7 @@ export default {
         });
       }
       if (type === "delete") {
-        http.delete(`${URL.user}/${row.userId}`);
+        http.delete(`${URL.user}/${row.customerId}`);
       }
       setTimeout(() => {
         this.getUserData();
@@ -529,6 +544,7 @@ export default {
         pageSize: 20,
         pageNumber: 1,
         customerId: "",
+        actives: this.pagination.actives
       };
       this.getUserData();
     },

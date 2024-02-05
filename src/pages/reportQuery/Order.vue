@@ -68,9 +68,11 @@
         <Select
             v-model="searchParams.orderStatus"
             class="mr3"
-            style="width: 120px"
+            style="width: 200px"
             placeholder="报单状态"
             :clearable="true"
+            :max-tag-count="1"
+            multiple
         >
           <Option
               v-for="item in this.$store.state.dictionaryList.OrderStatus"
@@ -127,6 +129,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="handleSort"
     >
     </Table>
     <template>
@@ -165,6 +168,7 @@ export default {
         minWidth: 120,
         resizable: true,
         width: null,
+        sortable: 'custom'
       },
       {
         title: "交易账号",
@@ -319,6 +323,20 @@ export default {
         resizable: true,
         width: null,
       },
+      {
+        title: "更新时间",
+        key: "updateTime",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+      },
+      {
+        title: "撤单时间",
+        key: "cancelTime",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+      },
     ];
     let pagination = {
       total: 0,
@@ -326,6 +344,7 @@ export default {
       pageNumber: 1,
     };
     let searchParams = {
+      orderStatus: [],
       orderInnerId: "",
       orderSysId: "",
       ruleId: "",
@@ -352,7 +371,7 @@ export default {
   },
   mounted() {
     // 动态高度
-     window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.tableHeight = window.innerHeight - 220
     })
     this.getOrderData();
@@ -388,7 +407,6 @@ export default {
         this.tableData = res.data.dataList;
       });
     },
-
     handleChangePage(page) {
       this.pagination.pageNumber = page;
       this.getOrderData();
@@ -446,6 +464,10 @@ export default {
         document.body.removeChild(link);
       });
     },
+    // 表头排序
+    handleSort(a, b, c) {
+      console.log(a, b, c, 2222)
+    }
   },
 };
 </script>

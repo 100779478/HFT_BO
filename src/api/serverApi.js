@@ -3,8 +3,8 @@
 // 玺子哥IP
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
-const devUrl = "http://106.12.178.118:9000";
-// const devUrl = "http://192.168.50.17:9000";
+// const devUrl = "http://106.12.178.118:9000";
+const devUrl = "http://192.168.50.17:9000";
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
