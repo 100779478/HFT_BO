@@ -84,6 +84,7 @@
         </Select>
         <form autocomplete="off">
           <DatePicker
+              split-panels
               class="mr3"
               type="daterange"
               placement="bottom-end"
