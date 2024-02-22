@@ -5,15 +5,51 @@
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col span="8">
+      <Col span="">
+        <form autocomplete="off">
+          <Select v-model="pagination.actives" multiple style="width:180px;float: right;margin-left:5px"
+                  @on-change="handleSearch">
+            <Option v-for="item in activeList" :value="item.value" :key="item.value">{{
+                item.label
+              }}
+            </Option>
+          </Select>
+          <Input
+              v-model="pagination.customerName"
+              style="float: right; width: 180px; border-radius: 20px"
+              placeholder="用户名称"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
+      </Col>
+      <Col style="position: absolute;right: 25px">
         <!--        <Button type="info" @click="modalUser('new')">-->
         <!--          <Icon type="md-add"/>-->
         <!--          新增用户-->
         <!--        </Button>-->
-        <Button type="success" @click="refresh()">
-          <Icon type="md-refresh"/>
-          刷新
-        </Button>
+        <!--        <Button type="success" @click="refresh()">-->
+        <!--          <Icon type="md-refresh"/>-->
+        <!--          刷新-->
+        <!--        </Button>-->
+<!--        <Button type="info" @click="handleSearch()" style="margin-right: 5px">-->
+<!--          <Icon type="md-search"/>-->
+<!--          查询-->
+<!--        </Button>-->
+        <Button type="success" @click="handleExportOrders()" class="mr3"
+        >
+          <Icon type="md-download"/>
+          导出
+        </Button
+        >
         <Modal
             v-model="showAddModal"
             draggable
@@ -108,29 +144,6 @@
           </div>
         </Modal>
       </Col>
-      <Col span="8" offset="8">
-        <form autocomplete="off">
-          <Select v-model="pagination.actives" multiple style="width:180px;float: right;margin-left:5px"
-                  @on-change="handleSearch">
-            <Option v-for="item in activeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-          <Input
-              v-model="pagination.customerName"
-              style="float: right; width: 180px; border-radius: 20px"
-              placeholder="用户名称"
-              @on-keydown.enter="handleSearch"
-              @on-change="handleSearch"
-          >
-            <Icon
-                type="ios-search"
-                slot="suffix"
-                size="19"
-                @click.native="handleSearch"
-                style="cursor: pointer"
-            />
-          </Input>
-        </form>
-      </Col>
     </Row>
     <Table
         :columns="columns1"
@@ -192,7 +205,8 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
-import {getUserType} from "@/common/common";
+import {getUserType, time} from "@/common/common";
+import moment from "moment/moment";
 
 export default {
   props: ["userId"],
@@ -547,6 +561,25 @@ export default {
         actives: this.pagination.actives
       };
       this.getUserData();
+    },
+    // 导出列表
+    handleExportOrders() {
+      // 校验策略编号必须为数字类型
+      http.postBlob(URL.userExport, this.pagination, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `用户管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
+      });
     },
   },
 };

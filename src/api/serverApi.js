@@ -3,8 +3,8 @@
 // 玺子哥IP
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
-const devUrl = "http://106.12.178.118:9000";
-// const devUrl = "http://192.168.50.17:9000";
+// const devUrl = "http://106.12.178.118:9000";
+const devUrl = "http://192.168.50.17:9000";
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -29,12 +29,18 @@ export const URL = {
     current: "/customer/current",
     // 获取分页用户列表
     user: "/customer",
+    // 导出用户管理
+    userExport: "/customer/export",
     // GET获取用户列表,
     userList: "/customer/list",
     // 获取所有角色列表
     role: "/role",
+    // 导出角色管理
+    roleExport: "/role/export",
     // 查询环境列表
     environment: "/env/list",
+    // 导出环境列表
+    environmentExport: "/env/list/export",
     // 切换环境
     setEnvironment: "/env/set",
     // 删除环境
@@ -45,8 +51,6 @@ export const URL = {
     environmentCurrent: "/env/current",
     // 修改环境
     modificationEnvironment: "/env",
-    // // 角色列表
-    // role: '/role',
     // 获取所有权限列表
     permission: "/permission",
     // 修改通道、添加通道
@@ -59,10 +63,14 @@ export const URL = {
     channelType: "/channel/channelType",
     // 分页获取客户通道数据
     channelTrade: "/cus-channel/list",
+    // 导出实体账户
+    channelTradeExport: "/channel/export",
     // 获取交易通道
     tradeChannel: "/channel/current",
     // 添加、修改、删除客户通道
     customChannel: "/cus-channel",
+    // 导出分账户
+    customChannelExport: "/cus-channel/export",
     // 分页获取用户策略
     ruleList: "/rule/list",
     // 添加、修改、删除用户策略
@@ -71,16 +79,18 @@ export const URL = {
     ruleType: "/rule/type",
     // 获取连接状态
     channelStatus: "/channel-status",
+    // 导出连接状态
+    channelStatusExport: "/channel-status/export",
     // 获取订单列表
     orders: "/order",
     // 导出订单
     ordersExport: "/order/export",
-    // 获取订单列表
+    // 获取成交列表
     deals: "/deal",
-    // 导出订单
+    // 导出成交
     dealsExport: "/deal/export",
-    // 获取订单列表
+    // 获取持仓列表
     position: "/position",
-    // 导出订单
+    // 导出持仓
     positionExport: "/position/export",
 };

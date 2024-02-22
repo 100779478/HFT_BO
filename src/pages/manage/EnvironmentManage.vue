@@ -22,20 +22,44 @@
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col span="8">
+      <Col>
+        <form autocomplete="off">
+          <Input
+              v-model="pagination.environmentName"
+              style="float: right; width: 160px; border-radius: 20px"
+              placeholder="环境名称"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
+      </Col>
+      <Col style="position: absolute;right: 25px">
         <Button type="info" @click="modalUser('new')"
+                style="margin-right: 5px"
         >
           <Icon type="md-add"/>
           新增环境
         </Button
         >
-        &nbsp;
-        <Button type="success" @click="refresh()"
+        <Button type="success" @click="handleExportOrders()" class="mr3"
         >
-          <Icon type="md-refresh"/>
-          刷新
+          <Icon type="md-download"/>
+          导出
         </Button
         >
+        <!--        <Button type="success" @click="refresh()"-->
+        <!--        >-->
+        <!--          <Icon type="md-refresh"/>-->
+        <!--          刷新-->
+        <!--        </Button-->
+        <!--        >-->
         <Modal
             v-model="showAddModal"
             draggable
@@ -79,24 +103,6 @@
             <Button type="primary" @click="ok(isNew)">确定</Button>
           </div>
         </Modal>
-      </Col>
-      <Col span="8" offset="8">
-        <form autocomplete="off">
-          <Input
-              v-model="pagination.environmentName"
-              style="float: right; width: 160px; border-radius: 20px"
-              placeholder="环境名称"
-              @on-keydown.enter="handleSearch"
-              @on-change="handleSearch"
-          >
-            <Icon
-                type="ios-search"
-                slot="suffix"
-                size="19"
-                style="cursor: pointer"
-            />
-          </Input>
-        </form>
       </Col>
     </Row>
     <Table
@@ -156,6 +162,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import {time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -206,7 +213,7 @@ export default {
   },
   mounted() {
     // 动态高度
-     window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.tableHeight = window.innerHeight - 220
     })
     this.getEnvironmentData();
@@ -298,6 +305,25 @@ export default {
     handleChangeSize(size) {
       this.pagination.pageSize = size;
       this.getEnvironmentData();
+    },
+    // 导出列表
+    handleExportOrders() {
+      // 校验策略编号必须为数字类型
+      http.postBlob(URL.environmentExport, this.pagination, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `用户管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
+      });
     },
   },
 };

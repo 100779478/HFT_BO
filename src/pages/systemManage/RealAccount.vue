@@ -30,155 +30,7 @@ input:-webkit-autofill {
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col span="8">
-        <Button type="info" @click="modalChannel('new')">
-          <Icon type="md-add"/>
-          新增实体账户
-        </Button>
-        &nbsp;
-        <Button type="success" @click="refresh()">
-          <Icon type="md-refresh"/>
-          刷新
-        </Button>
-        <Modal
-            v-model="showAddModal"
-            draggable
-            sticky
-            mask
-            :width="600"
-            :mask-closable="false"
-            :title="isNew ? '新增实体账户' : '编辑实体账户'"
-        >
-          <input type="password" autocomplete="new-password" style="position: absolute; top: -999px;">
-          <Form
-              ref="ruleForm"
-              :model="channelInfo"
-              :label-width="210"
-              label-colon
-              :rules="userValidRules"
-              autocomplete="off"
-          >
-            <Col :span="18">
-              <FormItem label="通道ID" prop="channelId">
-                <form autocomplete="off">
-                  <Input
-                      v-model="channelInfo.channelId"
-                      :disabled="!isNew"
-                      placeholder="请输入通道ID"
-                      :maxlength="16"
-                      show-message="false"
-                  ></Input>
-                </form>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="外部接口类型" prop="apiType">
-                <Select
-                    v-model="channelInfo.apiType"
-                    placeholder="请选择通道类型"
-                    :maxlength="32"
-                    @on-change="getApiTerminalType"
-                    :disabled="!isNew"
-                >
-                  <Option
-                      v-for="item in channelType"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="通道类型" prop="terminalType">
-                <Select
-                    v-model="channelInfo.terminalType"
-                    placeholder="请选择通道类型"
-                    :maxlength="32"
-                    :disabled="!isNew"
-                    v-if="isNew"
-                >
-                  <Option
-                      v-for="item in channelTrade"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.name }}
-                  </Option>
-                </Select>
-                <Select
-                    v-model="channelInfo.terminalType"
-                    placeholder="请选择通道类型"
-                    :maxlength="32"
-                    :disabled="!isNew"
-                    v-else
-                >
-                  <Option
-                      v-for="item in channelTrade"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="交易账号" prop="userId">
-                <form autocomplete="off">
-                  <Input
-                      v-model="channelInfo.userId"
-                      placeholder="请输入交易账号"
-                      :maxlength="16"
-                      show-message="false"
-                  ></Input>
-                </form>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="密码" prop="password">
-                <div style="position: relative; height: 34px; overflow: hidden;">
-                  <!-- 下面的 Input 覆盖上面的 Input -->
-                  <form autocomplete="off">
-                    <Input
-                        @on-focus="handleFocus"
-                        @on-blur="handleBlur"
-                        ref="password"
-                        v-model="channelInfo.password"
-                        type="text"
-                        placeholder="请输入密码"
-                        maxlength="20"
-                        :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
-                    ></Input>
-                  </form>
-
-                  <!-- 上面的 Input 隐藏 -->
-                  <Input
-                      @on-focus="handleFocus2"
-                      v-model="channelInfo.password"
-                      type="password"
-                      placeholder="请输入密码"
-                      maxlength="20"
-                      :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
-                  ></Input>
-
-                </div>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="状态" prop="active">
-                <i-Switch
-                    v-model="channelInfo.active"
-                    style="margin-top: 5px"
-                />
-              </FormItem>
-            </Col>
-          </Form>
-          <div slot="footer">
-            <Button type="text" @click="cancel">取消</Button>
-            <Button type="primary" @click="ok(isNew)">确定</Button>
-          </div>
-        </Modal>
-      </Col>
-      <Col span="8" offset="8">
+      <Col>
         <form autocomplete="off">
           <Input
               v-model="pagination.channelId"
@@ -196,6 +48,160 @@ input:-webkit-autofill {
             />
           </Input>
         </form>
+      </Col>
+      <Col style="position: absolute;right: 25px">
+        <Button type="info" @click="modalChannel('new')" style="margin-right: 5px">
+          <Icon type="md-add"/>
+          新增实体账户
+        </Button>
+        <Button type="success" @click="handleExportOrders()" class="mr3"
+        >
+          <Icon type="md-download"/>
+          导出
+        </Button
+        >
+      </Col>
+      <!--        <Button type="success" @click="refresh()">-->
+      <!--          <Icon type="md-refresh"/>-->
+      <!--          刷新-->
+      <!--        </Button>-->
+      <Modal
+          v-model="showAddModal"
+          draggable
+          sticky
+          mask
+          :width="600"
+          :mask-closable="false"
+          :title="isNew ? '新增实体账户' : '编辑实体账户'"
+      >
+        <input type="password" autocomplete="new-password" style="position: absolute; top: -999px;">
+        <Form
+            ref="ruleForm"
+            :model="channelInfo"
+            :label-width="210"
+            label-colon
+            :rules="userValidRules"
+            autocomplete="off"
+        >
+          <Col :span="18">
+            <FormItem label="通道ID" prop="channelId">
+              <form autocomplete="off">
+                <Input
+                    v-model="channelInfo.channelId"
+                    :disabled="!isNew"
+                    placeholder="请输入通道ID"
+                    :maxlength="16"
+                    show-message="false"
+                ></Input>
+              </form>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="外部接口类型" prop="apiType">
+              <Select
+                  v-model="channelInfo.apiType"
+                  placeholder="请选择通道类型"
+                  :maxlength="32"
+                  @on-change="getApiTerminalType"
+                  :disabled="!isNew"
+              >
+                <Option
+                    v-for="item in channelType"
+                    :key="item.code"
+                    :value="item.code"
+                >{{ item.name }}
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="通道类型" prop="terminalType">
+              <Select
+                  v-model="channelInfo.terminalType"
+                  placeholder="请选择通道类型"
+                  :maxlength="32"
+                  :disabled="!isNew"
+                  v-if="isNew"
+              >
+                <Option
+                    v-for="item in channelTrade"
+                    :key="item.code"
+                    :value="item.code"
+                >{{ item.name }}
+                </Option>
+              </Select>
+              <Select
+                  v-model="channelInfo.terminalType"
+                  placeholder="请选择通道类型"
+                  :maxlength="32"
+                  :disabled="!isNew"
+                  v-else
+              >
+                <Option
+                    v-for="item in channelTrade"
+                    :key="item.code"
+                    :value="item.code"
+                >{{ item.name }}
+                </Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="交易账号" prop="userId">
+              <form autocomplete="off">
+                <Input
+                    v-model="channelInfo.userId"
+                    placeholder="请输入交易账号"
+                    :maxlength="16"
+                    show-message="false"
+                ></Input>
+              </form>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="密码" prop="password">
+              <div style="position: relative; height: 34px; overflow: hidden;">
+                <!-- 下面的 Input 覆盖上面的 Input -->
+                <form autocomplete="off">
+                  <Input
+                      @on-focus="handleFocus"
+                      @on-blur="handleBlur"
+                      ref="password"
+                      v-model="channelInfo.password"
+                      type="text"
+                      placeholder="请输入密码"
+                      maxlength="20"
+                      :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
+                  ></Input>
+                </form>
+
+                <!-- 上面的 Input 隐藏 -->
+                <Input
+                    @on-focus="handleFocus2"
+                    v-model="channelInfo.password"
+                    type="password"
+                    placeholder="请输入密码"
+                    maxlength="20"
+                    :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
+                ></Input>
+
+              </div>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="状态" prop="active">
+              <i-Switch
+                  v-model="channelInfo.active"
+                  style="margin-top: 5px"
+              />
+            </FormItem>
+          </Col>
+        </Form>
+        <div slot="footer">
+          <Button type="text" @click="cancel">取消</Button>
+          <Button type="primary" @click="ok(isNew)">确定</Button>
+        </div>
+      </Modal>
       </Col>
     </Row>
     <Table
@@ -248,6 +254,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import {time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -351,7 +358,7 @@ export default {
   },
   mounted() {
     // 动态高度
-     window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.tableHeight = window.innerHeight - 220
     })
     this.getChannelData();
@@ -511,6 +518,25 @@ export default {
       this.getChannelData();
       this.getAPIType();
       this.getTerminalType();
+    },
+    // 导出列表
+    handleExportOrders() {
+      // 校验策略编号必须为数字类型
+      http.postBlob(URL.channelTradeExport, this.pagination, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `连接状态_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
+      });
     },
   },
 };

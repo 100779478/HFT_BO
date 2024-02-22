@@ -142,6 +142,7 @@ export default {
     },
   },
   mounted() {
+    this.$router.push({ name: "Dashboard" });
     http.get(URL.menus, this.getMenuList);
   },
   methods: {
@@ -174,9 +175,9 @@ export default {
       this.menuList = data;
     },
   },
-  updated() {
-    this.$router.push({ name: "Dashboard" });
-    // this.$router.push({ name: "UserManage" });
-  },
+  // updated() {
+  //   this.$router.push({ name: "Dashboard" });
+  //   // this.$router.push({ name: "UserManage" });
+  // },
 };
 </script>
