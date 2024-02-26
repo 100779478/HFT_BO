@@ -202,6 +202,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getChannelData)"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -243,7 +244,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time} from "@/common/common";
+import {handleSort, time} from "@/common/common";
 import {getUserInfo} from "@/utils/token";
 import {Message} from "view-design";
 
@@ -254,9 +255,10 @@ export default {
       {
         title: "用户代码",
         key: "customerId",
-        minWidth: 100,
+        minWidth: 110,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       // {
       //   title: "用户名称",
@@ -269,6 +271,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "分账号代码",
@@ -276,6 +279,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "交易接口类型",
@@ -283,6 +287,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "资产账户",
@@ -290,6 +295,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "组合账户",
@@ -297,6 +303,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "基金账户",
@@ -304,6 +311,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "交易员编号",
@@ -311,6 +319,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "备注",
@@ -318,6 +327,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "操作", slot: "operator", minWidth: 150, resizable: true,
@@ -384,6 +394,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     // 获取分账户列表
     getChannelData(value) {
       this.pagination.accountId = value || "";

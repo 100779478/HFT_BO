@@ -213,6 +213,7 @@ input:-webkit-autofill {
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getChannelData)"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -254,7 +255,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time} from "@/common/common";
+import {handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -266,6 +267,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "外部接口类型",
@@ -273,6 +275,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "通道类型",
@@ -280,6 +283,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "交易账号",
@@ -287,6 +291,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "是否启用",
@@ -294,6 +299,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
         render(h, params) {
           const iconOpen = h("Icon", {
             props: {
@@ -372,6 +378,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     handleFocus() {
       this.typeInput = true
       // 在第一个输入框获得焦点时将光标移动到输入框末尾

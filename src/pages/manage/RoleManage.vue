@@ -171,6 +171,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getRoleData)"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -215,7 +216,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time} from "@/common/common";
+import {handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -226,6 +227,7 @@ export default {
         key: "name",
         minWidth: 1000,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -280,6 +282,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     handleCheckAll(type) {
       if (this.indeterminate[type]) {
         this.checkAll[type] = false;
@@ -366,7 +369,7 @@ export default {
     // 获取环境列表
     getRoleData(value) {
       this.pagination.roleName = value || "";
-      http.post(URL.role, this.pagination, (res) => {
+      http.post(URL.roleList, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
           this.pagination.total = res.data.total;

@@ -154,6 +154,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getUserData)"
     >
       <template slot="operator" slot-scope="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
@@ -205,7 +206,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
-import {getUserType, time} from "@/common/common";
+import {getUserType, handleSort, time} from "@/common/common";
 import moment from "moment/moment";
 
 export default {
@@ -218,6 +219,7 @@ export default {
         minWidth: 100,
         width: null,
         resizable: true,
+        sortable: 'custom'
       },
       {
         title: "用户名称",
@@ -225,6 +227,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "用户类型",
@@ -232,6 +235,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getUserType(row.userType);
           return h("span", result.description);
@@ -242,6 +246,7 @@ export default {
         key: "roleName",
         resizable: true,
         width: 240,
+        sortable: 'custom',
         render: (h, params) => {
           const roleName = h(
               "Tooltip",
@@ -270,6 +275,7 @@ export default {
         resizable: true,
         width: null,
         minWidth: 90,
+        sortable: 'custom',
         render: (h, params) => {
           const iconOpen = h("Icon", {
             props: {
@@ -294,6 +300,7 @@ export default {
         key: "createTime",
         resizable: true,
         width: null,
+        sortable: 'custom',
         minWidth: 150,
       },
       {
@@ -301,6 +308,7 @@ export default {
         key: "updateTime",
         resizable: true,
         width: null,
+        sortable: 'custom',
         minWidth: 150,
       },
       {
@@ -369,6 +377,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     // 获取用户列表
     getUserData() {
       http.post(URL.user, this.pagination, this.getUserResponse);

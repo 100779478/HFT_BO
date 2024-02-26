@@ -142,7 +142,7 @@
         ref="table"
         :loading="loading"
         border
-        @on-sort-change="handleSort"
+        @on-sort-change="e=>handleSort(e,this.getOrderData)"
     >
     </Table>
     <template>
@@ -181,7 +181,7 @@ export default {
         minWidth: 120,
         resizable: true,
         width: null,
-        sortable: 'custom'
+        sortable: 'custom',
       },
       {
         title: "交易账号",
@@ -189,19 +189,22 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "用户编号",
         key: "customerId",
-        minWidth: 100,
+        minWidth: 120,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "资金账号",
         key: "assetNo",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -210,6 +213,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "报单内部编号",
@@ -217,12 +221,14 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "报单编号",
         key: "orderSysId",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -231,6 +237,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "合约代码",
@@ -238,6 +245,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "买卖",
@@ -245,6 +253,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getDirection(row.direction);
           const color = {
@@ -264,6 +273,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getOffsetType(row.offsetFlag);
           return h("span", result.description);
@@ -275,6 +285,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getOrderStatus(row.orderStatus);
           return h("span", result.description);
@@ -286,12 +297,14 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "报单量",
         key: "volumeTraded",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -299,6 +312,7 @@ export default {
         key: "volumeTotal",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -306,6 +320,7 @@ export default {
         key: "volumeTraded",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -313,6 +328,7 @@ export default {
         key: "statusMsg",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -320,6 +336,7 @@ export default {
         key: "tradeDate",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -327,6 +344,7 @@ export default {
         key: "tradeTime",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -334,6 +352,7 @@ export default {
         key: "ruleId",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -341,6 +360,7 @@ export default {
         key: "updateTime",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -348,6 +368,7 @@ export default {
         key: "cancelTime",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
     ];

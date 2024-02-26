@@ -154,6 +154,7 @@
             show-total
             @on-page-size-change="handleChangeSize"
             @on-change="handleChangePage"
+            @on-sort-change="e=>handleSort(e,this.getEnvironmentData)"
         />
       </div>
     </template>
@@ -162,7 +163,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time} from "@/common/common";
+import {handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -174,12 +175,14 @@ export default {
         minWidth: 80,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "环境名称",
         key: "name",
         minWidth: 300,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -187,6 +190,7 @@ export default {
         key: "comment",
         minWidth: 300,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {title: "操作", slot: "operator", width: null, minWidth: 100,},
@@ -223,6 +227,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     // 获取环境列表
     getEnvironmentData() {
       // let id = value || "";

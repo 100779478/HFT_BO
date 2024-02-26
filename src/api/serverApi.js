@@ -35,6 +35,8 @@ export const URL = {
     userList: "/customer/all",
     // 获取所有角色列表
     role: "/role",
+    // 获取分页角色列表
+    roleList:"/role/list",
     // 导出角色管理
     roleExport: "/role/export",
     // 查询环境列表

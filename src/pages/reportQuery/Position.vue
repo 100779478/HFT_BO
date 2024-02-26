@@ -87,6 +87,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getPositionData)"
     >
     </Table>
     <template>
@@ -112,7 +113,7 @@ import {URL} from "@/api/serverApi";
 import {
   time,
   getHedgeType,
-  getPositionDirection
+  getPositionDirection, handleSort
 } from "@/common/common";
 
 export default {
@@ -124,12 +125,14 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable: 'custom',
       },
       {
         title: "合约代码",
         key: "instrumentId",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -137,6 +140,7 @@ export default {
         key: "combiNo",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -144,6 +148,7 @@ export default {
         key: "exchangeId",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -151,6 +156,7 @@ export default {
         key: "positionDirection",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
         render: (h, {row}) => {
           const result = getPositionDirection(row.positionDirection);
@@ -170,6 +176,7 @@ export default {
         key: "hedgeFlag",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
         render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
@@ -181,6 +188,7 @@ export default {
         key: "position",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -188,6 +196,7 @@ export default {
         key: "ydPosition",
         minWidth: 150,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
     ];
@@ -216,7 +225,7 @@ export default {
   },
   mounted() {
     // 动态高度
-     window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.tableHeight = window.innerHeight - 220
     })
     this.getPositionData();
@@ -226,7 +235,8 @@ export default {
     })
   },
   methods: {
-    // 获取订单列表
+    handleSort,
+    // 获取持仓列表
     getPositionData() {
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")

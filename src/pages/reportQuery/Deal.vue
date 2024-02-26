@@ -115,6 +115,7 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getDealData)"
     >
     </Table>
     <template>
@@ -141,7 +142,7 @@ import {
   time,
   getDirection,
   getOffsetType,
-  getHedgeType,
+  getHedgeType, handleSort,
 } from "@/common/common";
 
 export default {
@@ -153,6 +154,7 @@ export default {
         minWidth: 110,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "交易账号",
@@ -160,6 +162,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "用户编号",
@@ -167,6 +170,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "资金账号",
@@ -174,6 +178,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "组合账号",
@@ -181,6 +186,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "成交编号",
@@ -188,6 +194,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "报单编号",
@@ -195,6 +202,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "交易所代码",
@@ -202,6 +210,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "合约代码",
@@ -209,6 +218,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
       },
       {
         title: "买卖",
@@ -216,6 +226,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
         render: (h, {row}) => {
           const result = getDirection(row.direction);
           const color = {
@@ -235,6 +246,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
         render: (h, {row}) => {
           const result = getOffsetType(row.offsetFlag);
           return h("span", result.description);
@@ -246,6 +258,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
+        sortable:'custom',
         render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
@@ -256,6 +269,7 @@ export default {
         key: "tradePrice",
         minWidth: 150,
         resizable: true,
+        sortable:'custom',
         width: null,
       },
       {
@@ -263,6 +277,7 @@ export default {
         key: "volumeTraded",
         minWidth: 150,
         resizable: true,
+        sortable:'custom',
         width: null,
       },
       {
@@ -270,6 +285,7 @@ export default {
         key: "tradeDate",
         minWidth: 150,
         resizable: true,
+        sortable:'custom',
         width: null,
       },
       {
@@ -277,6 +293,7 @@ export default {
         key: "tradeTime",
         minWidth: 150,
         resizable: true,
+        sortable:'custom',
         width: null,
       },
       {
@@ -284,6 +301,7 @@ export default {
         key: "ruleId",
         minWidth: 150,
         resizable: true,
+        sortable:'custom',
         width: null,
       },
     ];
@@ -328,6 +346,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     // 获取订单列表
     getDealData() {
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
