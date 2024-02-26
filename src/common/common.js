@@ -122,3 +122,17 @@ export function getPositionDirection(code) {
     });
     return result;
 }
+
+// 表头排序
+export function handleSort(col, func) {
+    // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值
+    const sortType = col.order === 'normal' ? 'asc' : col.order;
+
+    // 更新排序方式和排序字段
+    this.pagination.sort = sortType;
+    this.pagination.sortField = sortType === 'normal' ? '' : col.key;
+
+    // 获取连接状态
+    // this.getChannelStatus();
+    func();
+}

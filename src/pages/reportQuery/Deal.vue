@@ -15,7 +15,7 @@
         >
       </Col> -->
       <Col
-          span="19"
+          span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
         <form autocomplete="off">
@@ -57,14 +57,28 @@
         </form>
         <form autocomplete="off">
           <DatePicker
+              split-panels
               class="mr3"
-              type="daterange"
+              type="date"
               placement="bottom-end"
-              placeholder="选择日期"
-              style="width: 225px"
+              placeholder="选择起始日期"
+              style="width: 125px"
               format="yyyy-MM-dd"
-              v-model="dateRange"
+              v-model="dateRange.startDate"
               :transfer="true"
+              autocomplete="false"
+          ></DatePicker>
+          <DatePicker
+              split-panels
+              class="mr3"
+              type="date"
+              placement="bottom-end"
+              placeholder="选择结束日期"
+              style="width: 125px"
+              format="yyyy-MM-dd"
+              v-model="dateRange.endDate"
+              :transfer="true"
+              autocomplete="false"
           ></DatePicker>
           <TimePicker
               class="mr3"
@@ -288,7 +302,7 @@ export default {
       startTime: "",
       endTime: "",
     };
-    let dateRange = [moment().format("YYYYMMDD"), moment().format("YYYYMMDD")];
+    let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
     return {
       loading: true,
@@ -316,11 +330,11 @@ export default {
   methods: {
     // 获取订单列表
     getDealData() {
-      this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-          ? moment(this.dateRange[0]).format("YYYYMMDD")
+      this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
+          ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
-      this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-          ? moment(this.dateRange[1]).format("YYYYMMDD")
+      this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
+          ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
       this.searchParams.startTime = this.timeRange[0];
       this.searchParams.endTime = this.timeRange[1];
@@ -365,11 +379,11 @@ export default {
     },
     // 导出列表
     handleExportOrders() {
-      this.searchParams.startDate = moment(this.dateRange[0]).isValid()
-          ? moment(this.dateRange[0]).format("YYYYMMDD")
+      this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
+          ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
-      this.searchParams.endDate = moment(this.dateRange[1]).isValid()
-          ? moment(this.dateRange[1]).format("YYYYMMDD")
+      this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
+          ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
       this.searchParams.startTime = this.timeRange[0];
       this.searchParams.endTime = this.timeRange[1];

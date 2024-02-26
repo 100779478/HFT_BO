@@ -28,19 +28,21 @@ export const URL = {
     // 获取当前用户信息
     current: "/customer/current",
     // 获取分页用户列表
-    user: "/customer",
+    user: "/customer/list",
     // 导出用户管理
     userExport: "/customer/export",
     // GET获取用户列表,
-    userList: "/customer/list",
+    userList: "/customer/all",
     // 获取所有角色列表
     role: "/role",
     // 导出角色管理
     roleExport: "/role/export",
     // 查询环境列表
     environment: "/env/list",
+    // 获取所有环境列表
+    environmentAll: "/env/all",
     // 导出环境列表
-    environmentExport: "/env/list/export",
+    environmentExport: "/env/export",
     // 切换环境
     setEnvironment: "/env/set",
     // 删除环境
@@ -78,19 +80,19 @@ export const URL = {
     // 获取策略类型列表
     ruleType: "/rule/type",
     // 获取连接状态
-    channelStatus: "/channel-status",
+    channelStatus: "/channel-status/list",
     // 导出连接状态
     channelStatusExport: "/channel-status/export",
     // 获取订单列表
-    orders: "/order",
+    orders: "/order/list",
     // 导出订单
     ordersExport: "/order/export",
     // 获取成交列表
-    deals: "/deal",
+    deals: "/deal/list",
     // 导出成交
     dealsExport: "/deal/export",
     // 获取持仓列表
-    position: "/position",
+    position: "/position/list",
     // 导出持仓
     positionExport: "/position/export",
 };

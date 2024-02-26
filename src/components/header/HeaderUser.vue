@@ -137,7 +137,7 @@ export default {
     //   this.$refs.side.toggleCollapse();
     // },
     getEnvironmentList() {
-      http.get(`${URL.environment}`, (res) => {
+      http.get(`${URL.environmentAll}`, (res) => {
         this.environmentList = res.data;
       });
       http.get(URL.environmentCurrent, (res) => {

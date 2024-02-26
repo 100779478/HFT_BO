@@ -1,4 +1,6 @@
 <style lang="less" scoped>
+@import url("@/style/manage.less");
+
 .ivu-table-tip {
   font-size: 26px;
 }
@@ -43,14 +45,29 @@
         ref="table"
         :loading="loading"
         border
+        @on-sort-change="e=>handleSort(e,this.getChannelStatus)"
     >
     </Table>
+    <template>
+      <div class="page-bottom">
+        <Page
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
+        />
+      </div>
+    </template>
   </div>
 </template>
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelConnectStatus, time} from "@/common/common";
+import {getApiType, getChannelConnectStatus, time, handleSort} from "@/common/common";
 
 export default {
   data() {
@@ -66,12 +83,14 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
+        sortable: 'custom'
       },
       {
         title: "接口类型",
         key: "apiType",
         minWidth: 100,
         resizable: true,
+        sortable: 'custom',
         width: null,
         render: (h, {row}) => {
           const result = getApiType(row.apiType);
@@ -93,6 +112,7 @@ export default {
         key: "traderRunType",
         minWidth: 100,
         resizable: true,
+        sortable: 'custom',
         width: null,
         render: (h, {row}) => {
           const result = getChannelConnectStatus(row.traderRunType);
@@ -125,6 +145,7 @@ export default {
         key: "updateTime",
         minWidth: 100,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       {
@@ -132,6 +153,7 @@ export default {
         key: "updateDate",
         minWidth: 100,
         resizable: true,
+        sortable: 'custom',
         width: null,
       },
       // {
@@ -140,11 +162,19 @@ export default {
       //   minWidth: 100,
       // },
     ];
+    let pagination = {
+      total: 0,
+      pageSize: 20,
+      pageNumber: 1,
+      sort: 'asc',
+      sortField: ''
+    };
     return {
       loading: true,
       tableHeight: window.innerHeight - 220,
       tableData: [],
       columns1,
+      pagination
     };
   },
   mounted() {
@@ -155,12 +185,14 @@ export default {
     this.getChannelStatus();
   },
   methods: {
+    handleSort,
     // 获取状态连接列表
     getChannelStatus() {
-      http.get(`${URL.channelStatus}`, (res) => {
+      http.post(`${URL.channelStatus}`, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
         }, 200);
+        this.pagination.total = res.data.total;
         this.tableData = res.data || [];
       });
     },
@@ -169,10 +201,18 @@ export default {
       this.loading = true;
       this.getChannelStatus();
     },
+    handleChangePage(page) {
+      this.pagination.pageNumber = page;
+      this.getChannelStatus();
+    },
+    handleChangeSize(size) {
+      this.pagination.pageSize = size;
+      this.getChannelStatus();
+    },
     // 导出列表
     handleExportOrders() {
       // 校验策略编号必须为数字类型
-      http.postBlob(URL.channelStatusExport, {}, (res) => {
+      http.postBlob(URL.channelStatusExport, this.pagination, (res) => {
         const blob = res;
         // 创建link标签
         const link = document.createElement("a");
