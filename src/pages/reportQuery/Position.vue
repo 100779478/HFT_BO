@@ -204,6 +204,8 @@ export default {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
+      sort: 'asc',
+      sortField: ''
     };
     let searchParams = {
       instrumentId: "",
@@ -273,11 +275,11 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      // };
       this.getPositionData();
     },
     // 导出列表

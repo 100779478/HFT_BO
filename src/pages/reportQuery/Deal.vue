@@ -167,7 +167,7 @@ export default {
       {
         title: "用户编号",
         key: "customerId",
-        minWidth: 100,
+        minWidth: 110,
         resizable: true,
         width: null,
         sortable:'custom',
@@ -309,6 +309,8 @@ export default {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
+      sort: 'asc',
+      sortField: ''
     };
     let searchParams = {
       orderSysId: "",
@@ -389,11 +391,11 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      // };
       this.getDealData();
     },
     // 导出列表

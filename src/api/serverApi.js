@@ -3,8 +3,8 @@
 // 玺子哥IP
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
-// const devUrl = "http://106.12.178.118:9000";
-const devUrl = "http://192.168.50.17:9000";
+const devUrl = "http://106.12.178.118:9000";
+// const devUrl = "http://192.168.50.17:9000";
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -29,6 +29,8 @@ export const URL = {
     current: "/customer/current",
     // 获取分页用户列表
     user: "/customer/list",
+    // 修改用户，
+    userEdit: "/customer",
     // 导出用户管理
     userExport: "/customer/export",
     // GET获取用户列表,
@@ -36,7 +38,7 @@ export const URL = {
     // 获取所有角色列表
     role: "/role",
     // 获取分页角色列表
-    roleList:"/role/list",
+    roleList: "/role/list",
     // 导出角色管理
     roleExport: "/role/export",
     // 查询环境列表
@@ -97,4 +99,10 @@ export const URL = {
     position: "/position/list",
     // 导出持仓
     positionExport: "/position/export",
+    // 交易数据权限管理
+    tradeDataList: "/trade-data-permission/list",
+    // 新增、修改、删除交易数据权限
+    tradeData: "/trade-data-permission",
+    // 导出交易数据权限
+    tradeDataExport: "/trade-data-permission/export",
 };

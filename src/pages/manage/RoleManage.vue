@@ -240,6 +240,8 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       roleName: "",
+      sort: 'asc',
+      sortField: ''
     };
     return {
       loading: true,
@@ -494,12 +496,12 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        roleName: "",
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   roleName: "",
+      // };
       this.getRoleData();
     },
     // 导出列表
@@ -512,7 +514,7 @@ export default {
         link.href = window.URL.createObjectURL(blob);
         // 设置链接元素的下载属性，指定文件名
         const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `用户管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        link.download = `角色管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
         // 将链接元素添加到文档中
         document.body.appendChild(link);
         // 触发点击事件以开始下载

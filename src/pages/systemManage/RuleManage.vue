@@ -305,6 +305,8 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       ruleId: "",
+      sort: 'asc',
+      sortField: ''
     };
     return {
       loading: true,
@@ -466,12 +468,12 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        ruleId: "",
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   ruleId: "",
+      // };
       this.getUserStrategyData();
       this.getUserList();
       this.getStrategyType();

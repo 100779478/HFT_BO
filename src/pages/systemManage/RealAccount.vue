@@ -267,7 +267,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "外部接口类型",
@@ -275,7 +275,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "通道类型",
@@ -283,7 +283,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "交易账号",
@@ -291,7 +291,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "是否启用",
@@ -299,7 +299,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
         render(h, params) {
           const iconOpen = h("Icon", {
             props: {
@@ -329,6 +329,8 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       channelId: "",
+      sort: 'asc',
+      sortField: ''
     };
     return {
       typeInput: true,
@@ -516,12 +518,12 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        channelId: "",
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   channelId: "",
+      // };
       this.getChannelData();
       this.getAPIType();
       this.getTerminalType();
@@ -536,7 +538,7 @@ export default {
         link.href = window.URL.createObjectURL(blob);
         // 设置链接元素的下载属性，指定文件名
         const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `连接状态_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        link.download = `实体账户_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
         // 将链接元素添加到文档中
         document.body.appendChild(link);
         // 触发点击事件以开始下载

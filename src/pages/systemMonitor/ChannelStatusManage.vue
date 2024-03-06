@@ -40,6 +40,7 @@
     <Table
         :columns="columns1"
         :data="tableData"
+        size="small"
         class="table-content"
         :height="tableHeight"
         ref="table"

@@ -207,7 +207,6 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
 import {getUserType, handleSort, time} from "@/common/common";
-import moment from "moment/moment";
 
 export default {
   props: ["userId"],
@@ -246,9 +245,8 @@ export default {
         key: "roleName",
         resizable: true,
         width: 240,
-        sortable: 'custom',
         render: (h, params) => {
-          const roleName = h(
+          return h(
               "Tooltip",
               {
                 attrs: {
@@ -266,7 +264,6 @@ export default {
                     : params.row.roleName,
               ]
           );
-          return roleName;
         },
       },
       {
@@ -323,6 +320,8 @@ export default {
       pageNumber: 1,
       customerName: "",
       actives: [],
+      sort: 'asc',
+      sortField: ''
     };
     const activeList = [
       {
@@ -466,12 +465,12 @@ export default {
       // }
       if (isNew) {
         this.userInfo.password = this.$md5(this.userInfo.password);
-        http.put(URL.user, this.userInfo, () => {
+        http.put(URL.userEdit, this.userInfo, () => {
           this.getUserData(), this.cancel();
         });
       } else {
         http.post(
-            `${URL.user}/${this.userInfo.customerId}`,
+            `${URL.userEdit}/${this.userInfo.customerId}`,
             this.userInfo,
             () => {
               this.getUserData(), this.cancel();
@@ -510,10 +509,10 @@ export default {
         return;
       }
       if (!row.active) {
-        http.post(`${URL.user}/${data}/enable`, data, this.handleActiveEnable);
+        http.post(`${URL.userEdit}/${data}/enable`, data, this.handleActiveEnable);
       } else {
         http.post(
-            `${URL.user}/${data}/disable`,
+            `${URL.userEdit}/${data}/disable`,
             data,
             this.handleActiveDisable
         );
@@ -523,12 +522,12 @@ export default {
     moreOperations(row, type) {
       const password = this.$md5("123456");
       if (type === "resetPassword") {
-        http.post(`${URL.user}/${row.userId}/reset`, {
+        http.post(`${URL.userEdit}/${row.userId}/reset`, {
           password,
         });
       }
       if (type === "delete") {
-        http.delete(`${URL.user}/${row.customerId}`);
+        http.delete(`${URL.userEdit}/${row.customerId}`);
       }
       setTimeout(() => {
         this.getUserData();
@@ -562,13 +561,13 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        customerId: "",
-        actives: this.pagination.actives
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   customerId: "",
+      //   actives: this.pagination.actives
+      // };
       this.getUserData();
     },
     // 导出列表

@@ -169,7 +169,7 @@ import {
   time,
   getOrderStatus,
   getDirection,
-  getOffsetType,
+  getOffsetType, handleSort,
 } from "@/common/common";
 
 export default {
@@ -326,7 +326,7 @@ export default {
       {
         title: "详细状态",
         key: "statusMsg",
-        minWidth: 150,
+        minWidth: 250,
         resizable: true,
         sortable: 'custom',
         width: null,
@@ -376,6 +376,8 @@ export default {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
+      sort: 'asc',
+      sortField: ''
     };
     let searchParams = {
       orderStatus: [],
@@ -416,6 +418,7 @@ export default {
     })
   },
   methods: {
+    handleSort,
     // 获取订单列表
     getOrderData() {
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
@@ -458,11 +461,13 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   sort: 'asc',
+      //   sortField: ''
+      // };
       this.getOrderData();
     },
     // 导出列表
@@ -499,10 +504,6 @@ export default {
         document.body.removeChild(link);
       });
     },
-    // 表头排序
-    handleSort(a, b, c) {
-      console.log(a, b, c, 2222)
-    }
   },
 };
 </script>

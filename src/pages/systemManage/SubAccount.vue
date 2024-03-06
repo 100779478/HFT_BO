@@ -339,6 +339,8 @@ export default {
       pageSize: 20,
       pageNumber: 1,
       accountId: "",
+      sort: 'asc',
+      sortField: ''
     };
     return {
       assetLabel: "资产账户",
@@ -543,12 +545,12 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      this.pagination = {
-        total: 0,
-        pageSize: 20,
-        pageNumber: 1,
-        accountId: "",
-      };
+      // this.pagination = {
+      //   total: 0,
+      //   pageSize: 20,
+      //   pageNumber: 1,
+      //   accountId: "",
+      // };
       this.getChannelData();
       this.getTradeChannel();
     },
@@ -562,7 +564,7 @@ export default {
         link.href = window.URL.createObjectURL(blob);
         // 设置链接元素的下载属性，指定文件名
         const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `连接状态_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        link.download = `分账户管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
         // 将链接元素添加到文档中
         document.body.appendChild(link);
         // 触发点击事件以开始下载
