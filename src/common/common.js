@@ -123,6 +123,58 @@ export function getPositionDirection(code) {
     return result;
 }
 
+// 策略文件类型
+export function getRuleFileType(code) {
+    let result = {};
+
+    if (code) {
+        store.state.dictionaryList.RuleFileType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.RuleFileType;
+    }
+
+    return result;
+}
+
+// 策略参数类型
+export function RulePropType(code) {
+    let result = {};
+
+    if (code) {
+        store.state.dictionaryList.RulePropType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.RulePropType;
+    }
+
+    return result;
+}
+
+// 策略类型
+export function getRuleType(code) {
+    let result = {};
+
+    if (code) {
+        store.state.dictionaryList.RuleType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.RuleType;
+    }
+
+    return result;
+}
+
+
 // 表头排序
 export function handleSort(col, func) {
     // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值

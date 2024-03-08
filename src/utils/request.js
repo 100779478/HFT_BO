@@ -58,18 +58,31 @@ export const http = {
     ) => {
         return axiosInstance.post(url, data).then(thenHandler).catch(errorHandler);
     },
-    // postBlob: (
-    //     url,
-    //     data,
-    //     thenHandler = () => {
-    //     },
-    //     errorHandler = defaultErrorHandler
-    // ) => {
-    //     return axiosInstance
-    //         .post(url, data, {responseType: "blob"})
-    //         .then(thenHandler)
-    //         .catch(errorHandler);
-    // },
+    uploadFile: (
+        url,
+        file,
+        data = {},
+        thenHandler = () => {
+        },
+        errorHandler = defaultErrorHandler
+    ) => {
+        const formData = new FormData();
+        formData.append("file", file);  // 通过 "file" 字段传递文件
+        // 将其他参数加入 FormData
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                formData.append(key, data[key]);
+            }
+        }
+        return axiosInstance
+            .post(url, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",  // 设置请求头为multipart/form-data
+                },
+            })
+            .then(thenHandler)
+            .catch(errorHandler);
+    },
     postBlob: (
         url,
         data,

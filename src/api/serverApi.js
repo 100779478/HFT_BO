@@ -3,8 +3,8 @@
 // 玺子哥IP
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
-const devUrl = "http://106.12.178.118:9000";
-// const devUrl = "http://192.168.50.17:9000";
+// const devUrl = "http://106.12.178.118:9000";
+const devUrl = "http://192.168.50.17:9000";
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -83,6 +83,12 @@ export const URL = {
     rule: "/rule",
     // 获取策略类型列表
     ruleType: "/rule/type",
+    // 获取策略ID及存储位置 GET
+    ruleUpload: "/rule/upload",
+    // 上传策略文件
+    ruleConfig: "/rule/config",
+    // 上传策略参数
+    ruleIdPath: "/rule/rule-id-path",
     // 获取连接状态
     channelStatus: "/channel-status/list",
     // 导出连接状态

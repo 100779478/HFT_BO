@@ -202,7 +202,6 @@ input:-webkit-autofill {
           <Button type="primary" @click="ok(isNew)">确定</Button>
         </div>
       </Modal>
-      </Col>
     </Row>
     <Table
         :columns="columns1"
