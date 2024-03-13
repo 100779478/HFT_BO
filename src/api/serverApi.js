@@ -81,6 +81,8 @@ export const URL = {
     ruleList: "/rule/list",
     // 添加、修改、删除用户策略
     rule: "/rule",
+    // 导出用户策略列表
+    ruleExport: "/rule",
     // 获取策略类型列表
     ruleType: "/rule/type",
     // 获取策略ID及存储位置 GET

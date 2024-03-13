@@ -1,20 +1,6 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
 
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
 </style>
 <template>
   <div>
@@ -194,7 +180,7 @@ export default {
           this.loading = false;
         }, 200);
         this.pagination.total = res.data.total;
-        this.tableData = res.data || [];
+        this.tableData = res.data.dataList || [];
       });
     },
     // 刷新

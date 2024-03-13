@@ -248,7 +248,6 @@ axiosInstance.interceptors.response.use(
             return response.data;
         }
         if (response.status === 403) {
-            console.log(33333, response.data)
             if (response.data.errorMessage) {
                 Message.error(response.data.errorMessage);
             }

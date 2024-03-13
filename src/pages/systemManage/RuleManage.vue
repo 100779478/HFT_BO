@@ -1,12 +1,5 @@
 <style lang="less" scoped>
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
+@import "@/style/manage.less";
 
 .modal__content {
   display: flex;
@@ -32,23 +25,30 @@
     margin-bottom: 5px;
   }
 }
-
-.table-content {
-  //border: -5px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
-
 </style>
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col span="8">
+      <Col>
+        <form autocomplete="off">
+          <Input
+              v-model="pagination.ruleName"
+              style="float: right; width: 180px; border-radius: 20px"
+              placeholder="策略名称"
+              @on-keydown.enter="handleSearch"
+              @on-change="handleSearch"
+          >
+            <Icon
+                type="ios-search"
+                slot="suffix"
+                size="19"
+                @click.native="handleSearch"
+                style="cursor: pointer"
+            />
+          </Input>
+        </form>
+      </Col>
+      <Col style="position: absolute;right: 25px">
         <Button type="info" @click="modalUser('new')"
         >
           <Icon type="md-add"/>
@@ -56,10 +56,10 @@
         </Button
         >
         &nbsp;
-        <Button type="success" @click="refresh()"
+        <Button type="success" @click="handleExportList()"
         >
-          <Icon type="md-refresh"/>
-          刷新
+          <!--          <Icon type="md-refresh"/>-->
+          导出
         </Button
         >
         <Modal
@@ -87,6 +87,7 @@
                         v-model="userStrategyInfo.ruleFileType"
                         placeholder="请选择策略文件类型"
                         :maxlength="32"
+                        @on-change="fetchNewPolicyInfo"
                     >
                       <Option
                           v-for="item in getRuleFileType()"
@@ -207,25 +208,7 @@
               </Button>
               <Button @click="addRow" class="btn" type="success">添加参数</Button>
               <Button @click="clearParamList" class="btn" type="error">清空列表</Button>
-              <Table
-                  :columns="columns2"
-                  :data="paramList"
-                  :width="1027"
-                  class="table-content"
-                  style="position: unset"
-                  :height="450"
-                  size="small"
-                  ref="table2"
-                  :loading="loading"
-              >
-                <template slot="operator" slot-scope="{ row }">
-                  <div @click.stop style="display: flex; justify-content: flex-start">
-                    <div @click="() => deleteParams(row)" class="table-operate">
-                      删除
-                    </div>
-                  </div>
-                </template>
-              </Table>
+              <ParamsTable :paramList="paramList" :readOnly="false"/>
             </div>
           </div>
           <div slot="footer">
@@ -233,23 +216,6 @@
             <Button type="primary" @click="ok(isNew)">确定</Button>
           </div>
         </Modal>
-      </Col>
-      <Col span="8" offset="8">
-        <Input
-            v-model="pagination.ruleId"
-            style="float: right; width: 180px; border-radius: 20px"
-            placeholder="策略名称"
-            @on-keydown.enter="handleSearch"
-            @on-change="handleSearch"
-        >
-          <Icon
-              type="ios-search"
-              slot="suffix"
-              size="19"
-              @click.native="handleSearch"
-              style="cursor: pointer"
-          />
-        </Input>
       </Col>
     </Row>
     <Table
@@ -313,9 +279,11 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleFileType, getRuleType, handleSort, RulePropType} from "@/common/common";
+import {getRuleFileType, getRuleType, handleSort, time} from "@/common/common";
+import ParamsTable from "@/components/ParamsTable.vue";
 
 export default {
+  components: {ParamsTable},
   data() {
     let columns1 = [
       {
@@ -410,84 +378,11 @@ export default {
       },
       {title: "操作", slot: "operator", width: 180},
     ];
-    let columns2 = [
-      {
-        title: "参数名",
-        key: "name",
-        width: 150,
-        render: this.renderEditable
-      },
-      {
-        title: "参数描述",
-        key: "description",
-        width: 130,
-        render: this.renderEditable
-      },
-      {
-        title: "参数类型",
-        key: "type",
-        width: 150,
-        render: this.renderSelectCell,
-        renderHeader: (h, params) => {
-          return h('span', [
-            params.column.title,
-            h('Tooltip', {
-              props: {
-                content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent',
-                transfer: true,
-                maxWidth: 300,
-              },
-            }, [
-              h('Icon', {props: {type: 'md-alert'}})
-            ])
-          ]);
-        }
-      },
-      {
-        title: "参数默认值",
-        key: "value",
-        width: 150,
-        render: this.renderEditable
-      },
-      {
-        title: "参数分组",
-        key: "group",
-        width: 150,
-        render: this.renderEditable
-      },
-      {
-        title: "输入值范围",
-        key: "range",
-        width: 110,
-        render: this.renderEditable,
-        renderHeader: (h, params) => {
-          return h('span', [
-            params.column.title,
-            h('Tooltip', {
-              props: {
-                content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,',
-                transfer: true,
-                maxWidth: 300,
-              },
-            }, [
-              h('Icon', {props: {type: 'md-alert'}})
-            ])
-          ]);
-        },
-      },
-      {
-        title: "只读",
-        key: "readOnly",
-        width: 100,
-        render: this.renderSelectCell
-      },
-      {title: "操作", slot: "operator", width: 80},
-    ]
     let pagination = {
       total: 0,
       pageSize: 20,
       pageNumber: 1,
-      ruleId: "",
+      ruleName: "",
       sort: 'asc',
       sortField: ''
     };
@@ -526,7 +421,6 @@ export default {
         },
       ],
       columns1,
-      columns2,
       pagination,
       showAddModal: false,
       isNew: true,
@@ -546,8 +440,10 @@ export default {
     doOperate(name, row) {
       switch (name) {
         case "param":
+          this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
           this.$Modal.info({
-            content: "<p>此操作不可逆</p>",
+            render: (h) => h(ParamsTable, {props: {paramList: this.paramList, readOnly: true}}),
+            width: 1100, // 设置宽度
             okText: "确认",
           });
           break;
@@ -568,17 +464,6 @@ export default {
     clearParamList() {
       this.paramList = []
     },
-    // 删除参数列表
-    deleteParams(row) {
-      // 获取点击行的索引
-      const rowIndex = row._index;
-      // 根据点击行的索引找到 paramList 中对应索引的元素
-      const paramIndex = rowIndex >= 0 && rowIndex < this.paramList.length ? rowIndex : -1;
-      if (paramIndex !== -1) {
-        // 如果找到匹配的元素，则执行删除操作
-        this.paramList.splice(paramIndex, 1);
-      }
-    },
     // 添加一行参数列表
     addRow() {
       this.paramList.push({
@@ -591,43 +476,101 @@ export default {
         readOnly: ""
       },);
     },
-    handleFileChange(event, type) {
-      const file = event.target.files[0];
-      const url = type === 'strategy' ? `${URL.ruleUpload}/${this.userStrategyInfo.ruleId}` : URL.ruleConfig
-      if (file) {
-        // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
-        console.log('选择的文件：', file, event);
-        // TODO: 调用上传操作的代码
-        http.uploadFile(url, file, {},
-            (response) => {
-              this.$Message.success('上传成功')
-              if (type === 'param') {
-                this.paramList = this.paramList.concat(response.data)
-              } else {
-                this.uploadFlag = true
-              }
-            },
-            (error) => {
-              this.$Message.error('上传失败')
-            }
-        );
-        document.getElementById('fileInput').value = ''
-      }
+    // 检查重复的 name 字段的函数
+    checkDuplicateNames(paramList) {
+      const nameCountMap = {};
+      const duplicateNames = [];
+      paramList.forEach((param) => {
+        const name = param.name;
+        nameCountMap[name] = (nameCountMap[name] || 0) + 1;
+      });
+      // 过滤出出现超过一次的名称
+      Object.keys(nameCountMap).forEach((name) => {
+        if (nameCountMap[name] > 1) {
+          duplicateNames.push({name, count: nameCountMap[name]});
+        }
+      });
+      return duplicateNames;
     },
-    // 上传策略或参数文件
+    handleFileChange(event, type) {
+      // 获取用户选择的文件
+      const file = event.target.files[0];
+      if (file) {
+        // 根据 type 判断处理逻辑
+        if (type === 'strategy') {
+          // 使用注释逻辑
+          const url = `${URL.ruleUpload}/${this.userStrategyInfo.ruleId}`;
+          // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
+          console.log('选择的文件：', file, event);
+          // TODO: 调用上传操作的代码
+          http.uploadFile(url, file, {},
+              (response) => {
+                this.$Message.success('上传成功');
+                // 处理上传成功后的逻辑
+              },
+              (error) => {
+                this.$Message.error('上传失败');
+                // 处理上传失败后的逻辑
+              }
+          );
+          document.getElementById('fileInput').value = '';
+        } else {
+          // 使用处理 JSON 文件的逻辑
+          // 检查文件类型是否为 JSON
+          if (file.type === 'application/json') {
+            // 创建一个 FileReader 对象
+            const reader = new FileReader();
+            // 为文件加载完成时触发的事件注册处理程序
+            reader.onload = (event) => {
+              try {
+                // event.target.result 包含文件内容，这里假设文件内容是 JSON 格式的
+                const jsonContent = JSON.parse(event.target.result).param;
+                // 检查重复的 name 字段
+                const duplicateNames = this.checkDuplicateNames(jsonContent);
+                if (duplicateNames.length > 0) {
+                  const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
+                  const message = `参数名重复：${messages.join('、')}`;
+                  // 有重复的 name 字段，显示警告消息
+                  this.showMessage(message, 'error', 6)
+                } else {
+                  // 没有重复的 name 字段，显示成功消息
+                  this.$Message.success('导入参数列表成功');
+                }
+                // 更新 paramList
+                this.paramList = jsonContent;
+              } catch (error) {
+                this.$Message.error('导入参数列表失败');
+                console.error('读取 JSON 文件时发生错误：', error);
+              }
+            };
+            // 开始读取文件，以文本格式读取
+            reader.readAsText(file);
+          } else {
+            // 文件不是 JSON 类型，进行相应的处理
+            this.$Message.error('选择的文件不是 JSON 文件');
+          }
+        }
+      }
+      // 在上传后添加以下代码
+      document.getElementById('fileInput').value = '';
+    }
+    ,
+// 上传策略或参数文件
     uploadFile(type) {
       this.fileType = type
       // 获取文件输入元素
       const fileInput = document.getElementById('fileInput');
       fileInput.click()
     },
-    // 新建策略时获取策略ID及存储位置
-    fetchNewPolicyInfo() {
-      http.get(URL.ruleIdPath, (response) => {
-        const {ruleId, rulePath} = response.data;
-        this.userStrategyInfo.ruleId = ruleId;
-        this.userStrategyInfo.rulePath = rulePath;
-      })
+// 新建策略时获取策略ID及存储位置
+    fetchNewPolicyInfo(code) {
+      if (this.isNew && code) {
+        http.get(`${URL.ruleIdPath}?type=${code}`, (response) => {
+          const {ruleId, rulePath} = response.data;
+          this.userStrategyInfo.ruleId = ruleId;
+          this.userStrategyInfo.rulePath = rulePath;
+        })
+      }
     },
     getRuleFileType,
     getRuleType,
@@ -635,7 +578,8 @@ export default {
     // 获取用户策略列表
     getUserStrategyData() {
       http.post(URL.ruleList, this.pagination, this.getUserResponse);
-    },
+    }
+    ,
     getUserResponse(res) {
       setTimeout(() => {
         this.loading = false;
@@ -643,37 +587,42 @@ export default {
       this.pagination.total = res.data.total;
       this.tableData = res.data.dataList || [];
       // this.paramList = res.data.dataList || [];
-    },
-    // 获取用户代码
+    }
+    ,
+// 获取用户代码
     getUserList() {
       http.get(URL.userList, (res) => {
         this.userList = res.data;
       });
-    },
+    }
+    ,
     handleChangePage(page) {
       this.pagination.pageNumber = page;
       this.getUserStrategyData();
-    },
+    }
+    ,
     handleChangeSize(size) {
       this.pagination.pageSize = size;
       this.getUserStrategyData();
-    },
-    // 用户策略代码模糊查询
+    }
+    ,
+// 用户策略代码模糊查询
     handleSearch() {
       this.pagination.pageNumber = 1;
       this.getUserStrategyData();
-    },
+    }
+    ,
     handleShowParamsTable(e) {
       this.chooseRule = e === '2';
-    },
-    // 用户策略弹窗
+    }
+    ,
+// 用户策略弹窗
     modalUser(type, row) {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.paramList = []
       this.uploadFlag = false
       if (type === "new") {
-        this.fetchNewPolicyInfo()
         this.isNew = true;
         this.showAddModal = true;
         const info = {
@@ -695,28 +644,40 @@ export default {
         this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
         Object.assign(this.userStrategyInfo, row);
       }
-    },
-    // 新增弹窗确认按键
+    }
+    ,
+// 新增弹窗确认按键
     ok(isNew) {
-      if (isNew) {
-        http.put(URL.rule, this.userStrategyInfo, () => {
-          this.getUserStrategyData()
-          this.cancel();
-        });
+      // 检查重复的 name 字段
+      const duplicateNames = this.checkDuplicateNames(this.paramList);
+      if (duplicateNames.length > 0) {
+        const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
+        const message = `参数名重复：${messages.join('、')}`;
+        // 有重复的 name 字段，显示警告消息
+        this.showMessage(message, 'error', 6)
       } else {
-        this.userStrategyInfo.ruleParams = this.paramList
-        http.post(URL.rule, this.userStrategyInfo, () => {
-          this.getUserStrategyData()
-          this.cancel();
-        });
+        // 没有重复的 name 字段，执行提交操作
+        if (isNew) {
+          http.put(URL.rule, this.userStrategyInfo, () => {
+            this.getUserStrategyData();
+            this.cancel();
+          });
+        } else {
+          this.userStrategyInfo.ruleParams = this.paramList;
+          http.post(URL.rule, this.userStrategyInfo, () => {
+            this.getUserStrategyData();
+            this.cancel();
+          });
+        }
       }
     },
-    // 新增弹窗关闭
+// 新增弹窗关闭
     cancel() {
       this.showAddModal = false;
       this.paramList = []
-    },
-    // 启用用户策略
+    }
+    ,
+// 启用用户策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
         this.$Message.error("启用失败：" + res.msg);
@@ -724,8 +685,9 @@ export default {
       }
       this.$Message.success(`用户策略已启用`);
       this.getUserStrategyData();
-    },
-    // 🈲用用户策略
+    }
+    ,
+// 🈲用用户策略
     handleActiveDisable(res) {
       if (res.code !== "0") {
         this.$Message.error("禁用失败：" + res.msg);
@@ -733,7 +695,8 @@ export default {
       }
       this.$Message.error(`用户策略已禁用`);
       this.getUserStrategyData();
-    },
+    }
+    ,
     changeUserStatus(row) {
       let data = row.ruleId;
       if (!row.active) {
@@ -741,74 +704,52 @@ export default {
       } else {
         http.post(`${URL.rule}/${data}/disable`, {}, this.handleActiveDisable);
       }
+    }
+    ,
+    // 公共方法：显示消息提示
+    showMessage(content, type = 'info', duration = 6) {
+      this.$Message[type]({
+        content,
+        duration,
+      });
     },
     deleteStrategy(row) {
       // this.$Modal.confirm({
       //   title: `确认删除用户策略吗？`,
       //   content: "<p>此操作不可逆</p>",
       //   onOk: () => {
-      http.delete(`${URL.rule}/${row.ruleId}?customerId=${row.customerId}`, {}, () => {
+      http.delete(`${URL.rule}/${row.ruleId}`, {}, () => {
         this.getUserStrategyData();
         //     });
         //   },
         //   okText: "删除",
       });
-    },
-    // 刷新
+    }
+    ,
+// 刷新
     refresh() {
       this.loading = true;
       this.getUserStrategyData();
       this.getUserList();
-    },
-    // 渲染table列表
-    renderEditable(h, params) {
-      const {row, column} = params;
-      const rowIndex = row._index;
-      return h("Input", {
-        props: {
-          value: row[column.key].toString(),
-        },
-        on: {
-          input: (event) => {
-            // row[column.key] = event;
-            // 动态绑定对应行的key-value
-            this.paramList[rowIndex][column.key] = event
-          },
-        },
-      });
-    },
-    renderSelectCell(h, params) {
-      const {row, column} = params;
-      const rowIndex = row._index;
-      return h("Select",
-          {
-            props: {
-              value: row[column.key].toString(),
-            },
-            on: {
-              input: (event) => {
-                // 动态绑定对应行的key-value
-                this.paramList[rowIndex][column.key] = event
-              },
-            },
-          },
-          this.renderSelectOptions(h, column.key)
-      )
-    },
-    renderSelectOptions(h, column) {
-      const readList = [
-        {code: "true", description: '是'},
-        {code: "false", description: '否'},
-      ]
-      const options = column === 'type' ? RulePropType() : readList;
-      // 这里你可以根据需要动态生成 Options，例如从数据中获取选项列表
-      return options.map((option) => {
-        return h("Option", {
-          props: {
-            value: option.code,
-            label: option.description,
-          },
-        });
+    }
+    ,
+// 导出列表
+    handleExportList() {
+      // 校验策略编号必须为数字类型
+      http.postBlob(URL.ruleExport, this.pagination, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `用户策略管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
       });
     },
   },

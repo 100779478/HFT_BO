@@ -1,23 +1,5 @@
 <style lang="less" scoped>
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
+@import "@/style/manage.less";
 </style>
 <template>
   <div>
