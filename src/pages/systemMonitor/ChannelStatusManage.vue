@@ -194,7 +194,7 @@ export default {
           this.loading = false;
         }, 200);
         this.pagination.total = res.data.total;
-        this.tableData = res.data || [];
+        this.tableData = res.data.dataList || [];
       });
     },
     // 刷新
