@@ -270,6 +270,8 @@ axiosInstance.interceptors.response.use(
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
+                    console.log('403 -- forbid')
+                    Message.error('连接失败')
                     router.push({name: "Login"});
                     return Promise.reject(error);
                 }

@@ -11,6 +11,8 @@ export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
 console.log("current env :", env, requestContextPath, proUrl);
 export const URL = {
+    // 获取加密类型
+    encryption: '/config/password-type',
     // 数据字典
     dictionaryList: "/config/static-enums",
     // 页面配置

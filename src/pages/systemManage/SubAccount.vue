@@ -227,8 +227,6 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, time} from "@/common/common";
-import {getUserInfo} from "@/utils/token";
-import {Message} from "view-design";
 
 export default {
   props: ["userId"],
@@ -403,13 +401,13 @@ export default {
           this.channelInfo.tradeApiTypeName = d.apiTypeName;
         }
       });
-      if (this.channelInfo.tradeApiTypeName == "xQuant") {
+      if (this.channelInfo.tradeApiTypeName === "xQuant") {
         this.showLabel = true;
         this.assetLabel = "资产账户";
         this.positionLabel = "内证";
         this.foundationLabel = "基金账户";
         this.traderLabel = "交易员编码";
-      } else if (this.channelInfo.tradeApiTypeName == "UFX") {
+      } else if (this.channelInfo.tradeApiTypeName === "UFX") {
         this.showLabel = true;
         this.assetLabel = "资产单元";
         this.positionLabel = "投资组合";
@@ -451,7 +449,7 @@ export default {
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
-        const info = {
+        this.channelInfo = {
           customerId: "",
           tradeChannel: "",
           customName: "",
@@ -464,7 +462,6 @@ export default {
           remark: "",
           id: "",
         };
-        this.channelInfo = info;
         Object.assign(this.channelInfo);
       } else {
         this.isNew = false;
@@ -498,11 +495,13 @@ export default {
       }
       if (isNew) {
         http.put(URL.customChannel, this.channelInfo, () => {
-          this.getChannelData(), this.cancel();
+          this.getChannelData()
+          this.cancel();
         });
       } else {
         http.post(URL.customChannel, this.channelInfo, () => {
-          this.getChannelData(), this.cancel();
+          this.getChannelData()
+          this.cancel();
         });
       }
     },

@@ -71,12 +71,14 @@ import {http, defaultErrorHandler} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {putToken} from "@/utils/token";
 import {Message} from "view-design";
+import {encryptionModePassword} from "@/common/common";
 
 export default {
   data() {
     return {
       imgUrl: "",
       loading: false,
+      encryptType: "",
       formInline: {
         username: "",
         password: "",
@@ -100,13 +102,21 @@ export default {
     };
   },
   methods: {
+    getEncryptionType() {
+      http.get(URL.encryption, (res) => {
+        console.log(111, res)
+        this.encryptType = res.data
+      })
+    },
     handleSubmit(name) {
+      console.log(111111,encryptionModePassword(this.encryptType, this.formInline.password))
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.openLoading();
           let loginParam = {
             username: this.formInline.username,
-            password: this.$md5(this.formInline.password),
+            // password: this.$md5(this.formInline.password),
+            password: encryptionModePassword(this.encryptType, this.formInline.password),
             verifyCode: this.formInline.verifyCode,
           };
           http.post(URL.login, loginParam, this.login, this.loginError);
@@ -122,9 +132,6 @@ export default {
     },
     loginError(error) {
       console.log(error);
-      // Message.error(
-      //   error.message || error.errorMessage || error.data.errorMessage
-      // );
       this.closeLoading();
       defaultErrorHandler(error);
       this.handleGetVerifyImg();
@@ -154,6 +161,7 @@ export default {
   //   console.log(props, context, 2222);
   // },
   mounted() {
+    this.getEncryptionType()
     this.handleGetVerifyImg();
     this.handleGetDic();
   },

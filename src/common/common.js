@@ -1,4 +1,5 @@
 import store from "@/store/store";
+import md5 from "js-md5";
 // fill number into some length string
 export const fillNumber = (number, length) => {
     return (new Array(length).join(0) + number).slice(-length);
@@ -185,4 +186,41 @@ export function handleSort(col, func) {
     // 获取连接状态
     // this.getChannelStatus();
     func();
+}
+
+// 自定义密码加密
+function str_to_hex3(s) {
+    return [...s].map(c => c.charCodeAt(0).toString(16));
+}
+
+function encryptPassword(strPlainText) {
+    let temp_str = '';
+    for (let i = 0; i < strPlainText.length; i++) {
+        let rv = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        let rv_str = String.fromCharCode(rv % 255);
+        let iv = strPlainText.charCodeAt(i) ^ 86;
+        let ivc = String.fromCharCode(iv);
+        temp_str += rv_str + ivc;
+    }
+
+    let list_hex3 = str_to_hex3(temp_str);
+    for (let i = 0; i < list_hex3.length; i++) {
+        if (list_hex3[i].length === 1) {
+            list_hex3[i] = '0' + list_hex3[i];
+        }
+    }
+    return list_hex3.join('');
+}
+
+// 根据类型加密密码
+export function encryptionModePassword(type, pwd) {
+    console.log("当前加密类型为：",type)
+    switch (type) {
+        case 'MD5':
+            return md5(pwd);
+        case 'customize':
+            return encryptPassword(pwd);
+        default:
+            throw new Error('Unsupported encryption type');
+    }
 }
