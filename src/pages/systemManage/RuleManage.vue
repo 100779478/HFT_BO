@@ -658,15 +658,19 @@ export default {
       } else {
         // 没有重复的 name 字段，执行提交操作
         if (isNew) {
-          http.put(URL.rule, this.userStrategyInfo, () => {
-            this.getUserStrategyData();
-            this.cancel();
+          http.put(URL.rule, this.userStrategyInfo, (res) => {
+            if (res.data.code === '0') {
+              this.getUserStrategyData();
+              this.cancel();
+            }
           });
         } else {
           this.userStrategyInfo.ruleParams = this.paramList;
-          http.post(URL.rule, this.userStrategyInfo, () => {
-            this.getUserStrategyData();
-            this.cancel();
+          http.post(URL.rule, this.userStrategyInfo, (res) => {
+            if (res.data.code === '0') {
+              this.getUserStrategyData();
+              this.cancel();
+            }
           });
         }
       }
@@ -714,15 +718,8 @@ export default {
       });
     },
     deleteStrategy(row) {
-      // this.$Modal.confirm({
-      //   title: `确认删除用户策略吗？`,
-      //   content: "<p>此操作不可逆</p>",
-      //   onOk: () => {
       http.delete(`${URL.rule}/${row.ruleId}`, {}, () => {
         this.getUserStrategyData();
-        //     });
-        //   },
-        //   okText: "删除",
       });
     }
     ,

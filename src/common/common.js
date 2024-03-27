@@ -1,5 +1,6 @@
 import store from "@/store/store";
 import md5 from "js-md5";
+import {http} from "@/utils/request";
 // fill number into some length string
 export const fillNumber = (number, length) => {
     return (new Array(length).join(0) + number).slice(-length);
@@ -212,15 +213,27 @@ function encryptPassword(strPlainText) {
     return list_hex3.join('');
 }
 
-// 根据类型加密密码
+/**
+ * @description: 根据类型加密密码
+ * @date: 2024--03--26 15:32:56
+ * @param {String} type 当前加密类型
+ * @param {String} pwd 密码
+ * @returns {String}
+ */
+
 export function encryptionModePassword(type, pwd) {
-    console.log("当前加密类型为：",type)
+    console.log("当前加密类型为：", type)
     switch (type) {
         case 'MD5':
             return md5(pwd);
-        case 'customize':
+        case 'CUSTOMIZE':
             return encryptPassword(pwd);
         default:
             throw new Error('Unsupported encryption type');
     }
 }
+
+
+
+
+

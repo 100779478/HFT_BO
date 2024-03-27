@@ -104,18 +104,15 @@ export default {
   methods: {
     getEncryptionType() {
       http.get(URL.encryption, (res) => {
-        console.log(111, res)
         this.encryptType = res.data
       })
     },
     handleSubmit(name) {
-      console.log(111111,encryptionModePassword(this.encryptType, this.formInline.password))
       this.$refs[name].validate((valid) => {
         if (valid) {
           this.openLoading();
           let loginParam = {
             username: this.formInline.username,
-            // password: this.$md5(this.formInline.password),
             password: encryptionModePassword(this.encryptType, this.formInline.password),
             verifyCode: this.formInline.verifyCode,
           };
