@@ -81,25 +81,33 @@ export function getHedgeType(code) {
     return result;
 }
 
-// 交易通道类型
-export function getChannelType(code) {
-    let result = {};
-    store.state.dictionaryList.ChannelType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
-}
-
 // 接口类型
 export function getApiType(code) {
     let result = {};
-    store.state.dictionaryList.ApiType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
+    if (code) {
+        store.state.dictionaryList.ApiType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.ApiType;
+    }
+    return result;
+}
+
+// 业务类型
+export function getLogicType(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.LogicType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.LogicType;
+    }
     return result;
 }
 
@@ -176,6 +184,20 @@ export function getRuleType(code) {
     return result;
 }
 
+// 交易通道类型
+export function getChannelType(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.ChannelType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.ChannelType;
+    }
+    return result;
+}
 
 // 表头排序
 export function handleSort(col, func) {
@@ -189,7 +211,7 @@ export function handleSort(col, func) {
     func();
 }
 
-// 自定义密码加密
+// ===============================================自定义密码加密============================================
 function str_to_hex3(s) {
     return [...s].map(c => c.charCodeAt(0).toString(16));
 }

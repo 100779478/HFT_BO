@@ -85,8 +85,8 @@
                     @on-change="getTradeChannelApi"
                 >
                   <Option
-                      v-for="item in tradeChannel"
-                      :key="item.channelId"
+                      v-for="(item,index) in tradeChannel"
+                      :key="index"
                       :value="item.channelId"
                   >{{ item.channelId }}
                   </Option>
@@ -100,18 +100,35 @@
                     placeholder="请输入分账号代码"
                     :maxlength="16"
                     show-message="false"
+                    :disabled="!isNew"
                 ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="交易接口类型" prop="tradeApiTypeName">
+              <FormItem label="交易接口类型" prop="tdApiType">
                 <Input
-                    v-model="channelInfo.tradeApiTypeName"
+                    v-model="channelInfo.tdApiTypeName"
                     placeholder="请输入交易接口类型"
                     :maxlength="16"
                     show-message="false"
                     :disabled="true"
                 ></Input>
+              </FormItem>
+            </Col>
+            <Col :span="18">
+              <FormItem label="业务类型" prop="logicType">
+                <Select
+                    v-model="channelInfo.logicType"
+                    placeholder="请选择业务类型"
+                    :maxlength="32"
+                >
+                  <Option
+                      v-for="item in logicTypeList"
+                      :key="item.code"
+                      :value="item.code"
+                  >{{ item.description }}
+                  </Option>
+                </Select>
               </FormItem>
             </Col>
             <Col :span="18">
@@ -226,7 +243,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {getLogicType, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -263,11 +280,21 @@ export default {
       },
       {
         title: "交易接口类型",
-        key: "tradeApiTypeName",
+        key: "tdApiType",
         minWidth: 150,
         resizable: true,
         width: null,
         sortable: 'custom',
+        render: this.renderTdApiType
+      },
+      {
+        title: "业务类型",
+        key: "logicType",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+        render: this.renderLogicType
       },
       {
         title: "资产账户",
@@ -333,27 +360,32 @@ export default {
         customerId: [{required: true, message: "请选择用户代码"}],
         tradeChannel: [{required: true, message: "请选择交易通道"}],
         accountId: [{required: true, message: "请输入分账号代码"}],
-        tradeApiTypeName: [{required: true, message: "请输入交易接口类型"}],
+        tdApiType: [{required: true, message: "请输入交易接口类型"}],
         assetNo: [{required: true, message: "请输入资产账户"}],
         combiNo: [{required: true, message: "请输入组合账户"}],
+        logicType: [{required: true, message: "请选择业务类型"}],
       },
       channelInfo: {
         customerId: "",
         customName: "",
         tradeChannel: "",
         accountId: "",
-        tradeApiTypeName: "",
+        tdApiType: "",
         assetNo: "",
         combiNo: "",
         apiAccountId: "",
         apiInvestorId: "",
         remark: "",
+        logicType: "",
+        tdApiTypeName: "",
       },
       tableData: [],
       // 交易通道
       tradeChannel: [],
       // 用户列表
       userList: [],
+      // 业务类型列表
+      logicTypeList: [],
       columns1,
       pagination,
       showAddModal: false,
@@ -370,6 +402,7 @@ export default {
     // 获取交易通道
     this.getTradeChannel();
     this.getUserData();
+    this.getLogicTypeList()
   },
   unMounted() {
     window.removeEventListener('resize', () => {
@@ -396,30 +429,38 @@ export default {
       });
     },
     getTradeChannelApi(e) {
-      this.tradeChannel.map((d) => {
-        if (e == d.channelId) {
-          this.channelInfo.tradeApiTypeName = d.apiTypeName;
+      // 根据e查找对应的交易通道对象
+      const selectedChannel = this.tradeChannel.find(channel => e === channel.channelId);
+      if (selectedChannel) {
+        // 更新tdApiType和其他相关状态
+        this.channelInfo.tdApiType = selectedChannel.apiType;
+        this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;
+        this.showLabel = true; // 默认为true，根据后续的条件进一步调整
+        switch (this.channelInfo.tdApiType) {
+          case '8':
+            this.assetLabel = '资产账户';
+            this.positionLabel = '内证';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '交易员编码';
+            break;
+          case '5':
+            this.assetLabel = '资产单元';
+            this.positionLabel = '投资组合';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '股东账号';
+            break;
+          default:
+            this.assetLabel = '资产账户';
+            this.positionLabel = '组合账户';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '交易员编码';
+            this.showLabel = false;
+            break;
         }
-      });
-      if (this.channelInfo.tradeApiTypeName === "xQuant") {
-        this.showLabel = true;
-        this.assetLabel = "资产账户";
-        this.positionLabel = "内证";
-        this.foundationLabel = "基金账户";
-        this.traderLabel = "交易员编码";
-      } else if (this.channelInfo.tradeApiTypeName === "UFX") {
-        this.showLabel = true;
-        this.assetLabel = "资产单元";
-        this.positionLabel = "投资组合";
-        this.foundationLabel = "基金账户";
-        this.traderLabel = "股东账号";
-      } else {
-        this.showLabel = false;
-        this.assetLabel = "资产账户";
-        this.positionLabel = "组合账户";
-        this.foundationLabel = "基金账户";
-        this.traderLabel = "交易员编码";
       }
+    },
+    getLogicTypeList() {
+      this.logicTypeList = getLogicType()
     },
     getChannelResponse(res) {
       setTimeout(() => {
@@ -446,6 +487,7 @@ export default {
     modalChannel(type, row) {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
+      this.channelInfo.tdApiTypeName = ""
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
@@ -454,43 +496,67 @@ export default {
           tradeChannel: "",
           customName: "",
           accountId: "",
-          tradeApiTypeName: "",
+          tdApiType: "",
           assetNo: "",
           combiNo: "",
           apiAccountId: "",
           apiInvestorId: "",
           remark: "",
           id: "",
+          logicType: "",
         };
         Object.assign(this.channelInfo);
       } else {
         this.isNew = false;
         this.showAddModal = true;
         Object.assign(this.channelInfo, row);
-        // this.channelInfo.customerId = row.customerId;
-        // this.channelInfo.tradeChannel = row.tradeChannel;
+        const selectedChannel = this.tradeChannel.find(channel => row.tdApiType === channel.apiType);
+        if (selectedChannel) {
+          this.channelInfo.tdApiType = selectedChannel.apiType;
+          this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;
+        }
+        this.showLabel = true;
+        switch (this.channelInfo.tdApiType) {
+          case '8':
+            this.assetLabel = '资产账户';
+            this.positionLabel = '内证';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '交易员编码';
+            break;
+          case '5':
+            this.assetLabel = '资产单元';
+            this.positionLabel = '投资组合';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '股东账号';
+            break;
+          default:
+            this.showLabel = false;
+            this.assetLabel = '资产账户';
+            this.positionLabel = '组合账户';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '交易员编码';
+            break;
+        }
       }
+    },
+    // 检查字段是否为空
+    checkField(field, message) {
+      if (!this.channelInfo[field]) {
+        this.$Message.error(message);
+        return false;
+      }
+      return true;
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      if (!this.channelInfo.customerId) {
-        this.$Message.error("用户代码不能为空");
-        return;
-      }
-      if (!this.channelInfo.tradeChannel) {
-        this.$Message.error("请选择交易通道");
-        return;
-      }
-      if (!this.channelInfo.accountId) {
-        this.$Message.error("请填写分账号代码");
-        return;
-      }
-      if (!this.channelInfo.assetNo) {
-        this.$Message.error(`${this.assetLabel}不能为空`);
-        return;
-      }
-      if (!this.channelInfo.combiNo) {
-        this.$Message.error(`${this.positionLabel}不能为空`);
+      if (
+          !this.checkField("customerId", "用户代码不能为空") ||
+          !this.checkField("tradeChannel", "请选择交易通道") ||
+          !this.checkField("logicType", "请选择业务类型") ||
+          !this.checkField("accountId", "请填写分账号代码") ||
+          !this.checkField("assetNo", `${this.assetLabel}不能为空`) ||
+          !this.checkField("combiNo", `${this.positionLabel}不能为空`)
+      ) {
         return;
       }
       if (isNew) {
@@ -553,6 +619,21 @@ export default {
         // 移除链接元素
         document.body.removeChild(link);
       });
+    },
+    // 渲染交易员名称
+    renderTdApiType(h, params) {
+      return h(
+          "span",
+          params.row.tradeChannel
+      );
+    },
+    // 渲染组合类型
+    renderLogicType(h, params) {
+      const logicType = this.logicTypeList.find(item => item.code === params.row.logicType);
+      return h(
+          "span",
+          logicType?.description
+      );
     },
   },
 };

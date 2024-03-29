@@ -25,7 +25,8 @@ const getLocalDictionaryList = () => {
             UserType: [],
             RuleFileType: [],
             RulePropType: [],
-            RuleType: []
+            RuleType: [],
+            LogicType: [],
         };
     }
 };

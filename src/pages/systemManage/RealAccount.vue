@@ -91,7 +91,7 @@ input:-webkit-autofill {
                     v-for="item in channelType"
                     :key="item.code"
                     :value="item.code"
-                >{{ item.name }}
+                >{{ item.description }}
                 </Option>
               </Select>
             </FormItem>
@@ -103,33 +103,20 @@ input:-webkit-autofill {
                   placeholder="请选择通道类型"
                   :maxlength="32"
                   :disabled="!isNew"
-                  v-if="isNew"
               >
                 <Option
                     v-for="item in channelTrade"
                     :key="item.code"
                     :value="item.code"
-                >{{ item.name }}
-                </Option>
-              </Select>
-              <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-else
-              >
-                <Option
-                    v-for="item in channelTrade"
-                    :key="item.code"
-                    :value="item.code"
-                >{{ item.name }}
+                >{{ item.description }}
                 </Option>
               </Select>
             </FormItem>
           </Col>
           <Col :span="18">
-            <FormItem label="交易账号" prop="userId">
+            <FormItem label="交易账号" prop="userId"
+                      v-show="showAccountAndPwd"
+            >
               <form autocomplete="off">
                 <Input
                     v-model="channelInfo.userId"
@@ -141,11 +128,14 @@ input:-webkit-autofill {
             </FormItem>
           </Col>
           <Col :span="18">
-            <FormItem label="密码" prop="password">
+            <FormItem label="密码" prop="password"
+                      v-show="showAccountAndPwd"
+            >
               <div style="position: relative; height: 34px; overflow: hidden;">
                 <!-- 下面的 Input 覆盖上面的 Input -->
                 <form autocomplete="off">
                   <Input
+                      v-show="showAccountAndPwd"
                       @on-focus="handleFocus"
                       @on-blur="handleBlur"
                       ref="password"
@@ -236,7 +226,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -343,6 +333,7 @@ export default {
       pagination,
       showAddModal: false,
       isNew: true,
+      showAccountAndPwd: true
     };
   },
   mounted() {
@@ -392,19 +383,18 @@ export default {
     },
     getAPIType() {
       // 外部接口类型
-      http.get(URL.apiType, (res) => {
-        this.channelType = res.data;
-      });
+      // http.get(URL.apiType, (res) => {
+      this.channelType = getApiType()
+      // });
     },
     getTerminalType() {
-      http.get(URL.channelType, (res) => {
-        this.channelTrade = res.data;
-      });
+      this.channelTrade = getChannelType()
     },
     getApiTerminalType(e) {
       // 使用 selectedValue 获取选中项的值
       const selectedItem = this.channelType.find((item) => item.code === e);
-      this.terminalType = selectedItem.channelTypes;
+      this.showAccountAndPwd = e !== 'o'
+      this.terminalType = selectedItem?.channelTypes;
     },
     getChannelResponse(res) {
       setTimeout(() => {
@@ -432,8 +422,9 @@ export default {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       if (type === "new") {
-        this.isNew = true;
-        this.showAddModal = true;
+        this.isNew = true
+        this.showAddModal = true
+        this.showAccountAndPwd = true
         const info = {
           channelId: "",
           apiType: "",
@@ -447,6 +438,7 @@ export default {
       } else {
         this.isNew = false;
         this.showAddModal = true;
+        this.showAccountAndPwd = row.apiType !== 'o'
         Object.assign(this.channelInfo, row);
         this.channelInfo.apiType = row.apiType;
         this.channelInfo.terminalType = row.terminalType;
@@ -505,8 +497,6 @@ export default {
       //   channelId: "",
       // };
       this.getChannelData();
-      this.getAPIType();
-      this.getTerminalType();
     },
     // 导出列表
     handleExportOrders() {
