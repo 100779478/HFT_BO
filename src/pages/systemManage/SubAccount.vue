@@ -98,7 +98,7 @@
                 <Input
                     v-model="channelInfo.accountId"
                     placeholder="请输入分账号代码"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                     :disabled="!isNew"
                 ></Input>
@@ -109,7 +109,7 @@
                 <Input
                     v-model="channelInfo.tdApiTypeName"
                     placeholder="请输入交易接口类型"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                     :disabled="true"
                 ></Input>
@@ -136,7 +136,7 @@
                 <Input
                     v-model="channelInfo.assetNo"
                     :placeholder="`请输入${this.assetLabel}`"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -144,7 +144,7 @@
                 <Input
                     v-model="channelInfo.combiNo"
                     :placeholder="`请输入${this.positionLabel}`"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -156,7 +156,7 @@
                 <Input
                     v-model="channelInfo.apiAccountId"
                     :placeholder="`请输入${this.foundationLabel}`"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -168,7 +168,7 @@
                 <Input
                     v-model="channelInfo.apiInvestorId"
                     :placeholder="`请输入${this.traderLabel}`"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -449,6 +449,16 @@ export default {
             this.foundationLabel = '基金账户';
             this.traderLabel = '股东账号';
             break;
+          case '4':
+          case '6':
+          case 'l':
+          case 'o':
+            this.assetLabel = '资产账户';
+            this.positionLabel = '组合账户';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '股东账户';
+            this.showLabel = true;
+            break;
           default:
             this.assetLabel = '资产账户';
             this.positionLabel = '组合账户';
@@ -528,6 +538,16 @@ export default {
             this.positionLabel = '投资组合';
             this.foundationLabel = '基金账户';
             this.traderLabel = '股东账号';
+            break;
+          case '4':
+          case '6':
+          case 'l':
+          case 'o':
+            this.assetLabel = '资产账户';
+            this.positionLabel = '组合账户';
+            this.foundationLabel = '基金账户';
+            this.traderLabel = '股东账户';
+            this.showLabel = true;
             break;
           default:
             this.showLabel = false;

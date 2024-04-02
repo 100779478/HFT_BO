@@ -73,7 +73,7 @@
                     v-model="userInfo.customerId"
                     :disabled="!isNew"
                     placeholder="请输入用户账号"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>

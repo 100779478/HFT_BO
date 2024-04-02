@@ -104,7 +104,7 @@
                         v-model="userStrategyInfo.ruleId"
                         disabled
                         placeholder="请输入策略ID"
-                        :maxlength="16"
+                        :maxlength="20"
                         show-message="false"
                     ></Input>
                   </FormItem>

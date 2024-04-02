@@ -68,7 +68,7 @@
                 <!--                  <Input-->
                 <!--                      v-model="searchMgId"-->
                 <!--                      placeholder="请输入交易员代码"-->
-                <!--                      :maxlength="16"-->
+                <!--                      :maxlength="20"-->
                 <!--                      show-message="false"-->
                 <!--                      @on-change="handleSearchMgList"-->
                 <!--                  ></Input>-->
@@ -94,7 +94,7 @@
                 <!--                                  <Input-->
                 <!--                                      v-model="searchTdId"-->
                 <!--                                      placeholder="请输入交易员代码"-->
-                <!--                                      :maxlength="16"-->
+                <!--                                      :maxlength="20"-->
                 <!--                                      show-message="false"-->
                 <!--                                      @on-change="handleSearchMgList"-->
                 <!--                                  ></Input>-->

@@ -82,7 +82,7 @@
                 <Input
                     v-model="environmentInfo.name"
                     placeholder="请输入环境名称"
-                    :maxlength="16"
+                    :maxlength="20"
                     show-message="false"
                 ></Input>
               </FormItem>

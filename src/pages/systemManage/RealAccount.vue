@@ -72,7 +72,6 @@ input:-webkit-autofill {
                     v-model="channelInfo.channelId"
                     :disabled="!isNew"
                     placeholder="请输入通道ID"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </form>
@@ -83,7 +82,6 @@ input:-webkit-autofill {
               <Select
                   v-model="channelInfo.apiType"
                   placeholder="请选择通道类型"
-                  :maxlength="32"
                   @on-change="getApiTerminalType"
                   :disabled="!isNew"
               >
@@ -101,7 +99,6 @@ input:-webkit-autofill {
               <Select
                   v-model="channelInfo.terminalType"
                   placeholder="请选择通道类型"
-                  :maxlength="32"
                   :disabled="!isNew"
               >
                 <Option
@@ -121,7 +118,6 @@ input:-webkit-autofill {
                 <Input
                     v-model="channelInfo.userId"
                     placeholder="请输入交易账号"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </form>
