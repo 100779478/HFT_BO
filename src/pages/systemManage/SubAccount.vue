@@ -436,37 +436,38 @@ export default {
         this.channelInfo.tdApiType = selectedChannel.apiType;
         this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;
         this.showLabel = true; // 默认为true，根据后续的条件进一步调整
-        switch (this.channelInfo.tdApiType) {
-          case '8':
-            this.assetLabel = '资产账户';
-            this.positionLabel = '内证';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '交易员编码';
-            break;
-          case '5':
-            this.assetLabel = '资产单元';
-            this.positionLabel = '投资组合';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '股东账号';
-            break;
-          case '4':
-          case '6':
-          case 'l':
-          case 'o':
-            this.assetLabel = '资产账户';
-            this.positionLabel = '组合账户';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '股东账户';
-            this.showLabel = true;
-            break;
-          default:
-            this.assetLabel = '资产账户';
-            this.positionLabel = '组合账户';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '交易员编码';
-            this.showLabel = false;
-            break;
-        }
+        this.setLabelsByTdApiType(this.channelInfo.tdApiType);
+        // switch (this.channelInfo.tdApiType) {
+        //   case '8':
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '内证';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '交易员编码';
+        //     break;
+        //   case '5':
+        //     this.assetLabel = '资产单元';
+        //     this.positionLabel = '投资组合';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '股东账号';
+        //     break;
+        //   case '4':
+        //   case '6':
+        //   case 'l':
+        //   case 'o':
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '组合账户';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '股东账户';
+        //     this.showLabel = true;
+        //     break;
+        //   default:
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '组合账户';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '交易员编码';
+        //     this.showLabel = false;
+        //     break;
+        // }
       }
     },
     getLogicTypeList() {
@@ -526,37 +527,72 @@ export default {
           this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;
         }
         this.showLabel = true;
-        switch (this.channelInfo.tdApiType) {
-          case '8':
-            this.assetLabel = '资产账户';
-            this.positionLabel = '内证';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '交易员编码';
-            break;
-          case '5':
-            this.assetLabel = '资产单元';
-            this.positionLabel = '投资组合';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '股东账号';
-            break;
-          case '4':
-          case '6':
-          case 'l':
-          case 'o':
-            this.assetLabel = '资产账户';
-            this.positionLabel = '组合账户';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '股东账户';
-            this.showLabel = true;
-            break;
-          default:
-            this.showLabel = false;
-            this.assetLabel = '资产账户';
-            this.positionLabel = '组合账户';
-            this.foundationLabel = '基金账户';
-            this.traderLabel = '交易员编码';
-            break;
-        }
+        this.setLabelsByTdApiType(this.channelInfo.tdApiType);
+        // switch (this.channelInfo.tdApiType) {
+        //   case '8':
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '内证';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '交易员编码';
+        //     break;
+        //   case '5':
+        //     this.assetLabel = '资产单元';
+        //     this.positionLabel = '投资组合';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '股东账号';
+        //     break;
+        //   case '4':
+        //   case '6':
+        //   case 'l':
+        //   case 'o':
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '组合账户';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '股东账户';
+        //     this.showLabel = true;
+        //     break;
+        //   default:
+        //     this.showLabel = false;
+        //     this.assetLabel = '资产账户';
+        //     this.positionLabel = '组合账户';
+        //     this.foundationLabel = '基金账户';
+        //     this.traderLabel = '交易员编码';
+        //     break;
+        // }
+      }
+    },
+    // modal弹窗联动展示
+    setLabelsByTdApiType(tdApiType) {
+      switch (tdApiType) {
+        case '8':
+          this.assetLabel = '资产账户';
+          this.positionLabel = '内证';
+          this.foundationLabel = '基金账户';
+          this.traderLabel = '交易员编码';
+          break;
+        case '5':
+          this.assetLabel = '资产单元';
+          this.positionLabel = '投资组合';
+          this.foundationLabel = '基金账户';
+          this.traderLabel = '股东账号';
+          break;
+        case '4':
+        case '6':
+        case 'l':
+        case 'o':
+          this.assetLabel = '资产账户';
+          this.positionLabel = '组合账户';
+          this.foundationLabel = '基金账户';
+          this.traderLabel = '股东账户';
+          this.showLabel = true;
+          break;
+        default:
+          this.showLabel = false;
+          this.assetLabel = '资产账户';
+          this.positionLabel = '组合账户';
+          this.foundationLabel = '基金账户';
+          this.traderLabel = '交易员编码';
+          break;
       }
     },
     // 检查字段是否为空
