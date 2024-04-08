@@ -10,21 +10,25 @@
   width: 100px;
   margin-right: 20px;
 }
+
+.rotate-icon {
+  transform: rotate(-90deg);
+}
 </style>
 <template>
   <div>
     <Header :style="{ padding: 0 }" class="layout-header-bar">
-      <!-- <Icon
-        @click.native="collapsedSider"
-        :class="rotateIcon"
-        :style="{ margin: '0 20px', color: '#86909c' }"
-        type="md-menu"
-        size="20"
-      ></Icon> -->
+      <Icon
+          @click.native="collapsedSider"
+          :class="{'rotate-icon':!showMenu}"
+          :style="{ margin: '0 5px 0 20px', color: '#86909c',cursor: 'pointer' }"
+          type="md-menu"
+          size="20"
+      ></Icon>
       <Icon
           type="md-refresh"
           size="20"
-          :style="{ margin: '0 20px', color: '#86909c', cursor: 'pointer' }"
+          :style="{ margin: '0 5px', color: '#86909c', cursor: 'pointer' }"
           @click="refresh"
       >
       </Icon>
@@ -122,6 +126,7 @@ export default {
       show: false,
       environmentList: [],
       environmentId: "",
+      showMenu: true,
     };
   },
   mounted() {
@@ -133,9 +138,10 @@ export default {
     },
   },
   methods: {
-    // collapsedSider() {
-    //   this.$refs.side.toggleCollapse();
-    // },
+    collapsedSider() {
+      this.showMenu = !this.showMenu
+      this.$emit('showMenu', this.showMenu);
+    },
     getEnvironmentList() {
       http.get(`${URL.environmentAll}`, (res) => {
         this.environmentList = res.data;
@@ -149,7 +155,7 @@ export default {
         return;
       }
       http.post(`${URL.setEnvironment}/${val}`, {}, (res) => {
-        if (res.code == "0") {
+        if (res.code === "0") {
           this.$Message.success("环境设置成功");
           // 重载当前路由页面
           this.reload();
@@ -157,9 +163,9 @@ export default {
       });
     },
     handleClick(name) {
-      if (name == "changePassword") {
+      if (name === "changePassword") {
         this.show = true;
-      } else if (name == "logout") {
+      } else if (name === "logout") {
         this.$Modal.confirm({
           title: `退出登录确认`,
           content: "<p>您确定退出登录当前账户吗？</p>",
@@ -181,7 +187,7 @@ export default {
       this.$Message.success("修改成功");
     },
     ok() {
-      if (this.newPassword == "" && this.oldPassword == "") {
+      if (this.newPassword === "" && this.oldPassword === "") {
         this.$Message.warning("密码不可为空");
         return;
       }

@@ -32,14 +32,14 @@
   transition: all 0.3s;
 }
 
-.rotate-icon {
-  transform: rotate(-90deg);
-}
+
+
 </style>
 <template>
   <div class="layout">
     <Layout>
       <Sider
+          v-show="isShowMenu"
           ref="side"
           hide-trigger
           collapsible
@@ -96,6 +96,7 @@
         <HeaderUser
             :username="currentUser.customerName"
             :envList="envList"
+            @showMenu="showMenu"
         ></HeaderUser>
         <!-- <Bread></Bread> -->
         <Content :style="{ margin: '20px', background: '#fff' }">
@@ -131,6 +132,7 @@ export default {
       isCollapsed: false,
       isRouterAlive: true,
       envList: [],
+      isShowMenu: true,
     };
   },
   created() {
@@ -156,8 +158,9 @@ export default {
       });
     }
     ,
-    collapsedSider() {
-      this.$refs.side.toggleCollapse();
+    showMenu(e) {
+      console.log(111, e)
+      this.isShowMenu = e
     }
     ,
     currentUserInfo() {

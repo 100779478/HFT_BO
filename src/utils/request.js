@@ -172,7 +172,7 @@ export const http = {
  */
 export function defaultErrorHandler(error) {
     let errorResponse = error.response;
-    if (undefined == errorResponse) {
+    if (undefined === errorResponse) {
         console.log("Error ====> ", error);
         if (error.errorMessage) {
             Message.error(error.errorMessage);
@@ -182,7 +182,6 @@ export function defaultErrorHandler(error) {
     let errorMessage = errorResponse.errorMessage;
     if (
         null == errorMessage ||
-        undefined == errorMessage ||
         "" === errorMessage
     ) {
         console.log("Error ====> ", errorResponse);
@@ -260,13 +259,15 @@ axiosInstance.interceptors.response.use(
         let errorResponse = error.request;
         let httpStatus;
         console.log('onRejected Error:', error)
-        if (undefined == errorResponse || null == errorResponse) {
+        if (undefined === errorResponse || null == errorResponse) {
             httpStatus = 500;
         } else {
             httpStatus = errorResponse.status;
         }
         switch (httpStatus) {
             case 0:
+                Message.error('网络错误')
+                return Promise.reject(error);
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
