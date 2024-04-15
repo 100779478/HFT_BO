@@ -374,9 +374,9 @@ export default {
       http.post(URL.roleList, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
-          this.pagination.total = res.data.total;
+          this.pagination.total = res?.data.total;
         }, 200);
-        this.tableData = res.data.dataList || [];
+        this.tableData = res?.data.dataList || [];
       });
     },
     // 获取所有权限列表
@@ -385,7 +385,7 @@ export default {
         let dataInit = response.data;
         this.permissionInitData = response.data;
         // 将权限列表中menuName相同的项分别整理到一个数组
-        const result = dataInit.reduce((acc, curr) => {
+        this.permissionList = dataInit.reduce((acc, curr) => {
           if (acc[curr.menuName]) {
             acc[curr.menuName].push(curr);
           } else {
@@ -393,7 +393,6 @@ export default {
           }
           return acc;
         }, {});
-        this.permissionList = result;
       });
 
       // });
@@ -433,12 +432,11 @@ export default {
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
-        const info = {
+        this.roleInfo = {
           name: "",
           id: null,
           permissions: [],
         };
-        this.roleInfo = info;
         this.checkAllGroup = [];
         this.checkAll = {};
         this.indeterminate = {};
@@ -457,11 +455,11 @@ export default {
             arrList[k] = [];
           }
           row.permissions.map((d) => {
-            if (d.menuName == k) {
+            if (d.menuName === k) {
               arrList[k].push(d.description);
             }
           });
-          if (arrList[k].length == this.permissionList[k].length) {
+          if (arrList[k].length === this.permissionList[k].length) {
             this.checkAll[k] = true;
             this.indeterminate[k] = false;
           } else if (arrList[k].length > 0) {

@@ -102,6 +102,15 @@ const router = new VueRouter({
                         title: "连接状态",
                     },
                 },
+                // 操作日志
+                {
+                    path: "/home/sys-monitor/operating-log",
+                    name: "OperatingLog",
+                    component: () => import("@/pages/systemMonitor/OperatingLog"),
+                    meta: {
+                        title: "操作日志",
+                    },
+                },
                 // 报表查询
                 {
                     path: "/home/report-query/orders",

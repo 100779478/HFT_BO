@@ -1,0 +1,301 @@
+<style lang="less" scoped>
+@import url("@/style/manage.less");
+
+</style>
+<template>
+  <div>
+    <Row style="margin: 10px">
+      <Col
+          span="19"
+          style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
+      >
+        <form autocomplete="off">
+          <Input
+              class="mr3"
+              v-model="pagination.customerName"
+              style="float: right; width: 160px; border-radius: 20px"
+              placeholder="客户名称"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              class="mr3"
+              v-model="pagination.transactionName"
+              style="float: right; width: 160px; border-radius: 20px"
+              placeholder="操作业务"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <DatePicker
+              split-panels
+              class="mr3"
+              type="date"
+              placement="bottom-end"
+              placeholder="选择起始日期"
+              style="width: 125px"
+              format="yyyy-MM-dd"
+              v-model="dateRange.startDate"
+              :transfer="true"
+              autocomplete="false"
+          ></DatePicker>
+          <DatePicker
+              split-panels
+              class="mr3"
+              type="date"
+              placement="bottom-end"
+              placeholder="选择结束日期"
+              style="width: 125px"
+              format="yyyy-MM-dd"
+              v-model="dateRange.endDate"
+              :transfer="true"
+              autocomplete="false"
+          ></DatePicker>
+          <TimePicker
+              class="mr3"
+              type="timerange"
+              placement="bottom-end"
+              placeholder="选择时间"
+              style="width: 168px"
+              v-model="timeRange"
+              :transfer="true"
+          ></TimePicker>
+        </form>
+      </Col>
+      <Col style="position:absolute;right: 25px">
+        <Button type="info" @click="refresh()"
+                style="margin-right: 5px"
+        >
+          <Icon type="md-search"/>
+          查询
+        </Button
+        >
+        <Button type="success" @click="handleExportOrders()" class="mr3"
+        >
+          <Icon type="md-download"/>
+          导出
+        </Button
+        >
+      </Col>
+    </Row>
+    <Table
+        :columns="columns1"
+        :data="tableData"
+        size="small"
+        class="table-content"
+        :height="tableHeight"
+        ref="table"
+        :loading="loading"
+        border
+        @on-sort-change="e=>handleSort(e,this.getOperatingLog)"
+    >
+    </Table>
+    <template>
+      <div class="page-bottom">
+        <Page
+            :total="pagination.total"
+            :current="pagination.pageNumber"
+            :page-size="pagination.pageSize"
+            :page-size-opts="[20, 50, 100, 200]"
+            show-sizer
+            show-total
+            @on-page-size-change="handleChangeSize"
+            @on-change="handleChangePage"
+        />
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {time, handleSort} from "@/common/common";
+import moment from "moment/moment";
+
+export default {
+  data() {
+    let columns1 = [
+      {
+        title: "操作序号",
+        key: "sequenceNo",
+        minWidth: 100,
+        resizable: true,
+        width: null,
+        sortable: 'custom'
+      },
+      {
+        title: "客户编号",
+        key: "customerId",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "客户名称",
+        key: "customerName",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "操作日期",
+        key: "transactionDate",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "操作时间",
+        key: "transactionTime",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "业务编号",
+        key: "tid",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "操作业务",
+        key: "transactionName",
+        minWidth: 200,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "具体信息",
+        key: "operateMessage",
+        minWidth: 400,
+        resizable: true,
+        width: null,
+      },
+      {
+        title: "网卡地址",
+        key: "macAddress",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "IP地址",
+        key: "ipAddress",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "登录机器名",
+        key: "hostName",
+        minWidth: 100,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+    ];
+    let pagination = {
+      total: 0,
+      pageSize: 20,
+      pageNumber: 1,
+      sort: 'asc',
+      sortField: '',
+      customerName: '',
+      transactionName: '',
+      startDate: '',
+      endDate: '',
+      startTime: '',
+      endTime: '',
+    };
+    let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
+    let timeRange = [];
+    return {
+      dateRange,
+      timeRange,
+      loading: true,
+      tableHeight: window.innerHeight - 220,
+      tableData: [],
+      columns1,
+      pagination
+    };
+  },
+  mounted() {
+    // 动态高度
+    window.addEventListener('resize', () => {
+      this.tableHeight = window.innerHeight - 220
+    })
+    this.getOperatingLog();
+  },
+  methods: {
+    handleSort,
+    // 获取操作日志列表
+    getOperatingLog() {
+      this.pagination.startDate = moment(this.dateRange.startDate).isValid()
+          ? moment(this.dateRange.startDate).format("YYYYMMDD")
+          : null;
+      this.pagination.endDate = moment(this.dateRange.endDate).isValid()
+          ? moment(this.dateRange.endDate).format("YYYYMMDD")
+          : null;
+      this.pagination.startTime = this.timeRange[0];
+      this.pagination.endTime = this.timeRange[1];
+      http.post(`${URL.logList}`, this.pagination, (res) => {
+        setTimeout(() => {
+          this.loading = false;
+        }, 200);
+        this.pagination.total = res.data.total;
+        this.tableData = res.data.dataList || [];
+      });
+    },
+    // 刷新
+    refresh() {
+      this.loading = true;
+      this.getOperatingLog();
+    },
+    handleChangePage(page) {
+      this.pagination.pageNumber = page;
+      this.getOperatingLog();
+    },
+    handleChangeSize(size) {
+      this.pagination.pageSize = size;
+      this.getOperatingLog();
+    },
+    // 导出列表
+    handleExportOrders() {
+      this.pagination.startDate = moment(this.dateRange.startDate).isValid()
+          ? moment(this.dateRange.startDate).format("YYYYMMDD")
+          : null;
+      this.pagination.endDate = moment(this.dateRange.endDate).isValid()
+          ? moment(this.dateRange.endDate).format("YYYYMMDD")
+          : null;
+      this.pagination.startTime = this.timeRange[0];
+      this.pagination.endTime = this.timeRange[1];
+      // 校验策略编号必须为数字类型
+      http.postBlob(URL.logExport, this.pagination, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `操作日志_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
+      });
+    },
+  },
+};
+</script>

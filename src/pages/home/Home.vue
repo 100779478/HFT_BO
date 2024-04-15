@@ -33,7 +33,6 @@
 }
 
 
-
 </style>
 <template>
   <div class="layout">
@@ -94,7 +93,7 @@
       </Sider>
       <Layout>
         <HeaderUser
-            :username="currentUser.customerName"
+            :username="currentUser?.customerName"
             :envList="envList"
             @showMenu="showMenu"
         ></HeaderUser>
@@ -159,7 +158,6 @@ export default {
     }
     ,
     showMenu(e) {
-      console.log(111, e)
       this.isShowMenu = e
     }
     ,

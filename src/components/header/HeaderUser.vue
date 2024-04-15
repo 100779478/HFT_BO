@@ -179,7 +179,6 @@ export default {
     //页面刷新
     refresh() {
       location.reload();
-      // this.$router.go(0)
       // this.$router.push("/refresh");
     },
     modificationPasswordSuccess() {
