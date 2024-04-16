@@ -132,7 +132,7 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem :label="assetLabel" prop="assetNo">
+              <FormItem :label="assetLabel" prop="assetNo" v-if="showLabel">
                 <Input
                     v-model="channelInfo.assetNo"
                     :placeholder="`请输入${this.assetLabel}`"
@@ -361,8 +361,8 @@ export default {
         tradeChannel: [{required: true, message: "请选择交易通道"}],
         accountId: [{required: true, message: "请输入分账号代码"}],
         tdApiType: [{required: true, message: "请输入交易接口类型"}],
-        assetNo: [{required: true, message: "请输入资产账户"}],
-        combiNo: [{required: true, message: "请输入组合账户"}],
+        assetNo: [{required: false, message: "请输入资产账户"}],
+        combiNo: [{required: true, message: "请输入持仓账户"}],
         logicType: [{required: true, message: "请选择业务类型"}],
       },
       channelInfo: {
@@ -420,7 +420,8 @@ export default {
       // 获取交易通道
       http.get(URL.tradeChannel, (res) => {
         // 交易通道数组初始化
-        this.tradeChannel = res.data;
+        // 西部：过滤类型为Market的通道
+        this.tradeChannel = res.data.filter(d => d.terminalType !== '2');
       });
     },
     getUserData() {
@@ -437,37 +438,6 @@ export default {
         this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;
         this.showLabel = true; // 默认为true，根据后续的条件进一步调整
         this.setLabelsByTdApiType(this.channelInfo.tdApiType);
-        // switch (this.channelInfo.tdApiType) {
-        //   case '8':
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '内证';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '交易员编码';
-        //     break;
-        //   case '5':
-        //     this.assetLabel = '资产单元';
-        //     this.positionLabel = '投资组合';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '股东账号';
-        //     break;
-        //   case '4':
-        //   case '6':
-        //   case 'l':
-        //   case 'o':
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '组合账户';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '股东账户';
-        //     this.showLabel = true;
-        //     break;
-        //   default:
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '组合账户';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '交易员编码';
-        //     this.showLabel = false;
-        //     break;
-        // }
       }
     },
     getLogicTypeList() {
@@ -528,64 +498,44 @@ export default {
         }
         this.showLabel = true;
         this.setLabelsByTdApiType(this.channelInfo.tdApiType);
-        // switch (this.channelInfo.tdApiType) {
-        //   case '8':
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '内证';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '交易员编码';
-        //     break;
-        //   case '5':
-        //     this.assetLabel = '资产单元';
-        //     this.positionLabel = '投资组合';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '股东账号';
-        //     break;
-        //   case '4':
-        //   case '6':
-        //   case 'l':
-        //   case 'o':
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '组合账户';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '股东账户';
-        //     this.showLabel = true;
-        //     break;
-        //   default:
-        //     this.showLabel = false;
-        //     this.assetLabel = '资产账户';
-        //     this.positionLabel = '组合账户';
-        //     this.foundationLabel = '基金账户';
-        //     this.traderLabel = '交易员编码';
-        //     break;
-        // }
       }
     },
     // modal弹窗联动展示
     setLabelsByTdApiType(tdApiType) {
       switch (tdApiType) {
-        case '8':
-          this.assetLabel = '资产账户';
-          this.positionLabel = '内证';
-          this.foundationLabel = '基金账户';
-          this.traderLabel = '交易员编码';
-          break;
-        case '5':
-          this.assetLabel = '资产单元';
-          this.positionLabel = '投资组合';
-          this.foundationLabel = '基金账户';
-          this.traderLabel = '股东账号';
-          break;
-        case '4':
         case '6':
-        case 'l':
-        case 'o':
-          this.assetLabel = '资产账户';
-          this.positionLabel = '组合账户';
-          this.foundationLabel = '基金账户';
-          this.traderLabel = '股东账户';
+          this.assetLabel = '资金账户';
+          this.positionLabel = '持仓账户';
+          this.foundationLabel = '交易员名称';
+          this.traderLabel = '交易员编码';
           this.showLabel = true;
           break;
+        case 'o':
+          this.positionLabel = '持仓账户';
+          this.showLabel = false;
+          break;
+          // case '8':
+          //   this.assetLabel = '资产账户';
+          //   this.positionLabel = '内证';
+          //   this.foundationLabel = '基金账户';
+          //   this.traderLabel = '交易员编码';
+          //   break;
+          // case '5':
+          //   this.assetLabel = '资产单元';
+          //   this.positionLabel = '投资组合';
+          //   this.foundationLabel = '基金账户';
+          //   this.traderLabel = '股东账号';
+          //   break;
+          // case '4':
+          // case '6':
+          // case 'l':
+          // case 'o':
+          //   this.assetLabel = '资产账户';
+          //   this.positionLabel = '组合账户';
+          //   this.foundationLabel = '基金账户';
+          //   this.traderLabel = '股东账户';
+          //   this.showLabel = true;
+          //   break;
         default:
           this.showLabel = false;
           this.assetLabel = '资产账户';
@@ -610,7 +560,7 @@ export default {
           !this.checkField("tradeChannel", "请选择交易通道") ||
           !this.checkField("logicType", "请选择业务类型") ||
           !this.checkField("accountId", "请填写分账号代码") ||
-          !this.checkField("assetNo", `${this.assetLabel}不能为空`) ||
+          // !this.checkField("assetNo", `${this.assetLabel}不能为空`) ||
           !this.checkField("combiNo", `${this.positionLabel}不能为空`)
       ) {
         return;

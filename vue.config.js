@@ -23,7 +23,6 @@ module.exports = defineConfig({
             ],
             splitChunks: {
                 chunks: 'async', // 默认只分割异步引入代码块,可配置为  all
-                // ......此处省略一些
                 cacheGroups: { // splitChunks就是根据cacheGroups去拆分模块的
                     vendors: {
                         // 表示只筛选从node_modules文件夹下引入的模块，所以node_modules下的第三方模块才会被拆分出来。

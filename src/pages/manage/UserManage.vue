@@ -460,6 +460,7 @@ export default {
         }
       }
       this.userInfo.roleIds = list;
+      delete (this.userInfo.roles)
       // if (!this.userInfo.userType) {
       //   this.userInfo.userType = null
       // }
