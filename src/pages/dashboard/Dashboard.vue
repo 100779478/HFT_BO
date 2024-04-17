@@ -3,7 +3,7 @@
   // background-image: url("../../assets/478096259_20a6a6.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100%;
+  height: 90%;
   position: relative;
   width: 100%;
 }

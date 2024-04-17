@@ -39,8 +39,9 @@
           margin: '0 30px',
         }"
       >
-        <div style="display: inline-block;margin-right: 8px;"
-             id="environmentDropdown">
+        <div style="display: inline-block;margin-right: 8px;height: 32px;line-height: 32px"
+             id="environmentDropdown"
+        >
           <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
           <Select
               class="select-style"
