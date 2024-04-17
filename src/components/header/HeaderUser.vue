@@ -39,20 +39,23 @@
           margin: '0 30px',
         }"
       >
-        <span style="font-size: 17px; font-weight: bold">环境：</span>
-        <Select
-            class="select-style"
-            @on-change="postEnvironmentList"
-            v-model="environmentId"
-        >
-          <Option
-              v-for="item in environmentList"
-              :key="item.id"
-              :value="item.id"
-          >{{ item.name }}
-          </Option
+        <div style="display: inline-block;margin-right: 8px;"
+             id="environmentDropdown">
+          <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
+          <Select
+              class="select-style"
+              @on-change="postEnvironmentList"
+              v-model="environmentId"
           >
-        </Select>
+            <Option
+                v-for="item in environmentList"
+                :key="item.id"
+                :value="item.id"
+            >{{ item.name }}
+            </Option
+            >
+          </Select>
+        </div>
         <Dropdown @on-click="handleClick">
           <Avatar
               style="background-color: #00abe4; cursor: pointer"
@@ -113,12 +116,14 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {removeToken} from "@/utils/token";
-import router from "@/router";
+import introMixin from "@/common/introMixin";
+
 
 export default {
   // 引用Home组件中reload方法
   inject: ["reload"],
   props: ["username", "envList"],
+  mixins: [introMixin],
   data() {
     return {
       oldPassword: "",
@@ -142,13 +147,23 @@ export default {
       this.showMenu = !this.showMenu
       this.$emit('showMenu', this.showMenu);
     },
+    getCurrentEnv() {
+      http.get(URL.environmentCurrent, (res) => {
+        if (res.code === '0') {
+          this.environmentId = res.data.id;
+          // 存储到vuex，在dashboard展示当前环境
+          this.$store.commit('getCurrentEnv', res.data.name)
+        } else {
+          this.$store.commit('getCurrentEnv', null)
+          this.startIntro()
+        }
+      });
+    },
     getEnvironmentList() {
       http.get(`${URL.environmentAll}`, (res) => {
         this.environmentList = res.data;
       });
-      http.get(URL.environmentCurrent, (res) => {
-        this.environmentId = res.data.id;
-      });
+      this.getCurrentEnv()
     },
     postEnvironmentList(val) {
       if (!val) {
@@ -156,6 +171,8 @@ export default {
       }
       http.post(`${URL.setEnvironment}/${val}`, {}, (res) => {
         if (res.code === "0") {
+          this.getCurrentEnv()
+          this.exitIntro()
           this.$Message.success("环境设置成功");
           // 重载当前路由页面
           this.reload();

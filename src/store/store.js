@@ -8,6 +8,10 @@ const setLocalDictionaryList = (state) => {
     const {dictionaryList} = state;
     localStorage.dictionaryList = JSON.stringify(dictionaryList);
 };
+const setLocalCurrentEnv = (state) => {
+    const {currentEnv} = state;
+    localStorage.currentEnv = JSON.stringify(currentEnv);
+};
 const getLocalDictionaryList = () => {
     // 防止初始化localstorage中dictionaryList为undefined
     try {
@@ -31,10 +35,22 @@ const getLocalDictionaryList = () => {
         };
     }
 };
+const getCurrentEnv = () => {
+    // 防止初始化localstorage中dictionaryList为undefined
+    try {
+        return JSON.parse(localStorage.currentEnv);
+    } catch (e) {
+        return {
+            currentEnv: null
+        };
+    }
+};
+
 export default new Vuex.Store({
     state: {
         // 在这里定义你的状态
         dictionaryList: getLocalDictionaryList(),
+        currentEnv: getCurrentEnv(),
     },
     mutations: {
         // 在这里定义修改状态的方法
@@ -42,6 +58,10 @@ export default new Vuex.Store({
             state.dictionaryList = payload;
             setLocalDictionaryList(state);
         },
+        getCurrentEnv(state, payload) {
+            state.currentEnv = payload
+            setLocalCurrentEnv(state)
+        }
     },
     //   actions: {
     //     // 在这里定义触发mutations的方法
