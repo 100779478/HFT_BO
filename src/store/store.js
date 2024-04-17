@@ -27,6 +27,7 @@ const getLocalDictionaryList = () => {
             RulePropType: [],
             RuleType: [],
             LogicType: [],
+            OperatingLogType: [],
         };
     }
 };

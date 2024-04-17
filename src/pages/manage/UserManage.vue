@@ -32,10 +32,10 @@
         </form>
       </Col>
       <Col style="position: absolute;right: 25px">
-        <!--        <Button type="info" @click="modalUser('new')">-->
-        <!--          <Icon type="md-add"/>-->
-        <!--          新增用户-->
-        <!--        </Button>-->
+        <Button type="info" @click="modalUser('new')" style="margin-right: 5px">
+          <Icon type="md-add"/>
+          新增用户
+        </Button>
         <!--        <Button type="success" @click="refresh()">-->
         <!--          <Icon type="md-refresh"/>-->
         <!--          刷新-->
@@ -206,7 +206,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
-import {getUserType, handleSort, time} from "@/common/common";
+import {encryptionModePassword, getUserType, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -465,7 +465,8 @@ export default {
       //   this.userInfo.userType = null
       // }
       if (isNew) {
-        this.userInfo.password = this.$md5(this.userInfo.password);
+        const passType = sessionStorage.getItem('passType')
+        this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
         http.put(URL.userEdit, this.userInfo, () => {
           this.getUserData(), this.cancel();
         });
@@ -521,7 +522,8 @@ export default {
     },
     // 更多操作
     moreOperations(row, type) {
-      const password = this.$md5("123456");
+      const passType = sessionStorage.getItem('passType')
+      const password = encryptionModePassword(passType, '123456');
       if (type === "resetPassword") {
         http.post(`${URL.userEdit}/${row.userId}/reset`, {
           password,

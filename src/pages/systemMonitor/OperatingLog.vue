@@ -27,6 +27,21 @@
           >
           </Input>
         </form>
+        <Select
+            v-model="pagination.operatingLogType"
+            class="mr3"
+            style="width: 100px"
+            placeholder="操作系统"
+            :clearable="true"
+        >
+          <Option
+              v-for="item in this.$store.state.dictionaryList.OperatingLogType"
+              :value="item.code"
+              :key="item.code"
+          >{{ item.description }}
+          </Option
+          >
+        </Select>
         <form autocomplete="off">
           <DatePicker
               split-panels
@@ -212,6 +227,7 @@ export default {
       sortField: '',
       customerName: '',
       transactionName: '',
+      operatingLogType: '',
       startDate: '',
       endDate: '',
       startTime: '',

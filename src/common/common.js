@@ -199,6 +199,21 @@ export function getChannelType(code) {
     return result;
 }
 
+// 操作系统类型
+export function getOperatingLogType(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.OperatingLogType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.OperatingLogType;
+    }
+    return result;
+}
+
 // 表头排序
 export function handleSort(col, func) {
     // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值

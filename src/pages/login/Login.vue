@@ -105,6 +105,7 @@ export default {
     getEncryptionType() {
       http.get(URL.encryption, (res) => {
         this.encryptType = res.data
+        sessionStorage.setItem('passType', res.data)
       })
     },
     handleSubmit(name) {
