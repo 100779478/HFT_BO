@@ -361,9 +361,9 @@ export default {
         tradeChannel: [{required: true, message: "请选择交易通道"}],
         accountId: [{required: true, message: "请输入分账号代码"}],
         tdApiType: [{required: true, message: "请输入交易接口类型"}],
-        assetNo: [{required: false, message: "请输入资产账户"}],
         combiNo: [{required: true, message: "请输入持仓账户"}],
         logicType: [{required: true, message: "请选择业务类型"}],
+        assetNo: [{required: false, message: "请输入资产账户"}],
       },
       channelInfo: {
         customerId: "",
@@ -469,6 +469,7 @@ export default {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.channelInfo.tdApiTypeName = ""
+      this.showLabel = true;
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
@@ -537,7 +538,7 @@ export default {
           //   this.showLabel = true;
           //   break;
         default:
-          this.showLabel = false;
+          this.showLabel = true;
           this.assetLabel = '资产账户';
           this.positionLabel = '组合账户';
           this.foundationLabel = '基金账户';

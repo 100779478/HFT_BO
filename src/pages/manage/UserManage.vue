@@ -89,17 +89,19 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="密码" prop="password" v-show="isNew">
-                <Input
-                    v-model="userInfo.password"
-                    placeholder="请输入密码"
-                    type="password"
-                    autocomplete="new-password"
-                    maxlength="20"
-                    password
-                >
-                </Input>
-              </FormItem>
+              <form autocomplete="off" id="122">
+                <FormItem label="密码" prop="password" v-show="isNew">
+                  <!--                  <Input-->
+                  <!--                      v-model="userInfo.password"-->
+                  <!--                      placeholder="请输入密码"-->
+                  <!--                      type="password"-->
+                  <!--                      autocomplete="off"-->
+                  <!--                      maxlength="20"-->
+                  <!--                  >-->
+                  <!--                  </Input>-->
+                  <InputPassword @inputPass='onchangePassword' v-if="showAddModal"/>
+                </FormItem>
+              </form>
             </Col>
             <Col :span="18">
               <FormItem label="用户类型" prop="userType">
@@ -207,8 +209,10 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
 import {encryptionModePassword, getUserType, handleSort, time} from "@/common/common";
+import InputPassword from "@/components/InputPassword.vue";
 
 export default {
+  components: {InputPassword},
   props: ["userId"],
   data() {
     let columns1 = [
@@ -376,6 +380,10 @@ export default {
     })
   },
   methods: {
+    onchangePassword(e) {
+      console.log(e, 433344444)
+      this.userInfo.password = e
+    },
     handleSort,
     // 获取用户列表
     getUserData() {
@@ -466,6 +474,7 @@ export default {
       // }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
+        console.log(this.userInfo.password, 33333333)
         this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
         http.put(URL.userEdit, this.userInfo, () => {
           this.getUserData(), this.cancel();
