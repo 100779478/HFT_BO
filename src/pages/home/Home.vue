@@ -52,8 +52,8 @@
               src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADkAAAASCAYAAADhc3ZwAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAEASURBVHgB7ZeNDYIwEIUfxgFwAnET3UAnMG6gE8AIbqAj6AS4gW4gTqAb1KspCTlAIF4pol/ywk9Lw+Ou7QGVZ4yaUN+IPbsr6OOTQtKZdFf1ic3zHzOERWj8gA76ZQM4xJrJNwYfRlWkfZKSdt+oetyC6Iqkqz5nbTpV5xBC1ZgqKQPYY8quN57nHeAAKyZNqgbZe2RwD0fYjGRn+JvsC62ZVM2JIcRPRNJqxcM4oRkXCKFN6iohWzmMSDcIQ1vIDI7Q6cq/2BI9Q5s8sntrmvQhesSA0miLfDQjU2teSyRWg7ZBuvAskP9j4FU+WNvX8NpCKJoJaUKnKwiual3hCWhuZ7lJSEETAAAAAElFTkSuQmCC"
               alt=""
               style="-webkit-user-drag: none"
-              width="57px"
-              height="18px"
+              width=57
+              height=18
           />
           <span
               style="
@@ -61,7 +61,7 @@
               width: 1px;
               height: 20px;
               background: rgba(255, 255, 255, 0.7);
-              margin: 0px 12.5px;
+              margin: 0 12.5px;
             "
           ></span>
           <img

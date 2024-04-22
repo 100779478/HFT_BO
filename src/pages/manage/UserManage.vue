@@ -344,7 +344,7 @@ export default {
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
         // customerName: [{required: true, message: "请输入用户名称"}],
-        // password: [{ required: true, message: "请输入密码" }],
+        password: [{required: true, message: "请输入密码"}],
         userType: [{required: true, message: "请选择用户类型"}],
         roles: [{required: false, message: "请选择用户角色"}],
         active: [{required: false, message: "请选择状态"}],
@@ -454,15 +454,14 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      let arr = (this.userInfo.roleStr || []).map((item, index) => ({
+      let arr = (this.userInfo.roleStr || []).map((item) => ({
         id: "",
         name: item || "",
       }));
       let list = [];
-      for (let i = 0; i < this.userInfo.roles.length; i++) {
-        for (let j = 0; j < arr.length; j++) {
-          if (this.userInfo.roles[i].name == arr[j].name) {
-            // arr[j].id = this.userInfo.roles[i].id;
+      for (let i = 0; i < this.userInfo?.roles?.length; i++) {
+        for (let j = 0; j < arr?.length; j++) {
+          if (this.userInfo.roles[i].name === arr[j].name) {
             list.push(this.userInfo.roles[i].id);
           }
         }
@@ -474,17 +473,22 @@ export default {
       // }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
-        console.log(this.userInfo.password, 33333333)
-        this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
-        http.put(URL.userEdit, this.userInfo, () => {
-          this.getUserData(), this.cancel();
-        });
+        if (!this.userInfo.password) {
+          this.$Message.warning('请填写密码')
+        } else {
+          this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
+          http.put(URL.userEdit, this.userInfo, () => {
+            this.getUserData()
+            this.cancel();
+          });
+        }
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
             this.userInfo,
             () => {
-              this.getUserData(), this.cancel();
+              this.getUserData()
+              this.cancel();
             }
         );
       }
@@ -515,7 +519,7 @@ export default {
       let data = row.customerId;
       // let customerName = row.customerName;
       let customerId = Number(getUserInfo());
-      if (data == customerId) {
+      if (data === customerId) {
         this.$Message.error("无法禁用自己");
         return;
       }
@@ -545,7 +549,7 @@ export default {
         this.getUserData();
       }, 200);
     },
-    doOperate(name, row, index) {
+    doOperate(name, row) {
       switch (name) {
         case "resetPassword":
           this.$Modal.confirm({

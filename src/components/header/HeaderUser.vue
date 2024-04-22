@@ -11,8 +11,21 @@
   margin-right: 20px;
 }
 
+.icon-item {
+  margin: 0 5px 0 20px;
+  color: #86909c;
+  cursor: pointer
+}
+
 .rotate-icon {
   transform: rotate(-90deg);
+}
+
+.env-area {
+  display: inline-block;
+  margin-right: 8px;
+  height: 32px;
+  line-height: 32px
 }
 </style>
 <template>
@@ -21,14 +34,14 @@
       <Icon
           @click.native="collapsedSider"
           :class="{'rotate-icon':!showMenu}"
-          :style="{ margin: '0 5px 0 20px', color: '#86909c',cursor: 'pointer' }"
+          class="icon-item"
           type="md-menu"
           size="20"
       ></Icon>
       <Icon
           type="md-refresh"
           size="20"
-          :style="{ margin: '0 5px', color: '#86909c', cursor: 'pointer' }"
+          class="icon-item"
           @click="refresh"
       >
       </Icon>
@@ -39,7 +52,7 @@
           margin: '0 30px',
         }"
       >
-        <div style="display: inline-block;margin-right: 8px;height: 32px;line-height: 32px"
+        <div class="env-area"
              id="environmentDropdown"
         >
           <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
