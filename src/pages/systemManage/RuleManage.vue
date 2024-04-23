@@ -189,14 +189,6 @@
                         size="23"/>
                   </FormItem>
                 </Col>
-                <!--            <Col :span="18">-->
-                <!--              <FormItem label="状态" prop="active">-->
-                <!--                <i-Switch-->
-                <!--                    v-model="userStrategyInfo.active"-->
-                <!--                    style="margin-top: 5px"-->
-                <!--                />-->
-                <!--              </FormItem>-->
-                <!--            </Col>-->
               </Form>
             </div>
             <div class="modal__content-right"
@@ -614,6 +606,27 @@ export default {
     ,
     handleShowParamsTable(e) {
       this.chooseRule = e === '2';
+      switch (e) {
+          // 0 银行间双边做市策略-->./Rules/libMM_strategy.so
+          // 1 银行间指示性报价策略->./Rules/indicative_strategy.so
+          // 3 交易所新债平台做市策略-->./Rules/libmm_strategy_rate.so
+          // 4 交易所固收平台做市策略-->./Rules/libmm_strategy_fi.so
+        case '0':
+          this.userStrategyInfo.rulePath = './Rules/libMM_strategy.so'
+          break
+        case '1':
+          this.userStrategyInfo.rulePath = './Rules/indicative_strategy.so'
+          break
+        case '3':
+          this.userStrategyInfo.rulePath = './Rules/libmm_strategy_rate.so'
+          break
+        case '4':
+          this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
+          break
+        default:
+          this.userStrategyInfo.rulePath = ''
+          break
+      }
     }
     ,
 // 用户策略弹窗
