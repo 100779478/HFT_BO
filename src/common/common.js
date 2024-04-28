@@ -214,6 +214,21 @@ export function getOperatingLogType(code) {
     return result;
 }
 
+// 密码强度校验类型
+export function getPasswordStrength(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.PasswordStrength.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.PasswordStrength;
+    }
+    return result;
+}
+
 // 表头排序
 export function handleSort(col, func) {
     // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值

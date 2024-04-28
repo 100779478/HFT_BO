@@ -61,6 +61,7 @@
               </Button>
             </FormItem>
           </Form>
+          <div class="login-err">xixixi</div>
         </div>
       </div>
     </div>
@@ -177,6 +178,10 @@ export default {
   position: absolute;
   top: 25%;
   right: 15%;
+}
+
+.login-err {
+  color: red;
 }
 
 .login_form {
