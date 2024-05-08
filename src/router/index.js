@@ -35,6 +35,15 @@ const router = new VueRouter({
                         title: "主页",
                     },
                 },
+                // 主页
+                {
+                    path: "/home/trade-date",
+                    name: "TradeDate",
+                    component: () => import("@/pages/systemManage/TradeDate"),
+                    meta: {
+                        title: "主页",
+                    },
+                },
                 // 用户角色管理
                 {
                     path: "/home/manage/user-manage",
