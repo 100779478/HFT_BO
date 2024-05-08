@@ -640,8 +640,15 @@ export default {
         this.chooseRule = row.ruleType === '2'
         this.isNew = false;
         this.showAddModal = true;
-        // this.paramList = row.ruleParams
         this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
+        // 只读下拉框展示需改为字符串类型
+        this.paramList.forEach(param => {
+          if (param.readOnly === true) {
+            param.readOnly = 'true';
+          } else if (param.readOnly === false) {
+            param.readOnly = 'false';
+          }
+        });
         Object.assign(this.userStrategyInfo, row);
       }
     }
@@ -657,6 +664,15 @@ export default {
         this.showMessage(message, 'error', 6)
       } else {
         // 没有重复的 name 字段，执行提交操作
+        // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
+        this.paramList.forEach(param => {
+          if (param.readOnly === 'true') {
+            param.readOnly = true;
+          } else if (param.readOnly === 'false') {
+            param.readOnly = false;
+          }
+        });
+        this.userStrategyInfo.ruleParams = this.paramList;
         if (isNew) {
           http.put(URL.rule, this.userStrategyInfo, (res) => {
             if (res.code === '0') {
@@ -665,7 +681,6 @@ export default {
             }
           });
         } else {
-          this.userStrategyInfo.ruleParams = this.paramList;
           http.post(URL.rule, this.userStrategyInfo, (res) => {
             if (res.code === '0') {
               this.getUserStrategyData();
