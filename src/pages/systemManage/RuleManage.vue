@@ -381,6 +381,7 @@ export default {
     return {
       loading: true,
       fileType: '',
+      rulePath: '',
       uploadFlag: false,
       tableHeight: window.innerHeight - 220,
       chooseRule: false,
@@ -560,6 +561,7 @@ export default {
         http.get(`${URL.ruleIdPath}?type=${code}`, (response) => {
           const {ruleId, rulePath} = response.data;
           this.userStrategyInfo.ruleId = ruleId;
+          this.rulePath = rulePath
           this.userStrategyInfo.rulePath = rulePath;
         })
       }
@@ -624,7 +626,7 @@ export default {
           this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
           break
         default:
-          this.userStrategyInfo.rulePath = ''
+          this.userStrategyInfo.rulePath = this.rulePath
           break
       }
     }
