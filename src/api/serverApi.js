@@ -20,6 +20,8 @@ export const URL = {
     login: "/customer/login",
     // 修改密码
     // modification: "/user/modification",
+    // 密码强度校验
+    pwdStrength: "/customer/password-strength",
     // 获取验证码图片
     verifyCode: "/customer/captcha",
     // 退出登录

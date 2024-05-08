@@ -672,7 +672,7 @@ export default {
         // 没有重复的 name 字段，执行提交操作
         if (isNew) {
           http.put(URL.rule, this.userStrategyInfo, (res) => {
-            if (res.data.code === '0') {
+            if (res.code === '0') {
               this.getUserStrategyData();
               this.cancel();
             }
@@ -680,7 +680,7 @@ export default {
         } else {
           this.userStrategyInfo.ruleParams = this.paramList;
           http.post(URL.rule, this.userStrategyInfo, (res) => {
-            if (res.data.code === '0') {
+            if (res.code === '0') {
               this.getUserStrategyData();
               this.cancel();
             }

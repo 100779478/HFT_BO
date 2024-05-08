@@ -91,14 +91,14 @@
             <Col :span="18">
               <form autocomplete="off" id="122">
                 <FormItem label="密码" prop="password" v-show="isNew">
-                  <!--                  <Input-->
-                  <!--                      v-model="userInfo.password"-->
-                  <!--                      placeholder="请输入密码"-->
-                  <!--                      type="password"-->
-                  <!--                      autocomplete="off"-->
-                  <!--                      maxlength="20"-->
-                  <!--                  >-->
-                  <!--                  </Input>-->
+<!--                                    <Input-->
+                  <!--                                        v-model="userInfo.password"-->
+                  <!--                                        placeholder="请输入密码"-->
+                  <!--                                        type="password"-->
+                  <!--                                        autocomplete="off"-->
+                  <!--                                        maxlength="20"-->
+                  <!--                                    >-->
+                  <!--                                    </Input>-->
                   <InputPassword @inputPass='onchangePassword' v-if="showAddModal"/>
                 </FormItem>
               </form>
@@ -177,7 +177,7 @@
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <!--                          <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
+                <!--                                          <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
                 <DropdownItem name="dele" style="color: #ed4014"
                 >删除用户
                 </DropdownItem
@@ -381,7 +381,6 @@ export default {
   },
   methods: {
     onchangePassword(e) {
-      console.log(e, 433344444)
       this.userInfo.password = e
     },
     handleSort,
@@ -473,7 +472,9 @@ export default {
       // }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
-        if (!this.userInfo.password) {
+        if (this.userInfo.password.includes(' ')) {
+          this.$Message.warning('密码不允许包含空格')
+        } else if (!this.userInfo.password) {
           this.$Message.warning('请填写密码')
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
