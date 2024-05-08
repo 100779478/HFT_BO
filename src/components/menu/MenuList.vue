@@ -42,7 +42,7 @@
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
   background-color: #3a5d98;
   color: #02aff1;
-  border-radius: 5px solid #3a5d98;
+  //border-radius: 5px solid #3a5d98;
   border-radius: 5px;
 }
 
