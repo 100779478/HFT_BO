@@ -696,6 +696,10 @@ export default {
           }
         });
         this.userStrategyInfo.ruleParams = this.paramList;
+        if (!this.userStrategyInfo.rulePath) {
+          this.$Message.warning('策略存储路径不能为空')
+          return
+        }
         if (isNew) {
           http.put(URL.rule, this.userStrategyInfo, (res) => {
             if (res.code === '0') {
