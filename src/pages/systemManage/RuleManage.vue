@@ -67,7 +67,7 @@
             draggable
             sticky
             mask
-            :width="chooseRule ? 1600 : 600"
+            :width="chooseRule ? 1250 : 600"
             :mask-closable="false"
             :title="isNew ? '新增用户策略' : '编辑用户策略'"
         >
@@ -189,14 +189,6 @@
                         size="23"/>
                   </FormItem>
                 </Col>
-                <!--            <Col :span="18">-->
-                <!--              <FormItem label="状态" prop="active">-->
-                <!--                <i-Switch-->
-                <!--                    v-model="userStrategyInfo.active"-->
-                <!--                    style="margin-top: 5px"-->
-                <!--                />-->
-                <!--              </FormItem>-->
-                <!--            </Col>-->
               </Form>
             </div>
             <div class="modal__content-right"
@@ -390,6 +382,7 @@ export default {
       loading: true,
       rulePath: '',
       fileType: '',
+      rulePath: '',
       uploadFlag: false,
       tableHeight: window.innerHeight - 220,
       chooseRule: false,
@@ -474,7 +467,7 @@ export default {
         value: "",
         group: "",
         range: "",
-        readOnly: ""
+        readOnly: "false"
       },);
     },
     // 检查重复的 name 字段的函数

@@ -10,6 +10,7 @@ export default {
     },
     readOnly: {
       type: Boolean,
+      default:'false'
     }
   },
   data() {
@@ -35,15 +36,15 @@ export default {
         renderHeader: (h, params) => {
           return h('span', [
             params.column.title,
-            h('Tooltip', {
-              props: {
-                content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent',
-                transfer: true,
-                maxWidth: 300,
-              }
-            }, [
-              h('Icon', {props: {type: 'md-alert'}})
-            ])
+            // h('Tooltip', {
+            //   props: {
+            //     content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent',
+            //     transfer: true,
+            //     maxWidth: 300,
+            //   }
+            // }, [
+            //   h('Icon', {props: {type: 'md-alert'}})
+            // ])
           ]);
         }
       },
@@ -53,38 +54,38 @@ export default {
         width: 150,
         render: this.renderEditable
       },
-      {
-        title: "参数分组",
-        key: "group",
-        width: 150,
-        render: this.renderEditable
-      },
-      {
-        title: "输入值范围",
-        key: "range",
-        width: 110,
-        render: this.renderEditable,
-        renderHeader: (h, params) => {
-          return h('span', [
-            params.column.title,
-            h('Tooltip', {
-              props: {
-                content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,',
-                transfer: true,
-                maxWidth: 300,
-              },
-            }, [
-              h('Icon', {props: {type: 'md-alert'}})
-            ])
-          ]);
-        },
-      },
-      {
-        title: "只读",
-        key: "readOnly",
-        width: 100,
-        render: this.renderSelectCell
-      },
+      // {
+      //   title: "参数分组",
+      //   key: "group",
+      //   width: 150,
+      //   render: this.renderEditable
+      // },
+      // {
+      //   title: "输入值范围",
+      //   key: "range",
+      //   width: 110,
+      //   render: this.renderEditable,
+      //   renderHeader: (h, params) => {
+      //     return h('span', [
+      //       params.column.title,
+      //       h('Tooltip', {
+      //         props: {
+      //           content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,',
+      //           transfer: true,
+      //           maxWidth: 300,
+      //         },
+      //       }, [
+      //         h('Icon', {props: {type: 'md-alert'}})
+      //       ])
+      //     ]);
+      //   },
+      // },
+      // {
+      //   title: "只读",
+      //   key: "readOnly",
+      //   width: 100,
+      //   render: this.renderSelectCell
+      // },
       {
         title: "操作",
         slot: "operator",
@@ -204,7 +205,7 @@ export default {
   <Table
       :columns="dynamicColumns"
       :data="paramList"
-      :width="1027"
+      :width="827"
       class="table-content"
       style="position: unset"
       :height="450"
