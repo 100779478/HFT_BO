@@ -21,7 +21,7 @@
 <template>
   <div class="bck">
     <h1 class="title">欢迎使用本系统</h1>
-    <div class="curEnv" id="currentEnv">当前环境为：{{
+    <div class="curEnv title" id="currentEnv">当前环境为：{{
         this.$store.state.currentEnv || '未选择'
       }}
     </div>
