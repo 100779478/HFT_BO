@@ -67,7 +67,7 @@
             draggable
             sticky
             mask
-            :width="chooseRule ? 1600 : 600"
+            :width="chooseRule ? 1250 : 600"
             :mask-closable="false"
             :title="isNew ? '新增用户策略' : '编辑用户策略'"
         >
@@ -466,7 +466,7 @@ export default {
         value: "",
         group: "",
         range: "",
-        readOnly: ""
+        readOnly: "false"
       },);
     },
     // 检查重复的 name 字段的函数
