@@ -35,15 +35,6 @@ const router = new VueRouter({
                         title: "主页",
                     },
                 },
-                // 主页
-                {
-                    path: "/home/trade-date",
-                    name: "TradeDate",
-                    component: () => import("@/pages/systemManage/TradeDate"),
-                    meta: {
-                        title: "主页",
-                    },
-                },
                 // 用户角色管理
                 {
                     path: "/home/manage/user-manage",
@@ -109,6 +100,15 @@ const router = new VueRouter({
                     component: () => import("@/pages/systemMonitor/ChannelStatusManage"),
                     meta: {
                         title: "连接状态",
+                    },
+                },
+                // 主页
+                {
+                    path: "/home/sys-monitor/trade-calendar",
+                    name: "TradeCalendar",
+                    component: () => import("@/pages/systemManage/TradeCalendar.vue"),
+                    meta: {
+                        title: "系统管理/交易日历",
                     },
                 },
                 // 操作日志

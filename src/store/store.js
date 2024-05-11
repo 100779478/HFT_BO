@@ -33,6 +33,8 @@ const getLocalDictionaryList = () => {
             LogicType: [],
             PasswordStrength: [],
             OperatingLogType: [],
+            DayOfWeek: [],
+            TradeExchangeType: [],
         };
     }
 };

@@ -21,7 +21,7 @@
 </style>
 <template>
   <div>
-    <Row style="margin: 10px">
+    <Row>
       <Col>
         <form autocomplete="off">
           <Input
@@ -48,18 +48,12 @@
           新增环境
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.environmentExport, this.pagination,'环境管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
         </Button
         >
-        <!--        <Button type="success" @click="refresh()"-->
-        <!--        >-->
-        <!--          <Icon type="md-refresh"/>-->
-        <!--          刷新-->
-        <!--        </Button-->
-        <!--        >-->
         <Modal
             v-model="showAddModal"
             draggable
@@ -123,25 +117,6 @@
           <div @click="() => deleteEnvironment(row)" class="table-operate">
             删除
           </div>
-          <!-- <Button
-            type="info"
-            size="small"
-            @click="() => modalUser('modify', row)"
-            >编辑</Button
-          >
-          &nbsp;
-          <Button
-            type="error"
-            size="small"
-            @click="() => deleteEnvironment(row)"
-            >删除</Button
-          > -->
-          <!-- <div @click="() => modalUser('modify', row)" class="table-operate">
-            编辑
-          </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
-            {{ "删除" }}
-          </div> -->
         </div>
       </template>
     </Table>
@@ -165,7 +140,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -231,6 +206,7 @@ export default {
     })
   },
   methods: {
+    handleExport,
     handleSort,
     // 获取环境列表
     getEnvironmentData() {
@@ -268,11 +244,10 @@ export default {
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
-        const info = {
+        this.environmentInfo = {
           name: "",
           comment: "",
         };
-        this.environmentInfo = info;
       } else {
         this.isNew = false;
         this.showAddModal = true;
@@ -314,25 +289,6 @@ export default {
     handleChangeSize(size) {
       this.pagination.pageSize = size;
       this.getEnvironmentData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.environmentExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `环境管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

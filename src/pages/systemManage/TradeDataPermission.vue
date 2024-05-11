@@ -31,7 +31,7 @@
           新增权限
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.tradeDataExport, this.pagination,'权限管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -90,19 +90,6 @@
             </Col>
             <Col :span="18">
               <FormItem label="交易员" prop="traderIds">
-                <!--                                <Select v-model="tradeInfo.traderIds" multiple style="width:260px" :max-tag-count="1">-->
-                <!--                                  <Input-->
-                <!--                                      v-model="searchTdId"-->
-                <!--                                      placeholder="请输入交易员代码"-->
-                <!--                                      :maxlength="20"-->
-                <!--                                      show-message="false"-->
-                <!--                                      @on-change="handleSearchMgList"-->
-                <!--                                  ></Input>-->
-                <!--                                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                                      item.customerId + `(${item.customerName})`-->
-                <!--                                    }}-->
-                <!--                                  </Option>-->
-                <!--                                </Select>-->
                 <Select
                     v-model="tradeInfo.traderIds"
                     multiple
@@ -167,7 +154,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort, time} from "@/common/common";
 import {Message} from "view-design";
 
 export default {
@@ -245,6 +232,7 @@ export default {
     })
   },
   methods: {
+    handleExport,
     handleSort,
     remoteMethod3(query) {
       if (query !== '') {
@@ -382,26 +370,6 @@ export default {
           },
           [content]
       );
-    },
-
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.tradeDataExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `权限管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

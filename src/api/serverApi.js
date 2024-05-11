@@ -120,4 +120,18 @@ export const URL = {
     logExport: "/log/export",
     // 操作日志列表
     logList: "/log/list",
+    // 获取节假日列表
+    holidayList: "/calendar/holiday/list",
+    // 新增删除修改节假日
+    holiday: "/calendar/holiday",
+    // 获取周末工作日列表
+    weeklyList: "/calendar/trading-day/list",
+    // 新增删除修改周末工作日
+    weekly: "/calendar/trading-day",
+    // 交易日历列表
+    calendarList: "/calendar/list",
+    // 交易日历计算
+    calendarCalculate: "/calendar/calculate",
+    // 导出交易日历
+    calendarExport: "/calendar/export",
 };

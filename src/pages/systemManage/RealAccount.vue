@@ -36,17 +36,13 @@ input:-webkit-autofill {
           <Icon type="md-add"/>
           新增实体账户
         </Button>
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.channelTradeExport,this.pagination,'实体账户')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
         </Button
         >
       </Col>
-      <!--        <Button type="success" @click="refresh()">-->
-      <!--          <Icon type="md-refresh"/>-->
-      <!--          刷新-->
-      <!--        </Button>-->
       <Modal
           v-model="showAddModal"
           draggable
@@ -224,7 +220,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, handleExport, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -331,7 +327,8 @@ export default {
       pagination,
       showAddModal: false,
       isNew: true,
-      showAccountAndPwd: true
+      showAccountAndPwd: true,
+      URL
     };
   },
   mounted() {
@@ -350,6 +347,7 @@ export default {
     })
   },
   methods: {
+    handleExport,
     handleSort,
     handleFocus() {
       this.typeInput = true
@@ -488,32 +486,7 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   channelId: "",
-      // };
       this.getChannelData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.channelTradeExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `实体账户_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

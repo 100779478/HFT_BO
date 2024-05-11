@@ -1,6 +1,8 @@
 import store from "@/store/store";
 import md5 from "js-md5";
 import {http} from "@/utils/request";
+import moment from "moment/moment";
+import {URL} from "@/api/serverApi";
 // fill number into some length string
 export const fillNumber = (number, length) => {
     return (new Array(length).join(0) + number).slice(-length);
@@ -214,6 +216,36 @@ export function getOperatingLogType(code) {
     return result;
 }
 
+// 星期
+export function getDayOfWeek(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.DayOfWeek.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.DayOfWeek;
+    }
+    return result;
+}
+
+// 交易所类型
+export function getTradeExchangeType(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.TradeExchangeType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+    } else {
+        result = store.state.dictionaryList.TradeExchangeType;
+    }
+    return result;
+}
+
 // 密码强度校验类型
 export function getPasswordStrength(code) {
     let result = {};
@@ -285,7 +317,40 @@ export function encryptionModePassword(type, pwd) {
     }
 }
 
+/**
+ * @description: 转换日期类型为20240101
+ * @date: 2024--05--09 18:16:46
+ * @params {data} 日期
+ * @returns {String}
+ */
+export function formatDate(date) {
+    return moment(date).isValid() ? moment(date).format("YYYYMMDD") : null;
+}
 
 
+/**
+ * @description: 导出功能
+ * @date: 2024--05--11 13:58:29
+ * @params {url} 请求接口
+ * @params {params} 请求参数
+ * @params {name} 文件名称
+ * @returns {File}
+ */
 
-
+export function handleExport(url, params, name) {
+    http.postBlob(url, params, (res) => {
+        const blob = res;
+        // 创建link标签
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        // 设置链接元素的下载属性，指定文件名
+        const dateObj = time.dateToLocaleObject(new Date());
+        link.download = `${name}_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
+        // 将链接元素添加到文档中
+        document.body.appendChild(link);
+        // 触发点击事件以开始下载
+        link.click();
+        // 移除链接元素
+        document.body.removeChild(link);
+    });
+}

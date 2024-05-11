@@ -104,10 +104,6 @@ a.ivu-menu-item {
         <Icon type="md-home"/>
         首页
       </MenuItem>
-<!--      <MenuItem name="TradeDate" :to="{ name: 'TradeDate' }">-->
-<!--        <Icon type="md-home"/>-->
-<!--        交易日历-->
-<!--      </MenuItem>-->
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
           <template slot="title">

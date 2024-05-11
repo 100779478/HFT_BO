@@ -71,7 +71,7 @@
           新增角色
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.roleExport, this.pagination,'角色管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -216,7 +216,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -284,6 +284,7 @@ export default {
     })
   },
   methods: {
+    handleExport,
     handleSort,
     handleCheckAll(type) {
       if (this.indeterminate[type]) {
@@ -501,25 +502,6 @@ export default {
       //   roleName: "",
       // };
       this.getRoleData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.roleExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `角色管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
     // 其他处理逻辑...
     // handleCheckboxClick() {

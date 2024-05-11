@@ -70,7 +70,7 @@
           查询
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="handleExportPosition()" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -113,7 +113,7 @@ import {URL} from "@/api/serverApi";
 import {
   time,
   getHedgeType,
-  getPositionDirection, handleSort
+  getPositionDirection, handleSort, handleExport
 } from "@/common/common";
 
 export default {
@@ -283,32 +283,14 @@ export default {
       this.getPositionData();
     },
     // 导出列表
-    handleExportOrders() {
+    handleExportPosition() {
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
       this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
           ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
-      http.postBlob(URL.positionExport, this.searchParams, (res) => {
-        // 创建blob
-        // const blob = new Blob([res.data], {
-        //   type: "application/vnd.ems-excel;charset=UTF-8",
-        // });
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `持仓_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
+      handleExport(URL.positionExport, this.searchParams,'持仓')
     },
   },
 };

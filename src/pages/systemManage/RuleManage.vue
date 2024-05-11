@@ -53,15 +53,12 @@
         >
           <Icon type="md-add"/>
           新增用户策略
-        </Button
-        >
+        </Button>
         &nbsp;
-        <Button type="success" @click="handleExportList()"
+        <Button type="success" @click="()=>handleExport(URL.ruleExport, this.pagination, '策略管理')"
         >
-          <!--          <Icon type="md-refresh"/>-->
           导出
-        </Button
-        >
+        </Button>
         <Modal
             v-model="showAddModal"
             draggable
@@ -271,7 +268,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleFileType, getRuleType, handleSort, time} from "@/common/common";
+import {getRuleFileType, getRuleType, handleExport, handleSort, time} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 
 export default {
@@ -382,7 +379,6 @@ export default {
       loading: true,
       rulePath: '',
       fileType: '',
-      rulePath: '',
       uploadFlag: false,
       tableHeight: window.innerHeight - 220,
       chooseRule: false,
@@ -419,6 +415,7 @@ export default {
       showAddModal: false,
       isNew: true,
       userList: [],
+      URL
     };
   },
   mounted() {
@@ -430,6 +427,7 @@ export default {
     this.getUserList();
   },
   methods: {
+    handleExport,
     // 更多操作
     doOperate(name, row) {
       switch (name) {
@@ -581,7 +579,6 @@ export default {
       }, 200);
       this.pagination.total = res.data.total;
       this.tableData = res.data.dataList || [];
-      // this.paramList = res.data.dataList || [];
     }
     ,
 // 获取用户代码
@@ -714,8 +711,7 @@ export default {
     cancel() {
       this.showAddModal = false;
       this.paramList = []
-    }
-    ,
+    },
 // 启用用户策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
@@ -724,8 +720,7 @@ export default {
       }
       this.$Message.success(`用户策略已启用`);
       this.getUserStrategyData();
-    }
-    ,
+    },
 // 🈲用用户策略
     handleActiveDisable(res) {
       if (res.code !== "0") {
@@ -734,8 +729,7 @@ export default {
       }
       this.$Message.error(`用户策略已禁用`);
       this.getUserStrategyData();
-    }
-    ,
+    },
     changeUserStatus(row) {
       let data = row.ruleId;
       if (!row.active) {
@@ -743,8 +737,7 @@ export default {
       } else {
         http.post(`${URL.rule}/${data}/disable`, {}, this.handleActiveDisable);
       }
-    }
-    ,
+    },
     // 公共方法：显示消息提示
     showMessage(content, type = 'info', duration = 6) {
       this.$Message[type]({
@@ -756,33 +749,12 @@ export default {
       http.delete(`${URL.rule}/${row.ruleId}`, {}, () => {
         this.getUserStrategyData();
       });
-    }
-    ,
+    },
 // 刷新
     refresh() {
       this.loading = true;
       this.getUserStrategyData();
       this.getUserList();
-    }
-    ,
-// 导出列表
-    handleExportList() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.ruleExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `用户策略管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 }
