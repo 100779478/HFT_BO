@@ -157,6 +157,7 @@ export default {
       sortField: ''
     };
     return {
+      setTime: 10,
       loading: true,
       tableHeight: window.innerHeight - 220,
       tableData: [],

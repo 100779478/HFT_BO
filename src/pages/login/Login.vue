@@ -61,6 +61,7 @@
               </Button>
             </FormItem>
           </Form>
+          <div class="login-err">{{ passwordIncorrectMessage }}</div>
         </div>
       </div>
     </div>
@@ -79,6 +80,7 @@ export default {
       imgUrl: "",
       loading: false,
       encryptType: "",
+      passwordIncorrectMessage: "",
       formInline: {
         username: "",
         password: "",
@@ -102,6 +104,7 @@ export default {
     };
   },
   methods: {
+    // 获取当前系统密码类型MD5 or CUSTOMIZE
     getEncryptionType() {
       http.get(URL.encryption, (res) => {
         this.encryptType = res.data
@@ -124,6 +127,10 @@ export default {
     login(response) {
       this.closeLoading();
       let token = response.data.token;
+      if (!token) {
+        this.passwordIncorrectMessage = response.data.message
+        return
+      }
       putToken(token);
       Message.success("登录成功！");
       this.$router.push({name: "Home"});
@@ -179,15 +186,18 @@ export default {
   right: 15%;
 }
 
+.login-err {
+  color: red;
+}
+
 .login_form {
   height: 489px;
-  width: 440px;
+  width: 450px;
   background: #fff;
-  padding: 0 60px;
+  padding: 65px 60px 0 60px;
   flex: none;
-  box-shadow: 0px 4px 60px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 60px rgba(0, 0, 0, 0.08);
   border-radius: 10px;
-  padding-top: 65px;
   text-align: center;
 }
 

@@ -2,8 +2,8 @@
 // export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
 // const devUrl = "http://106.12.178.118:9000"; // 测试
-const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.50.17:9000"; // 玺子哥
+// const devUrl = "http://58.250.164.226:31004"; //POC
+const devUrl = "http://192.168.50.17:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -20,6 +20,8 @@ export const URL = {
     login: "/customer/login",
     // 修改密码
     // modification: "/user/modification",
+    // 密码强度校验
+    pwdStrength: "/customer/password-strength",
     // 获取验证码图片
     verifyCode: "/customer/captcha",
     // 退出登录
