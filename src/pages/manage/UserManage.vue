@@ -91,6 +91,14 @@
                   <!--                                        maxlength="20"-->
                   <!--                                    >-->
                   <!--                                    </Input>-->
+<!--                                    <Input-->
+                  <!--                                        v-model="userInfo.password"-->
+                  <!--                                        placeholder="请输入密码"-->
+                  <!--                                        type="password"-->
+                  <!--                                        autocomplete="off"-->
+                  <!--                                        maxlength="20"-->
+                  <!--                                    >-->
+                  <!--                                    </Input>-->
                   <InputPassword @inputPass='onchangePassword' v-if="showAddModal"/>
                 </FormItem>
               </form>

@@ -379,6 +379,7 @@ export default {
       loading: true,
       rulePath: '',
       fileType: '',
+      rulePath: '',
       uploadFlag: false,
       tableHeight: window.innerHeight - 220,
       chooseRule: false,
