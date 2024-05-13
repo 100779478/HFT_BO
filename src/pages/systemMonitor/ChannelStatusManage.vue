@@ -5,7 +5,13 @@
 <template>
   <div>
     <Row style="margin: 10px">
+      <Col style="text-align: center;font-size: 16px;font-weight: bold;line-height: 30px">
+        刷新频率：
+      </Col>
       <Col style="height: 30px">
+        <Select v-model="queryFrequency" placeholder="查询频率" @on-change="handleSetQueryTime">
+          <Option v-for="option in timeOptions" :key="option.value" :value="option.value">{{ option.label }}</Option>
+        </Select>
       </Col>
       <Col style="position:absolute;right: 25px">
         <Button type="info" @click="refresh()"
@@ -156,13 +162,21 @@ export default {
       sort: 'asc',
       sortField: ''
     };
+    const timeOptions = [ // 下拉框选项
+      {value: 5, label: '5秒'},
+      {value: 10, label: '10秒'},
+      {value: 30, label: '30秒'},
+      {value: 60, label: '60秒'}
+    ]
     return {
-      setTime: 10,
+      queryFrequency: 10,
+      interval: null,
       loading: true,
       tableHeight: window.innerHeight - 220,
       tableData: [],
       columns1,
-      pagination
+      pagination,
+      timeOptions
     };
   },
   mounted() {
@@ -171,9 +185,21 @@ export default {
       this.tableHeight = window.innerHeight - 220
     })
     this.getChannelStatus();
+    this.handleSetQueryTime(this.queryFrequency)
+  },
+  destroyed() {
+    clearInterval(this.interval);
   },
   methods: {
     handleSort,
+    // 手动设置查询时间
+    handleSetQueryTime(e) {
+      clearInterval(this.interval);
+      this.queryFrequency = e
+      this.interval = setInterval(() => {
+        this.getChannelStatus()
+      }, e * 1000)
+    },
     // 获取状态连接列表
     getChannelStatus() {
       http.post(`${URL.channelStatus}`, this.pagination, (res) => {
