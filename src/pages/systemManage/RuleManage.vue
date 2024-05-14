@@ -625,7 +625,7 @@ export default {
           this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
           break
         default:
-          this.userStrategyInfo.rulePath = this.rulePath
+          this.userStrategyInfo.rulePath = this.rulePath || this.userStrategyInfo.rulePath
           break
       }
     }

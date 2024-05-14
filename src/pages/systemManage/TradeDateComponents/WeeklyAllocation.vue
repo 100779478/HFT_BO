@@ -120,6 +120,10 @@
         <Icon type="md-search"/>
         查询
       </Button>
+      <Button type="success" @click="()=>handleExport(URL.weeklyExport,this.pagination,'周末工作日')" class="top">
+        <Icon type="md-download"/>
+        导出
+      </Button>
     </div>
     <Table
         :loading="loading"
@@ -163,8 +167,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
-import {formatDate, getTradeExchangeType} from "@/common/common";
-import {renderDateCell} from "@/pages/systemManage/TradeDateComponents/index";
+import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport} from "@/common/common";
 
 export default {
   components: {InputPassword},
@@ -173,7 +176,6 @@ export default {
       {
         title: '日期',
         key: 'tradingDay',
-        render: (h, params) => renderDateCell(h, params, ['tradingDay', ''])
       },
       {
         title: "交易所类型",
@@ -186,7 +188,12 @@ export default {
       },
       {
         title: '周几',
-        key: 'weekDay'
+        key: 'weekDay',
+        render: (h, params) => {
+          const {weekDay} = params.row
+          const val = getDayOfWeek(weekDay).description
+          return h('span', val)
+        }
       },
       {
         title: '调整缘由',
@@ -220,7 +227,8 @@ export default {
       tableHeight: window.innerHeight - 220,
       columns1,
       list,
-      pagination
+      pagination,
+      URL
     };
   },
   mounted() {
@@ -231,6 +239,7 @@ export default {
     this.getWeeklyList();
   },
   methods: {
+    handleExport,
     // 获取周末工作日列表
     getWeeklyList() {
       this.pagination.startDate = formatDate(this.pagination.startDate)

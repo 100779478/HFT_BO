@@ -134,4 +134,8 @@ export const URL = {
     calendarCalculate: "/calendar/calculate",
     // 导出交易日历
     calendarExport: "/calendar/export",
+    // 导出周末工作日
+    weeklyExport: "/calendar/trading-day/export",
+    // 导出节假日
+    holidayExport: "/calendar/holiday/export",
 };

@@ -138,6 +138,10 @@
         <Icon type="md-search"/>
         查询
       </Button>
+      <Button type="success" @click="()=>handleExport(URL.holidayExport,this.pagination,'节假日')" class="top">
+        <Icon type="md-download"/>
+        导出
+      </Button>
     </div>
     <Table
         :loading="loading"
@@ -179,10 +183,9 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {formatDate, getTradeExchangeType} from "@/common/common";
+import {formatDate, getTradeExchangeType, handleExport} from "@/common/common";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
-import {renderDateCell} from "@/pages/systemManage/TradeDateComponents/index";
 
 export default {
   components: {InputPassword},
@@ -191,12 +194,10 @@ export default {
       {
         title: '起始日期',
         key: 'startDate',
-        render: (h, params) => renderDateCell(h, params, ['startDate'])
       },
       {
         title: '结束日期',
         key: 'endDate',
-        render: (h, params) => renderDateCell(h, params, ['endDate'])
       },
       {
         title: "交易所类型",
@@ -239,7 +240,8 @@ export default {
       tableHeight: window.innerHeight - 220,
       columns1,
       list,
-      pagination
+      pagination,
+      URL
     };
   },
   mounted() {
@@ -250,6 +252,7 @@ export default {
     this.getHolidayList();
   },
   methods: {
+    handleExport,
     // 获取状态连接列表
     getHolidayList() {
       this.pagination.startDate = formatDate(this.pagination.startDate)
