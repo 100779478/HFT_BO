@@ -152,6 +152,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport, handleSort} from "@/common/common";
 import moment from "moment";
+import {renderDateCell} from "@/pages/systemManage/TradeDateComponents/index";
 
 export default {
   props: ["userId"],
@@ -227,11 +228,7 @@ export default {
         resizable: true,
         sortable: 'custom',
         width: null,
-        render: (h, params) => {
-          const {pre1, dayCountTPre1} = params.row
-          const val = moment(pre1).format('YYYY-MM-DD')
-          return h('span', `${val}(${dayCountTPre1})`)
-        }
+        render: (h, params) => renderDateCell(h, params, ['pre1', 'dayCountTPre1'])
       },
       {
         title: "T+0",
@@ -240,11 +237,7 @@ export default {
         resizable: true,
         sortable: 'custom',
         width: null,
-        render: (h, params) => {
-          const {t0, dayCountT0} = params.row
-          const val = moment(t0).format('YYYY-MM-DD')
-          return h('span', `${val}(${dayCountT0})`)
-        }
+        render: (h, params) => renderDateCell(h, params, ['t0', 'dayCountT0'])
       },
       {
         title: "T+1",
@@ -253,11 +246,7 @@ export default {
         resizable: true,
         sortable: 'custom',
         width: null,
-        render: (h, params) => {
-          const {t1, dayCountT1} = params.row
-          const val = moment(t1).format('YYYY-MM-DD')
-          return h('span', `${val}(${dayCountT1})`)
-        }
+        render: (h, params) => renderDateCell(h, params, ['t1', 'dayCountT1'])
       },
       {
         title: "T+2",
@@ -266,11 +255,7 @@ export default {
         resizable: true,
         sortable: 'custom',
         width: null,
-        render: (h, params) => {
-          const {t2, dayCountT2} = params.row
-          const val = moment(t2).format('YYYY-MM-DD')
-          return h('span', `${val}(${dayCountT2})`)
-        }
+        render: (h, params) => renderDateCell(h, params, ['t2', 'dayCountT2'])
       },
       {title: "操作", slot: "operator", width: null, minWidth: 100,},
     ];

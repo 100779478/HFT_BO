@@ -1,16 +1,11 @@
 <template>
   <div>
-    <Tabs size="default" value="1">
-      <TabPane name="1" label="交易日历" icon="ios-calendar">
-        <Calendar></Calendar>
-      </TabPane>
-      <TabPane name="2" label="周末工作日配置" icon="ios-hammer">
-        <WeeklyOption></WeeklyOption>
-      </TabPane>
-      <TabPane name="3" label="节假日配置" icon="ios-hammer">
-        <HolidayAllocation></HolidayAllocation>
-      </TabPane>
+    <Tabs size="default" :value="activeTab" :animated="false" @on-click="handleChangeTab">
+      <TabPane name="1" label="交易日历" icon="ios-calendar"></TabPane>
+      <TabPane name="2" label="周末工作日配置" icon="ios-hammer"></TabPane>
+      <TabPane name="3" label="节假日配置" icon="ios-hammer"></TabPane>
     </Tabs>
+    <component :is="activeComponent"></component>
   </div>
 </template>
 
@@ -21,7 +16,31 @@ import Calendar from "@/pages/systemManage/TradeDateComponents/Calendar.vue";
 
 export default {
   name: "TradeDate",
-  components: {Calendar, WeeklyOption, HolidayAllocation}
+  components: {Calendar, WeeklyOption, HolidayAllocation},
+  data() {
+    return {
+      activeTab: '1', // 初始时激活的标签页为 "1"
+      activeComponent: 'Calendar' // 初始时激活的组件为 Calendar
+    };
+  },
+  methods: {
+    handleChangeTab(t) {
+      this.activeTab = t;
+      this.setActiveComponent(); // 切换标签页时更新激活的组件
+    },
+    setActiveComponent() {
+      if (this.activeTab === '1') {
+        this.activeComponent = 'Calendar';
+      } else if (this.activeTab === '2') {
+        this.activeComponent = 'WeeklyOption';
+      } else if (this.activeTab === '3') {
+        this.activeComponent = 'HolidayAllocation';
+      }
+    }
+  },
+  mounted() {
+    this.setActiveComponent(); // 初始加载页面时设置激活的组件
+  }
 }
 </script>
 

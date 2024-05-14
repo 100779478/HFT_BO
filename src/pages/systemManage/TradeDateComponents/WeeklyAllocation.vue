@@ -164,6 +164,7 @@ import {URL} from "@/api/serverApi";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
 import {formatDate, getTradeExchangeType} from "@/common/common";
+import {renderDateCell} from "@/pages/systemManage/TradeDateComponents/index";
 
 export default {
   components: {InputPassword},
@@ -172,11 +173,7 @@ export default {
       {
         title: '日期',
         key: 'tradingDay',
-        render: (h, params) => {
-          const {tradingDay} = params.row
-          const val = moment(tradingDay).format('YYYY-MM-DD')
-          return h('div', val)
-        }
+        render: (h, params) => renderDateCell(h, params, ['tradingDay', ''])
       },
       {
         title: "交易所类型",
