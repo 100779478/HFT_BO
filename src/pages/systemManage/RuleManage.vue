@@ -6,7 +6,7 @@
 }
 
 .modal__content-left {
-  flex-grow: 0.5; /* 占据60%的空间 */
+  flex-grow: 0.8; /* 占据60%的空间 */
   /* 其他样式，如宽度、背景等 */
 }
 
@@ -64,7 +64,7 @@
             draggable
             sticky
             mask
-            :width="chooseRule ? 1250 : 600"
+            :width="chooseRule ? 1300 : 600"
             :mask-closable="false"
             :title="isNew ? '新增用户策略' : '编辑用户策略'"
         >

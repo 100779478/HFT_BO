@@ -205,7 +205,7 @@ export default {
   <Table
       :columns="dynamicColumns"
       :data="paramList"
-      :width="827"
+      :width="665"
       class="table-content"
       style="position: unset"
       :height="450"
