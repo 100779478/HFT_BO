@@ -1,62 +1,6 @@
-<script>
-import {encryptionModePassword} from "@/common/common";
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
-
-export default {
-  name: "InputPassword",
-  props: {
-    value: String // 接受外部传入的值
-  },
-  data() {
-    return {
-      typeInput: true,
-      inputValue: this.value, // 使用一个内部的数据来接收外部传入的值
-      pwdStrengthLevel: '0' // 密码强度等级0-4 弱->很强
-    }
-  },
-  // 密码强度背景色
-  computed: {
-    strengthColor() {
-      // 根据 pwdStrengthLevel 返回相应的颜色
-      // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的颜色
-      const colors = ['red', 'orange', 'orange', '#08e813', '#08e813'];
-      return colors[parseInt(this.pwdStrengthLevel)];
-    },
-    strengthWidth() {
-      // 根据 pwdStrengthLevel 返回相应的宽度
-      // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的宽度
-      const widths = ['44px', '88px', '132px', '176px', '220px'];
-      return widths[parseInt(this.pwdStrengthLevel)];
-    }
-  },
-  methods: {
-    handleFocus() {
-      this.typeInput = true
-    },
-    handleFocus2() {
-      this.typeInput = true
-      this.$refs.password.focus();
-    },
-    handleBlur() {
-      this.typeInput = false
-    },
-    // 当输入框内容改变时触发
-    handleInput(event) {
-      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value)
-      http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
-        this.pwdStrengthLevel = res.data
-      })
-      this.inputValue = event.target.value; // 更新内部数据
-      this.$emit('inputPass', this.inputValue); // 发送事件给父组件
-    },
-  },
-}
-</script>
-
 <template>
   <div>
-    <div style="position: relative; height: 50px; overflow: hidden;">
+    <div style="position: relative; height: 50px">
       <!-- 下面的 Input 覆盖上面的 Input -->
       <form autocomplete="off">
         <Input
@@ -81,16 +25,86 @@ export default {
       ></Input>
       <div
           class="pwd"
-          :style="{ backgroundColor: strengthColor,width:strengthWidth }"></div>
+          :style="{ backgroundColor: strengthColor,width:strengthWidth,transition: 'width 0.5s' }">
+        <div class="check_info" :style="{width:strengthWidth}">{{ strengthText }}</div>
+      </div>
     </div>
   </div>
 </template>
+<script>
+import {encryptionModePassword} from "@/common/common";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {debounce} from "lodash";
+
+export default {
+  name: "InputPassword",
+  props: {
+    value: String // 接受外部传入的值
+  },
+  data() {
+    return {
+      typeInput: true,
+      inputValue: this.value, // 使用一个内部的数据来接收外部传入的值
+      pwdStrengthLevel: '0', // 密码强度等级0-4 弱->很强
+    }
+  },
+  // 密码强度背景色
+  computed: {
+    strengthText() {
+      const texts = ["很弱", "弱", "中等", "强", "很强"];
+      return texts[this.pwdStrengthLevel];
+    },
+    strengthColor() {
+      // 根据 pwdStrengthLevel 返回相应的颜色
+      // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的颜色
+      const colors = ['red', 'orange', 'orange', '#08e813', '#08e813'];
+      return colors[parseInt(this.pwdStrengthLevel)];
+    },
+    strengthWidth() {
+      // 根据 pwdStrengthLevel 返回相应的宽度
+      // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的宽度
+      const widths = ['44px', '88px', '132px', '176px', '215px'];
+      return widths[parseInt(this.pwdStrengthLevel)];
+    }
+  },
+  methods: {
+    handleFocus() {
+      this.typeInput = true
+    },
+    handleFocus2() {
+      this.typeInput = true
+      this.$refs.password.focus();
+    },
+    handleBlur() {
+      this.typeInput = false
+    },
+    // (防抖)当输入框内容改变时触发
+    handleInput: debounce(function (event) {
+      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
+      http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
+        this.pwdStrengthLevel = res.data;
+      });
+      this.inputValue = event.target.value;
+      this.$emit('inputPass', this.inputValue);
+    }, 500)
+  },
+}
+</script>
 <style>
 .pwd {
   position: absolute;
-  bottom: -5px;
+  bottom: 2px;
   width: 220px;
-  height: 12px
+  height: 7px;
+  border-radius: 4px;
 }
 
+.check_info {
+  position: relative;
+  top: -12px;
+  left: -42px;
+  font-weight: bolder;
+  z-index: 999;
+}
 </style>
