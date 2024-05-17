@@ -16,9 +16,9 @@ new Vue({
     render: (h) => h(App),
     router: Router,
     store, // 注册 Vuex store
-    beforeCreate() {
-        Vue.prototype.$menuPath = this;
-    },
+    // beforeCreate() {
+    //     Vue.prototype.$menuPath = this;
+    // },
     created() {
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.handleBeforeUnload);

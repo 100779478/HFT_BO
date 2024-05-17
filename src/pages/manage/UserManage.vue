@@ -91,7 +91,7 @@
                   <!--                                        maxlength="20"-->
                   <!--                                    >-->
                   <!--                                    </Input>-->
-<!--                                    <Input-->
+                  <!--                                    <Input-->
                   <!--                                        v-model="userInfo.password"-->
                   <!--                                        placeholder="请输入密码"-->
                   <!--                                        type="password"-->
@@ -99,7 +99,7 @@
                   <!--                                        maxlength="20"-->
                   <!--                                    >-->
                   <!--                                    </Input>-->
-                  <InputPassword @inputPass='onchangePassword' v-if="showAddModal"/>
+                  <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"/>
                 </FormItem>
               </form>
             </Col>
@@ -340,6 +340,7 @@ export default {
     return {
       activeList,
       loading: true,
+      pwdStrengthLevel: '0',
       tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
@@ -383,6 +384,9 @@ export default {
     handleExport,
     onchangePassword(e) {
       this.userInfo.password = e
+    },
+    getPwdStrength(q) {
+      this.pwdStrengthLevel = q
     },
     handleSort,
     // 获取用户列表
@@ -477,6 +481,8 @@ export default {
           this.$Message.warning('密码不允许包含空格')
         } else if (!this.userInfo.password) {
           this.$Message.warning('请填写密码')
+        } else if (this.pwdStrengthLevel < 3) {
+          this.$Message.error("密码强度不足")
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
           http.put(URL.userEdit, this.userInfo, () => {

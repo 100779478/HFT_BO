@@ -9,7 +9,7 @@
             ref="password"
             v-model="inputValue"
             type="text"
-            placeholder="请输入密码"
+            placeholder="密码(8-20位字母/数字组合)"
             :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
             @on-change="handleInput"
         ></Input>
@@ -19,7 +19,7 @@
           @on-focus="handleFocus2"
           v-model="inputValue"
           type="password"
-          placeholder="请输入密码"
+          placeholder="密码(8-20位字母/数字组合)"
           :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
           @on-change="handleInput"
       ></Input>
@@ -84,6 +84,7 @@ export default {
       const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
       http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
         this.pwdStrengthLevel = res.data;
+        this.$emit('getStrength', res.data)
       });
       this.inputValue = event.target.value;
       this.$emit('inputPass', this.inputValue);

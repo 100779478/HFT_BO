@@ -377,7 +377,6 @@ export default {
     };
     return {
       loading: true,
-      rulePath: '',
       fileType: '',
       rulePath: '',
       uploadFlag: false,
