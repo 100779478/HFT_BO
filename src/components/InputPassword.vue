@@ -1,7 +1,41 @@
+<template>
+  <div>
+    <div style="position: relative; height: 50px">
+      <!-- 下面的 Input 覆盖上面的 Input -->
+      <form autocomplete="off">
+        <Input
+            @on-focus="handleFocus"
+            @on-blur="handleBlur"
+            ref="password"
+            v-model="inputValue"
+            type="text"
+            placeholder="密码(8-32位字母/数字/符号组合)"
+            :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
+            @on-change="handleInput"
+        ></Input>
+      </form>
+      <!-- 上面的 Input 隐藏 -->
+      <Input
+          @on-focus="handleFocus2"
+          v-model="inputValue"
+          type="password"
+          placeholder="密码(8-32位字母/数字/符号组合)"
+          :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
+          @on-change="handleInput"
+      ></Input>
+      <div
+          class="pwd"
+          :style="{ backgroundColor: strengthColor,width:strengthWidth,transition: 'width 0.5s' }">
+        <div class="check_info" :style="{width:strengthWidth}">{{ strengthText }}</div>
+      </div>
+    </div>
+  </div>
+</template>
 <script>
 import {encryptionModePassword} from "@/common/common";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import {debounce} from "lodash";
 
 export default {
   name: "InputPassword",
@@ -12,11 +46,15 @@ export default {
     return {
       typeInput: true,
       inputValue: this.value, // 使用一个内部的数据来接收外部传入的值
-      pwdStrengthLevel: '0' // 密码强度等级0-4 弱->很强
+      pwdStrengthLevel: '0', // 密码强度等级0-4 弱->很强
     }
   },
   // 密码强度背景色
   computed: {
+    strengthText() {
+      const texts = ["很弱", "弱", "中等", "强", "很强"];
+      return texts[this.pwdStrengthLevel];
+    },
     strengthColor() {
       // 根据 pwdStrengthLevel 返回相应的颜色
       // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的颜色
@@ -26,7 +64,7 @@ export default {
     strengthWidth() {
       // 根据 pwdStrengthLevel 返回相应的宽度
       // 这里假设 pwdStrengthLevel 为 0 到 4，分别对应不同的宽度
-      const widths = ['44px', '88px', '132px', '176px', '220px'];
+      const widths = ['44px', '88px', '132px', '176px', '215px'];
       return widths[parseInt(this.pwdStrengthLevel)];
     }
   },
@@ -41,56 +79,33 @@ export default {
     handleBlur() {
       this.typeInput = false
     },
-    // 当输入框内容改变时触发
-    handleInput(event) {
-      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value)
+    // (防抖)当输入框内容改变时触发
+    handleInput: debounce(function (event) {
+      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
       http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
-        this.pwdStrengthLevel = res.data
-      })
-      this.inputValue = event.target.value; // 更新内部数据
-      this.$emit('inputPass', this.inputValue); // 发送事件给父组件
-    },
+        this.pwdStrengthLevel = res.data;
+        this.$emit('getStrength', res.data)
+      });
+      this.inputValue = event.target.value;
+      this.$emit('inputPass', this.inputValue);
+    }, 500)
   },
 }
 </script>
-
-<template>
-  <div>
-    <div style="position: relative; height: 50px; overflow: hidden;">
-      <!-- 下面的 Input 覆盖上面的 Input -->
-      <form autocomplete="off">
-        <Input
-            @on-focus="handleFocus"
-            @on-blur="handleBlur"
-            ref="password"
-            v-model="inputValue"
-            type="text"
-            placeholder="请输入密码"
-            :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
-            @on-change="handleInput"
-        ></Input>
-      </form>
-      <!-- 上面的 Input 隐藏 -->
-      <Input
-          @on-focus="handleFocus2"
-          v-model="inputValue"
-          type="password"
-          placeholder="请输入密码"
-          :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
-          @on-change="handleInput"
-      ></Input>
-      <div
-          class="pwd"
-          :style="{ backgroundColor: strengthColor,width:strengthWidth }"></div>
-    </div>
-  </div>
-</template>
 <style>
 .pwd {
   position: absolute;
-  bottom: -5px;
+  bottom: 2px;
   width: 220px;
-  height: 12px
+  height: 7px;
+  border-radius: 4px;
 }
 
+.check_info {
+  position: relative;
+  top: -12px;
+  left: -42px;
+  font-weight: bolder;
+  z-index: 999;
+}
 </style>
