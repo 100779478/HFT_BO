@@ -378,7 +378,6 @@ export default {
     },
     getPwdStrength(q) {
       this.pwdStrengthLevel = q
-      console.log(222, q)
     },
     handleSort,
     // 获取用户列表
