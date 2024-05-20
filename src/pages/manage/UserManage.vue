@@ -375,6 +375,7 @@ export default {
   methods: {
     onchangePassword(e) {
       this.userInfo.password = e
+      this.userValidRules.password = e
     },
     getPwdStrength(q) {
       this.pwdStrengthLevel = q
