@@ -297,7 +297,7 @@ export default {
     // 删除工作日
     deleteHoliday(row) {
       this.$Modal.confirm({
-        title: `确认删除节假日吗？`,
+        title: `确认删除周末工作日吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
           http.delete(`${URL.weekly}/${row.tradingDay}`, {}, () => {
