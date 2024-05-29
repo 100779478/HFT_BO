@@ -91,7 +91,8 @@
             <Col :span="18">
               <form autocomplete="off">
                 <FormItem label="密码" prop="password" v-show="isNew">
-                  <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"/>
+                  <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"
+                                 :showPwdCheck="true"/>
                 </FormItem>
               </form>
             </Col>
@@ -139,6 +140,16 @@
         </Modal>
       </Col>
     </Row>
+    <Modal v-model="showPwdModal" :width="400" :title="'重置密码'">
+      <ResetPwdModal :clear="showPwdModal" @password-change="onPasswordChange"
+                     @confirm-password-change="onConfirmPasswordChange"
+                     @strength-level="getStrengthLevel"
+      />
+      <div slot="footer" align="right">
+        <Button class="btn" size="default" type="default" @click="cancelModifyImg">取消</Button>
+        <Button class="btn" size="default" type="primary" @click="sureModifyImg">确定</Button>
+      </div>
+    </Modal>
     <Table
         :columns="columns1"
         size="small"
@@ -169,7 +180,9 @@
                 <Icon type="ios-arrow-down"></Icon>
               </a>
               <DropdownMenu slot="list">
-                <!--                                          <DropdownItem name="resetPassword">重置密码</DropdownItem>-->
+                <DropdownItem name="resetPassword">
+                  重置密码
+                </DropdownItem>
                 <DropdownItem name="dele" style="color: #ed4014"
                 >删除用户
                 </DropdownItem
@@ -202,9 +215,16 @@ import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
 import {encryptionModePassword, getUserType, handleSort, time} from "@/common/common";
 import InputPassword from "@/components/InputPassword.vue";
+import ResetPwdModal from "@/pages/manage/ResetPwdModal.vue";
+import index from "vuex";
 
 export default {
-  components: {InputPassword},
+  computed: {
+    index() {
+      return index
+    }
+  },
+  components: {InputPassword, ResetPwdModal},
   props: ["userId"],
   data() {
     let columns1 = [
@@ -330,6 +350,11 @@ export default {
       },
     ]
     return {
+      showPwdModal: false,
+      row: '',
+      strength: '0',
+      password: "",
+      confirmPassword: "",
       activeList,
       loading: true,
       pwdStrengthLevel: '0',
@@ -420,6 +445,10 @@ export default {
       this.pagination.pageSize = size;
       this.getUserData();
     },
+    // 修改用户密码获取强度
+    getStrengthLevel(e) {
+      this.strength = e
+    },
     // 用户代码模糊查询
     handleSearch() {
       this.pagination.pageNumber = 1;
@@ -468,7 +497,6 @@ export default {
       //   this.userInfo.userType = null
       // }
       if (isNew) {
-        console.log(this.pwdStrengthLevel, 2222)
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
           this.$Message.warning('密码不允许包含空格')
@@ -535,12 +563,38 @@ export default {
       }
     },
     // 更多操作
+    onPasswordChange(val) {
+      this.password = val;
+    },
+    onConfirmPasswordChange(val) {
+      this.confirmPassword = val;
+    },
+    cancelModifyImg() {
+      this.showPwdModal = false
+    },
+    sureModifyImg() {
+      if (this.password === '' || this.confirmPassword === '') {
+        this.$Message.error('密码不能为空')
+      } else if (this.password !== this.confirmPassword) {
+        this.$Message.error('两次密码输入不一致')
+      } else if (this.strength < 3) {
+        this.$Message.warning('密码强度不足')
+      } else {
+        this.moreOperations(this.row, 'resetPassword')
+        this.showPwdModal = false
+      }
+    },
     moreOperations(row, type) {
       const passType = sessionStorage.getItem('passType')
-      const password = encryptionModePassword(passType, '123456');
+      const password = encryptionModePassword(passType, this.password);
       if (type === "resetPassword") {
-        http.post(`${URL.userEdit}/${row.userId}/reset`, {
-          password,
+        http.post(URL.userReset, {
+          customerId: row.customerId,
+          password
+        }, (res) => {
+          if (res.code === '0') {
+            this.$Message.success('重置成功')
+          }
         });
       }
       if (type === "delete") {
@@ -553,14 +607,10 @@ export default {
     doOperate(name, row) {
       switch (name) {
         case "resetPassword":
-          this.$Modal.confirm({
-            title: `确认重置密码吗？`,
-            // content: "<p>此操作不可逆</p>",
-            onOk: () => {
-              this.moreOperations(row, "resetPassword");
-            },
-            okText: "确认",
-          });
+          this.showPwdModal = true
+          this.password = ''
+          this.confirmPassword = ''
+          this.row = row
           break;
         case "dele":
           this.$Modal.confirm({

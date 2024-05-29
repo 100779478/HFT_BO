@@ -80,45 +80,20 @@
           >你好, {{ username }}</span
           >
           <DropdownMenu slot="list">
-            <!--            <DropdownItem name="changePassword">修改密码</DropdownItem>-->
+            <DropdownItem name="changePassword">修改密码</DropdownItem>
             <DropdownItem name="logout">退出登录</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </div>
     </Header>
-    <Modal v-model="show" title="修改密码" @on-ok="ok" @on-cancel="cancel">
-      <Row style="justify-content: center">
-        <Row style="margin: 10px 0">
-          <Col algin="center">
-            <label>
-              &nbsp;&nbsp;&nbsp;
-              <span style="color: red">*</span>原密码：
-            </label>
-            <Input
-                style="width: 200px"
-                placeholder="请输入原密码"
-                v-model="oldPassword"
-                type="password"
-                password
-            ></Input>
-          </Col>
-        </Row>
-        <Row style="margin: 10px 0">
-          <Col>
-            <label>
-              &nbsp;&nbsp;&nbsp;
-              <span style="color: red">*</span>新密码：
-            </label>
-            <Input
-                style="width: 200px"
-                placeholder="请输入新密码"
-                v-model="newPassword"
-                type="password"
-                password
-            ></Input>
-          </Col>
-        </Row>
-      </Row>
+    <Modal v-model="show" title="修改密码" :width="400">
+      <ResetPwdModal
+          :clear="show"
+          :show="true"
+          @password-change="onPasswordChange"
+          @confirm-password-change="onConfirmPasswordChange"
+          @old-password-change="onchangeOldPassword"
+          @strength-level="getStrengthLevel"/>
       <div slot="footer">
         <Button type="text" @click="cancel">取消</Button>
         <Button type="primary" @click="ok">确定</Button>
@@ -131,9 +106,13 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {removeToken} from "@/utils/token";
 import introMixin from "@/common/introMixin";
+import ResetPwdModal from "@/pages/manage/ResetPwdModal.vue";
+import InputPassword from "@/components/InputPassword.vue";
+import {encryptionModePassword} from "@/common/common";
 
 
 export default {
+  components: {InputPassword, ResetPwdModal},
   // 引用Home组件中reload方法
   inject: ["reload"],
   props: ["username", "envList"],
@@ -142,6 +121,8 @@ export default {
     return {
       oldPassword: "",
       newPassword: "",
+      confirmPassword: "",
+      strength: '0',
       show: false,
       environmentList: [],
       environmentId: "",
@@ -157,6 +138,18 @@ export default {
     },
   },
   methods: {
+    onPasswordChange(val) {
+      this.newPassword = val;
+    },
+    onConfirmPasswordChange(val) {
+      this.confirmPassword = val;
+    },
+    onchangeOldPassword(val) {
+      this.oldPassword = val;
+    },
+    getStrengthLevel(e) {
+      this.strength = e
+    },
     collapsedSider() {
       this.showMenu = !this.showMenu
       this.$emit('showMenu', this.showMenu);
@@ -212,22 +205,43 @@ export default {
       location.reload();
       // this.$router.push("/refresh");
     },
-    modificationPasswordSuccess() {
-      this.show = false;
-      this.$Message.success("修改成功");
+    modificationPasswordSuccess(res) {
+      if (res.code === '0') {
+        this.show = false;
+        this.$Message.success("修改成功");
+      }
     },
     ok() {
-      if (this.newPassword === "" && this.oldPassword === "") {
-        this.$Message.warning("密码不可为空");
+      if (this.oldPassword === "") {
+        this.$Message.error("请输入旧密码");
         return;
       }
-      if (this.newPassword.length < 6) {
-        this.$Message.warning("新密码长度不可小于6位");
+      if (this.newPassword === "") {
+        this.$Message.error("请输入新密码");
         return;
       }
+      if (this.confirmPassword === "") {
+        this.$Message.error("请输入确认密码");
+        return;
+      }
+      if (this.newPassword.includes(' ')) {
+        this.$Message.warning('密码不允许包含空格')
+        return;
+      }
+      if (this.strength < 3) {
+        this.$Message.error("密码强度不足")
+        return;
+      }
+      if (this.newPassword !== this.confirmPassword) {
+        this.$Message.warning("两次密码输入不一致");
+        return;
+      }
+      const passType = sessionStorage.getItem('passType')
+      const oldPassword = encryptionModePassword(passType, this.oldPassword);
+      const newPassword = encryptionModePassword(passType, this.newPassword);
       let params = {
-        oldPassword: this.$md5(this.oldPassword),
-        newPassword: this.$md5(this.newPassword),
+        oldPassword,
+        newPassword,
       };
       //修改密码http请求
       http.post(URL.modification, params, this.modificationPasswordSuccess);

@@ -3,7 +3,7 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://106.12.178.118:9000"; // 测试
 const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.50.17:9000"; // 玺子哥
+// const devUrl = "http://192.168.50.39:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -19,7 +19,7 @@ export const URL = {
     // 用户登录
     login: "/customer/login",
     // 修改密码
-    // modification: "/user/modification",
+    modification: "/customer/modification",
     // 密码强度校验
     pwdStrength: "/customer/password-strength",
     // 获取验证码图片
@@ -32,8 +32,10 @@ export const URL = {
     current: "/customer/current",
     // 获取分页用户列表
     user: "/customer/list",
-    // 修改用户，
+    // 编辑用户，
     userEdit: "/customer",
+    // 修改密码
+    userReset: "/customer/reset",
     // 导出用户管理
     userExport: "/customer/export",
     // GET获取用户列表,

@@ -177,7 +177,8 @@
                   <FormItem label="">
                     <input type="file" id="fileInput" style="display: none;"
                            @change="handleFileChange($event,fileType)">
-                    <Button @click="uploadFile('strategy')" class="btn" style="margin-right: 5px"
+                    <Button v-show="userStrategyInfo.ruleType==='2'" @click="uploadFile('strategy')" class="btn"
+                            style="margin-right: 5px"
                             type="success">
                       <Icon type="md-cloud-upload"/>
                       上传策略文件

@@ -9,7 +9,7 @@
             ref="password"
             v-model="inputValue"
             type="text"
-            placeholder="密码(8-20位字母/数字组合)"
+            placeholder="12位大小写字母+数字+特殊字符"
             :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
             @on-change="handleInput"
         ></Input>
@@ -19,11 +19,12 @@
           @on-focus="handleFocus2"
           v-model="inputValue"
           type="password"
-          placeholder="密码(8-20位字母/数字组合)"
+          placeholder="12位大小写字母+数字+特殊字符"
           :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
           @on-change="handleInput"
       ></Input>
       <div
+          v-if="showPwdCheck"
           class="pwd"
           :style="{ backgroundColor: strengthColor,width:strengthWidth,transition: 'width 0.5s' }">
         <div class="check_info" :style="{width:strengthWidth}">{{ strengthText }}</div>
@@ -40,7 +41,9 @@ import {debounce} from "lodash";
 export default {
   name: "InputPassword",
   props: {
-    value: String // 接受外部传入的值
+    value: String, // 接受外部传入的值
+    showPwdCheck: Boolean, // 是否展示密码校验
+    clear: Boolean
   },
   data() {
     return {
@@ -48,6 +51,15 @@ export default {
       inputValue: this.value, // 使用一个内部的数据来接收外部传入的值
       pwdStrengthLevel: '0', // 密码强度等级0-4 弱->很强
     }
+  },
+  watch: {
+    clear(old) {
+      if (!old) {
+        this.inputValue = ''
+        this.typeInput = true
+        this.pwdStrengthLevel = '0'
+      }
+    },
   },
   // 密码强度背景色
   computed: {
@@ -81,11 +93,13 @@ export default {
     },
     // (防抖)当输入框内容改变时触发
     handleInput: debounce(function (event) {
-      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
-      http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
-        this.pwdStrengthLevel = res.data;
-        this.$emit('getStrength', res.data)
-      });
+      if (this.showPwdCheck) {
+        const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
+        http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
+          this.pwdStrengthLevel = res.data;
+          this.$emit('getStrength', res.data)
+        });
+      }
       this.inputValue = event.target.value;
       this.$emit('inputPass', this.inputValue);
     }, 500)
