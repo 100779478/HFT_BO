@@ -129,6 +129,7 @@ export default {
       let token = response.data.token;
       if (!token) {
         this.passwordIncorrectMessage = response.data.message
+        this.handleGetVerifyImg()
         return
       }
       putToken(token);
