@@ -124,7 +124,7 @@
                 <!-- 下拉框中v-model的数据格式为['测试角色1','测试角色二',....] -->
                 <Select multiple :max-tag-count="4" v-model="userInfo.roleStr">
                   <Option
-                      v-for="item in userInfo.roles"
+                      v-for="item in allRoleList"
                       :value="item.name"
                       :key="item.id"
                   >{{ item.name }}
@@ -140,7 +140,8 @@
         </Modal>
       </Col>
     </Row>
-    <Modal v-model="showPwdModal" :width="400" :title="'重置密码'">
+    <Modal v-model="showPwdModal" :width="400" :title="'重置密码'" draggable
+           sticky :mask-closable="false">
       <ResetPwdModal :clear="showPwdModal" @password-change="onPasswordChange"
                      @confirm-password-change="onConfirmPasswordChange"
                      @strength-level="getStrengthLevel"
@@ -434,7 +435,6 @@ export default {
       });
     },
     getAllRoleResponse(res) {
-      this.userInfo.roles = res.data;
       this.allRoleList = res.data;
     },
     handleChangePage(page) {
@@ -469,11 +469,11 @@ export default {
           roleStr: "",
           userType: "",
         };
-        Object.assign(this.userInfo, info, {roles: this.allRoleList});
+        Object.assign(this.userInfo, info);
       } else {
         this.isNew = false;
         this.showAddModal = true;
-        this.userInfo = {...row, roles: this.allRoleList};
+        this.userInfo = {...row};
         this.userInfo.roleStr = row.roleName.split(",");
       }
     },
@@ -484,10 +484,10 @@ export default {
         name: item || "",
       }));
       let list = [];
-      for (let i = 0; i < this.userInfo?.roles?.length; i++) {
+      for (let i = 0; i < this.allRoleList.length; i++) {
         for (let j = 0; j < arr?.length; j++) {
-          if (this.userInfo.roles[i].name === arr[j].name) {
-            list.push(this.userInfo.roles[i].id);
+          if (this.allRoleList[i].name === arr[j].name) {
+            list.push(this.allRoleList[i].id);
           }
         }
       }

@@ -86,7 +86,9 @@
         </Dropdown>
       </div>
     </Header>
-    <Modal v-model="show" title="修改密码" :width="400">
+    <Modal v-model="show" draggable
+           sticky :mask-closable="false"
+           mask title="修改密码" :width="400">
       <ResetPwdModal
           :clear="show"
           :show="true"
