@@ -95,6 +95,7 @@
         <HeaderUser
             :username="currentUser?.customerName"
             :envList="envList"
+            :serverTime="serverTime"
             @showMenu="showMenu"
         ></HeaderUser>
         <!-- <Bread></Bread> -->
@@ -116,6 +117,8 @@ import HeaderUser from "@/components/header/HeaderUser.vue";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {setUserInfo} from "@/utils/token";
+import router from "@/router";
+import {checkPwdExpiredTime} from "@/common/common";
 
 export default {
   components: {Bread, MenuList, HeaderUser},
@@ -132,11 +135,27 @@ export default {
       isRouterAlive: true,
       envList: [],
       isShowMenu: true,
+      serverTime: '',
     };
   },
   created() {
     // 加载当前用户信息
     this.currentUserInfo();
+    this.$Notice.config({
+      duration: 0,
+      top: 50,
+    });
+    http.get(URL.loginProtect, (res) => {
+      const expiredTime = res.data.expiredTime
+      const serverTime = res.data.serverTime
+      this.serverTime = serverTime
+      const time = (expiredTime - serverTime) / (1000 * 3600 * 24)
+      if (!checkPwdExpiredTime(expiredTime, serverTime) && time <= 7) {
+        this.$Notice.warning({
+          title: '密码过期时间不足7天，请及时修改',
+        });
+      }
+    })
   },
   computed: {
     rotateIcon() {

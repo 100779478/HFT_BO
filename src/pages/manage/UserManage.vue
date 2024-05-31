@@ -216,7 +216,7 @@ import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
 import {encryptionModePassword, getUserType, handleSort, time} from "@/common/common";
 import InputPassword from "@/components/InputPassword.vue";
-import ResetPwdModal from "@/pages/manage/ResetPwdModal.vue";
+import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import index from "vuex";
 
 export default {

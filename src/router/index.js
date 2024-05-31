@@ -1,5 +1,7 @@
 import vue from "vue";
 import VueRouter from "vue-router";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
 
 vue.use(VueRouter);
 const router = new VueRouter({
@@ -14,6 +16,14 @@ const router = new VueRouter({
             component: () => import("@/pages/login/Login"),
             meta: {
                 title: "登录",
+            },
+        },
+        {
+            path: "/login-protect",
+            name: "LoginProtect",
+            component: () => import("@/pages/loginProtect/LoginProtect.vue"),
+            meta: {
+                title: "登录保护",
             },
         },
         {
@@ -162,6 +172,18 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
+    // if (to.path === '/home/dashboard') {
+    //     http.get(URL.loginProtect, (res) => {
+    //         if (res.code === '0') {
+    //             const expiredTime = new Date(res.data.expiredTime);
+    //             const serverTime = new Date(res.data.serverTime);
+    //             if (expiredTime <= serverTime) {
+    //                 next({name: 'LoginProtect'})
+    //             }
+    //         }
+    //     })
+    // }
     next();
+
 });
 export default router;

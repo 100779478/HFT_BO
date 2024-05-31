@@ -1,6 +1,8 @@
 import store from "@/store/store";
 import md5 from "js-md5";
 import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import router from "@/router";
 // fill number into some length string
 export const fillNumber = (number, length) => {
     return (new Array(length).join(0) + number).slice(-length);
@@ -285,6 +287,16 @@ export function encryptionModePassword(type, pwd) {
     }
 }
 
+export function checkPwdExpiredTime(expiredTime, serverTime) {
+    const expiredTimeDate = new Date(expiredTime);
+    const serverTimeDate = new Date(serverTime);
+    // const time = (expiredTime - serverTime) / (1000 * 3600 * 24)
+    if (expiredTimeDate <= serverTimeDate) {
+        this.$Message.warning('密码已过期,请修改')
+        router.push({name: 'LoginProtect'})
+    }
+    return expiredTimeDate <= serverTimeDate
+}
 
 
 
