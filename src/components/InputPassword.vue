@@ -102,7 +102,7 @@ export default {
       }
       this.inputValue = event.target.value;
       this.$emit('inputPass', this.inputValue);
-    }, 500)
+    }, 100)
   },
 }
 </script>
