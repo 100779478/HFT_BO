@@ -104,13 +104,6 @@ export default {
     },
     // (防抖)当输入框内容改变时触发
     handleInput: debounce(function (event) {
-<<<<<<< HEAD
-      const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
-      http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
-        this.pwdStrengthLevel = res.data;
-        this.$emit('getStrength', res.data)
-      });
-=======
       if (this.showPwdCheck) {
         const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
         http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
@@ -118,7 +111,6 @@ export default {
           this.$emit('getStrength', res.data)
         });
       }
->>>>>>> feature_xibu
       this.inputValue = event.target.value;
       this.$emit('inputPass', this.inputValue);
     }, 500)
