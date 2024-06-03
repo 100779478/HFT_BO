@@ -72,7 +72,8 @@ import {http, defaultErrorHandler} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {putToken} from "@/utils/token";
 import {Message} from "view-design";
-import {encryptionModePassword} from "@/common/common";
+import {checkPwdExpiredTime, encryptionModePassword} from "@/common/common";
+import router from "@/router";
 
 export default {
   data() {
@@ -127,27 +128,37 @@ export default {
     login(response) {
       this.closeLoading();
       let token = response.data.token;
+
       if (!token) {
         this.passwordIncorrectMessage = response.data.message
         this.handleGetVerifyImg()
         return
       }
       putToken(token);
-      Message.success("登录成功！");
-      this.$router.push({name: "Home"});
+      http.get(URL.loginProtect, (res) => {
+            if (!checkPwdExpiredTime(res.data.expiredTime, res.data.serverTime)) {
+              Message.success("登录成功！");
+              this.$router.push({name: "Home"});
+            }
+          }
+      )
+
     },
     loginError(error) {
       console.log(error);
       this.closeLoading();
       defaultErrorHandler(error);
       this.handleGetVerifyImg();
-    },
+    }
+    ,
     closeLoading() {
       this.loading = false;
-    },
+    }
+    ,
     openLoading() {
       this.loading = true;
-    },
+    }
+    ,
     handleGetVerifyImg() {
       http.getBlob(
           URL.verifyCode,
@@ -156,19 +167,23 @@ export default {
             this.imgUrl = window.URL.createObjectURL(blob);
           }
       );
-    },
+    }
+    ,
     handleGetDic() {
       http.get(URL.dictionaryList, (res) => {
         this.$store.commit("dictionaryList", res.data);
       });
-    },
+    }
+    ,
   },
   mounted() {
     this.getEncryptionType()
     this.handleGetVerifyImg();
     this.handleGetDic();
-  },
-};
+  }
+  ,
+}
+;
 </script>
 <style scoped lang='less'>
 .page-account {

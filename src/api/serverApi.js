@@ -18,6 +18,8 @@ export const URL = {
     template: "/template",
     // 用户登录
     login: "/customer/login",
+    // 等保
+    loginProtect: "/customer/password-expired-time",
     // 修改密码
     modification: "/customer/modification",
     // 密码强度校验

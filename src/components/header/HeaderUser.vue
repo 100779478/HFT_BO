@@ -27,6 +27,13 @@
   height: 32px;
   line-height: 32px
 }
+
+.current-time {
+  width: 250px;
+  display: inline-block;
+  font-weight: bolder;
+  margin-left: 15px;
+}
 </style>
 <template>
   <div>
@@ -45,7 +52,7 @@
           @click="refresh"
       >
       </Icon>
-
+      <div class="current-time">当前时间：{{ currentTimeText }}</div>
       <div
           :style="{
           float: 'right',
@@ -108,16 +115,17 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {removeToken} from "@/utils/token";
 import introMixin from "@/common/introMixin";
-import ResetPwdModal from "@/pages/manage/ResetPwdModal.vue";
+import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import InputPassword from "@/components/InputPassword.vue";
 import {encryptionModePassword} from "@/common/common";
+import moment from "moment";
 
 
 export default {
   components: {InputPassword, ResetPwdModal},
   // 引用Home组件中reload方法
   inject: ["reload"],
-  props: ["username", "envList"],
+  props: ["username", "envList", "serverTime"],
   mixins: [introMixin],
   data() {
     return {
@@ -129,17 +137,31 @@ export default {
       environmentList: [],
       environmentId: "",
       showMenu: true,
+      currentTime: "",
+      currentTimeText: ""
     };
   },
   mounted() {
     this.getEnvironmentList();
+    this.updateElapsedTime(); // 初始化显示
+    this.timer = setInterval(() => {
+      this.updateElapsedTime();
+    }, 1000);
   },
   watch: {
-    envList: function (params) {
+    envList: function () {
       this.environmentList = this.envList || [];
     },
   },
   methods: {
+    updateElapsedTime() {
+      if (this.currentTime === "") {
+        this.currentTime = this.serverTime ? new Date(this.serverTime).getTime() : ''
+      } else {
+        this.currentTime += 1000;
+      }
+      this.currentTimeText = this.currentTime ? moment(new Date(this.currentTime + 1000)).format("yyyy-MM-DD HH:mm:ss") : ''
+    },
     onPasswordChange(val) {
       this.newPassword = val;
     },
@@ -252,5 +274,9 @@ export default {
       this.show = false;
     },
   },
+  beforeDestroy() {
+    // 组件销毁时清除定时器
+    clearInterval(this.timer);
+  }
 };
 </script>

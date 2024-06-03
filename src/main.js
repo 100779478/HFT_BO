@@ -7,11 +7,13 @@ import Router from "@/router/index";
 import md5 from "js-md5";
 import 'intro.js/introjs.css';
 import introJs from 'intro.js';
+import {log} from "@/common/log";
 
 Vue.config.productionTip = false;
 Vue.use(ViewUI);
 Vue.prototype.$introJs = introJs;
 Vue.prototype.$md5 = md5;
+Vue.prototype.$log = log;
 new Vue({
     render: (h) => h(App),
     router: Router,

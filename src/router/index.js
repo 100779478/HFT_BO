@@ -1,7 +1,14 @@
 import vue from "vue";
 import VueRouter from "vue-router";
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
 
 vue.use(VueRouter);
+
+function HEAD() {
+    return null;
+}
+
 const routes = [
     {
         path: "/",
@@ -13,6 +20,14 @@ const routes = [
         component: () => import(/* webpackChunkName: "login" */ "@/pages/login/Login"),
         meta: {
             title: "登录",
+        },
+    },
+    {
+        path: "/login-protect",
+        name: "LoginProtect",
+        component: () => import("@/pages/loginProtect/LoginProtect.vue"),
+        meta: {
+            title: "登录保护",
         },
     },
     {
@@ -144,25 +159,20 @@ const routes = [
                     title: "持仓列表",
                 },
             },
-            {
-                path: "/test",
-                name: "TradeCalendarManage",
-                redirect: "NotFound",
-            },
         ],
     },
-    // 刷新页面 必须保留
-    // {
-    //     path: '/refresh',
-    //     name: 'Refresh',
-    //     hidden: true,
-    //     component: {
-    //         beforeRouteEnter(to, from, next) {
-    //             next(instance => instance.$router.replace(from.fullPath));
-    //         },
-    //         render: h => h()
-    //     }
-    // },
+// 刷新页面 必须保留
+// {
+//     path: '/refresh',
+//     name: 'Refresh',
+//     hidden: true,
+//     component: {
+//         beforeRouteEnter(to, from, next) {
+//             next(instance => instance.$router.replace(from.fullPath));
+//         },
+//         render: h => h()
+//     }
+// },
 ]
 const router = new VueRouter({
     routes,
@@ -172,6 +182,18 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
+    // if (to.path === '/home/dashboard') {
+    //     http.get(URL.loginProtect, (res) => {
+    //         if (res.code === '0') {
+    //             const expiredTime = new Date(res.data.expiredTime);
+    //             const serverTime = new Date(res.data.serverTime);
+    //             if (expiredTime <= serverTime) {
+    //                 next({name: 'LoginProtect'})
+    //             }
+    //         }
+    //     })
+    // }
     next();
+
 });
 export default router;
