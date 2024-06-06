@@ -146,8 +146,8 @@ export default {
       top: 50,
     });
     http.get(URL.loginProtect, (res) => {
-      const expiredTime = res.data.expiredTime
-      const serverTime = res.data.serverTime
+      const expiredTime = new Date(res.data.expiredTime)
+      const serverTime = new Date(res.data.serverTime)
       this.serverTime = serverTime
       const time = (expiredTime - serverTime) / (1000 * 3600 * 24)
       if (!checkPwdExpiredTime(expiredTime, serverTime) && time <= 7) {
