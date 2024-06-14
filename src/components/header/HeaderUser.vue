@@ -184,9 +184,10 @@ export default {
           this.environmentId = res.data.id;
           // 存储到vuex，在dashboard展示当前环境
           this.$store.commit('getCurrentEnv', res.data.name)
-        } else {
-          this.$store.commit('getCurrentEnv', null)
-          this.startIntro()
+          if (!res.data.id && res.data.enable) {
+            // 新手引导执行
+            this.startIntro()
+          }
         }
       });
     },

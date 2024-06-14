@@ -328,6 +328,14 @@ export function formatDate(date) {
     return moment(date).isValid() ? moment(date).format("YYYYMMDD") : null;
 }
 
+/**
+ * @description: 检查密码是否过期
+ * @date: 2024--06--03 10:54:22
+ * @params {expiredTime} 过期时间
+ * @params {serverTime} 服务器时间
+ * @returns {Boolean} 是否过期
+ */
+
 export function checkPwdExpiredTime(expiredTime, serverTime) {
     const expiredTimeDate = new Date(expiredTime);
     const serverTimeDate = new Date(serverTime);
@@ -338,7 +346,6 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
     }
     return expiredTimeDate <= serverTimeDate
 }
-
 
 /**
  * @description: 导出功能

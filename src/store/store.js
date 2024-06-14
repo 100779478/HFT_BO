@@ -54,6 +54,9 @@ export default new Vuex.Store({
         // 在这里定义你的状态
         dictionaryList: getLocalDictionaryList(),
         currentEnv: getCurrentEnv(),
+        rolePermissionList: [], // 角色管理web端权限列表
+        pcPermissionList: [],   // 角色管理客户端权限列表
+        scenesList: [],   // 角色管理客户端权限列表
     },
     mutations: {
         // 在这里定义修改状态的方法
@@ -64,6 +67,27 @@ export default new Vuex.Store({
         getCurrentEnv(state, payload) {
             state.currentEnv = payload
             setLocalCurrentEnv(state)
+        },
+        setRolePermissionList(state, payload) {
+            if (Array.isArray(payload)) {
+                state.rolePermissionList = payload;
+            } else {
+                state.rolePermissionList = [];
+            }
+        },
+        setPcScenesList(state, payload) {
+            if (Array.isArray(payload)) {
+                state.scenesList = payload;
+            } else {
+                state.scenesList = [];
+            }
+        },
+        setPcPermissionList(state, payload) {
+            if (Array.isArray(payload)) {
+                state.pcPermissionList = payload
+            } else {
+                state.pcPermissionList = []
+            }
         }
     },
     //   actions: {

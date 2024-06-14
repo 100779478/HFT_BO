@@ -9,11 +9,7 @@
             ref="password"
             v-model="inputValue"
             type="text"
-<<<<<<< HEAD
-            placeholder="密码(8-20位字母/数字组合)"
-=======
             placeholder="12位大小写字母+数字+特殊字符"
->>>>>>> feature_xibu
             :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
             @on-change="handleInput"
         ></Input>
@@ -23,19 +19,12 @@
           @on-focus="handleFocus2"
           v-model="inputValue"
           type="password"
-<<<<<<< HEAD
-          placeholder="密码(8-20位字母/数字组合)"
-=======
           placeholder="12位大小写字母+数字+特殊字符"
->>>>>>> feature_xibu
           :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
           @on-change="handleInput"
       ></Input>
       <div
-<<<<<<< HEAD
-=======
           v-if="showPwdCheck"
->>>>>>> feature_xibu
           class="pwd"
           :style="{ backgroundColor: strengthColor,width:strengthWidth,transition: 'width 0.5s' }">
         <div class="check_info" :style="{width:strengthWidth}">{{ strengthText }}</div>

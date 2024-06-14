@@ -83,28 +83,8 @@
             <Col :span="18">
               <form autocomplete="off">
                 <FormItem label="密码" prop="password" v-show="isNew">
-<<<<<<< HEAD
-                  <!--                                    <Input-->
-                  <!--                                        v-model="userInfo.password"-->
-                  <!--                                        placeholder="请输入密码"-->
-                  <!--                                        type="password"-->
-                  <!--                                        autocomplete="off"-->
-                  <!--                                        maxlength="20"-->
-                  <!--                                    >-->
-                  <!--                                    </Input>-->
-                  <!--                                    <Input-->
-                  <!--                                        v-model="userInfo.password"-->
-                  <!--                                        placeholder="请输入密码"-->
-                  <!--                                        type="password"-->
-                  <!--                                        autocomplete="off"-->
-                  <!--                                        maxlength="20"-->
-                  <!--                                    >-->
-                  <!--                                    </Input>-->
-                  <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"/>
-=======
                   <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"
                                  :showPwdCheck="true"/>
->>>>>>> feature_xibu
                 </FormItem>
               </form>
             </Col>
