@@ -84,6 +84,7 @@ export default {
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
         this.$Message.success("修改成功");
+        this.$router.push({name: 'Login'})
       }
     },
   }
