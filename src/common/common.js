@@ -3,6 +3,7 @@ import md5 from "js-md5";
 import {http} from "@/utils/request";
 import moment from "moment/moment";
 import router from "@/router";
+import {Message} from "view-design";
 
 // fill number into some length string
 export const fillNumber = (number, length) => {
@@ -341,7 +342,7 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
     const serverTimeDate = new Date(serverTime);
     // const time = (expiredTime - serverTime) / (1000 * 3600 * 24)
     if (expiredTimeDate <= serverTimeDate) {
-        this.$Message.warning('密码已过期,请修改')
+        Message.warning('密码已过期,请修改')
         router.push({name: 'LoginProtect'})
     }
     return expiredTimeDate <= serverTimeDate

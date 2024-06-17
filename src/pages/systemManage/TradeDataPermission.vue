@@ -353,7 +353,7 @@ export default {
     // 渲染交易员名称
     renderTradeNames(h, params) {
       const tradeNames = params.row.traders.map(v => v.traderName).join(",");
-      // const content = tradeNames
+      console.log(params.row.traders.map(v => v.traderName))
       const content = tradeNames.length > 100
           ? `${tradeNames.slice(0, 100)}...`
           : tradeNames;
@@ -361,8 +361,8 @@ export default {
           "Tooltip",
           {
             attrs: {
-              content,
-              maxWidth: 200,
+              content: tradeNames,
+              maxWidth: 600,
             },
             style: {
               whiteSpace: "nowrap",

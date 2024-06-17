@@ -21,6 +21,7 @@ import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import {encryptionModePassword} from "@/common/common";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import router from "@/router";
 
 export default {
   name: "LoginProtect",
@@ -84,6 +85,7 @@ export default {
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
         this.$Message.success("修改成功");
+        this.$router.push({name: 'Login'})
       }
     },
   }
