@@ -1,5 +1,10 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+.input-form {
+  float: right;
+  width: 145px;
+  border-radius: 20px
+}
 </style>
 <template>
   <div>
@@ -21,8 +26,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -30,8 +34,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.combiNo"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="持仓账号"
           >
           </Input>

@@ -1,7 +1,5 @@
 <style lang="less">
-.ivu-table-tip {
-  font-size: 26px;
-}
+@import "@/style/manage.less";
 
 .modal {
   height: 650px;
@@ -15,10 +13,6 @@
   margin: 0 50px;
 }
 
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
 
 .title-font {
   display: inline;
@@ -27,15 +21,6 @@
   margin-bottom: 10px;
 }
 
-.table-content {
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
 </style>
 <template>
   <div>

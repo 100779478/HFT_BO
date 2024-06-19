@@ -1,5 +1,11 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+
+.input-form {
+  float: right;
+  width: 145px;
+  border-radius: 20px;
+}
 </style>
 <template>
   <div>
@@ -20,9 +26,8 @@
       >
         <form autocomplete="off">
           <Input
-              class="mr3"
               v-model="searchParams.orderInnerId"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="报单内部编号"
           >
           </Input>
@@ -30,8 +35,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderSysId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="报单编号"
           >
           </Input>
@@ -39,8 +43,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="策略编号"
               type="text"
               @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
@@ -50,8 +53,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -59,8 +61,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.customerId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="用户编号"
           >
           </Input>

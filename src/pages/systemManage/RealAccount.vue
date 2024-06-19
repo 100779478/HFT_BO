@@ -351,18 +351,6 @@ export default {
     handleSort,
     handleFocus() {
       this.typeInput = true
-      // 在第一个输入框获得焦点时将光标移动到输入框末尾
-      // this.$nextTick(() => {
-      //   console.log(this.$refs.password,3333)
-      //   this.$refs.password.focus({
-      //     cursor: 'end'
-      //   });
-      // });
-      // this.$nextTick(() => {
-      //   const inputElement = this.$refs.password.$el.querySelector('Input');
-      //   inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
-      //   console.log(inputElement, 333322)
-      // });
     },
     handleFocus2() {
       this.typeInput = true
@@ -379,9 +367,7 @@ export default {
     },
     getAPIType() {
       // 外部接口类型
-      // http.get(URL.apiType, (res) => {
       this.channelType = getApiType()
-      // });
     },
     getTerminalType() {
       this.channelTrade = getChannelType()

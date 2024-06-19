@@ -254,7 +254,6 @@ export default {
     //         d => d.customerId.indexOf(searchTerm) > -1
     //     );
     //   }
-    //   console.log(this.customerList, searchTerm, 3333);
     // },
     getCustomerList() {
       http.get(URL.userList, (res) => {
@@ -353,7 +352,6 @@ export default {
     // 渲染交易员名称
     renderTradeNames(h, params) {
       const tradeNames = params.row.traders.map(v => v.traderName).join(",");
-      console.log(params.row.traders.map(v => v.traderName))
       const content = tradeNames.length > 100
           ? `${tradeNames.slice(0, 100)}...`
           : tradeNames;
