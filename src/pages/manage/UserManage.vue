@@ -486,9 +486,11 @@ export default {
       }
       this.userInfo.roleIds = list;
       delete (this.userInfo.roles)
-      // if (!this.userInfo.userType) {
-      //   this.userInfo.userType = null
-      // }
+      if (!this.userInfo.customerId) {
+        this.$Message.warning('请填写用户账号')
+      } else if (!this.userInfo.userType) {
+        this.$Message.warning('请选择用户类型')
+      }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
