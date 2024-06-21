@@ -507,7 +507,7 @@ export default {
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
           http.put(URL.userEdit, this.userInfo, (res) => {
-            if (res.code === 0) {
+            if (res.code === '0') {
               this.getUserData()
               this.cancel();
             }
@@ -518,7 +518,7 @@ export default {
             `${URL.userEdit}/${this.userInfo.customerId}`,
             this.userInfo,
             (res) => {
-              if (res.code === 0) {
+              if (res.code === '0') {
                 this.getUserData()
                 this.cancel();
               }
