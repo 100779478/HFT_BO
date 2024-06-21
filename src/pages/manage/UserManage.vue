@@ -488,8 +488,6 @@ export default {
       delete (this.userInfo.roles)
       if (!this.userInfo.customerId) {
         this.$Message.warning('请填写用户账号')
-      } else if (!this.userInfo.userType) {
-        this.$Message.warning('请选择用户类型')
       }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
@@ -501,18 +499,22 @@ export default {
           this.$Message.error("密码强度不足")
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
-          http.put(URL.userEdit, this.userInfo, () => {
-            this.getUserData()
-            this.cancel();
+          http.put(URL.userEdit, this.userInfo, (res) => {
+            if (res.code === '0') {
+              this.getUserData()
+              this.cancel();
+            }
           });
         }
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
             this.userInfo,
-            () => {
-              this.getUserData()
-              this.cancel();
+            (res) => {
+              if (res.code === '0') {
+                this.getUserData()
+                this.cancel();
+              }
             }
         );
       }
