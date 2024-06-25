@@ -104,6 +104,10 @@ a.ivu-menu-item {
         <Icon type="md-home"/>
         首页
       </MenuItem>
+      <MenuItem name="RuleInterpretation" :to="{ name: 'RuleInterpretation' }">
+        <Icon type="md-home"/>
+        策略审批
+      </MenuItem>
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
           <template slot="title">
