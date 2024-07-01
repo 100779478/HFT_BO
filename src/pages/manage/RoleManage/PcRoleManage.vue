@@ -113,7 +113,7 @@ export default {
           winType: i.winType,
           readonly: i.readonly
         }));
-        this.$store.commit('setPcPermissionList', arr)
+        this.$store.commit('role/setRolePermissionList', arr)
       },
       deep: true,
     },
@@ -132,7 +132,7 @@ export default {
           }
           allPermissions.push(...d.clientPermissionWinTypes);
         });
-        this.$store.commit('setPcScenesList', formScenes) // 存储当前选中场景
+        this.$store.commit('role/setPcScenesList', formScenes) // 存储当前选中场景
         const uniqueCheckedArr = [...new Set(checkedArr)]; // 用于存储所有选中场景的权限ID
         const uniqueUncheckedArr = [...new Set(uncheckedArr)]; // 用于存储所有未选中场景的权限ID
         const uniqueAllPermissions = [...new Set(allPermissions)]; // 用于存储所有场景的权限ID

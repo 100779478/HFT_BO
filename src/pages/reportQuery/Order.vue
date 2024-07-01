@@ -76,7 +76,7 @@
             multiple
         >
           <Option
-              v-for="item in this.$store.state.dictionaryList.OrderStatus"
+              v-for="item in this.$store.state.dictionary.dictionaryList.OrderStatus"
               :value="item.code"
               :key="item.code"
           >{{ item.description }}

@@ -49,6 +49,7 @@
 
 <script>
 import {formatRolePermissionList} from "@/pages/manage/RoleManage/roleIndex";
+import {mapMutations} from "vuex";
 
 export default {
   name: "rolePermissionComponent",
@@ -72,7 +73,8 @@ export default {
   created() {
     // 初始化渲染选中权限
     this.checkAllGroup = formatRolePermissionList(this.currentPermissionList)
-    this.$store.commit('setRolePermissionList', this.checkAllGroup);
+    // this.$store.commit('role/setRolePermissionList', this.checkAllGroup);
+    this.setRolePermissionList(this.checkAllGroup)
     const result = formatRolePermissionList(this.permissionList)
     // menuId对应的全选框初始化渲染
     Object.keys(this.checkAllGroup).forEach(menuId => {
@@ -80,11 +82,12 @@ export default {
     });
   },
   methods: {
+    ...mapMutations('role', ["setRolePermissionList"]),
     updatePermissionList() {
       this.$forceUpdate();
       // 平铺选中权限permissionId为['1','2','3']
       const result = Object.values(this.checkAllGroup).flat(1)
-      this.$store.commit('setRolePermissionList', result || []);
+      this.setRolePermissionList(result || [])
     },
     handleCheckAll(menuId, list) {
       // 判断是否已经是半选状态，如果是则取消全选，否则取反全选状态

@@ -64,7 +64,7 @@
                 placeholder="交易所类型"
             >
               <Option
-                  v-for="item in this.$store.state.dictionaryList.TradeExchangeType"
+                  v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
                   :value="item.code"
                   :key="item.code"
               >{{ item.description }}
@@ -97,7 +97,7 @@
           placeholder="交易所类型"
       >
         <Option
-            v-for="item in this.$store.state.dictionaryList.TradeExchangeType"
+            v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
             :value="item.code"
             :key="item.code"
         >{{ item.description }}
@@ -221,14 +221,14 @@ export default {
     let list = []
     let holidaySetting = {
       comment: '',
-      exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
       startDate: moment().format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD")
     }
     let pagination = {
       startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
-      exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
       total: 0,
       pageSize: 20,
       pageNumber: 1,
@@ -276,7 +276,7 @@ export default {
         this.showAddModal = true;
         const info = {
           comment: '',
-          exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+          exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
           startDate: moment().format("YYYYMMDD"),
           endDate: moment().format("YYYYMMDD"),
         };

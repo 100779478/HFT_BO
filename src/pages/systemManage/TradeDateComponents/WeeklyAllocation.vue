@@ -47,7 +47,7 @@
               placeholder="交易所类型"
           >
             <Option
-                v-for="item in this.$store.state.dictionaryList.TradeExchangeType"
+                v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
                 :value="item.code"
                 :key="item.code"
             >{{ item.description }}
@@ -79,7 +79,7 @@
           placeholder="交易所类型"
       >
         <Option
-            v-for="item in this.$store.state.dictionaryList.TradeExchangeType"
+            v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
             :value="item.code"
             :key="item.code"
         >{{ item.description }}
@@ -208,14 +208,14 @@ export default {
     let list = []
     let weeklySetting = {
       tradingDay: moment().format("YYYYMMDD"),
-      exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
       weekDay: "",
       comment: ""
     }
     let pagination = {
       startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
-      exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
       total: 0,
       pageSize: 20,
       pageNumber: 1,
@@ -264,7 +264,7 @@ export default {
         const info = {
           comment: '',
           weekDay: '',
-          exchangeCode: this.$store.state.dictionaryList.TradeExchangeType[0].code,
+          exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
           tradingDay: moment().format("YYYYMMDD"),
         };
         Object.assign(this.weeklySetting, info);

@@ -23,6 +23,24 @@
   margin: 20px auto 0 auto;
 }
 
+.shine-span {
+  background: black linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8), transparent) no-repeat 0 0;
+  background-size: 10% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: shine 4s linear infinite;
+}
+
+@keyframes shine {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 0;
+  }
+}
+
 canvas {
   position: absolute;
   top: 0;
@@ -33,7 +51,7 @@ canvas {
 <template>
   <div class="bck">
     <canvas ref="canvas"></canvas>
-    <h1 class="title">欢迎使用本系统</h1>
+    <h1 class="title shine-span">欢迎使用本系统</h1>
     <div class="curEnv title" id="currentEnv">
       当前环境为：{{ currentEnv }}
     </div>
@@ -50,7 +68,7 @@ export default {
   },
   computed: {
     currentEnv() {
-      return this.$store.state.currentEnv || '未选择';
+      return this.$store.state.environment.currentEnv || '未选择';
     }
   },
   methods: {

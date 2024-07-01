@@ -97,7 +97,7 @@
                     placeholder="用户类型"
                 >
                   <Option
-                      v-for="item in this.$store.state.dictionaryList.UserType"
+                      v-for="item in this.$store.state.dictionary.dictionaryList.UserType"
                       :value="item.code"
                       :key="item.code"
                   >{{ item.description }}

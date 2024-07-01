@@ -171,7 +171,7 @@ export default {
     ,
     handleGetDic() {
       http.get(URL.dictionaryList, (res) => {
-        this.$store.commit("dictionaryList", res.data);
+        this.$store.commit("dictionary/dictionaryList", res.data);
       });
     }
     ,

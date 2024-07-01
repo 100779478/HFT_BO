@@ -3,7 +3,7 @@ import {getToken} from "./token";
 import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
-import store from "@/store/store";
+import store from "@/store";
 
 
 let is403MessageShown = false;
@@ -211,7 +211,7 @@ axiosInstance.interceptors.request.use((config) => {
         (router.currentRoute.name !== 'Login' && router.currentRoute.name !== 'Dashboard' && router.currentRoute.name !== 'Home')
     ) {
         http.get(URL.dictionaryList, (res) => {
-            store.commit("dictionaryList", res.data);
+            store.commit("dictionary/dictionaryList", res.data);
         });
     }
     const token = getToken();

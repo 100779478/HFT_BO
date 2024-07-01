@@ -1,4 +1,4 @@
-import store from "@/store/store";
+import store from "@/store";
 import md5 from "js-md5";
 import {http} from "@/utils/request";
 import moment from "moment/moment";
@@ -33,7 +33,7 @@ export const time = {
 // 订单状态
 export function getOrderStatus(code) {
     let result = {};
-    store.state.dictionaryList.OrderStatus.forEach((i) => {
+    store.state.dictionary.dictionaryList.OrderStatus.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -44,7 +44,7 @@ export function getOrderStatus(code) {
 // 方向
 export function getDirection(code) {
     let result = {};
-    store.state.dictionaryList.Direction.forEach((i) => {
+    store.state.dictionary.dictionaryList.Direction.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -55,7 +55,7 @@ export function getDirection(code) {
 // 开平
 export function getOffsetType(code) {
     let result = {};
-    store.state.dictionaryList.OffsetType.forEach((i) => {
+    store.state.dictionary.dictionaryList.OffsetType.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -66,7 +66,7 @@ export function getOffsetType(code) {
 // 连接状态
 export function getChannelConnectStatus(code) {
     let result = {};
-    store.state.dictionaryList.ChannelConnectStatus.forEach((i) => {
+    store.state.dictionary.dictionaryList.ChannelConnectStatus.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -77,7 +77,7 @@ export function getChannelConnectStatus(code) {
 // 投保套利
 export function getHedgeType(code) {
     let result = {};
-    store.state.dictionaryList.HedgeType.forEach((i) => {
+    store.state.dictionary.dictionaryList.HedgeType.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -89,13 +89,13 @@ export function getHedgeType(code) {
 export function getApiType(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.ApiType.forEach((i) => {
+        store.state.dictionary.dictionaryList.ApiType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.ApiType;
+        result = store.state.dictionary.dictionaryList.ApiType;
     }
     return result;
 }
@@ -104,13 +104,13 @@ export function getApiType(code) {
 export function getLogicType(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.LogicType.forEach((i) => {
+        store.state.dictionary.dictionaryList.LogicType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.LogicType;
+        result = store.state.dictionary.dictionaryList.LogicType;
     }
     return result;
 }
@@ -118,7 +118,7 @@ export function getLogicType(code) {
 // 用户类型
 export function getUserType(code) {
     let result = {};
-    store.state.dictionaryList.UserType.forEach((i) => {
+    store.state.dictionary.dictionaryList.UserType.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -129,7 +129,7 @@ export function getUserType(code) {
 // 持仓方向
 export function getPositionDirection(code) {
     let result = {};
-    store.state.dictionaryList.PositionDirection.forEach((i) => {
+    store.state.dictionary.dictionaryList.PositionDirection.forEach((i) => {
         if (i.code === code) {
             result = i;
         }
@@ -142,13 +142,13 @@ export function getRuleFileType(code) {
     let result = {};
 
     if (code) {
-        store.state.dictionaryList.RuleFileType.forEach((i) => {
+        store.state.dictionary.dictionaryList.RuleFileType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.RuleFileType;
+        result = store.state.dictionary.dictionaryList.RuleFileType;
     }
 
     return result;
@@ -159,13 +159,13 @@ export function RulePropType(code) {
     let result = {};
 
     if (code) {
-        store.state.dictionaryList.RulePropType.forEach((i) => {
+        store.state.dictionary.dictionaryList.RulePropType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.RulePropType;
+        result = store.state.dictionary.dictionaryList.RulePropType;
     }
 
     return result;
@@ -176,13 +176,13 @@ export function getRuleType(code) {
     let result = {};
 
     if (code) {
-        store.state.dictionaryList.RuleType.forEach((i) => {
+        store.state.dictionary.dictionaryList.RuleType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.RuleType;
+        result = store.state.dictionary.dictionaryList.RuleType;
     }
 
     return result;
@@ -192,13 +192,13 @@ export function getRuleType(code) {
 export function getChannelType(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.ChannelType.forEach((i) => {
+        store.state.dictionary.dictionaryList.ChannelType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.ChannelType;
+        result = store.state.dictionary.dictionaryList.ChannelType;
     }
     return result;
 }
@@ -207,13 +207,13 @@ export function getChannelType(code) {
 export function getOperatingLogType(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.OperatingLogType.forEach((i) => {
+        store.state.dictionary.dictionaryList.OperatingLogType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.OperatingLogType;
+        result = store.state.dictionary.dictionaryList.OperatingLogType;
     }
     return result;
 }
@@ -222,13 +222,13 @@ export function getOperatingLogType(code) {
 export function getDayOfWeek(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.DayOfWeek.forEach((i) => {
+        store.state.dictionary.dictionaryList.DayOfWeek.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.DayOfWeek;
+        result = store.state.dictionary.dictionaryList.DayOfWeek;
     }
     return result;
 }
@@ -237,13 +237,13 @@ export function getDayOfWeek(code) {
 export function getTradeExchangeType(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.TradeExchangeType.forEach((i) => {
+        store.state.dictionary.dictionaryList.TradeExchangeType.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.TradeExchangeType;
+        result = store.state.dictionary.dictionaryList.TradeExchangeType;
     }
     return result;
 }
@@ -252,13 +252,13 @@ export function getTradeExchangeType(code) {
 export function getPasswordStrength(code) {
     let result = {};
     if (code) {
-        store.state.dictionaryList.PasswordStrength.forEach((i) => {
+        store.state.dictionary.dictionaryList.PasswordStrength.forEach((i) => {
             if (i.code === code) {
                 result = i;
             }
         });
     } else {
-        result = store.state.dictionaryList.PasswordStrength;
+        result = store.state.dictionary.dictionaryList.PasswordStrength;
     }
     return result;
 }

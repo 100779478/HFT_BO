@@ -150,6 +150,7 @@ import {handleExport, handleSort} from "@/common/common";
 import RolePermissionComponent from "@/pages/manage/RoleManage/RolePermissionComponent.vue";
 import PcRoleManage from "@/pages/manage/RoleManage/PcRoleManage.vue";
 import {cancel} from "@/utils/tableUtils";
+import {mapState} from "vuex";
 
 export default {
   components: {PcRoleManage, RolePermissionComponent},
@@ -201,6 +202,13 @@ export default {
       // 当前选中角色客户端场景列表
       currentScenesList: []
     };
+  },
+  computed: {
+    ...mapState('role', {
+      rolePermissionList: state => state.rolePermissionList,
+      pcPermissionList: state => state.pcPermissionList,
+      scenesList: state => state.scenesList,
+    })
   },
   mounted() {
     // 动态高度
@@ -290,9 +298,9 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      this.roleInfo.permissions = this.$store.state.rolePermissionList || []
-      this.roleInfo.clientPermissions = this.$store.state.pcPermissionList || []
-      this.roleInfo.scenesWinTypes = this.$store.state.scenesList || []
+      this.roleInfo.permissions = this.rolePermissionList || []
+      this.roleInfo.clientPermissions = this.pcPermissionList || []
+      this.roleInfo.scenesWinTypes = this.scenesList || []
       if (isNew) {
         http.put(URL.role, this.roleInfo, () => {
           this.getRoleData()

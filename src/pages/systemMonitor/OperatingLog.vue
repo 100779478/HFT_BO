@@ -35,7 +35,7 @@
             :clearable="true"
         >
           <Option
-              v-for="item in this.$store.state.dictionaryList.OperatingLogType"
+              v-for="item in this.$store.state.dictionary.dictionaryList.OperatingLogType"
               :value="item.code"
               :key="item.code"
           >{{ item.description }}

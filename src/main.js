@@ -2,7 +2,7 @@ import Vue from "vue";
 import App from "./App.vue";
 import ViewUI from "view-design";
 import "view-design/dist/styles/iview.css";
-import store from "./store/store.js";
+import store from "@/store";
 import Router from "@/router/index";
 import md5 from "js-md5";
 import 'intro.js/introjs.css';
