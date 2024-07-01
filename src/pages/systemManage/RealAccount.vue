@@ -221,6 +221,7 @@ input:-webkit-autofill {
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getApiType, getChannelType, handleExport, handleSort, time} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -347,6 +348,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     handleSort,
     handleFocus() {
@@ -451,10 +453,6 @@ export default {
           this.cancel();
         });
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 删除实体账户
     deleteChannel(row) {

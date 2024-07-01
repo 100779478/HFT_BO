@@ -245,6 +245,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getLogicType, handleExport, handleSort, time} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -411,6 +412,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     handleSort,
     // 获取分账户列表
@@ -580,10 +582,6 @@ export default {
           this.cancel();
         });
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 删除分账户
     deleteChannel(row) {

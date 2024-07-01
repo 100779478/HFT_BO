@@ -152,6 +152,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport, handleSort} from "@/common/common";
 import moment from "moment";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -282,6 +283,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     // 导出交易日历
     handleExport,
     // 排序
@@ -314,10 +316,6 @@ export default {
           this.getCalendarList();
         }
       })
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     handleChangePage(page) {
       this.pagination.pageNumber = page;

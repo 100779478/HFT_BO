@@ -168,6 +168,7 @@ import {URL} from "@/api/serverApi";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   components: {InputPassword},
@@ -239,6 +240,7 @@ export default {
     this.getWeeklyList();
   },
   methods: {
+    cancel,
     handleExport,
     // 获取周末工作日列表
     getWeeklyList() {
@@ -289,10 +291,6 @@ export default {
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 删除工作日
     deleteHoliday(row) {

@@ -210,6 +210,7 @@ import {encryptionModePassword, getUserType, handleExport, handleSort, time} fro
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import index from "vuex";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   computed: {
@@ -391,6 +392,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     onchangePassword(e) {
       this.userInfo.password = e
@@ -518,10 +520,6 @@ export default {
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 启用用户
     handleActiveEnable(res) {

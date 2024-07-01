@@ -149,6 +149,7 @@ import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
 import RolePermissionComponent from "@/pages/manage/RoleManage/RolePermissionComponent.vue";
 import PcRoleManage from "@/pages/manage/RoleManage/PcRoleManage.vue";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   components: {PcRoleManage, RolePermissionComponent},
@@ -214,6 +215,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     handleSort,
     // 获取角色列表
@@ -302,10 +304,6 @@ export default {
           this.cancel();
         });
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 刷新
     refresh() {

@@ -30,6 +30,7 @@
                   placeholder="请输入策略ID"
                   :maxlength="20"
                   show-message="false"
+                  disabled
               ></Input>
             </FormItem>
             <FormItem label="策略名称" prop="ruleName">
@@ -38,6 +39,7 @@
                   placeholder="请输入策略名称"
                   :maxlength="20"
                   show-message="false"
+                  disabled
               ></Input>
             </FormItem>
           </Col>
@@ -48,6 +50,7 @@
                   placeholder="请输入用户账号"
                   :maxlength="20"
                   show-message="false"
+                  disabled
               ></Input>
             </FormItem>
           </Col>
@@ -58,6 +61,7 @@
                   placeholder="请输入申请备注"
                   :maxlength="20"
                   show-message="false"
+                  disabled
               ></Input>
             </FormItem>
           </Col>
@@ -68,6 +72,7 @@
                   placeholder="请填写审批意见"
                   :maxlength="20"
                   show-message="false"
+                  disabled
               ></Input>
             </FormItem>
           </Col>
@@ -85,7 +90,7 @@
         </Form>
         <div slot="footer">
           <Button type="text" @click="cancel">取消</Button>
-          <Button type="primary" @click="ok(isNew)">确定</Button>
+          <Button type="primary" @click="ok()">确定</Button>
         </div>
       </Modal>
       <Col
@@ -166,6 +171,8 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, handleExport} from "@/common/common";
+import {cancel, updateTableHeight} from "@/utils/tableUtils";
+import {Message} from "view-design";
 
 export default {
   data() {
@@ -253,7 +260,14 @@ export default {
     }
     return {
       ruleApprovalValid,
-      ruleApproval: {ruleId: ''},
+      ruleApproval: {
+        ruleId: "",
+        ruleName: "",
+        customerId: "",
+        remark: "",
+        nnnn: "",
+        auditMsg: "",
+      },
       loading: true,
       tableHeight: window.innerHeight - 220,
       tableData: [],
@@ -264,22 +278,26 @@ export default {
   },
   mounted() {
     // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
+    window.addEventListener('resize', this.updateTableHeight)
     this.getOperatingLog();
   },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateTableHeight);
+  },
   methods: {
+    cancel,
     handleSort,
+    updateTableHeight,
     // 获取操作日志列表
     getOperatingLog() {
       http.post(`${URL.logList}`, this.pagination, (res) => {
-        setTimeout(() => {
-          this.loading = false;
-        }, 200);
+        this.loading = false;
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
       });
+    },
+    ok() {
+      this.cancel();
     },
     // 刷新
     refresh() {
@@ -296,8 +314,11 @@ export default {
     },
     // 审批策略
     handleRuleApproval(row) {
+      // 使用解构和剩余运算符去掉 index 和 rowKey 属性
+      const {_index, _rowKey, ...filteredRow} = row;
       this.$refs.ruleForm.resetFields();
       this.showAddModal = true;
+      this.ruleApproval = {...filteredRow};
     },
     // 导出列表
     handleExportLog() {

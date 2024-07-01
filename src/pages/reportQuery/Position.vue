@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+
 .input-form {
   float: right;
   width: 145px;
@@ -113,11 +114,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {
-  time,
-  getHedgeType,
-  getPositionDirection, handleSort, handleExport
-} from "@/common/common";
+import {getHedgeType, getPositionDirection, handleSort, handleExport} from "@/common/common";
 
 export default {
   data() {
@@ -293,7 +290,7 @@ export default {
       this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
           ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
-      handleExport(URL.positionExport, this.searchParams,'持仓')
+      handleExport(URL.positionExport, this.searchParams, '持仓')
     },
   },
 };

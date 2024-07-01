@@ -1,4 +1,4 @@
-// store/index.js
+// store/tableUtils.js
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -39,13 +39,11 @@ const getLocalDictionaryList = () => {
     }
 };
 const getCurrentEnv = () => {
-    // 防止初始化localstorage中dictionaryList为undefined
+    // 防止初始化localstorage中currentEnv为undefined
     try {
         return JSON.parse(localStorage.currentEnv);
     } catch (e) {
-        return {
-            currentEnv: null
-        };
+        return null;
     }
 };
 

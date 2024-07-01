@@ -58,25 +58,6 @@
           >
             <Col :span="18">
               <FormItem label="管理用户" prop="managerId">
-                <!--                <Select v-model="tradeInfo.managerId" style="width:260px" :disabled="!isNew">-->
-                <!--                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                      item.customerId + `(${item.customerName})`-->
-                <!--                    }}-->
-                <!--                  </Option>-->
-                <!--                </Select>-->
-                <!--                <Select v-model="tradeInfo.managerId" style="width:260px">-->
-                <!--                  <Input-->
-                <!--                      v-model="searchMgId"-->
-                <!--                      placeholder="请输入交易员代码"-->
-                <!--                      :maxlength="20"-->
-                <!--                      show-message="false"-->
-                <!--                      @on-change="handleSearchMgList"-->
-                <!--                  ></Input>-->
-                <!--                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                      item.customerId + `(${item.customerName})`-->
-                <!--                    }}-->
-                <!--                  </Option>-->
-                <!--                </Select>-->
                 <Select
                     v-model="tradeInfo.managerId"
                     filterable
@@ -154,8 +135,9 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleExport, handleSort, time} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
 import {Message} from "view-design";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -232,6 +214,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     handleSort,
     remoteMethod3(query) {
@@ -242,19 +225,6 @@ export default {
         }, 200);
       }
     },
-    // 过滤弹窗交易员列表（模糊查询）
-    // handleSearchMgList(e) {
-    //   const searchTerm = e.target.value.trim();
-    //   if (searchTerm === "") {
-    //     // 如果搜索框为空，还原为原始列表
-    //     this.customerList = [...this.originalCustomerList];
-    //   } else {
-    //     // 否则，根据搜索词筛选列表
-    //     this.customerList = this.originalCustomerList.filter(
-    //         d => d.customerId.indexOf(searchTerm) > -1
-    //     );
-    //   }
-    // },
     getCustomerList() {
       http.get(URL.userList, (res) => {
         this.customerList = res.data
@@ -328,10 +298,6 @@ export default {
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 刷新
     refresh() {

@@ -123,6 +123,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleExport, handleSort, time} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -188,6 +189,7 @@ export default {
     })
   },
   methods: {
+    cancel,
     handleExport,
     handleSort,
     // 获取环境列表
@@ -240,21 +242,19 @@ export default {
     ok(isNew) {
       if (isNew) {
         http.put(URL.addEnvironment, this.environmentInfo, () => {
-          this.getEnvironmentData(), this.cancel();
+          this.getEnvironmentData()
+          this.cancel();
         });
       } else {
         http.post(
             `${URL.modificationEnvironment}`,
             this.environmentInfo,
             () => {
-              this.getEnvironmentData(), this.cancel();
+              this.getEnvironmentData()
+              this.cancel();
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 刷新
     refresh() {

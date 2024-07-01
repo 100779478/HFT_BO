@@ -125,7 +125,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time, handleSort, handleExport} from "@/common/common";
+import {handleSort, handleExport} from "@/common/common";
 import moment from "moment/moment";
 
 export default {

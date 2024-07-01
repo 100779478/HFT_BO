@@ -186,6 +186,7 @@ import {URL} from "@/api/serverApi";
 import {formatDate, getTradeExchangeType, handleExport} from "@/common/common";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   components: {InputPassword},
@@ -252,6 +253,7 @@ export default {
     this.getHolidayList();
   },
   methods: {
+    cancel,
     handleExport,
     // 获取状态连接列表
     getHolidayList() {
@@ -305,10 +307,6 @@ export default {
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 删除节假日
     deleteHoliday(row) {
