@@ -167,7 +167,6 @@ import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {
-  time,
   getOrderStatus,
   getDirection,
   getOffsetType, handleSort, handleExport,
@@ -392,7 +391,6 @@ export default {
       startTime: "",
       endTime: "",
     };
-    // let dateRange = [moment().format("YYYYMMDD"), moment().format("YYYYMMDD")];
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
     return {

@@ -61,7 +61,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelConnectStatus, time, handleSort, handleExport} from "@/common/common";
+import {getApiType, getChannelConnectStatus, handleSort, handleExport} from "@/common/common";
 
 export default {
   data() {

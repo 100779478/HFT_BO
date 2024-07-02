@@ -140,7 +140,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getOperatingLog)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => handleRuleApproval( row)" class="table-operate">
             审批
@@ -319,6 +319,9 @@ export default {
       this.$refs.ruleForm.resetFields();
       this.showAddModal = true;
       this.ruleApproval = {...filteredRow};
+    },
+    downloadRuleApproval(row) {
+
     },
     // 导出列表
     handleExportLog() {

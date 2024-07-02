@@ -340,7 +340,6 @@ export function formatDate(date) {
 export function checkPwdExpiredTime(expiredTime, serverTime) {
     const expiredTimeDate = new Date(expiredTime);
     const serverTimeDate = new Date(serverTime);
-    // const time = (expiredTime - serverTime) / (1000 * 3600 * 24)
     if (expiredTimeDate <= serverTimeDate) {
         Message.warning('密码已过期,请修改')
         router.push({name: 'LoginProtect'})

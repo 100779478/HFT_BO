@@ -204,7 +204,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getChannelData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalChannel('modify', row)" class="table-operate">
             编辑
@@ -244,7 +244,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getLogicType, handleExport, handleSort, time} from "@/common/common";
+import {getLogicType, handleExport, handleSort} from "@/common/common";
 import {cancel} from "@/utils/tableUtils";
 
 export default {

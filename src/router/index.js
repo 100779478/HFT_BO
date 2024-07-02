@@ -190,17 +190,6 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
-    // if (to.path === '/home/dashboard') {
-    //     http.get(URL.loginProtect, (res) => {
-    //         if (res.code === '0') {
-    //             const expiredTime = new Date(res.data.expiredTime);
-    //             const serverTime = new Date(res.data.serverTime);
-    //             if (expiredTime <= serverTime) {
-    //                 next({name: 'LoginProtect'})
-    //             }
-    //         }
-    //     })
-    // }
     next();
 
 });

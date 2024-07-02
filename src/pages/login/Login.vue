@@ -73,7 +73,6 @@ import {URL} from "@/api/serverApi";
 import {putToken} from "@/utils/token";
 import {Message} from "view-design";
 import {checkPwdExpiredTime, encryptionModePassword} from "@/common/common";
-import router from "@/router";
 
 export default {
   data() {

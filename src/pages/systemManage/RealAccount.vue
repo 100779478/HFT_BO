@@ -180,7 +180,7 @@ input:-webkit-autofill {
         border
         @on-sort-change="e=>handleSort(e,this.getChannelData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalChannel('modify', row)" class="table-operate">
             编辑
@@ -220,7 +220,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, handleExport, handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
 import {cancel} from "@/utils/tableUtils";
 
 export default {

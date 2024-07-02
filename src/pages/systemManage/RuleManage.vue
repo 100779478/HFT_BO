@@ -219,7 +219,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getUserStrategyData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -269,7 +269,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleFileType, getRuleType, handleExport, handleSort, time} from "@/common/common";
+import {getRuleFileType, getRuleType, handleExport, handleSort} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 
 export default {

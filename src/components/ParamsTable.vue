@@ -212,7 +212,7 @@ export default {
       size="small"
       ref="table2"
   >
-    <template slot="operator" slot-scope="{ row }">
+    <template v-slot:operator="{ row }">
       <div @click.stop style="display: flex; justify-content: flex-start">
         <div @click="() => deleteParams(row)" class="table-operate">
           删除

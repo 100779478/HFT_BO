@@ -91,7 +91,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getEnvironmentData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -122,7 +122,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleExport, handleSort, time} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
 import {cancel} from "@/utils/tableUtils";
 
 export default {
@@ -203,10 +203,6 @@ export default {
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
       });
-      // 传值给header组件
-      // http.get(`${URL.environment}?name`, (res) => {
-      //   this.$emit("child-event", res.data);
-      // });
     },
     // 删除环境
     deleteEnvironment(row) {

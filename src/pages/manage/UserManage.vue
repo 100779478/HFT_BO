@@ -154,7 +154,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getUserData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -206,7 +206,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
-import {encryptionModePassword, getUserType, handleExport, handleSort, time} from "@/common/common";
+import {encryptionModePassword, getUserType, handleExport, handleSort} from "@/common/common";
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import index from "vuex";
