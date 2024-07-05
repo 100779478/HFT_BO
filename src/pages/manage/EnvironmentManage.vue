@@ -3,7 +3,7 @@
 </style>
 <template>
   <div>
-    <Row>
+    <Row style="margin: 10px">
       <Col>
         <form autocomplete="off">
           <Input
@@ -18,6 +18,7 @@
                 slot="suffix"
                 size="19"
                 style="cursor: pointer"
+                @click.native="handleSearch"
             />
           </Input>
         </form>
