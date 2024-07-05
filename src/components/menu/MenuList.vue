@@ -143,6 +143,7 @@ export default {
     },
   },
   mounted() {
+    // this.$router.push({name: "Dashboard"});
     this.$router.push({name: "Dashboard"});
     http.get(URL.menus, this.getMenuList);
   },

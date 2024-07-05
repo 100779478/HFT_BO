@@ -36,17 +36,13 @@ input:-webkit-autofill {
           <Icon type="md-add"/>
           新增实体账户
         </Button>
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.channelTradeExport,this.pagination,'实体账户')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
         </Button
         >
       </Col>
-      <!--        <Button type="success" @click="refresh()">-->
-      <!--          <Icon type="md-refresh"/>-->
-      <!--          刷新-->
-      <!--        </Button>-->
       <Modal
           v-model="showAddModal"
           draggable
@@ -184,7 +180,7 @@ input:-webkit-autofill {
         border
         @on-sort-change="e=>handleSort(e,this.getChannelData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalChannel('modify', row)" class="table-operate">
             编辑
@@ -224,7 +220,8 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -331,7 +328,8 @@ export default {
       pagination,
       showAddModal: false,
       isNew: true,
-      showAccountAndPwd: true
+      showAccountAndPwd: true,
+      URL
     };
   },
   mounted() {
@@ -350,21 +348,11 @@ export default {
     })
   },
   methods: {
+    cancel,
+    handleExport,
     handleSort,
     handleFocus() {
       this.typeInput = true
-      // 在第一个输入框获得焦点时将光标移动到输入框末尾
-      // this.$nextTick(() => {
-      //   console.log(this.$refs.password,3333)
-      //   this.$refs.password.focus({
-      //     cursor: 'end'
-      //   });
-      // });
-      // this.$nextTick(() => {
-      //   const inputElement = this.$refs.password.$el.querySelector('Input');
-      //   inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
-      //   console.log(inputElement, 333322)
-      // });
     },
     handleFocus2() {
       this.typeInput = true
@@ -381,9 +369,7 @@ export default {
     },
     getAPIType() {
       // 外部接口类型
-      // http.get(URL.apiType, (res) => {
       this.channelType = getApiType()
-      // });
     },
     getTerminalType() {
       this.channelTrade = getChannelType()
@@ -468,10 +454,6 @@ export default {
         });
       }
     },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
-    },
     // 删除实体账户
     deleteChannel(row) {
       this.$Modal.confirm({
@@ -488,32 +470,7 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   channelId: "",
-      // };
       this.getChannelData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.channelTradeExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `实体账户_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

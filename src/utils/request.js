@@ -3,7 +3,7 @@ import {getToken} from "./token";
 import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
-import store from "@/store/store";
+import store from "@/store";
 
 
 let is403MessageShown = false;
@@ -171,24 +171,28 @@ export const http = {
  * @param {object} error - 错误返回结果
  */
 export function defaultErrorHandler(error) {
-    let errorResponse = error.response;
-    if (undefined === errorResponse) {
-        console.log("Error ====> ", error);
-        if (error.errorMessage) {
-            Message.error(error.errorMessage);
+    try {
+        let errorResponse = error?.response;
+        if (undefined === errorResponse) {
+            console.log("Error ====> ", error);
+            if (error?.errorMessage) {
+                Message.error(error?.errorMessage);
+            }
+            return;
         }
-        return;
+        let errorMessage = errorResponse?.errorMessage;
+        if (
+            null == errorMessage ||
+            "" === errorMessage
+        ) {
+            console.log("Error ====> ", errorResponse);
+            Message.error(errorResponse?.data?.errorMessage);
+            return;
+        }
+        Message.error(errorMessage);
+    } catch (e) {
+        Message.error('未知错误');
     }
-    let errorMessage = errorResponse.errorMessage;
-    if (
-        null == errorMessage ||
-        "" === errorMessage
-    ) {
-        console.log("Error ====> ", errorResponse);
-        Message.error(errorResponse.data.errorMessage);
-        return;
-    }
-    Message.error(errorMessage);
 }
 
 /**
@@ -207,7 +211,7 @@ axiosInstance.interceptors.request.use((config) => {
         (router.currentRoute.name !== 'Login' && router.currentRoute.name !== 'Dashboard' && router.currentRoute.name !== 'Home')
     ) {
         http.get(URL.dictionaryList, (res) => {
-            store.commit("dictionaryList", res.data);
+            store.commit("dictionary/dictionaryList", res.data);
         });
     }
     const token = getToken();

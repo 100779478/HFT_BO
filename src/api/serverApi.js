@@ -1,9 +1,6 @@
-// 玺子哥IP
-// export const requestContextPath = "http://192.168.50.71:80" + "/hft-bos"
 const env = process.env.NODE_ENV;
-// const devUrl = "http://106.12.178.118:9000"; // 测试
-// const devUrl = "http://58.250.164.226:31004"; //POC
-const devUrl = "http://192.168.50.39:9000"; // 玺子哥
+const devUrl = "http://58.250.164.226:31004"; //POC
+// const devUrl = "http://192.168.50.39:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -124,4 +121,26 @@ export const URL = {
     logExport: "/log/export",
     // 操作日志列表
     logList: "/log/list",
+    // 获取节假日列表
+    holidayList: "/calendar/holiday/list",
+    // 新增删除修改节假日
+    holiday: "/calendar/holiday",
+    // 获取周末工作日列表
+    weeklyList: "/calendar/trading-day/list",
+    // 新增删除修改周末工作日
+    weekly: "/calendar/trading-day",
+    // 交易日历列表
+    calendarList: "/calendar/list",
+    // 交易日历计算
+    calendarCalculate: "/calendar/calculate",
+    // 导出交易日历
+    calendarExport: "/calendar/export",
+    // 导出周末工作日
+    weeklyExport: "/calendar/trading-day/export",
+    // 导出节假日
+    holidayExport: "/calendar/holiday/export",
+    // 获取所有场景列表
+    scenes: "/scenes",
+    // 获取所有客户端权限列表
+    clientPermission: "/client-permission",
 };

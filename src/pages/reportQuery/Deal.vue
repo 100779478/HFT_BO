@@ -1,5 +1,11 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+
+.input-form {
+  float: right;
+  width: 145px;
+  border-radius: 20px
+}
 </style>
 <template>
   <div>
@@ -21,17 +27,15 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderSysId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="报单编号"
           >
           </Input>
         </form>
         <form autocomplete="off">
           <Input
-              class="mr3"
+              class="mr3 input-form"
               v-model="searchParams.tradeId"
-              style="float: right; width: 145px; border-radius: 20px"
               placeholder="成交编号"
           >
           </Input>
@@ -39,8 +43,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="策略编号"
               @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
           >
@@ -49,8 +52,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -98,7 +100,7 @@
           查询
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="handleExportDeals()" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -138,12 +140,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {
-  time,
-  getDirection,
-  getOffsetType,
-  getHedgeType, handleSort,
-} from "@/common/common";
+import {getDirection, getOffsetType, getHedgeType, handleSort, handleExport} from "@/common/common";
 
 export default {
   data() {
@@ -154,7 +151,7 @@ export default {
         minWidth: 110,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "交易账号",
@@ -162,7 +159,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "用户编号",
@@ -170,7 +167,7 @@ export default {
         minWidth: 110,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "资金账号",
@@ -178,7 +175,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "组合账号",
@@ -186,7 +183,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "成交编号",
@@ -194,7 +191,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "报单编号",
@@ -202,7 +199,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "交易所代码",
@@ -210,7 +207,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "合约代码",
@@ -218,7 +215,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "买卖",
@@ -226,7 +223,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getDirection(row.direction);
           const color = {
@@ -246,7 +243,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getOffsetType(row.offsetFlag);
           return h("span", result.description);
@@ -258,7 +255,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
         render: (h, {row}) => {
           const result = getHedgeType(row.hedgeFlag);
           return h("span", result.description);
@@ -269,7 +266,7 @@ export default {
         key: "tradePrice",
         minWidth: 150,
         resizable: true,
-        sortable:'custom',
+        sortable: 'custom',
         width: null,
       },
       {
@@ -277,7 +274,7 @@ export default {
         key: "volumeTraded",
         minWidth: 150,
         resizable: true,
-        sortable:'custom',
+        sortable: 'custom',
         width: null,
       },
       {
@@ -285,7 +282,7 @@ export default {
         key: "tradeDate",
         minWidth: 150,
         resizable: true,
-        sortable:'custom',
+        sortable: 'custom',
         width: null,
       },
       {
@@ -293,7 +290,7 @@ export default {
         key: "tradeTime",
         minWidth: 150,
         resizable: true,
-        sortable:'custom',
+        sortable: 'custom',
         width: null,
       },
       {
@@ -301,7 +298,7 @@ export default {
         key: "ruleId",
         minWidth: 150,
         resizable: true,
-        sortable:'custom',
+        sortable: 'custom',
         width: null,
       },
     ];
@@ -338,7 +335,7 @@ export default {
   },
   mounted() {
     // 动态高度
-     window.addEventListener('resize', () => {
+    window.addEventListener('resize', () => {
       this.tableHeight = window.innerHeight - 220
     })
     this.getDealData();
@@ -399,7 +396,7 @@ export default {
       this.getDealData();
     },
     // 导出列表
-    handleExportOrders() {
+    handleExportDeals() {
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
@@ -411,29 +408,7 @@ export default {
       if (this.searchParams.ruleId) {
         this.searchParams.ruleId = Number(this.searchParams.ruleId)
       }
-      http.postBlob(
-          URL.dealsExport,
-          this.searchParams,
-          (res) => {
-            // 创建blob
-            // const blob = new Blob([res.data], {
-            //   type: "application/vnd.ems-excel;charset=UTF-8",
-            // });
-            const blob = res;
-            // 创建link标签
-            const link = document.createElement("a");
-            link.href = window.URL.createObjectURL(blob);
-            // 设置链接元素的下载属性，指定文件名
-            const dateObj = time.dateToLocaleObject(new Date());
-            link.download = `成交单_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-            // 将链接元素添加到文档中
-            document.body.appendChild(link);
-            // 触发点击事件以开始下载
-            link.click();
-            // 移除链接元素
-            document.body.removeChild(link);
-          }
-      );
+      handleExport(URL.dealsExport, this.searchParams, '成交单')
     },
   },
 };

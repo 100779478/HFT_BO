@@ -1,23 +1,5 @@
 <style lang="less" scoped>
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
+@import "@/style/manage.less";
 </style>
 <template>
   <div>
@@ -26,7 +8,7 @@
         <form autocomplete="off">
           <Input
               v-model="pagination.environmentName"
-              style="float: right; width: 160px; border-radius: 20px"
+              style="float: right; width: 180px; border-radius: 20px"
               placeholder="环境名称"
               @on-keydown.enter="handleSearch"
               @on-change="handleSearch"
@@ -36,6 +18,7 @@
                 slot="suffix"
                 size="19"
                 style="cursor: pointer"
+                @click.native="handleSearch"
             />
           </Input>
         </form>
@@ -48,18 +31,12 @@
           新增环境
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.environmentExport, this.pagination,'环境管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
         </Button
         >
-        <!--        <Button type="success" @click="refresh()"-->
-        <!--        >-->
-        <!--          <Icon type="md-refresh"/>-->
-        <!--          刷新-->
-        <!--        </Button-->
-        <!--        >-->
         <Modal
             v-model="showAddModal"
             draggable
@@ -115,7 +92,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getEnvironmentData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -123,25 +100,6 @@
           <div @click="() => deleteEnvironment(row)" class="table-operate">
             删除
           </div>
-          <!-- <Button
-            type="info"
-            size="small"
-            @click="() => modalUser('modify', row)"
-            >编辑</Button
-          >
-          &nbsp;
-          <Button
-            type="error"
-            size="small"
-            @click="() => deleteEnvironment(row)"
-            >删除</Button
-          > -->
-          <!-- <div @click="() => modalUser('modify', row)" class="table-operate">
-            编辑
-          </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
-            {{ "删除" }}
-          </div> -->
         </div>
       </template>
     </Table>
@@ -165,7 +123,8 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -231,6 +190,8 @@ export default {
     })
   },
   methods: {
+    cancel,
+    handleExport,
     handleSort,
     // 获取环境列表
     getEnvironmentData() {
@@ -243,10 +204,6 @@ export default {
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
       });
-      // 传值给header组件
-      // http.get(`${URL.environment}?name`, (res) => {
-      //   this.$emit("child-event", res.data);
-      // });
     },
     // 删除环境
     deleteEnvironment(row) {
@@ -268,11 +225,10 @@ export default {
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
-        const info = {
+        this.environmentInfo = {
           name: "",
           comment: "",
         };
-        this.environmentInfo = info;
       } else {
         this.isNew = false;
         this.showAddModal = true;
@@ -283,21 +239,19 @@ export default {
     ok(isNew) {
       if (isNew) {
         http.put(URL.addEnvironment, this.environmentInfo, () => {
-          this.getEnvironmentData(), this.cancel();
+          this.getEnvironmentData()
+          this.cancel();
         });
       } else {
         http.post(
             `${URL.modificationEnvironment}`,
             this.environmentInfo,
             () => {
-              this.getEnvironmentData(), this.cancel();
+              this.getEnvironmentData()
+              this.cancel();
             }
         );
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 刷新
     refresh() {
@@ -314,25 +268,6 @@ export default {
     handleChangeSize(size) {
       this.pagination.pageSize = size;
       this.getEnvironmentData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.environmentExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `环境管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

@@ -31,7 +31,7 @@
           新增权限
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.tradeDataExport, this.pagination,'权限管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -58,25 +58,6 @@
           >
             <Col :span="18">
               <FormItem label="管理用户" prop="managerId">
-                <!--                <Select v-model="tradeInfo.managerId" style="width:260px" :disabled="!isNew">-->
-                <!--                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                      item.customerId + `(${item.customerName})`-->
-                <!--                    }}-->
-                <!--                  </Option>-->
-                <!--                </Select>-->
-                <!--                <Select v-model="tradeInfo.managerId" style="width:260px">-->
-                <!--                  <Input-->
-                <!--                      v-model="searchMgId"-->
-                <!--                      placeholder="请输入交易员代码"-->
-                <!--                      :maxlength="20"-->
-                <!--                      show-message="false"-->
-                <!--                      @on-change="handleSearchMgList"-->
-                <!--                  ></Input>-->
-                <!--                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                      item.customerId + `(${item.customerName})`-->
-                <!--                    }}-->
-                <!--                  </Option>-->
-                <!--                </Select>-->
                 <Select
                     v-model="tradeInfo.managerId"
                     filterable
@@ -90,19 +71,6 @@
             </Col>
             <Col :span="18">
               <FormItem label="交易员" prop="traderIds">
-                <!--                                <Select v-model="tradeInfo.traderIds" multiple style="width:260px" :max-tag-count="1">-->
-                <!--                                  <Input-->
-                <!--                                      v-model="searchTdId"-->
-                <!--                                      placeholder="请输入交易员代码"-->
-                <!--                                      :maxlength="20"-->
-                <!--                                      show-message="false"-->
-                <!--                                      @on-change="handleSearchMgList"-->
-                <!--                                  ></Input>-->
-                <!--                                  <Option v-for="item in customerList" :value="item.customerId" :key="item.customerId">{{-->
-                <!--                                      item.customerId + `(${item.customerName})`-->
-                <!--                                    }}-->
-                <!--                                  </Option>-->
-                <!--                                </Select>-->
                 <Select
                     v-model="tradeInfo.traderIds"
                     multiple
@@ -136,7 +104,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getTradeData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -167,8 +135,9 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
 import {Message} from "view-design";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   props: ["userId"],
@@ -245,6 +214,8 @@ export default {
     })
   },
   methods: {
+    cancel,
+    handleExport,
     handleSort,
     remoteMethod3(query) {
       if (query !== '') {
@@ -254,20 +225,6 @@ export default {
         }, 200);
       }
     },
-    // 过滤弹窗交易员列表（模糊查询）
-    // handleSearchMgList(e) {
-    //   const searchTerm = e.target.value.trim();
-    //   if (searchTerm === "") {
-    //     // 如果搜索框为空，还原为原始列表
-    //     this.customerList = [...this.originalCustomerList];
-    //   } else {
-    //     // 否则，根据搜索词筛选列表
-    //     this.customerList = this.originalCustomerList.filter(
-    //         d => d.customerId.indexOf(searchTerm) > -1
-    //     );
-    //   }
-    //   console.log(this.customerList, searchTerm, 3333);
-    // },
     getCustomerList() {
       http.get(URL.userList, (res) => {
         this.customerList = res.data
@@ -342,10 +299,6 @@ export default {
         );
       }
     },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
-    },
     // 刷新
     refresh() {
       this.loading = true;
@@ -381,26 +334,6 @@ export default {
           },
           [content]
       );
-    },
-
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.tradeDataExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `权限管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

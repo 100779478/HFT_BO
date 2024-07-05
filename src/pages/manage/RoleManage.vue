@@ -1,7 +1,5 @@
 <style lang="less">
-.ivu-table-tip {
-  font-size: 26px;
-}
+@import "@/style/manage.less";
 
 .modal {
   height: 650px;
@@ -13,16 +11,8 @@
 
 .ivu-modal-body {
   margin: 0 50px;
-  // margin: 0 10px 0 50px;
-  // height: 650px;
-  // overflow: scroll;
-  // overflow-x: unset;
 }
 
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
 
 .title-font {
   display: inline;
@@ -31,16 +21,6 @@
   margin-bottom: 10px;
 }
 
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
 </style>
 <template>
   <div>
@@ -71,7 +51,7 @@
           新增角色
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.roleExport, this.pagination,'角色管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -90,13 +70,14 @@
             <Form
                 ref="ruleForm"
                 :model="roleInfo"
-                :label-width="80"
+                :label-width="90"
                 label-colon
                 autocomplete="off"
                 style="margin-left: -5px; font-weight: bold"
             >
               <Col :span="10">
                 <FormItem label="角色名称" prop="name">
+                  <span slot="label" style="font-size: 16px;">角色名称:</span>
                   <Input
                       v-model="roleInfo.name"
                       placeholder="请输入角色名称"
@@ -106,54 +87,16 @@
                 </FormItem>
               </Col>
             </Form>
-            <!--            <Checkbox-->
-            <!--                :value="checkALot"-->
-            <!--                @click.prevent.native="handleCheckboxClick"-->
-            <!--            >全选-->
-            <!--            </Checkbox-->
-            <!--            >-->
-            <!-- 权限复选框 -->
-            <div
-                style="
-                border-bottom: 1px solid #e9e9e9;
-                padding-bottom: 6px;
-                margin-bottom: 6px;
-              "
-                v-for="(item, index) in permissionList"
-                :key="index"
-            >
-              <span class="title-font">
-                {{ item[0].menuName }}
-              </span>
-              <!-- :value="checkAll" -->
-              <Checkbox
-                  :indeterminate="indeterminate[item[0].menuName]"
-                  :value="checkAll[item[0].menuName]"
-                  @click.prevent.native="handleCheckAll(item[0].menuName)"
-                  style="float: right"
-              >全选
-              </Checkbox
-              >
-              <Row type="flex">
-                <Col span="8" v-for="itemChild in item" :key="itemChild.id">
-                  <CheckboxGroup
-                      v-model="checkAllGroup"
-                      @on-change="
-                      checkAllGroupChange(
-                        $event,
-                        itemChild.menuName,
-                        itemChild.description
-                      )
-                    "
-                  >
-                    <Checkbox
-                        :label="itemChild.description"
-                        style="margin: 5px"
-                    ></Checkbox>
-                  </CheckboxGroup>
-                </Col>
-              </Row>
-            </div>
+            <Tabs :animated="false" v-model="activeTab">
+              <TabPane label="web管理权限" name="web">
+                <RolePermissionComponent v-if="showAddModal" :permissionList="permissionList"
+                                         :currentPermissionList="currentPermissionList"/>
+              </TabPane>
+              <TabPane label="客户端管理权限" name="client">
+                <PcRoleManage v-if="showAddModal" :currentPcList="currentPcPermissionList"
+                              :currentScenesList="currentScenesList"/>
+              </TabPane>
+            </Tabs>
           </div>
           <div slot="footer">
             <Button type="text" @click="cancel">取消</Button>
@@ -173,27 +116,14 @@
         border
         @on-sort-change="e=>handleSort(e,this.getRoleData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
+          <div @click="() => deleteRole(row)" class="table-operate">
             删除
           </div>
-          <!-- <Button
-            type="info"
-            size="small"
-            @click="() => modalUser('modify', row)"
-            >编辑</Button
-          >
-          &nbsp;
-          <Button
-            type="error"
-            size="small"
-            @click="() => deleteEnvironment(row)"
-            >删除</Button
-          > -->
         </div>
       </template>
     </Table>
@@ -216,9 +146,14 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
+import RolePermissionComponent from "@/pages/manage/RoleManage/RolePermissionComponent.vue";
+import PcRoleManage from "@/pages/manage/RoleManage/PcRoleManage.vue";
+import {cancel} from "@/utils/tableUtils";
+import {mapState} from "vuex";
 
 export default {
+  components: {PcRoleManage, RolePermissionComponent},
   props: ["userId"],
   data() {
     let columns1 = [
@@ -244,6 +179,7 @@ export default {
       sortField: ''
     };
     return {
+      activeTab: 'web',
       loading: true,
       pagination,
       tableHeight: window.innerHeight - 220,
@@ -258,18 +194,21 @@ export default {
       isNew: true,
 
       //权限列表
-      permissionInitData: [],
       permissionList: [],
-      // indeterminate: true,
-      // checkAll: false,
-      // checkAllGroup: [],
-      indeterminate: {},
-      checkAll: {},
-      checkAllGroup: [],
-      dataList: {},
-      typeArr: {},
-      // checkALot: false
+      // 当前用户权限列表
+      currentPermissionList: [],
+      // 当前选中角色客户端权限列表
+      currentPcPermissionList: [],
+      // 当前选中角色客户端场景列表
+      currentScenesList: []
     };
+  },
+  computed: {
+    ...mapState('role', {
+      rolePermissionList: state => state.rolePermissionList,
+      pcPermissionList: state => state.pcPermissionList,
+      scenesList: state => state.scenesList,
+    })
   },
   mounted() {
     // 动态高度
@@ -284,91 +223,10 @@ export default {
     })
   },
   methods: {
+    cancel,
+    handleExport,
     handleSort,
-    handleCheckAll(type) {
-      if (this.indeterminate[type]) {
-        this.checkAll[type] = false;
-      } else {
-        this.checkAll[type] = !this.checkAll[type];
-      }
-      this.indeterminate[type] = false;
-      if (!Array.isArray(this.typeArr[type])) {
-        this.typeArr[type] = [];
-      }
-      if (this.checkAll[type]) {
-        this.permissionInitData.map((d) => {
-          if (d.menuName == type) {
-            this.typeArr[type].push(d.description);
-          }
-        });
-      } else {
-        this.typeArr[type] = [];
-      }
-
-      this.checkAllGroup = Object.values(this.typeArr).flat();
-      this.roleInfo.permissions = [];
-      this.permissionInitData.map((d) => {
-        for (let i = 0; i < this.checkAllGroup.length; i++) {
-          if (d.description === this.checkAllGroup[i]) {
-            this.roleInfo.permissions.push(d);
-          }
-        }
-      });
-      // 数组去重
-      let uniquePermissions = new Set(this.roleInfo.permissions);
-      this.roleInfo.permissions = Array.from(uniquePermissions);
-    },
-    checkAllGroupChange(data, type, opt) {
-      this.roleInfo.permissions = [];
-      this.permissionInitData.map((d) => {
-        for (let i = 0; i < data.length; i++) {
-          if (d.description === data[i]) {
-            this.roleInfo.permissions.push(d);
-          }
-        }
-      });
-      // 数组去重
-      let uniquePermissions = new Set(this.roleInfo.permissions);
-      this.roleInfo.permissions = Array.from(uniquePermissions);
-      // this.roleInfo.permissions.map((d) => {
-      //   if (!Array.isArray(this.typeArr[type])) {
-      //     this.typeArr[type] = [];
-      //   }
-      //   for (let i = 0; i < data.length; i++) {}
-      //   if (d.description == opt) {
-      //     this.typeArr[type].push(d.description);
-      //   }
-      // });
-      // roleInfo.permissions为最新的选中数据，每次修改时,转化格式后,赋值给typeArr
-      let result = this.roleInfo.permissions.reduce((acc, curr) => {
-        if (acc[curr.menuName]) {
-          acc[curr.menuName].push(curr);
-        } else {
-          acc[curr.menuName] = [curr];
-        }
-        return acc;
-      }, {});
-      let newObj = {};
-      for (const k in result) {
-        newObj[k] = Object.keys(result[k])
-            .map((key) => result[k][key].description)
-            .concat();
-      }
-      this.typeArr = newObj;
-      let newObjLength = newObj[type] ? newObj[type].length : 0;
-      if (newObjLength === this.permissionList[type].length) {
-        this.indeterminate[type] = false;
-        this.checkAll[type] = true;
-      } else if (newObjLength > 0) {
-        this.indeterminate[type] = true;
-        this.checkAll[type] = false;
-      } else {
-        this.indeterminate[type] = false;
-        this.checkAll[type] = false;
-      }
-    },
-
-    // 获取环境列表
+    // 获取角色列表
     getRoleData(value) {
       this.pagination.roleName = value || "";
       http.post(URL.roleList, this.pagination, (res) => {
@@ -382,29 +240,17 @@ export default {
     // 获取所有权限列表
     getPermissionData() {
       http.get(URL.permission, (response) => {
-        let dataInit = response.data;
-        this.permissionInitData = response.data;
-        // 将权限列表中menuName相同的项分别整理到一个数组
-        this.permissionList = dataInit.reduce((acc, curr) => {
-          if (acc[curr.menuName]) {
-            acc[curr.menuName].push(curr);
-          } else {
-            acc[curr.menuName] = [curr];
-          }
-          return acc;
-        }, {});
+        this.permissionList = response?.data || []
       });
-
-      // });
     },
-    // 环境名称模糊查询
+    // 角色名称模糊查询
     handleSearch(e) {
       this.pagination.pageNumber = 1;
       let value = e.target.value;
       this.getRoleData(value);
     },
-    // 删除环境
-    deleteEnvironment(row) {
+    // 删除角色
+    deleteRole(row) {
       this.$Modal.confirm({
         title: `确认删除角色吗？`,
         content: "<p>此操作不可逆</p>",
@@ -427,7 +273,7 @@ export default {
       this.pagination.pageSize = size;
       this.getUserData();
     },
-    // 用户弹窗
+    // 角色弹窗
     modalUser(type, row) {
       if (type === "new") {
         this.isNew = true;
@@ -437,98 +283,41 @@ export default {
           id: null,
           permissions: [],
         };
-        this.checkAllGroup = [];
-        this.checkAll = {};
-        this.indeterminate = {};
-        this.typeArr = {};
+        this.currentPermissionList = []
+        this.currentPcPermissionList = []
+        this.currentScenesList = []
       } else {
         this.isNew = false;
         this.showAddModal = true;
+        this.currentPermissionList = row.permissions || []
+        this.currentPcPermissionList = row.clientPermissions || []
+        this.currentScenesList = row.scenesWinTypes || []
         this.roleInfo = {...row};
-        let arr = [];
-        row.permissions.forEach((val) => {
-          arr.push(val.description);
-        });
-        let arrList = {};
-        for (const k in this.permissionList) {
-          if (!Array.isArray(arrList[k])) {
-            arrList[k] = [];
-          }
-          row.permissions.map((d) => {
-            if (d.menuName === k) {
-              arrList[k].push(d.description);
-            }
-          });
-          if (arrList[k].length === this.permissionList[k].length) {
-            this.checkAll[k] = true;
-            this.indeterminate[k] = false;
-          } else if (arrList[k].length > 0) {
-            this.checkAll[k] = false;
-            this.indeterminate[k] = true;
-          } else {
-            this.checkAll[k] = false;
-            this.indeterminate[k] = false;
-          }
-        }
-        // 编辑时row.permissions转换格式赋值给typeArr{}
-        this.typeArr = arrList;
-        this.checkAllGroup = arr;
       }
+      this.activeTab = 'web'
     },
     // 新增弹窗确认按键
     ok(isNew) {
+      this.roleInfo.permissions = this.rolePermissionList || []
+      this.roleInfo.clientPermissions = this.pcPermissionList || []
+      this.roleInfo.scenesWinTypes = this.scenesList || []
       if (isNew) {
         http.put(URL.role, this.roleInfo, () => {
-          this.getRoleData(), this.cancel();
+          this.getRoleData()
+          this.cancel();
         });
       } else {
         http.post(`${URL.role}/${this.roleInfo.id}`, this.roleInfo, () => {
-          this.getRoleData(), this.cancel();
+          this.getRoleData()
+          this.cancel();
         });
       }
-    },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
     },
     // 刷新
     refresh() {
       this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   roleName: "",
-      // };
       this.getRoleData();
     },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.roleExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `角色管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
-    },
-    // 其他处理逻辑...
-    // handleCheckboxClick() {
-    //   this.checkALot = !this.checkALot
-    //   for (const permissionListKey in this.permissionList) {
-    //     this.handleCheckAll(this.permissionList[permissionListKey][0].menuName)
-    //     console.log(this.permissionList, 222)
-    //   }
-    // },
   },
 };
 </script>

@@ -36,15 +36,7 @@
           <Icon type="md-add"/>
           新增用户
         </Button>
-        <!--        <Button type="success" @click="refresh()">-->
-        <!--          <Icon type="md-refresh"/>-->
-        <!--          刷新-->
-        <!--        </Button>-->
-        <!--        <Button type="info" @click="handleSearch()" style="margin-right: 5px">-->
-        <!--          <Icon type="md-search"/>-->
-        <!--          查询-->
-        <!--        </Button>-->
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.userExport, this.pagination,'用户管理')" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -105,7 +97,7 @@
                     placeholder="用户类型"
                 >
                   <Option
-                      v-for="item in this.$store.state.dictionaryList.UserType"
+                      v-for="item in this.$store.state.dictionary.dictionaryList.UserType"
                       :value="item.code"
                       :key="item.code"
                   >{{ item.description }}
@@ -162,7 +154,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getUserData)"
     >
-      <template slot="operator" slot-scope="{ row }">
+      <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
@@ -214,10 +206,11 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getUserInfo} from "@/utils/token";
-import {encryptionModePassword, getUserType, handleSort, time} from "@/common/common";
+import {encryptionModePassword, getUserType, handleExport, handleSort} from "@/common/common";
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import index from "vuex";
+import {cancel} from "@/utils/tableUtils";
 
 export default {
   computed: {
@@ -399,6 +392,8 @@ export default {
     })
   },
   methods: {
+    cancel,
+    handleExport,
     onchangePassword(e) {
       this.userInfo.password = e
       this.userValidRules.password = e
@@ -526,10 +521,6 @@ export default {
         );
       }
     },
-    // 新增弹窗关闭
-    cancel() {
-      this.showAddModal = false;
-    },
     // 启用用户
     handleActiveEnable(res) {
       if (res.code !== "0") {
@@ -640,25 +631,6 @@ export default {
       //   actives: this.pagination.actives
       // };
       this.getUserData();
-    },
-    // 导出列表
-    handleExportOrders() {
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.userExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `用户管理_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
     },
   },
 };

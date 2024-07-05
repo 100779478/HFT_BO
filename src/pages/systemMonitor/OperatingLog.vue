@@ -35,7 +35,7 @@
             :clearable="true"
         >
           <Option
-              v-for="item in this.$store.state.dictionaryList.OperatingLogType"
+              v-for="item in this.$store.state.dictionary.dictionaryList.OperatingLogType"
               :value="item.code"
               :key="item.code"
           >{{ item.description }}
@@ -86,7 +86,7 @@
           查询
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="handleExportLog()" class="mr3"
         >
           <Icon type="md-download"/>
           导出
@@ -125,7 +125,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {time, handleSort} from "@/common/common";
+import {handleSort, handleExport} from "@/common/common";
 import moment from "moment/moment";
 
 export default {
@@ -286,7 +286,7 @@ export default {
       this.getOperatingLog();
     },
     // 导出列表
-    handleExportOrders() {
+    handleExportLog() {
       this.pagination.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
@@ -295,22 +295,7 @@ export default {
           : null;
       this.pagination.startTime = this.timeRange[0];
       this.pagination.endTime = this.timeRange[1];
-      // 校验策略编号必须为数字类型
-      http.postBlob(URL.logExport, this.pagination, (res) => {
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `操作日志_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
+      handleExport(URL.logExport, this.pagination, '操作日志')
     },
   },
 };

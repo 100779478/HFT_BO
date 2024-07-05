@@ -73,7 +73,6 @@ import {URL} from "@/api/serverApi";
 import {putToken} from "@/utils/token";
 import {Message} from "view-design";
 import {checkPwdExpiredTime, encryptionModePassword} from "@/common/common";
-import router from "@/router";
 
 export default {
   data() {
@@ -171,7 +170,7 @@ export default {
     ,
     handleGetDic() {
       http.get(URL.dictionaryList, (res) => {
-        this.$store.commit("dictionaryList", res.data);
+        this.$store.commit("dictionary/dictionaryList", res.data);
       });
     }
     ,

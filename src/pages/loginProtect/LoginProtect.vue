@@ -21,6 +21,7 @@ import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import {encryptionModePassword} from "@/common/common";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import router from "@/router";
 
 export default {
   name: "LoginProtect",

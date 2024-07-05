@@ -1,5 +1,11 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+
+.input-form {
+  float: right;
+  width: 145px;
+  border-radius: 20px;
+}
 </style>
 <template>
   <div>
@@ -20,9 +26,8 @@
       >
         <form autocomplete="off">
           <Input
-              class="mr3"
               v-model="searchParams.orderInnerId"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="报单内部编号"
           >
           </Input>
@@ -30,8 +35,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderSysId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="报单编号"
           >
           </Input>
@@ -39,8 +43,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="策略编号"
               type="text"
               @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
@@ -50,8 +53,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -59,8 +61,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.customerId"
-              class="mr3"
-              style="float: right; width: 145px; border-radius: 20px"
+              class="mr3 input-form"
               placeholder="用户编号"
           >
           </Input>
@@ -75,7 +76,7 @@
             multiple
         >
           <Option
-              v-for="item in this.$store.state.dictionaryList.OrderStatus"
+              v-for="item in this.$store.state.dictionary.dictionaryList.OrderStatus"
               :value="item.code"
               :key="item.code"
           >{{ item.description }}
@@ -166,10 +167,9 @@ import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {
-  time,
   getOrderStatus,
   getDirection,
-  getOffsetType, handleSort,
+  getOffsetType, handleSort, handleExport,
 } from "@/common/common";
 
 export default {
@@ -391,7 +391,6 @@ export default {
       startTime: "",
       endTime: "",
     };
-    // let dateRange = [moment().format("YYYYMMDD"), moment().format("YYYYMMDD")];
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
     return {
@@ -484,25 +483,7 @@ export default {
       if (this.searchParams.ruleId) {
         this.searchParams.ruleId = Number(this.searchParams.ruleId)
       }
-      http.postBlob(URL.ordersExport, this.searchParams, (res) => {
-        // 创建blob
-        // const blob = new Blob([res.data], {
-        //   type: "application/vnd.ems-excel;charset=UTF-8",
-        // });
-        const blob = res;
-        // 创建link标签
-        const link = document.createElement("a");
-        link.href = window.URL.createObjectURL(blob);
-        // 设置链接元素的下载属性，指定文件名
-        const dateObj = time.dateToLocaleObject(new Date());
-        link.download = `订单_${dateObj.year}_${dateObj.month}_${dateObj.date}.xlsx`;
-        // 将链接元素添加到文档中
-        document.body.appendChild(link);
-        // 触发点击事件以开始下载
-        link.click();
-        // 移除链接元素
-        document.body.removeChild(link);
-      });
+      handleExport(URL.ordersExport, this.searchParams, '订单')
     },
   },
 };
