@@ -303,11 +303,13 @@ export default {
       this.roleInfo.scenesWinTypes = this.scenesList || []
       if (isNew) {
         http.put(URL.role, this.roleInfo, () => {
+          this.$Message.success("新增成功");
           this.getRoleData()
           this.cancel();
         });
       } else {
         http.post(`${URL.role}/${this.roleInfo.id}`, this.roleInfo, () => {
+          this.$Message.success("修改成功");
           this.getRoleData()
           this.cancel();
         });

@@ -3,28 +3,18 @@ const state = () => ({
     pcPermissionList: [],
     scenesList: [],
 });
-
+const setList = (state, key, payload) => {
+    state[key] = Array.isArray(payload) ? payload : [];
+};
 const mutations = {
     setRolePermissionList(state, payload) {
-        if (Array.isArray(payload)) {
-            state.rolePermissionList = payload;
-        } else {
-            state.rolePermissionList = [];
-        }
+        setList(state, 'rolePermissionList', payload);
     },
     setPcPermissionList(state, payload) {
-        if (Array.isArray(payload)) {
-            state.pcPermissionList = payload;
-        } else {
-            state.pcPermissionList = [];
-        }
+        setList(state, 'pcPermissionList', payload);
     },
     setPcScenesList(state, payload) {
-        if (Array.isArray(payload)) {
-            state.scenesList = payload;
-        } else {
-            state.scenesList = [];
-        }
+        setList(state, 'scenesList', payload);
     },
 };
 
