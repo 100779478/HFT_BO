@@ -12,6 +12,8 @@
   font-size: 2rem;
   text-align: center;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  z-index: 2; /* 确保标题在canvas上层 */
+  position: relative; /* 确保z-index生效 */
 }
 
 .curEnv {
@@ -21,6 +23,8 @@
   color: #070707;
   text-align: center;
   margin: 20px auto 0 auto;
+  z-index: 2; /* 确保当前环境文字在canvas上层 */
+  position: relative; /* 确保z-index生效 */
 }
 
 .shine-span {
@@ -45,6 +49,7 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1; /* 确保canvas在最底层 */
 }
 </style>
 

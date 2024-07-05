@@ -5,10 +5,6 @@ import {URL} from "@/api/serverApi";
 
 vue.use(VueRouter);
 
-function HEAD() {
-    return null;
-}
-
 const routes = [
     {
         path: "/",

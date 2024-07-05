@@ -30,237 +30,105 @@ export const time = {
     },
 };
 
+/**
+ * @description: 查找数据字典对应数据
+ * @date: 2024--07--03 16:56:41
+ * @params {dictionaryKey} 数字字典类型
+ * @params {code}
+ * @returns {object} 整个类型的数据列表 或 对应code的某条数据
+ */
+
+function findDictionaryList(dictionaryKey, code) {
+    const dictionaryList = store.state.dictionary.dictionaryList[dictionaryKey];
+    if (code) {
+        return dictionaryList.find((item) => item.code === code) || {};
+    }
+    return dictionaryList;
+}
+
 // 订单状态
 export function getOrderStatus(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.OrderStatus.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('OrderStatus', code)
 }
 
 // 方向
 export function getDirection(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.Direction.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('Direction', code)
 }
 
 // 开平
 export function getOffsetType(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.OffsetType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('OffsetType', code)
 }
 
 // 连接状态
 export function getChannelConnectStatus(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.ChannelConnectStatus.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('ChannelConnectStatus', code)
 }
 
 // 投保套利
 export function getHedgeType(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.HedgeType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('HedgeType', code)
 }
 
 // 接口类型
 export function getApiType(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.ApiType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.ApiType;
-    }
-    return result;
+    return findDictionaryList('ApiType', code)
 }
 
 // 业务类型
 export function getLogicType(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.LogicType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.LogicType;
-    }
-    return result;
+    return findDictionaryList('LogicType', code)
 }
 
 // 用户类型
 export function getUserType(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.UserType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('UserType', code)
 }
 
 // 持仓方向
 export function getPositionDirection(code) {
-    let result = {};
-    store.state.dictionary.dictionaryList.PositionDirection.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    return findDictionaryList('PositionDirection', code)
 }
 
 // 策略文件类型
 export function getRuleFileType(code) {
-    let result = {};
-
-    if (code) {
-        store.state.dictionary.dictionaryList.RuleFileType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.RuleFileType;
-    }
-
-    return result;
+    return findDictionaryList('RuleFileType', code)
 }
 
 // 策略参数类型
 export function RulePropType(code) {
-    let result = {};
-
-    if (code) {
-        store.state.dictionary.dictionaryList.RulePropType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.RulePropType;
-    }
-
-    return result;
+    return findDictionaryList('RulePropType', code)
 }
 
 // 策略类型
 export function getRuleType(code) {
-    let result = {};
-
-    if (code) {
-        store.state.dictionary.dictionaryList.RuleType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.RuleType;
-    }
-
-    return result;
+    return findDictionaryList('RuleType', code)
 }
 
 // 交易通道类型
 export function getChannelType(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.ChannelType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.ChannelType;
-    }
-    return result;
+    return findDictionaryList('ChannelType', code)
 }
 
 // 操作系统类型
 export function getOperatingLogType(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.OperatingLogType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.OperatingLogType;
-    }
-    return result;
+    return findDictionaryList('OperatingLogType', code)
 }
 
 // 星期
 export function getDayOfWeek(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.DayOfWeek.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.DayOfWeek;
-    }
-    return result;
+    return findDictionaryList('DayOfWeek', code)
 }
 
 // 交易所类型
 export function getTradeExchangeType(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.TradeExchangeType.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.TradeExchangeType;
-    }
-    return result;
+    return findDictionaryList('TradeExchangeType', code)
 }
 
 // 密码强度校验类型
 export function getPasswordStrength(code) {
-    let result = {};
-    if (code) {
-        store.state.dictionary.dictionaryList.PasswordStrength.forEach((i) => {
-            if (i.code === code) {
-                result = i;
-            }
-        });
-    } else {
-        result = store.state.dictionary.dictionaryList.PasswordStrength;
-    }
-    return result;
+    return findDictionaryList('PasswordStrength', code)
 }
 
 // 表头排序
