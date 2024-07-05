@@ -113,7 +113,7 @@ export default {
           winType: i.winType,
           readonly: i.readonly
         }));
-        this.$store.commit('role/setRolePermissionList', arr)
+        this.$store.commit('role/setPcPermissionList', arr)
       },
       deep: true,
     },
