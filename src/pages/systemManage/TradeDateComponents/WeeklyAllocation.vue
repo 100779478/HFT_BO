@@ -280,12 +280,12 @@ export default {
       // 换算当前日期为周几
       this.weeklySetting.weekDay = moment(this.weeklySetting.tradingDay).isoWeekday();
       if (isNew) {
-        http.put(URL.weekly, this.weeklySetting, () => {
+        http.put(URL.weekly, {...this.weeklySetting,messageType:'新增成功'}, () => {
           this.getWeeklyList()
           this.cancel();
         });
       } else {
-        http.post(`${URL.weekly}`, this.weeklySetting, () => {
+        http.post(`${URL.weekly}`, {...this.weeklySetting,messageType:'修改成功'}, () => {
               this.getWeeklyList()
               this.cancel();
             }
@@ -298,7 +298,7 @@ export default {
         title: `确认删除周末工作日吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.weekly}/${row.tradingDay}`, {}, () => {
+          http.delete(`${URL.weekly}/${row.tradingDay}`, {messageType:'删除成功'}, () => {
             this.getWeeklyList();
           });
         },

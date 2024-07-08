@@ -501,7 +501,7 @@ export default {
           this.$Message.error("密码强度不足")
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
-          http.put(URL.userEdit, this.userInfo, (res) => {
+          http.put(URL.userEdit, {...this.userInfo,messageType:'新增成功'}, (res) => {
             if (res.code === '0') {
               this.getUserData()
               this.cancel();
@@ -511,7 +511,7 @@ export default {
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
-            this.userInfo,
+            {...this.userInfo,messageType:'修改成功'},
             (res) => {
               if (res.code === '0') {
                 this.getUserData()
@@ -585,15 +585,12 @@ export default {
       if (type === "resetPassword") {
         http.post(URL.userReset, {
           customerId: row.customerId,
-          password
-        }, (res) => {
-          if (res.code === '0') {
-            this.$Message.success('重置成功')
-          }
+          password,
+          messageType:'重置成功'
         });
       }
       if (type === "delete") {
-        http.delete(`${URL.userEdit}/${row.customerId}`);
+        http.delete(`${URL.userEdit}/${row.customerId}`,{messageType:'删除成功'});
       }
       setTimeout(() => {
         this.getUserData();

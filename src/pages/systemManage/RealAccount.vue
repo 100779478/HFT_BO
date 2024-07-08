@@ -443,12 +443,12 @@ export default {
         return;
       }
       if (isNew) {
-        http.put(URL.channel, this.channelInfo, () => {
+        http.put(URL.channel, {...this.channelInfo,messageType:'新增成功'}, () => {
           this.getChannelData();
           this.cancel();
         });
       } else {
-        http.post(URL.channel, this.channelInfo, () => {
+        http.post(URL.channel, {...this.channelInfo,messageType:'修改成功'}, () => {
           this.getChannelData();
           this.cancel();
         });
@@ -460,7 +460,7 @@ export default {
         title: `确认删除实体账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.channel}/${row.channelId}`, {}, () => {
+          http.delete(`${URL.channel}/${row.channelId}`, {messageType:'删除成功'}, () => {
             this.getChannelData();
           });
         },

@@ -211,7 +211,7 @@ export default {
         title: `确认删除环境吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.deleteEnvironment}/${row.id}`, {}, () => {
+          http.delete(`${URL.deleteEnvironment}/${row.id}`, {messageType:'删除环境成功'}, () => {
             this.getEnvironmentData();
           });
         },
@@ -238,14 +238,14 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (isNew) {
-        http.put(URL.addEnvironment, this.environmentInfo, () => {
+        http.put(URL.addEnvironment, {...this.environmentInfo,messageType:'新增成功'}, () => {
           this.getEnvironmentData()
           this.cancel();
         });
       } else {
         http.post(
             `${URL.modificationEnvironment}`,
-            this.environmentInfo,
+            {...this.environmentInfo,messageType:'修改成功'},
             () => {
               this.getEnvironmentData()
               this.cancel();

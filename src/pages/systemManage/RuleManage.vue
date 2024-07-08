@@ -692,14 +692,14 @@ export default {
           return
         }
         if (isNew) {
-          http.put(URL.rule, this.userStrategyInfo, (res) => {
+          http.put(URL.rule, {...this.userStrategyInfo, messageType: '新增成功'}, (res) => {
             if (res.code === '0') {
               this.getUserStrategyData();
               this.cancel();
             }
           });
         } else {
-          http.post(URL.rule, this.userStrategyInfo, (res) => {
+          http.post(URL.rule, {...this.userStrategyInfo, messageType: '修改成功'}, (res) => {
             if (res.code === '0') {
               this.getUserStrategyData();
               this.cancel();
@@ -747,7 +747,7 @@ export default {
       });
     },
     deleteStrategy(row) {
-      http.delete(`${URL.rule}/${row.ruleId}`, {}, () => {
+      http.delete(`${URL.rule}/${row.ruleId}`, {messageType: '删除成功'}, () => {
         this.getUserStrategyData();
       });
     },

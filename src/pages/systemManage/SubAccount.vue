@@ -572,12 +572,12 @@ export default {
         return;
       }
       if (isNew) {
-        http.put(URL.customChannel, this.channelInfo, () => {
+        http.put(URL.customChannel, {...this.channelInfo, messageType: '新增成功'}, () => {
           this.getChannelData()
           this.cancel();
         });
       } else {
-        http.post(URL.customChannel, this.channelInfo, () => {
+        http.post(URL.customChannel, {...this.channelInfo, messageType: '修改成功'}, () => {
           this.getChannelData()
           this.cancel();
         });
@@ -589,8 +589,7 @@ export default {
         title: `确认删除分账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.customChannel}/${row.accountId}`, {}, () => {
-            this.$Message.success("删除成功");
+          http.delete(`${URL.customChannel}/${row.accountId}`, {messageType: '删除成功'}, () => {
             this.getChannelData();
           });
         },

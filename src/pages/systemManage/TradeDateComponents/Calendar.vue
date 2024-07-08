@@ -309,9 +309,8 @@ export default {
     // 新增弹窗确认按键
     ok() {
       const year = moment(this.year).format('YYYY')
-      http.post(`${URL.calendarCalculate}/${year}`, {}, (res) => {
+      http.post(`${URL.calendarCalculate}/${year}`, {messageType:'计算成功'}, (res) => {
         if (res.code === '0') {
-          this.$Message.success('计算成功')
           this.showAddModal = false
           this.getCalendarList();
         }

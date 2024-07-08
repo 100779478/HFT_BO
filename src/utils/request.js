@@ -4,7 +4,7 @@ import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store";
-
+import showNotification from "@/utils/message";
 
 let is403MessageShown = false;
 const axiosInstance = axios.create({
@@ -25,16 +25,17 @@ export const http = {
         url,
         thenHandler = () => {
         },
-        errorHandler = defaultErrorHandler
+        errorHandler = defaultErrorHandler,
     ) => {
-        return axiosInstance.get(url).then(thenHandler).catch(errorHandler);
+        return axiosInstance.get(url).then(thenHandler
+        ).catch(errorHandler);
     },
 
     getBlob: (
         url,
         thenHandler = () => {
         },
-        errorHandler = defaultErrorHandler
+        errorHandler = defaultErrorHandler,
     ) => {
         return axiosInstance
             .get(url, {responseType: "blob"})
@@ -54,9 +55,12 @@ export const http = {
         data,
         thenHandler = () => {
         },
-        errorHandler = defaultErrorHandler
+        errorHandler = defaultErrorHandler,
     ) => {
-        return axiosInstance.post(url, data).then(thenHandler).catch(errorHandler);
+        return axiosInstance.post(url, data).then((res) => {
+            thenHandler(res)
+            if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+        }).catch(errorHandler);
     },
     uploadFile: (
         url,
@@ -64,7 +68,7 @@ export const http = {
         data = {},
         thenHandler = () => {
         },
-        errorHandler = defaultErrorHandler
+        errorHandler = defaultErrorHandler,
     ) => {
         const formData = new FormData();
         formData.append("file", file);  // 通过 "file" 字段传递文件
@@ -139,9 +143,13 @@ export const http = {
         data,
         thenHandler = () => {
         },
-        errorHandler = defaultErrorHandler
+        errorHandler = defaultErrorHandler,
     ) => {
-        return axiosInstance.put(url, data).then(thenHandler).catch(errorHandler);
+        return axiosInstance.put(url, data).then((res) => {
+            thenHandler(res)
+            if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+
+        }).catch(errorHandler);
     },
 
     /**
@@ -161,7 +169,10 @@ export const http = {
     ) => {
         return axiosInstance
             .delete(url, data)
-            .then(thenHandler)
+            .then((res) => {
+                thenHandler(res)
+                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+            })
             .catch(errorHandler);
     },
 };
@@ -235,29 +246,17 @@ axiosInstance.interceptors.response.use(
         const code = response.data.code;
         if (response.status === 200) {
             is403MessageShown = false;
-            // switch (code) {
-            //     case "100002":
-            //         // router.push({name: "Login"});
-            //     // case "110020":
-            //     // case "100001":
-            //     // case "110002":
-            //     // case "100000":
-            //     //   Message.error(response.data.errorMessage);
-            //     default:
             if (response.data.errorMessage) {
                 Message.error(response.data.errorMessage);
             }
-            // }
             return response.data;
         }
         if (response.status === 403) {
             if (response.data.errorMessage) {
                 Message.error(response.data.errorMessage);
             }
-            // router.push({name: "Login"});
         }
         throw response.data;
-        // throw new Error(response)
     },
     (error) => {
         let errorResponse = error.request;

@@ -296,12 +296,12 @@ export default {
         return
       }
       if (isNew) {
-        http.put(URL.holiday, this.holidaySetting, () => {
+        http.put(URL.holiday, {...this.holidaySetting,messageType:'新增成功'}, () => {
           this.getHolidayList()
           this.cancel();
         });
       } else {
-        http.post(`${URL.holiday}`, this.holidaySetting, () => {
+        http.post(`${URL.holiday}`, {...this.holidaySetting,messageType:'修改成功'}, () => {
               this.getHolidayList()
               this.cancel();
             }
@@ -314,7 +314,7 @@ export default {
         title: `确认删除节假日吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.holiday}/${row.id}`, {}, () => {
+          http.delete(`${URL.holiday}/${row.id}`, {messageType:'删除成功'}, () => {
             this.getHolidayList();
           });
         },

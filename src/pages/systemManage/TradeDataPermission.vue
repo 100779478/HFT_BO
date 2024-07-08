@@ -247,9 +247,8 @@ export default {
         title: `确认删除管理员吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.tradeData}/${row.managerId}`, {}, () => {
+          http.delete(`${URL.tradeData}/${row.managerId}`, {messageType: '删除成功'}, () => {
             this.getTradeData();
-            this.$Message.success('删除成功')
           });
         },
         okText: "删除",
@@ -284,14 +283,16 @@ export default {
         return
       }
       if (isNew) {
-        http.put(URL.tradeData, this.tradeInfo, () => {
-          this.getTradeData()
-          this.cancel();
-        });
+        http.put(URL.tradeData,
+            {...this.tradeInfo, messageType: '新增成功'},
+            () => {
+              this.getTradeData()
+              this.cancel();
+            });
       } else {
         http.post(
             `${URL.tradeData}`,
-            this.tradeInfo,
+            {...this.tradeInfo, messageType: '修改成功'},
             () => {
               this.getTradeData()
               this.cancel();
