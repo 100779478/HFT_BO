@@ -255,7 +255,7 @@ export default {
         title: `确认删除角色吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.role}/${row.id}`, {messageType:'删除成功'}, (res) => {
+          http.delete(`${URL.role}/${row.id}`, {messageType: '删除成功'}, (res) => {
             this.getRoleData();
           });
         },
@@ -299,12 +299,12 @@ export default {
       this.roleInfo.clientPermissions = this.pcPermissionList || []
       this.roleInfo.scenesWinTypes = this.scenesList || []
       if (isNew) {
-        http.put(URL.role, {...this.roleInfo,messageType:'新增成功'}, () => {
+        http.put(URL.role, {...this.roleInfo, messageType: '新增成功'}, () => {
           this.getRoleData()
           this.cancel();
         });
       } else {
-        http.post(`${URL.role}/${this.roleInfo.id}`, {...this.roleInfo,messageType:'修改成功'}, () => {
+        http.post(`${URL.role}/${this.roleInfo.id}`, {...this.roleInfo, messageType: '修改成功'}, () => {
           this.getRoleData()
           this.cancel();
         });
