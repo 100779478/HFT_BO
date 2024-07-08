@@ -84,7 +84,10 @@ export const http = {
                     "Content-Type": "multipart/form-data",  // 设置请求头为multipart/form-data
                 },
             })
-            .then(thenHandler)
+            .then((res) => {
+                thenHandler(res)
+                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+            })
             .catch(errorHandler);
     },
     postBlob: (
@@ -98,7 +101,10 @@ export const http = {
             .post(url, data, {
                 responseType: "blob",  // 设置成功响应的数据类型为 blob
             })
-            .then(thenHandler)
+            .then((res) => {
+                thenHandler(res)
+                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+            })
             .catch(error => {
                 // 在这里处理错误，包括获取blob类型的数据
                 if (error.response && error.response.data instanceof Blob) {
@@ -148,7 +154,6 @@ export const http = {
         return axiosInstance.put(url, data).then((res) => {
             thenHandler(res)
             if (res?.code === '0' && data.messageType) showNotification(data.messageType)
-
         }).catch(errorHandler);
     },
 
