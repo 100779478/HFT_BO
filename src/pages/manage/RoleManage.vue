@@ -255,7 +255,7 @@ export default {
         title: `确认删除角色吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.role}/${row.id}`, {messageType:'删除成功'}, (res) => {
+          http.delete(`${URL.role}/${row.id}`, {messageType: '删除成功'}, (res) => {
             this.getRoleData();
           });
         },
@@ -299,12 +299,22 @@ export default {
       this.roleInfo.clientPermissions = this.pcPermissionList || []
       this.roleInfo.scenesWinTypes = this.scenesList || []
       if (isNew) {
-        http.put(URL.role, {...this.roleInfo,messageType:'新增成功'}, () => {
+<<<<<<< HEAD
+        http.put(URL.role, {...this.roleInfo, messageType: '新增成功'}, () => {
+=======
+        http.put(URL.role, this.roleInfo, () => {
+          this.$Message.success("新增成功");
+>>>>>>> aa5f257 (feat(RoleManage):添加角色时给出提示信息;refactor(role.js):提取公共方法为setList)
           this.getRoleData()
           this.cancel();
         });
       } else {
-        http.post(`${URL.role}/${this.roleInfo.id}`, {...this.roleInfo,messageType:'修改成功'}, () => {
+<<<<<<< HEAD
+        http.post(`${URL.role}/${this.roleInfo.id}`, {...this.roleInfo, messageType: '修改成功'}, () => {
+=======
+        http.post(`${URL.role}/${this.roleInfo.id}`, this.roleInfo, () => {
+          this.$Message.success("修改成功");
+>>>>>>> aa5f257 (feat(RoleManage):添加角色时给出提示信息;refactor(role.js):提取公共方法为setList)
           this.getRoleData()
           this.cancel();
         });
