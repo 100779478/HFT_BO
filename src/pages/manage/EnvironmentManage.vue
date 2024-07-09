@@ -175,7 +175,8 @@ export default {
       columns1,
       showAddModal: false,
       isNew: true,
-      pagination
+      pagination,
+      URL
     };
   },
   mounted() {

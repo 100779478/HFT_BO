@@ -137,9 +137,6 @@ export function handleSort(col, func) {
     // 更新排序方式和排序字段
     this.pagination.sort = col.order === 'normal' ? 'asc' : col.order;
     this.pagination.sortField = col.order === 'normal' ? '' : col.key;
-
-    // 获取连接状态
-    // this.getChannelStatus();
     func();
 }
 
@@ -225,7 +222,7 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
  */
 
 export function handleExport(url, params, name) {
-    http.postBlob(url, params, (res) => {
+    http.post(url, {...params, responseType: "blob"}, (res) => {
         const blob = res;
         // 创建link标签
         const link = document.createElement("a");
@@ -239,5 +236,6 @@ export function handleExport(url, params, name) {
         link.click();
         // 移除链接元素
         document.body.removeChild(link);
+        Message.success(`导出${name}成功`)
     });
 }

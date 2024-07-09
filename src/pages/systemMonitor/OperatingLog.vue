@@ -242,7 +242,8 @@ export default {
       tableHeight: window.innerHeight - 220,
       tableData: [],
       columns1,
-      pagination
+      pagination,
+      URL
     };
   },
   mounted() {

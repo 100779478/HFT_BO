@@ -159,12 +159,13 @@ export default {
     }
     ,
     handleGetVerifyImg() {
-      http.getBlob(
+      http.get(
           URL.verifyCode,
           (res) => {
             let blob = new Blob([res], {type: "image/png"});
             this.imgUrl = window.URL.createObjectURL(blob);
-          }
+          }, () => {
+          }, 'blob'
       );
     }
     ,

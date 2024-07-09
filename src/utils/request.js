@@ -19,6 +19,7 @@ export const http = {
      * @param {string} url - 请求地址
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
+     * @param responseType 请求类型
      * @returns 请求响应
      */
     get: (
@@ -26,25 +27,16 @@ export const http = {
         thenHandler = () => {
         },
         errorHandler = defaultErrorHandler,
+        responseType
     ) => {
-        return axiosInstance.get(url).then(thenHandler
+        return axiosInstance.get(url, {responseType}).then(thenHandler
         ).catch(errorHandler);
-    },
-
-    getBlob: (
-        url,
-        thenHandler = () => {
-        },
-        errorHandler = defaultErrorHandler,
-    ) => {
-        return axiosInstance
-            .get(url, {responseType: "blob"})
-            .then(thenHandler)
-            .catch(errorHandler);
     },
     /**
      * HTTP POST 请求
      * @param {string} url - 请求地址
+     * @param messageType - 提示消息
+     * @param responseType - 请求类型
      * @param {object} data - 请求body参数
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
@@ -52,24 +44,19 @@ export const http = {
      */
     post: (
         url,
-        data,
+        {messageType, responseType, ...data} = {},
         thenHandler = () => {
         },
         errorHandler = defaultErrorHandler,
     ) => {
-        return axiosInstance.post(url, data).then((res) => {
+        // 创建一个 data 的副本
+        return axiosInstance.post(url, data, {responseType}).then((res) => {
             thenHandler(res)
-            if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+            if (res?.code === '0' && messageType) showNotification(messageType)
         }).catch(errorHandler);
     },
-    uploadFile: (
-        url,
-        file,
-        data = {},
-        thenHandler = () => {
-        },
-        errorHandler = defaultErrorHandler,
-    ) => {
+    uploadFile: (url, file, data = {}, thenHandler = () => {
+    }, errorHandler = defaultErrorHandler,) => {
         const formData = new FormData();
         formData.append("file", file);  // 通过 "file" 字段传递文件
         // 将其他参数加入 FormData
@@ -84,61 +71,59 @@ export const http = {
                     "Content-Type": "multipart/form-data",  // 设置请求头为multipart/form-data
                 },
             })
-            .then((res) => {
-                thenHandler(res)
-                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
-            })
+            .then(thenHandler)
             .catch(errorHandler);
     },
-    postBlob: (
-        url,
-        data,
-        thenHandler = () => {
-        },
-        errorHandler = defaultErrorHandler
-    ) => {
-        return axiosInstance
-            .post(url, data, {
-                responseType: "blob",  // 设置成功响应的数据类型为 blob
-            })
-            .then((res) => {
-                thenHandler(res)
-                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
-            })
-            .catch(error => {
-                // 在这里处理错误，包括获取blob类型的数据
-                if (error.response && error.response.data instanceof Blob) {
-                    console.log("Blob 数据:", error.response.data);
-                    // 尝试将 Blob 数据转换为 JSON
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        try {
-                            const jsonData = JSON.parse(reader.result);
-                            console.log("成功转换为 JSON 数据:", jsonData);
-                            // 从 JSON 数据中取得 errorMessage，并在这里处理
-                            const errorMessage = jsonData.errorMessage;
-                            Message.error(jsonData.errorMessage)
-                            console.log("错误消息:", errorMessage);
-                            // 在这里处理 errorMessage，例如调用自定义错误处理函数
-                            // errorHandler(errorMessage);
-                        } catch (jsonError) {
-                            console.error("转换为 JSON 出错:", jsonError);
-                            // 转换失败，调用自定义的错误处理函数
-                            errorHandler(error);
-                        }
-                    };
-
-                    reader.readAsText(error.response.data);
-                } else {
-                    // 处理其他错误，调用自定义的错误处理函数
-                    return errorHandler(error);
-                }
-            });
-    },
+    // postBlob: (
+    //     url,
+    //     data,
+    //     thenHandler = () => {
+    //     },
+    //     errorHandler = defaultErrorHandler
+    // ) => {
+    //     return axiosInstance
+    //         .post(url, data, {
+    //             responseType: "blob",  // 设置成功响应的数据类型为 blob
+    //         })
+    //         .then((res) => {
+    //             thenHandler(res)
+    //             if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+    //         })
+    //         .catch(error => {
+    //             // 在这里处理错误，包括获取blob类型的数据
+    //             if (error.response && error.response.data instanceof Blob) {
+    //                 console.log("Blob 数据:", error.response.data);
+    //                 // 尝试将 Blob 数据转换为 JSON
+    //                 const reader = new FileReader();
+    //                 reader.onload = () => {
+    //                     try {
+    //                         const jsonData = JSON.parse(reader.result);
+    //                         console.log("成功转换为 JSON 数据:", jsonData);
+    //                         // 从 JSON 数据中取得 errorMessage，并在这里处理
+    //                         const errorMessage = jsonData.errorMessage;
+    //                         Message.error(jsonData.errorMessage)
+    //                         console.log("错误消息:", errorMessage);
+    //                         // 在这里处理 errorMessage，例如调用自定义错误处理函数
+    //                         // errorHandler(errorMessage);
+    //                     } catch (jsonError) {
+    //                         console.error("转换为 JSON 出错:", jsonError);
+    //                         // 转换失败，调用自定义的错误处理函数
+    //                         errorHandler(error);
+    //                     }
+    //                 };
+    //
+    //                 reader.readAsText(error.response.data);
+    //             } else {
+    //                 // 处理其他错误，调用自定义的错误处理函数
+    //                 return errorHandler(error);
+    //             }
+    //         });
+    // },
 
     /**
      * HTTP PUT 请求
      * @param {string} url - 请求地址
+     * @param messageType - 提示消息
      * @param {object} data - 请求body参数
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
@@ -146,20 +131,21 @@ export const http = {
      */
     put: (
         url,
-        data,
+        {messageType, ...data} = {},
         thenHandler = () => {
         },
         errorHandler = defaultErrorHandler,
     ) => {
         return axiosInstance.put(url, data).then((res) => {
             thenHandler(res)
-            if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+            if (res?.code === '0' && messageType) showNotification(messageType)
         }).catch(errorHandler);
     },
 
     /**
      * HTTP DELETE 请求
      * @param {string} url - 请求地址
+     * @param messageType - 提示消息
      * @param {object} data - 请求body参数
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
@@ -167,7 +153,7 @@ export const http = {
      */
     delete: (
         url,
-        data,
+        {messageType, ...data} = {},
         thenHandler = () => {
         },
         errorHandler = defaultErrorHandler
@@ -176,7 +162,7 @@ export const http = {
             .delete(url, data)
             .then((res) => {
                 thenHandler(res)
-                if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+                if (res?.code === '0' && messageType) showNotification(messageType)
             })
             .catch(errorHandler);
     },
