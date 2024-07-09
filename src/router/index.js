@@ -45,14 +45,6 @@ const routes = [
                     title: "主页",
                 },
             },
-            {
-                path: "/home/RuleInterpretation",
-                name: "RuleInterpretation",
-                component: () => import(/* webpackChunkName: "dashboard" */"@/pages/systemManage/RuleInterpretation.vue"),
-                meta: {
-                    title: "RuleInterpretation",
-                },
-            },
             // 用户角色管理
             {
                 path: "/home/manage/user-manage",
