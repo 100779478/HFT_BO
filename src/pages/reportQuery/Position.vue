@@ -223,6 +223,7 @@ export default {
       isNew: true,
       searchParams,
       dateRange,
+      URL
     };
   },
   mounted() {

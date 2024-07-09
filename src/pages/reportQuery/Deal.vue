@@ -331,6 +331,7 @@ export default {
       searchParams,
       dateRange,
       timeRange,
+      URL
     };
   },
   mounted() {

@@ -200,7 +200,8 @@ export default {
       // 当前选中角色客户端权限列表
       currentPcPermissionList: [],
       // 当前选中角色客户端场景列表
-      currentScenesList: []
+      currentScenesList: [],
+      URL
     };
   },
   computed: {

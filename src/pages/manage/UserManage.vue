@@ -376,6 +376,7 @@ export default {
       showAddModal: false,
       allRoleList: [],
       isNew: true,
+      URL
     };
   },
   mounted() {
@@ -501,7 +502,7 @@ export default {
           this.$Message.error("密码强度不足")
         } else {
           this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
-          http.put(URL.userEdit, {...this.userInfo,messageType:'新增成功'}, (res) => {
+          http.put(URL.userEdit, {...this.userInfo, messageType: '新增成功'}, (res) => {
             if (res.code === '0') {
               this.getUserData()
               this.cancel();
@@ -511,7 +512,7 @@ export default {
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
-            {...this.userInfo,messageType:'修改成功'},
+            {...this.userInfo, messageType: '修改成功'},
             (res) => {
               if (res.code === '0') {
                 this.getUserData()
@@ -586,11 +587,11 @@ export default {
         http.post(URL.userReset, {
           customerId: row.customerId,
           password,
-          messageType:'重置成功'
+          messageType: '重置成功'
         });
       }
       if (type === "delete") {
-        http.delete(`${URL.userEdit}/${row.customerId}`,{messageType:'删除成功'});
+        http.delete(`${URL.userEdit}/${row.customerId}`, {messageType: '删除成功'});
       }
       setTimeout(() => {
         this.getUserData();
