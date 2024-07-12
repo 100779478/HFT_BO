@@ -64,7 +64,7 @@
                 placeholder="交易所类型"
             >
               <Option
-                  v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
+                  v-for="item in this.tradeExchangeTypeList"
                   :value="item.code"
                   :key="item.code"
               >{{ item.description }}
@@ -97,7 +97,7 @@
           placeholder="交易所类型"
       >
         <Option
-            v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
+            v-for="item in this.tradeExchangeTypeList"
             :value="item.code"
             :key="item.code"
         >{{ item.description }}
@@ -187,6 +187,8 @@ import {formatDate, getTradeExchangeType, handleExport} from "@/common/common";
 import moment from "moment/moment";
 import InputPassword from "@/components/InputPassword.vue";
 import {cancel} from "@/utils/tableUtils";
+import {mapState} from "vuex";
+import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 
 export default {
   components: {InputPassword},
@@ -221,14 +223,14 @@ export default {
     let list = []
     let holidaySetting = {
       comment: '',
-      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: null,
       startDate: moment().format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD")
     }
     let pagination = {
       startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
-      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: null,
       total: 0,
       pageSize: 20,
       pageNumber: 1,
@@ -245,6 +247,7 @@ export default {
       URL
     };
   },
+  mixins: [tradeExchangeMixin],
   mounted() {
     // 动态高度
     window.addEventListener('resize', () => {
@@ -276,7 +279,7 @@ export default {
         this.showAddModal = true;
         const info = {
           comment: '',
-          exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
+          exchangeCode: this.tradeExchangeTypeList[0].code,
           startDate: moment().format("YYYYMMDD"),
           endDate: moment().format("YYYYMMDD"),
         };
@@ -296,12 +299,12 @@ export default {
         return
       }
       if (isNew) {
-        http.put(URL.holiday, {...this.holidaySetting,messageType:'新增成功'}, () => {
+        http.put(URL.holiday, {...this.holidaySetting, messageType: '新增成功'}, () => {
           this.getHolidayList()
           this.cancel();
         });
       } else {
-        http.post(`${URL.holiday}`, {...this.holidaySetting,messageType:'修改成功'}, () => {
+        http.post(`${URL.holiday}`, {...this.holidaySetting, messageType: '修改成功'}, () => {
               this.getHolidayList()
               this.cancel();
             }
@@ -314,7 +317,7 @@ export default {
         title: `确认删除节假日吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.holiday}/${row.id}`, {messageType:'删除成功'}, () => {
+          http.delete(`${URL.holiday}/${row.id}`, {messageType: '删除成功'}, () => {
             this.getHolidayList();
           });
         },
@@ -329,6 +332,10 @@ export default {
       this.pagination.pageSize = size;
       this.getHolidayList();
     },
+    setExchangeCode(code) {
+      this.holidaySetting.exchangeCode = code;
+      this.pagination.exchangeCode = code;
+    }
   },
 };
 </script>

@@ -83,13 +83,13 @@
               icon="md-person"
           >
           </Avatar>
-          <span style="margin-left: 10px; cursor: pointer"
-          >你好, {{ username }}</span
-          >
-          <DropdownMenu slot="list">
-            <DropdownItem name="changePassword">修改密码</DropdownItem>
-            <DropdownItem name="logout">退出登录</DropdownItem>
-          </DropdownMenu>
+          <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
+          <template v-slot:list>
+            <DropdownMenu>
+              <DropdownItem name="changePassword">修改密码</DropdownItem>
+              <DropdownItem name="logout">退出登录</DropdownItem>
+            </DropdownMenu>
+          </template>
         </Dropdown>
       </div>
     </Header>

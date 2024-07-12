@@ -117,8 +117,8 @@ import HeaderUser from "@/components/header/HeaderUser.vue";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {setUserInfo} from "@/utils/token";
-import router from "@/router";
 import {checkPwdExpiredTime} from "@/common/common";
+import {createEventSource} from "@/server/sse"
 
 export default {
   components: {Bread, MenuList, HeaderUser},
@@ -156,6 +156,9 @@ export default {
         });
       }
     })
+  },
+  mounted() {
+    createEventSource()
   },
   computed: {
     rotateIcon() {

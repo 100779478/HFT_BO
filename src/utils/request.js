@@ -183,11 +183,8 @@ export function defaultErrorHandler(error) {
             return;
         }
         let errorMessage = errorResponse?.errorMessage;
-        if (
-            null == errorMessage ||
-            "" === errorMessage
-        ) {
-            console.log("Error ====> ", errorResponse);
+        if (null == errorMessage || "" === errorMessage) {
+            console.log("ErrorResponse ====> ", errorResponse);
             Message.error(errorResponse?.data?.errorMessage);
             return;
         }
@@ -209,12 +206,9 @@ axiosInstance.interceptors.request.use((config) => {
     ) {
         return config;
     }
-    if (!localStorage.dictionaryList &&
-        (router.currentRoute.name !== 'Login' && router.currentRoute.name !== 'Dashboard' && router.currentRoute.name !== 'Home')
-    ) {
-        http.get(URL.dictionaryList, (res) => {
-            store.commit("dictionary/dictionaryList", res.data);
-        });
+    const excludedRoutes = ['Login', 'Dashboard', 'Home'];
+    if (!localStorage.dictionaryList && (!excludedRoutes.includes(router.currentRoute.name))) {
+        http.get(URL.dictionaryList, res => store.commit("dictionary/dictionaryList", res.data))
     }
     const token = getToken();
     if (!token) {
@@ -265,7 +259,6 @@ axiosInstance.interceptors.response.use(
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
-                    console.log('403 -- forbid')
                     Message.error('连接失败')
                     router.push({name: "Login"});
                     return Promise.reject(error);

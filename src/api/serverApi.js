@@ -1,12 +1,14 @@
 const env = process.env.NODE_ENV;
-const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.50.39:9000"; // 玺子哥
+// const devUrl = "http://58.250.164.226:31004"; //POC
+const devUrl = "http://192.168.77.16:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
 console.log("current env :", env, requestContextPath, proUrl);
 export const URL = {
+    // 长链接SSE
+    SSE: '/sse',
     // 获取加密类型
     encryption: '/config/password-type',
     // 数据字典
@@ -132,7 +134,7 @@ export const URL = {
     // 交易日历列表
     calendarList: "/calendar/list",
     // 交易日历计算
-    calendarCalculate: "/calendar/calculate",
+    calendarCalculate: "/calendar/recalculate",
     // 导出交易日历
     calendarExport: "/calendar/export",
     // 导出周末工作日

@@ -8,6 +8,7 @@ import md5 from "js-md5";
 import 'intro.js/introjs.css';
 import introJs from 'intro.js';
 import {log} from "@/common/log";
+import {closeEventSource} from "@/server/sse";
 
 Vue.config.productionTip = false;
 Vue.use(ViewUI);
@@ -38,6 +39,8 @@ new Vue({
         }
     },
     beforeDestroy() {
+        // 断开连接SSE
+        closeEventSource()
         // 移除 beforeunload 事件监听器
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
     }

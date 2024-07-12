@@ -48,6 +48,24 @@
             <DatePicker type="year" placeholder="选择年份" style="width: 200px" v-model="year"></DatePicker>
           </FormItem>
         </Col>
+        <Col :span="18">
+          <FormItem label="年份">
+            <Select
+                v-model="exchangeCode"
+                class="mr3"
+                style="width: 100px"
+                placeholder="交易所类型"
+            >
+              <Option
+                  v-for="item in this.tradeExchangeTypeList"
+                  :value="item.code"
+                  :key="item.code"
+              >{{ item.description }}
+              </Option
+              >
+            </Select>
+          </FormItem>
+        </Col>
       </Form>
       <div slot="footer">
         <Button type="text" @click="cancel">取消</Button>
@@ -63,7 +81,7 @@
           placeholder="交易所类型"
       >
         <Option
-            v-for="item in this.$store.state.dictionary.dictionaryList.TradeExchangeType"
+            v-for="item in this.tradeExchangeTypeList"
             :value="item.code"
             :key="item.code"
         >{{ item.description }}
@@ -153,6 +171,7 @@ import {URL} from "@/api/serverApi";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport, handleSort} from "@/common/common";
 import moment from "moment";
 import {cancel} from "@/utils/tableUtils";
+import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 
 export default {
   props: ["userId"],
@@ -258,7 +277,7 @@ export default {
       sortField: '',
       startDate: moment().format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
-      exchangeCode: this.$store.state.dictionary.dictionaryList.TradeExchangeType[0].code,
+      exchangeCode: null,
     };
     return {
       loading: true,
@@ -266,11 +285,13 @@ export default {
       tableData: [],
       columns1,
       year: moment().format("YYYY"),
+      exchangeCode: null,
       showAddModal: false,
       pagination,
       URL
     };
   },
+  mixins: [tradeExchangeMixin],
   mounted() {
     // 动态高度
     window.addEventListener('resize', () => {
@@ -309,7 +330,7 @@ export default {
     // 新增弹窗确认按键
     ok() {
       const year = moment(this.year).format('YYYY')
-      http.post(`${URL.calendarCalculate}/${year}`, {messageType:'计算成功'}, (res) => {
+      http.post(`${URL.calendarCalculate}`, {year, exchangeCode: this.exchangeCode, messageType: '计算成功'}, (res) => {
         if (res.code === '0') {
           this.showAddModal = false
           this.getCalendarList();
@@ -324,6 +345,10 @@ export default {
       this.pagination.pageSize = size;
       this.getCalendarList();
     },
+    setExchangeCode(code) {
+      this.exchangeCode = code;
+      this.pagination.exchangeCode = code;
+    }
   },
 };
 </script>
