@@ -517,15 +517,10 @@ export default {
           this.showLabel = true;
           break;
         case 'o':
+        case 'X':
           this.positionLabel = '持仓账户';
           this.showLabel = false;
           break;
-          // case '8':
-          //   this.assetLabel = '资产账户';
-          //   this.positionLabel = '内证';
-          //   this.foundationLabel = '基金账户';
-          //   this.traderLabel = '交易员编码';
-          //   break;
           // case '5':
           //   this.assetLabel = '资产单元';
           //   this.positionLabel = '投资组合';

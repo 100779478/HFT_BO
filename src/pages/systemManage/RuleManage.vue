@@ -242,7 +242,7 @@
             <DropdownMenu slot="list">
               <DropdownItem name="param">策略参数</DropdownItem>
               <DropdownItem name="dele" style="color: #ed4014"
-              >删除用户
+              >删除策略
               </DropdownItem
               >
             </DropdownMenu>

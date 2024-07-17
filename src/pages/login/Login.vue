@@ -127,7 +127,6 @@ export default {
     login(response) {
       this.closeLoading();
       let token = response.data.token;
-
       if (!token) {
         this.passwordIncorrectMessage = response.data.message
         this.handleGetVerifyImg()

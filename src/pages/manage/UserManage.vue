@@ -83,7 +83,8 @@
             <Col :span="18">
               <form autocomplete="off">
                 <FormItem label="密码" prop="password" v-show="isNew">
-                  <InputPassword @inputPass='onchangePassword' @getStrength="getPwdStrength" v-if="showAddModal"
+                  <InputPassword v-if="showAddModal" :value="this.userInfo.password"
+                                 @inputPass='onchangePassword' @getStrength="getPwdStrength"
                                  :showPwdCheck="true"/>
                 </FormItem>
               </form>
@@ -347,7 +348,7 @@ export default {
       showPwdModal: false,
       row: '',
       strength: '0',
-      password: "",
+      resetPassword: "",
       confirmPassword: "",
       activeList,
       loading: true,
@@ -493,6 +494,7 @@ export default {
         this.$Message.warning('请填写用户账号')
       }
       if (isNew) {
+        console.log('pw:',this.userInfo.password)
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
           this.$Message.warning('密码不允许包含空格')
@@ -560,7 +562,7 @@ export default {
     },
     // 更多操作
     onPasswordChange(val) {
-      this.password = val;
+      this.resetPassword = val;
     },
     onConfirmPasswordChange(val) {
       this.confirmPassword = val;
@@ -569,9 +571,9 @@ export default {
       this.showPwdModal = false
     },
     sureModifyImg() {
-      if (this.password === '' || this.confirmPassword === '') {
+      if (this.resetPassword === '' || this.confirmPassword === '') {
         this.$Message.error('密码不能为空')
-      } else if (this.password !== this.confirmPassword) {
+      } else if (this.resetPassword !== this.confirmPassword) {
         this.$Message.error('两次密码输入不一致')
       } else if (this.strength < 3) {
         this.$Message.warning('密码强度不足')
@@ -582,7 +584,7 @@ export default {
     },
     moreOperations(row, type) {
       const passType = sessionStorage.getItem('passType')
-      const password = encryptionModePassword(passType, this.password);
+      const password = encryptionModePassword(passType, this.resetPassword);
       if (type === "resetPassword") {
         http.post(URL.userReset, {
           customerId: row.customerId,
@@ -601,7 +603,7 @@ export default {
       switch (name) {
         case "resetPassword":
           this.showPwdModal = true
-          this.password = ''
+          this.resetPassword = ''
           this.confirmPassword = ''
           this.row = row
           break;
@@ -621,13 +623,6 @@ export default {
     // 刷新
     refresh() {
       this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   customerId: "",
-      //   actives: this.pagination.actives
-      // };
       this.getUserData();
     },
   },

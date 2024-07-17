@@ -148,9 +148,9 @@ input:-webkit-autofill {
                     v-model="channelInfo.password"
                     type="password"
                     placeholder="请输入密码"
+                    autocomplete="new-password"
                     :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
                 ></Input>
-
               </div>
             </FormItem>
           </Col>
@@ -245,7 +245,7 @@ export default {
       },
       {
         title: "通道类型",
-        key: "terminalTypeName",
+        key: "channelTypeName",
         minWidth: 150,
         resizable: true,
         width: null,
@@ -443,12 +443,12 @@ export default {
         return;
       }
       if (isNew) {
-        http.put(URL.channel, {...this.channelInfo,messageType:'新增成功'}, () => {
+        http.put(URL.channel, {...this.channelInfo, messageType: '新增成功'}, () => {
           this.getChannelData();
           this.cancel();
         });
       } else {
-        http.post(URL.channel, {...this.channelInfo,messageType:'修改成功'}, () => {
+        http.post(URL.channel, {...this.channelInfo, messageType: '修改成功'}, () => {
           this.getChannelData();
           this.cancel();
         });
@@ -460,7 +460,7 @@ export default {
         title: `确认删除实体账户吗？`,
         content: "<p>此操作不可逆</p>",
         onOk: () => {
-          http.delete(`${URL.channel}/${row.channelId}`, {messageType:'删除成功'}, () => {
+          http.delete(`${URL.channel}/${row.channelId}`, {messageType: '删除成功'}, () => {
             this.getChannelData();
           });
         },

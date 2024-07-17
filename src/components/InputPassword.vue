@@ -4,25 +4,29 @@
       <!-- 下面的 Input 覆盖上面的 Input -->
       <form autocomplete="off">
         <Input
+            v-model="inputValue"
             @on-focus="handleFocus"
             @on-blur="handleBlur"
             ref="password"
-            v-model="inputValue"
             type="text"
             placeholder="12位大小写字母+数字+特殊字符"
             :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
             @on-change="handleInput"
+            autocomplete="new-password"
         ></Input>
       </form>
       <!-- 上面的 Input 隐藏 -->
-      <Input
-          @on-focus="handleFocus2"
-          v-model="inputValue"
-          type="password"
-          placeholder="12位大小写字母+数字+特殊字符"
-          :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
-          @on-change="handleInput"
-      ></Input>
+      <form autocomplete="off">
+        <Input
+            v-model="inputValue"
+            @on-focus="handleFocus2"
+            type="password"
+            placeholder="12位大小写字母+数字+特殊字符"
+            :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
+            @on-change="handleInput"
+            autocomplete="new-password"
+        ></Input>
+      </form>
       <div
           v-if="showPwdCheck"
           class="pwd"
@@ -92,7 +96,7 @@ export default {
       this.typeInput = false
     },
     // (防抖)当输入框内容改变时触发
-    handleInput: debounce(function (event) {
+    handleInput(event) {
       if (this.showPwdCheck) {
         const val = encryptionModePassword(sessionStorage.getItem('passType'), event.target.value);
         http.get(`${URL.pwdStrength}?password=${val}`, (res) => {
@@ -102,7 +106,7 @@ export default {
       }
       this.inputValue = event.target.value;
       this.$emit('inputPass', this.inputValue);
-    }, 100)
+    }
   },
 }
 </script>

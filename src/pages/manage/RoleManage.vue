@@ -3,7 +3,7 @@
 
 .modal {
   height: 650px;
-  overflow: scroll;
+  //overflow: scroll;
   overflow-x: unset;
   margin-right: -60px;
   padding-right: 30px;
@@ -89,12 +89,16 @@
             </Form>
             <Tabs :animated="false" v-model="activeTab">
               <TabPane label="web管理权限" name="web">
-                <RolePermissionComponent v-if="showAddModal" :permissionList="permissionList"
-                                         :currentPermissionList="currentPermissionList"/>
+                <div style="height: 540px;overflow-y: scroll">
+                  <RolePermissionComponent v-if="showAddModal" :permissionList="permissionList"
+                                           :currentPermissionList="currentPermissionList"/>
+                </div>
               </TabPane>
               <TabPane label="客户端管理权限" name="client">
-                <PcRoleManage v-if="showAddModal" :currentPcList="currentPcPermissionList"
-                              :currentScenesList="currentScenesList"/>
+                <div style="height: 540px;overflow-y: scroll">
+                  <PcRoleManage v-if="showAddModal" :currentPcList="currentPcPermissionList"
+                                :currentScenesList="currentScenesList"/>
+                </div>
               </TabPane>
             </Tabs>
           </div>

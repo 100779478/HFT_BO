@@ -166,14 +166,11 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import moment from "moment/moment";
-import InputPassword from "@/components/InputPassword.vue";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport} from "@/common/common";
 import {cancel} from "@/utils/tableUtils";
-import {mapState} from "vuex";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 
 export default {
-  components: {InputPassword},
   data() {
     let columns1 = [
       {
