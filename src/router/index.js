@@ -103,6 +103,22 @@ const routes = [
                     title: "系统管理/权限管理",
                 },
             },
+            {
+                path: "/home/sys-manage/rule-vetting",
+                name: "RuleVetting",
+                component: () => import(/* webpackChunkName: "auth-manage" */ "@/pages/systemManage/RuleVetting.vue"),
+                meta: {
+                    title: "系统管理/策略审批管理",
+                },
+            },
+            {
+                path: "/home/sys-manage/my-rule-vetting",
+                name: "MyRuleVetting",
+                component: () => import(/* webpackChunkName: "auth-manage" */ "@/pages/systemManage/MyRuleVetting.vue"),
+                meta: {
+                    title: "系统管理/我的审批",
+                },
+            },
             // 系统监控
             {
                 path: "/home/sys-monitor/channel-status",

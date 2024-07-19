@@ -1,7 +1,8 @@
 const env = process.env.NODE_ENV;
-const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
-const proUrl = location.origin;
+// const devUrl = "http://58.250.164.226:31004"; //POC
+const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+// const proUrl = location.origin;
+const proUrl = "http://192.168.77.16:9000";
 //服务器
 export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
@@ -145,4 +146,28 @@ export const URL = {
     scenes: "/scenes",
     // 获取所有客户端权限列表
     clientPermission: "/client-permission",
+    // 获取策略审批单列表
+    vetting: '/rule-vetting/list',
+    // 获取我的策略审批单列表
+    myVetting: '/rule-vetting/list/my',
+    // 撤销策略审批单
+    cancelVetting: '/rule-vetting/cancel',
+    // 同意策略审批单
+    agreeVetting: '/rule-vetting/agree',
+    // 拒绝策略审批单
+    refuseVetting: '/rule-vetting/refuse',
+    // 上传策略文件
+    uploadVetting: '/rule-vetting/upload',
+    // 更新策略审批单信息
+    updateVetting: '/rule-vetting',
+    // 获取生产所有环境列表，发送端
+    envAllProduct: '/env/all/product-producer',
+    // 一键上传策略至生产环境，发送端
+    ruleUploadProduct: '/rule/upload-product',
+    // 下载策略审批单中的策略文件，一般是ZIP包
+    vettingDownload: '/rule-vetting/download',
+    // 导出策略审批单列表
+    vettingExport: '/rule-vetting/export',
+    // 导出我的策略审批单列表
+    myVettingExport: '/rule-vetting/export/my',
 };

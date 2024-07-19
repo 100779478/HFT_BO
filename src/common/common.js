@@ -126,6 +126,11 @@ export function getTradeExchangeType(code) {
     return findDictionaryList('TradeExchangeType', code)
 }
 
+// 策略审批单状态
+export function getRuleVettingStatus(code) {
+    return findDictionaryList('RuleVettingStatus', code)
+}
+
 // 密码强度校验类型
 export function getPasswordStrength(code) {
     return findDictionaryList('PasswordStrength', code)
