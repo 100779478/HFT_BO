@@ -444,7 +444,7 @@ export default {
           break;
         case "dele":
           this.$Modal.confirm({
-            title: `确认删除用户吗？`,
+            title: `确认删除策略吗？`,
             content: "<p>此操作不可逆</p>",
             onOk: () => {
               this.deleteStrategy(row);
