@@ -174,7 +174,7 @@
                   <FormItem label="">
                     <input type="file" id="fileInput" style="display: none;"
                            @change="handleFileChange($event,fileType)">
-                    <Button v-show="userStrategyInfo.ruleType==='2'" @click="uploadFile('strategy')" class="btn"
+                    <Button v-show="userStrategyInfo.ruleType==='8'" @click="uploadFile('strategy')" class="btn"
                             style="margin-right: 5px"
                             type="success">
                       <Icon type="md-cloud-upload"/>
@@ -606,7 +606,7 @@ export default {
     }
     ,
     handleShowParamsTable(e) {
-      this.chooseRule = e === '2';
+      this.chooseRule = e === '8';
       switch (e) {
           // 0 银行间双边做市策略-->./Rules/libMM_strategy.so
           // 1 银行间指示性报价策略->./Rules/indicative_strategy.so
@@ -651,7 +651,7 @@ export default {
         };
         Object.assign(this.userStrategyInfo, info);
       } else {
-        this.chooseRule = row.ruleType === '2'
+        this.chooseRule = row.ruleType === '8'
         this.isNew = false;
         this.showAddModal = true;
         this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
