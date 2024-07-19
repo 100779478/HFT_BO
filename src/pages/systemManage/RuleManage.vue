@@ -185,6 +185,7 @@
                         type="ios-checkmark-circle"
                         color="green"
                         size="23"/>
+                    <div>{{ this.fileName }}</div>
                   </FormItem>
                 </Col>
               </Form>
@@ -378,6 +379,7 @@ export default {
     };
     return {
       loading: true,
+      fileName: "",
       fileType: '',
       rulePath: '',
       uploadFlag: false,
@@ -499,6 +501,7 @@ export default {
           http.uploadFile(url, file, {},
               (response) => {
                 this.$Message.success('上传成功');
+                this.fileName = file.name;
                 // 处理上传成功后的逻辑
               },
               (error) => {
@@ -607,6 +610,7 @@ export default {
     ,
     handleShowParamsTable(e) {
       this.chooseRule = e === '8';
+      this.fileName = ""
       switch (e) {
           // 0 银行间双边做市策略-->./Rules/libMM_strategy.so
           // 1 银行间指示性报价策略->./Rules/indicative_strategy.so
