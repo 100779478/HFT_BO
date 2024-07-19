@@ -1,5 +1,5 @@
 export const setLocalDictionaryList = (state) => {
-    const { dictionaryList } = state;
+    const {dictionaryList} = state;
     localStorage.dictionaryList = JSON.stringify(dictionaryList);
 };
 
@@ -26,6 +26,7 @@ export const getLocalDictionaryList = () => {
             OperatingLogType: [],
             DayOfWeek: [],
             TradeExchangeType: [],
+            RuleVettingStatus: []
         };
     }
 };

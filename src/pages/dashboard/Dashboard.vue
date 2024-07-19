@@ -55,7 +55,7 @@ canvas {
 
 <template>
   <div class="bck">
-<!--    <canvas ref="canvas"></canvas>-->
+    <!--    <canvas ref="canvas"></canvas>-->
     <h1 class="title shine-span">欢迎使用本系统</h1>
     <div class="curEnv title" id="currentEnv">
       当前环境为：{{ currentEnv }}
@@ -74,7 +74,7 @@ export default {
   computed: {
     currentEnv() {
       return this.$store.state.environment.currentEnv || '未选择';
-    }
+    },
   },
   methods: {
     initCanvas() {

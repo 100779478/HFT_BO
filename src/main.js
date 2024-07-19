@@ -10,11 +10,21 @@ import introJs from 'intro.js';
 import {log} from "@/common/log";
 import {closeEventSource} from "@/server/sse";
 
+// // 获取当前脚本的路径
+// const scriptElement = document.currentScript || (function () {
+//     const scripts = document.getElementsByTagName('data-src');
+//     return scripts[scripts.length - 1];
+// })();
+//
+// console.log('Current script src:', scriptElement.src);
+
+// Attach config to Vue prototype
 Vue.config.productionTip = false;
 Vue.use(ViewUI);
 Vue.prototype.$introJs = introJs;
 Vue.prototype.$md5 = md5;
 Vue.prototype.$log = log;
+
 new Vue({
     render: (h) => h(App),
     router: Router,
@@ -45,3 +55,5 @@ new Vue({
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
     }
 }).$mount("#app");
+
+

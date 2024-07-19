@@ -494,7 +494,6 @@ export default {
         this.$Message.warning('请填写用户账号')
       }
       if (isNew) {
-        console.log('pw:',this.userInfo.password)
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
           this.$Message.warning('密码不允许包含空格')
@@ -503,8 +502,9 @@ export default {
         } else if (this.pwdStrengthLevel < 3) {
           this.$Message.error("密码强度不足")
         } else {
-          this.userInfo.password = encryptionModePassword(passType, this.userInfo.password);
-          http.put(URL.userEdit, {...this.userInfo, messageType: '新增成功'}, (res) => {
+          const encryptedPassword = encryptionModePassword(passType, this.userInfo.password);
+          console.log('pw:', this.userInfo.password, encryptedPassword)
+          http.put(URL.userEdit, {...this.userInfo, password: encryptedPassword, messageType: '新增成功'}, (res) => {
             if (res.code === '0') {
               this.getUserData()
               this.cancel();
