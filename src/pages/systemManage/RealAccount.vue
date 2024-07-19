@@ -306,13 +306,10 @@ export default {
         channelId: [{required: true, message: "请输入通道ID"}],
         apiType: [{required: true, message: "请选择外部接口类型"}],
         terminalType: [{required: true, message: "请选择通道类型"}],
-        // userId: [{ required: true, message: "请输入交易账号" }],
-        // password: [{ required: true, message: "请输入密码" }],
-        // active: [{ required: false, message: "请选择状态" }],
       },
       channelInfo: {
         channelId: "",
-        apiType: [],
+        apiType: "",
         terminalType: "",
         active: true,
         password: "",
@@ -409,7 +406,7 @@ export default {
         this.isNew = true
         this.showAddModal = true
         this.showAccountAndPwd = true
-        const info = {
+        this.channelInfo = {
           channelId: "",
           apiType: "",
           terminalType: "",
@@ -417,8 +414,7 @@ export default {
           password: "",
           userId: "",
           id: "",
-        };
-        Object.assign(this.channelInfo, info);
+        }
       } else {
         this.isNew = false;
         this.showAddModal = true;
