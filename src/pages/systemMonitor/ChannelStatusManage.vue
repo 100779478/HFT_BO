@@ -51,8 +51,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getChannelStatus)"
+            @on-change="e=>handleChangePage('pageNumber',e,getChannelStatus)"
         />
       </div>
     </template>
@@ -62,15 +62,12 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getApiType, getChannelConnectStatus, handleSort, handleExport} from "@/common/common";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins:[tableMixin],
   data() {
     let columns1 = [
-      // {
-      //   title: "环境ID标识",
-      //   key: "id",
-      //   minWidth: 80,
-      // },
       {
         title: "通道代码",
         key: "channelId",
@@ -91,16 +88,6 @@ export default {
           return h("span", result.description);
         },
       },
-      // {
-      //   title: "用途类型",
-      //   key: "comment",
-      //   minWidth: 100,
-      // },
-      // {
-      //   title: "用户代码",
-      //   key: "comment",
-      //   minWidth: 100,
-      // },
       {
         title: "服务运行时状态",
         key: "traderRunType",
@@ -129,11 +116,6 @@ export default {
           return h("span", [iconStatus, result.description]);
         },
       },
-      // {
-      //   title: "交易员当前连接是否活跃",
-      //   key: "active",
-      //   minWidth: 100,
-      // },
       {
         title: "更新时间",
         key: "updateTime",
@@ -150,19 +132,7 @@ export default {
         sortable: 'custom',
         width: null,
       },
-      // {
-      //   title: "更新信息",
-      //   key: "comment",
-      //   minWidth: 100,
-      // },
     ];
-    let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: ''
-    };
     const timeOptions = [ // 下拉框选项
       {value: 5, label: '5秒'},
       {value: 10, label: '10秒'},
@@ -172,20 +142,11 @@ export default {
     return {
       queryFrequency: 10,
       interval: null,
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
-      pagination,
-      URL,
       timeOptions
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getChannelStatus();
     this.handleSetQueryTime(this.queryFrequency)
   },
@@ -205,6 +166,7 @@ export default {
     },
     // 获取状态连接列表
     getChannelStatus() {
+      this.loading = true;
       http.post(`${URL.channelStatus}`, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
@@ -215,15 +177,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.loading = true;
-      this.getChannelStatus();
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getChannelStatus();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
       this.getChannelStatus();
     },
   },

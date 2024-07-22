@@ -126,7 +126,7 @@
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteRole(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.role,row.id,'角色',getRoleData)" class="table-operate">
             删除
           </div>
         </div>
@@ -141,8 +141,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getRoleData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getRoleData)"
         />
       </div>
     </template>
@@ -154,12 +154,13 @@ import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
 import RolePermissionComponent from "@/pages/manage/RoleManage/RolePermissionComponent.vue";
 import PcRoleManage from "@/pages/manage/RoleManage/PcRoleManage.vue";
-import {cancel} from "@/utils/tableUtils";
 import {mapState} from "vuex";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   components: {PcRoleManage, RolePermissionComponent},
   props: ["userId"],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -176,28 +177,19 @@ export default {
       },
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       roleName: "",
-      sort: 'asc',
-      sortField: ''
     };
     return {
       activeTab: 'web',
-      loading: true,
       pagination,
-      tableHeight: window.innerHeight - 220,
       roleInfo: {
         name: "",
         id: null,
         permissions: [],
       },
-      tableData: [],
       columns1,
       showAddModal: false,
       isNew: true,
-
       //权限列表
       permissionList: [],
       // 当前用户权限列表
@@ -206,7 +198,6 @@ export default {
       currentPcPermissionList: [],
       // 当前选中角色客户端场景列表
       currentScenesList: [],
-      URL
     };
   },
   computed: {
@@ -217,23 +208,15 @@ export default {
     })
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getRoleData();
     this.getPermissionData();
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     handleExport,
     handleSort,
     // 获取角色列表
     getRoleData() {
+      this.loading = true;
       http.post(URL.roleList, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
@@ -251,27 +234,6 @@ export default {
     // 角色名称模糊查询
     handleSearch() {
       this.pagination.pageNumber = 1;
-      this.getRoleData();
-    },
-    // 删除角色
-    deleteRole(row) {
-      this.$Modal.confirm({
-        title: `确认删除角色吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.role}/${row.id}`, {messageType: '删除成功'}, (res) => {
-            this.getRoleData();
-          });
-        },
-        okText: "删除",
-      });
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getRoleData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
       this.getRoleData();
     },
     // 角色弹窗
@@ -302,22 +264,14 @@ export default {
       this.roleInfo.permissions = this.rolePermissionList || []
       this.roleInfo.clientPermissions = this.pcPermissionList || []
       this.roleInfo.scenesWinTypes = this.scenesList || []
-      if (isNew) {
-        http.put(URL.role, {...this.roleInfo, messageType: '新增成功'}, () => {
-          this.getRoleData()
-          this.cancel();
-        });
-      } else {
-        http.post(`${URL.role}/${this.roleInfo.id}`, {...this.roleInfo, messageType: '修改成功'}, () => {
-          this.getRoleData()
-          this.cancel();
-        });
-      }
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getRoleData();
+      const config = {
+        method: isNew ? 'put' : 'post',
+        msg: isNew ? '新增成功' : '修改成功'
+      };
+      http[config.method](URL.role, {...this.roleInfo, messageType: config.msg}, () => {
+        this.getRoleData()
+        this.cancel();
+      });
     },
   },
 };

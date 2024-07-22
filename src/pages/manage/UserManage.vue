@@ -167,7 +167,7 @@
             <Dropdown
                 trigger="hover"
                 transfer
-                @on-click="doOperate($event, row, index)"
+                @on-click="doOperate($event, row)"
             >
               <a style="color: #02aff1; font-size: 14px">
                 {{ "更多" }}
@@ -196,8 +196,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getUserData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getUserData)"
         />
       </div>
     </template>
@@ -210,17 +210,12 @@ import {getUserInfo} from "@/utils/token";
 import {encryptionModePassword, getUserType, handleExport, handleSort} from "@/common/common";
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
-import index from "vuex";
-import {cancel} from "@/utils/tableUtils";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
-  computed: {
-    index() {
-      return index
-    }
-  },
   components: {InputPassword, ResetPwdModal},
   props: ["userId"],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -326,13 +321,8 @@ export default {
       },
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       customerName: "",
       actives: [],
-      sort: 'asc',
-      sortField: ''
     };
     const activeList = [
       {
@@ -351,7 +341,6 @@ export default {
       resetPassword: "",
       confirmPassword: "",
       activeList,
-      loading: true,
       pwdStrengthLevel: '0',
       tableHeight: window.innerHeight - 220,
       userValidRules: {
@@ -371,30 +360,18 @@ export default {
         roleStr: "",
         userType: "",
       },
-      tableData: [],
       columns1,
       pagination,
       showAddModal: false,
       allRoleList: [],
       isNew: true,
-      URL
     };
   },
   mounted() {
-    // 动态高度
     this.getUserData();
     this.getAllRoleData();
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
-  },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
   },
   methods: {
-    cancel,
     handleExport,
     onchangePassword(e) {
       this.userInfo.password = e
@@ -406,6 +383,7 @@ export default {
     handleSort,
     // 获取用户列表
     getUserData() {
+      this.loading = true;
       http.post(URL.user, this.pagination, this.getUserResponse);
     },
     // 获取所有角色列表
@@ -433,14 +411,6 @@ export default {
     },
     getAllRoleResponse(res) {
       this.allRoleList = res.data;
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getUserData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getUserData();
     },
     // 修改用户密码获取强度
     getStrengthLevel(e) {
@@ -592,9 +562,6 @@ export default {
           messageType: '重置成功'
         });
       }
-      if (type === "delete") {
-        http.delete(`${URL.userEdit}/${row.customerId}`, {messageType: '删除成功'});
-      }
       setTimeout(() => {
         this.getUserData();
       }, 200);
@@ -608,22 +575,10 @@ export default {
           this.row = row
           break;
         case "dele":
-          this.$Modal.confirm({
-            title: `确认删除用户吗？`,
-            content: "<p>此操作不可逆</p>",
-            onOk: () => {
-              this.moreOperations(row, "delete");
-            },
-            okText: "删除",
-          });
+          this.deleteRow(URL.userEdit, row.customerId, '用户', this.getUserData)
           break;
         default:
       }
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getUserData();
     },
   },
 };

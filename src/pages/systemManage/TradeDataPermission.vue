@@ -109,7 +109,7 @@
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.tradeData,row.managerId,'管理员',getTradeData)" class="table-operate">
             删除
           </div>
         </div>
@@ -124,9 +124,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
-            @on-sort-change="e=>handleSort(e,this.getTradeData)"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getTradeData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getTradeData)"
         />
       </div>
     </template>
@@ -137,10 +136,11 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
 import {Message} from "view-design";
-import {cancel} from "@/utils/tableUtils";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -170,12 +170,7 @@ export default {
       {title: "操作", slot: "operator", width: null, minWidth: 100,},
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       managerName: "",
-      sort: 'asc',
-      sortField: ''
     };
     let tradeValidRules = {
       managerId: [{required: true, message: "请选择管理员代码"}],
@@ -183,9 +178,7 @@ export default {
     }
     return {
       loading3: false,
-      loading: true,
       tradeValidRules,
-      tableHeight: window.innerHeight - 220,
       tradeInfo: {
         managerId: "",
         traderIds: []
@@ -194,28 +187,17 @@ export default {
       originalCustomerList: [], // 原始完整列表
       searchMgId: "",
       searchTdId: "",
-      tableData: [],
       columns1,
       showAddModal: false,
       isNew: true,
       pagination,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getTradeData();
     this.getCustomerList()
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     handleExport,
     handleSort,
     remoteMethod3(query) {
@@ -234,25 +216,13 @@ export default {
     },
     // 获取交易数据权限列表
     getTradeData() {
+      this.loading = true;
       http.post(`${URL.tradeDataList}`, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
         }, 200);
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
-      });
-    },
-    // 删除环境
-    deleteEnvironment(row) {
-      this.$Modal.confirm({
-        title: `确认删除管理员吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.tradeData}/${row.managerId}`, {messageType: '删除成功'}, () => {
-            this.getTradeData();
-          });
-        },
-        okText: "删除",
       });
     },
     // 用户弹窗
@@ -283,39 +253,17 @@ export default {
         Message.error('请选择交易员')
         return
       }
-      if (isNew) {
-        http.put(URL.tradeData,
-            {...this.tradeInfo, messageType: '新增成功'},
-            () => {
-              this.getTradeData()
-              this.cancel();
-            });
-      } else {
-        http.post(
-            `${URL.tradeData}`,
-            {...this.tradeInfo, messageType: '修改成功'},
-            () => {
-              this.getTradeData()
-              this.cancel();
-            }
-        );
-      }
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getTradeData();
+      const config = {
+        method: isNew ? 'put' : 'post',
+        msg: isNew ? '新增成功' : '修改成功'
+      };
+      http[config.method](URL.tradeData, {...this.tradeInfo, messageType: config.msg}, () => {
+        this.getTradeData()
+        this.cancel();
+      });
     },
     handleSearch() {
       this.getTradeData()
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getTradeData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getTradeData();
     },
     // 渲染交易员名称
     renderTradeNames(h, params) {

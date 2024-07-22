@@ -97,7 +97,7 @@
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.deleteEnvironment,row.id,'环境',getEnvironmentData)" class="table-operate">
             删除
           </div>
         </div>
@@ -112,9 +112,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
-            @on-sort-change="e=>handleSort(e,this.getEnvironmentData)"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getEnvironmentData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getEnvironmentData)"
         />
       </div>
     </template>
@@ -124,10 +123,11 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
-import {cancel} from "@/utils/tableUtils";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -180,23 +180,14 @@ export default {
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getEnvironmentData();
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     handleExport,
     handleSort,
     // 获取环境列表
     getEnvironmentData() {
-      // let id = value || "";
+      this.loading = true;
       http.post(`${URL.environment}`, this.pagination, (res) => {
         this.$emit("child-event", res.data.dataList);
         setTimeout(() => {
@@ -204,19 +195,6 @@ export default {
         }, 200);
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
-      });
-    },
-    // 删除环境
-    deleteEnvironment(row) {
-      this.$Modal.confirm({
-        title: `确认删除环境吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.deleteEnvironment}/${row.id}`, {messageType:'删除环境成功'}, () => {
-            this.getEnvironmentData();
-          });
-        },
-        okText: "删除",
       });
     },
     // 用户弹窗
@@ -238,37 +216,17 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      if (isNew) {
-        http.put(URL.addEnvironment, {...this.environmentInfo,messageType:'新增成功'}, () => {
-          this.getEnvironmentData()
-          this.cancel();
-        });
-      } else {
-        http.post(
-            `${URL.modificationEnvironment}`,
-            {...this.environmentInfo,messageType:'修改成功'},
-            () => {
-              this.getEnvironmentData()
-              this.cancel();
-            }
-        );
-      }
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getEnvironmentData();
+      const config = {
+        method: isNew ? 'put' : 'post',
+        msg: isNew ? '新增成功' : '修改成功'
+      };
+      http[config.method](URL.editEnvironment, {...this.environmentInfo, messageType: config.msg}, () => {
+        this.getEnvironmentData()
+        this.cancel();
+      });
     },
     handleSearch() {
       this.getEnvironmentData()
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getEnvironmentData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getEnvironmentData();
     },
   },
 };

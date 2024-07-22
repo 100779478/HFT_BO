@@ -1,8 +1,7 @@
 const env = process.env.NODE_ENV;
-// const devUrl = "http://58.250.164.226:31004"; //POC
-const devUrl = "http://192.168.77.16:9000"; // 玺子哥
-// const proUrl = location.origin;
-const proUrl = "http://192.168.77.16:9000";
+const devUrl = "http://58.250.164.226:31004"; //POC
+// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+const proUrl = location.origin;
 //服务器
 export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
@@ -58,12 +57,10 @@ export const URL = {
     setEnvironment: "/env/set",
     // 删除环境
     deleteEnvironment: "/env",
-    // 新增环境
-    addEnvironment: "/env",
     // 获取当前环境
     environmentCurrent: "/env/current",
     // 修改环境
-    modificationEnvironment: "/env",
+    editEnvironment: "/env",
     // 获取所有权限列表
     permission: "/permission",
     // 修改通道、添加通道

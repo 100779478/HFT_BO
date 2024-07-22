@@ -10,16 +10,6 @@
 <template>
   <div>
     <Row style="margin: 10px" justify="space-between" align="top">
-      <!-- <Col span="" class="mr3">
-        <Button type="success" @click="refresh()"
-          ><Icon type="md-refresh" /> 刷新</Button
-        >
-      </Col> -->
-      <!-- <Col span="" offset="21">
-        <Button type="primary" @click="refresh()"
-          ><Icon type="md-search" /> 查询</Button
-        >
-      </Col> -->
       <Col
           span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
@@ -129,8 +119,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getDealData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getDealData)"
         />
       </div>
     </template>
@@ -141,8 +131,10 @@ import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getDirection, getOffsetType, getHedgeType, handleSort, handleExport} from "@/common/common";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -302,13 +294,6 @@ export default {
         width: null,
       },
     ];
-    let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: ''
-    };
     let searchParams = {
       orderSysId: "",
       ruleId: "",
@@ -322,33 +307,21 @@ export default {
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
     return {
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
-      pagination,
       isNew: true,
       searchParams,
       dateRange,
       timeRange,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getDealData();
-  },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
   },
   methods: {
     handleSort,
     // 获取订单列表
     getDealData() {
+      this.loading = true;
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
@@ -372,15 +345,6 @@ export default {
         this.tableData = res.data.dataList;
       });
     },
-
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getDealData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getDealData();
-    },
     // 查询
     handleSearch() {
       this.pagination.pageNumber = 1;
@@ -388,12 +352,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      // };
       this.getDealData();
     },
     // 导出列表
