@@ -136,15 +136,7 @@
         ref="table"
         border
         @on-sort-change="e=>handleSort(e,this.getCalendarList)"
-    >
-      <template v-slot:operator="{ row }">
-        <div @click.stop style="display: flex; justify-content: flex-start">
-          <div @click="() => modalUser('modify', row)" class="table-operate">
-            编辑
-          </div>
-        </div>
-      </template>
-    </Table>
+    ></Table>
     <template>
       <div class="page-bottom">
         <Page
@@ -264,7 +256,6 @@ export default {
         sortable: 'custom',
         width: null,
       },
-      {title: "操作", slot: "operator", width: null, minWidth: 100,},
     ];
     let pagination = {
       total: 0,
