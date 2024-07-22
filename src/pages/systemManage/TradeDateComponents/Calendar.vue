@@ -136,18 +136,7 @@
         ref="table"
         border
         @on-sort-change="e=>handleSort(e,this.getCalendarList)"
-    >
-      <template v-slot:operator="{ row }">
-        <div @click.stop style="display: flex; justify-content: flex-start">
-          <div @click="() => modalUser('modify', row)" class="table-operate">
-            编辑
-          </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
-            删除
-          </div>
-        </div>
-      </template>
-    </Table>
+    ></Table>
     <template>
       <div class="page-bottom">
         <Page
@@ -157,9 +146,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
-            @on-sort-change="e=>handleSort(e,this.getCalendarList)"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getCalendarList)"
+            @on-change="e=>handleChangePage('pageNumber',e,getCalendarList)"
         />
       </div>
     </template>
@@ -170,11 +158,12 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport, handleSort} from "@/common/common";
 import moment from "moment";
-import {cancel} from "@/utils/tableUtils";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
+  mixins: [tradeExchangeMixin, tableMixin],
   data() {
     let columns1 = [
       {
@@ -267,44 +256,24 @@ export default {
         sortable: 'custom',
         width: null,
       },
-      {title: "操作", slot: "operator", width: null, minWidth: 100,},
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: '',
       startDate: moment().format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
       exchangeCode: null,
     };
     return {
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
       year: moment().format("YYYY"),
       exchangeCode: null,
       showAddModal: false,
       pagination,
-      URL
     };
   },
-  mixins: [tradeExchangeMixin],
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getCalendarList();
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     // 导出交易日历
     handleExport,
     // 排序
@@ -336,14 +305,6 @@ export default {
           this.getCalendarList();
         }
       })
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getCalendarList();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getCalendarList();
     },
     setExchangeCode(code) {
       this.exchangeCode = code;

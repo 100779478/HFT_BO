@@ -107,13 +107,15 @@
                 </Col>
                 <Col :span="18">
                   <FormItem label="策略文件存储位置" prop="rulePath">
-                    <Input
-                        disabled
-                        v-model="userStrategyInfo.rulePath"
-                        placeholder="请输入策略文件存储位置"
-                        autocomplete="off"
-                        :maxlength="32"
-                    ></Input>
+                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300">
+                      <Input
+                          disabled
+                          v-model="userStrategyInfo.rulePath"
+                          placeholder="请输入策略文件存储位置"
+                          autocomplete="off"
+                          :maxlength="32"
+                      ></Input>
+                    </Tooltip>
                   </FormItem>
                 </Col>
                 <Col :span="18">
@@ -256,8 +258,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getUserStrategyData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getUserStrategyData)"
         />
       </div>
     </template>
@@ -268,9 +270,11 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getRuleFileType, getRuleType, handleExport, handleSort} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   components: {ParamsTable},
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -366,27 +370,15 @@ export default {
       {title: "操作", slot: "operator", width: 180},
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       ruleName: "",
-      sort: 'asc',
-      sortField: ''
     };
     return {
-      loading: true,
       fileName: "",
       fileType: '',
       rulePath: '',
       uploadFlag: false,
-      tableHeight: window.innerHeight - 220,
       chooseRule: false,
-      userValidRules: {
-        // username: [{ required: true, message: "请输入用户策略账号" }],
-        // customerName: [{ required: true, message: "请输入用户策略名称" }],
-        // // password: [{ required: true, message: "请输入密码" }],
-        // roles: [{ required: false, message: "请选择用户策略角色" }],
-      },
+      userValidRules: {},
       userStrategyInfo: {
         ruleFileType: "",
         ruleId: "",
@@ -397,7 +389,6 @@ export default {
         ruleType: "",
         ruleParams: [],
       },
-      tableData: [],
       paramList: [
         {
           name: "account id",
@@ -415,14 +406,9 @@ export default {
       isNew: true,
       userList: [],
       selectedEnv: null,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getUserStrategyData();
     this.getUserList();
   },
@@ -443,14 +429,7 @@ export default {
           this.handleUploadToProduct(row)
           break;
         case "dele":
-          this.$Modal.confirm({
-            title: `确认删除策略吗？`,
-            content: "<p>此操作不可逆</p>",
-            onOk: () => {
-              this.deleteStrategy(row);
-            },
-            okText: "删除",
-          });
+          this.deleteRow(URL.rule, row.ruleId, '策略', this.getUserStrategyData)
           break;
         default:
       }
@@ -622,6 +601,7 @@ export default {
     handleSort,
     // 获取用户策略列表
     getUserStrategyData() {
+      this.loading = true;
       http.post(URL.ruleList, this.pagination, this.getUserResponse);
     }
     ,
@@ -633,24 +613,13 @@ export default {
       this.tableData = res.data.dataList || [];
     }
     ,
-// 获取用户代码
+    // 获取用户代码
     getUserList() {
       http.get(URL.userList, (res) => {
         this.userList = res.data;
       });
-    }
-    ,
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getUserStrategyData();
-    }
-    ,
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getUserStrategyData();
-    }
-    ,
-// 用户策略代码模糊查询
+    },
+    // 用户策略代码模糊查询
     handleSearch() {
       this.pagination.pageNumber = 1;
       this.getUserStrategyData();
@@ -797,17 +766,6 @@ export default {
         content,
         duration,
       });
-    },
-    deleteStrategy(row) {
-      http.delete(`${URL.rule}/${row.ruleId}`, {messageType: '删除成功'}, () => {
-        this.getUserStrategyData();
-      });
-    },
-// 刷新
-    refresh() {
-      this.loading = true;
-      this.getUserStrategyData();
-      this.getUserList();
     },
   },
 }

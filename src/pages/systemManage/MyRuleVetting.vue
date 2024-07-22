@@ -268,8 +268,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getMyVettingList)"
+            @on-change="e=>handleChangePage('pageNumber',e,getMyVettingList)"
         />
       </div>
     </template>
@@ -280,9 +280,11 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getRuleFileType, getRuleType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   components: {ParamsTable},
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -376,20 +378,13 @@ export default {
       {title: "操作", slot: "operator", width: 180},
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: '',
       ruleVettingStatus: '',
       ruleName: ""
     };
     return {
-      loading: true,
       fileType: '',
       rulePath: '',
       uploadFlag: false,
-      tableHeight: window.innerHeight - 220,
       chooseRule: false,
       userValidRules: {},
       userStrategyInfo: {
@@ -402,7 +397,6 @@ export default {
         ruleType: "",
         ruleParams: [],
       },
-      tableData: [],
       paramList: [
         {
           name: "account id",
@@ -418,14 +412,9 @@ export default {
       pagination,
       showAddModal: false,
       userList: [],
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getMyVettingList();
     this.getUserList();
   },
@@ -563,6 +552,7 @@ export default {
     handleSort,
     // 获取用户策略列表
     getMyVettingList() {
+      this.loading = true;
       http.post(URL.myVetting, this.pagination, this.getUserResponse);
     },
     getUserResponse(res) {
@@ -577,14 +567,6 @@ export default {
       http.get(URL.userList, (res) => {
         this.userList = res.data;
       });
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getMyVettingList();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getMyVettingList();
     },
 // 用户策略代码模糊查询
     handleSearch() {
@@ -685,7 +667,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.loading = true;
       this.getMyVettingList();
       this.getUserList();
     },

@@ -94,8 +94,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getVettingList)"
+            @on-change="e=>handleChangePage('pageNumber',e,getVettingList)"
         />
       </div>
     </template>
@@ -105,11 +105,12 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, getRuleFileType, getRuleType, getRuleVettingStatus} from "@/common/common";
-import {updateTableHeight} from "@/utils/tableUtils";
 import {downLoadZip} from "@/utils/downLoadZip";
 import ParamsTable from "@/components/ParamsTable.vue";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -203,30 +204,17 @@ export default {
       {title: "操作", slot: "operator", width: 180},
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: '',
       ruleVettingStatus: '',
       ruleName: ""
     };
     return {
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
       pagination,
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', this.updateTableHeight)
     this.loading = false
     this.getVettingList();
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.updateTableHeight);
   },
   methods: {
     handleSort,
@@ -246,9 +234,9 @@ export default {
         default:
       }
     },
-    updateTableHeight,
     // 获取策略审批单列表
     getVettingList() {
+      this.loading = true;
       http.post(`${URL.vetting}`, this.pagination, (res) => {
         this.loading = false;
         this.pagination.total = res.data.total;
@@ -257,19 +245,6 @@ export default {
     },
     ok() {
       this.cancel();
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getVettingList();
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getVettingList();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getVettingList();
     },
     /**
      * 审批按钮

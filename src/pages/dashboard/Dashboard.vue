@@ -64,7 +64,7 @@ canvas {
 </template>
 
 <script>
-import introMixin from "@/common/introMixin";
+import introMixin from "@/mixins/introMixin";
 
 export default {
   mixins: [introMixin],

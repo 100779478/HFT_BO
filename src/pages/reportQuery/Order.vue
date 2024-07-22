@@ -10,16 +10,6 @@
 <template>
   <div>
     <Row style="margin: 10px" justify="space-between" align="top">
-      <!-- <Col span="" class="mr3">
-        <Button type="success" @click="refresh()"
-          ><Icon type="md-refresh" /> 刷新</Button
-        >
-      </Col> -->
-      <!-- <Col span="" offset="21">
-        <Button type="primary" @click="refresh()"
-          ><Icon type="md-search" /> 查询</Button
-        >
-      </Col> -->
       <Col
           span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
@@ -155,8 +145,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getOrderData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getOrderData)"
         />
       </div>
     </template>
@@ -171,8 +161,10 @@ import {
   getDirection,
   getOffsetType, handleSort, handleExport,
 } from "@/common/common";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -372,13 +364,6 @@ export default {
         width: null,
       },
     ];
-    let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: ''
-    };
     let searchParams = {
       orderStatus: [],
       orderInnerId: "",
@@ -390,16 +375,11 @@ export default {
       endDate: "",
       startTime: "",
       endTime: "",
-      URL
     };
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
     return {
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
-      pagination,
       isNew: true,
       searchParams,
       dateRange,
@@ -407,20 +387,13 @@ export default {
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getOrderData();
-  },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
   },
   methods: {
     handleSort,
     // 获取订单列表
     getOrderData() {
+      this.loading = true;
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
@@ -445,14 +418,6 @@ export default {
         this.tableData = res.data.dataList;
       });
     },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getOrderData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getOrderData();
-    },
     // 查询
     handleSearch() {
       this.pagination.pageNumber = 1;
@@ -460,14 +425,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   sort: 'asc',
-      //   sortField: ''
-      // };
       this.getOrderData();
     },
     // 导出列表

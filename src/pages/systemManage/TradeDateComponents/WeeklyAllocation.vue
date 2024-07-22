@@ -129,7 +129,7 @@
         :loading="loading"
         style="clear: both"
         :columns="columns1"
-        :data="list"
+        :data="tableData"
         size="small"
         class="table-content"
         :height="tableHeight"
@@ -140,7 +140,7 @@
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteHoliday(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.weekly,row.tradingDay,'周末工作日',getWeeklyList)" class="table-operate">
             删除
           </div>
         </div>
@@ -155,8 +155,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getWeeklyList)"
+            @on-change="e=>handleChangePage('pageNumber',e,getWeeklyList)"
         />
       </div>
     </template>
@@ -167,10 +167,11 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import moment from "moment/moment";
 import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport} from "@/common/common";
-import {cancel} from "@/utils/tableUtils";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins: [tradeExchangeMixin, tableMixin],
   data() {
     let columns1 = [
       {
@@ -204,7 +205,6 @@ export default {
         slot: 'operator'
       },
     ];
-    let list = []
     let weeklySetting = {
       tradingDay: moment().format("YYYYMMDD"),
       exchangeCode: null,
@@ -215,32 +215,19 @@ export default {
       startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
       endDate: moment().format("YYYYMMDD"),
       exchangeCode: null,
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
     };
     return {
-      loading: true,
       weeklySetting,
       showAddModal: false,
       isNew: true,
-      tableHeight: window.innerHeight - 220,
       columns1,
-      list,
       pagination,
-      URL
     };
   },
-  mixins:[tradeExchangeMixin],
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getWeeklyList();
   },
   methods: {
-    cancel,
     handleExport,
     // 获取周末工作日列表
     getWeeklyList() {
@@ -251,7 +238,7 @@ export default {
           this.loading = false;
         }, 200);
         this.pagination.total = res.data.total;
-        this.list = res.data.dataList || [];
+        this.tableData = res.data.dataList || [];
       });
     },
     // 用户弹窗
@@ -279,40 +266,14 @@ export default {
       this.weeklySetting.tradingDay = formatDate(this.weeklySetting.tradingDay)
       // 换算当前日期为周几
       this.weeklySetting.weekDay = moment(this.weeklySetting.tradingDay).isoWeekday();
-      if (isNew) {
-        http.put(URL.weekly, {...this.weeklySetting, messageType: '新增成功'}, () => {
-          this.getWeeklyList()
-          this.cancel();
-        });
-      } else {
-        http.post(`${URL.weekly}`, {...this.weeklySetting, messageType: '修改成功'}, () => {
-              this.getWeeklyList()
-              this.cancel();
-            }
-        );
-      }
-    },
-    // 删除工作日
-    deleteHoliday(row) {
-      this.$Modal.confirm({
-        title: `确认删除周末工作日吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.weekly}/${row.tradingDay}`, {messageType: '删除成功'}, () => {
-            this.getWeeklyList();
-          });
-        },
-        okText: "删除",
+      const config = {
+        method: isNew ? 'put' : 'post',
+        msg: isNew ? '新增成功' : '修改成功'
+      };
+      http[config.method](URL.weekly, {...this.weeklySetting, messageType: config.msg}, () => {
+        this.getWeeklyList()
+        this.cancel();
       });
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-
-      this.getWeeklyList();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getWeeklyList();
     },
     setExchangeCode(code) {
       this.weeklySetting.exchangeCode = code;

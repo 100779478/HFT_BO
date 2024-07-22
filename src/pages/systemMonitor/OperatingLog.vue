@@ -115,8 +115,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getOperatingLog)"
+            @on-change="e=>handleChangePage('pageNumber',e,getOperatingLog)"
         />
       </div>
     </template>
@@ -127,8 +127,10 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, handleExport} from "@/common/common";
 import moment from "moment/moment";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -220,11 +222,6 @@ export default {
       },
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
-      sort: 'asc',
-      sortField: '',
       customerName: '',
       transactionName: '',
       operatingLogType: '',
@@ -238,25 +235,18 @@ export default {
     return {
       dateRange,
       timeRange,
-      loading: true,
-      tableHeight: window.innerHeight - 220,
-      tableData: [],
       columns1,
       pagination,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getOperatingLog();
   },
   methods: {
     handleSort,
     // 获取操作日志列表
     getOperatingLog() {
+      this.loading = true;
       this.pagination.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
@@ -275,15 +265,6 @@ export default {
     },
     // 刷新
     refresh() {
-      this.loading = true;
-      this.getOperatingLog();
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getOperatingLog();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
       this.getOperatingLog();
     },
     // 导出列表

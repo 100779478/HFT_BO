@@ -38,12 +38,6 @@
           导出
         </Button
         >
-        <!--        <Button type="success" @click="refresh()"-->
-        <!--        >-->
-        <!--          <Icon type="md-refresh"/>-->
-        <!--          刷新-->
-        <!--        </Button-->
-        <!--        >-->
         <Modal
             v-model="showAddModal"
             draggable
@@ -209,19 +203,9 @@
           <div @click="() => modalChannel('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteChannel(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.customChannel,row.accountId,'分帐户',getChannelData)" class="table-operate">
             删除
           </div>
-          <!-- <Button
-            type="info"
-            size="small"
-            @click="() => modalChannel('modify', row)"
-            >编辑</Button
-          >
-          &nbsp;
-          <Button type="error" size="small" @click="() => deleteChannel(row)"
-            >删除</Button
-          > -->
         </div>
       </template>
     </Table>
@@ -234,8 +218,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getChannelData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getChannelData)"
         />
       </div>
     </template>
@@ -245,10 +229,11 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getLogicType, handleExport, handleSort} from "@/common/common";
-import {cancel} from "@/utils/tableUtils";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
+  mixins:[tableMixin],
   data() {
     let columns1 = [
       {
@@ -344,20 +329,13 @@ export default {
       },
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       accountId: "",
-      sort: 'asc',
-      sortField: ''
     };
     return {
       assetLabel: "资产账户",
       positionLabel: "组合账户",
       foundationLabel: "基金账户",
       traderLabel: "交易员编码",
-      loading: true,
-      tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请选择用户代码"}],
         tradeChannel: [{required: true, message: "请选择交易通道"}],
@@ -381,7 +359,6 @@ export default {
         logicType: "",
         tdApiTypeName: "",
       },
-      tableData: [],
       // 交易通道
       tradeChannel: [],
       // 用户列表
@@ -393,30 +370,21 @@ export default {
       showAddModal: false,
       isNew: true,
       showLabel: false,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getChannelData();
     // 获取交易通道
     this.getTradeChannel();
     this.getUserData();
     this.getLogicTypeList()
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     handleExport,
     handleSort,
     // 获取分账户列表
     getChannelData(value) {
+      this.loading = true;
       this.pagination.accountId = value || "";
       // 分账户列表
       http.post(URL.channelTrade, this.pagination, this.getChannelResponse);
@@ -454,14 +422,6 @@ export default {
       }, 200);
       this.pagination.total = res.data.total;
       this.tableData = res.data.dataList || [];
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getChannelData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getChannelData();
     },
     // 用户代码模糊查询
     handleSearch(e) {
@@ -577,31 +537,6 @@ export default {
           this.cancel();
         });
       }
-    },
-    // 删除分账户
-    deleteChannel(row) {
-      this.$Modal.confirm({
-        title: `确认删除分账户吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.customChannel}/${row.accountId}`, {messageType: '删除成功'}, () => {
-            this.getChannelData();
-          });
-        },
-        okText: "删除",
-      });
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      // this.pagination = {
-      //   total: 0,
-      //   pageSize: 20,
-      //   pageNumber: 1,
-      //   accountId: "",
-      // };
-      this.getChannelData();
-      this.getTradeChannel();
     },
     // 渲染交易员名称
     renderTdApiType(h, params) {

@@ -185,19 +185,9 @@ input:-webkit-autofill {
           <div @click="() => modalChannel('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteChannel(row)" class="table-operate">
+          <div @click="() => deleteRow(URL.channel,row.channelId,'实体账户',getChannelData)" class="table-operate">
             删除
           </div>
-          <!-- <Button
-            type="info"
-            size="small"
-            @click="() => modalChannel('modify', row)"
-            >编辑</Button
-          >
-          &nbsp;
-          <Button type="error" size="small" @click="() => deleteChannel(row)"
-            >删除</Button
-          > -->
         </div>
       </template>
     </Table>
@@ -210,8 +200,8 @@ input:-webkit-autofill {
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="handleChangeSize"
-            @on-change="handleChangePage"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getChannelData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getChannelData)"
         />
       </div>
     </template>
@@ -221,10 +211,11 @@ input:-webkit-autofill {
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
-import {cancel} from "@/utils/tableUtils";
+import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -291,17 +282,10 @@ export default {
       },
     ];
     let pagination = {
-      total: 0,
-      pageSize: 20,
-      pageNumber: 1,
       channelId: "",
-      sort: 'asc',
-      sortField: ''
     };
     return {
       typeInput: true,
-      loading: true,
-      tableHeight: window.innerHeight - 220,
       userValidRules: {
         channelId: [{required: true, message: "请输入通道ID"}],
         apiType: [{required: true, message: "请选择外部接口类型"}],
@@ -318,7 +302,6 @@ export default {
         password: "",
         userId: "",
       },
-      tableData: [],
       // 外部接口
       channelType: [],
       // 通道
@@ -329,26 +312,16 @@ export default {
       showAddModal: false,
       isNew: true,
       showAccountAndPwd: true,
-      URL
     };
   },
   mounted() {
-    // 动态高度
-    window.addEventListener('resize', () => {
-      this.tableHeight = window.innerHeight - 220
-    })
     this.getChannelData();
     // 获取外部接口类型
     this.getAPIType();
     // 获取通道类型
     this.getTerminalType();
   },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
-  },
   methods: {
-    cancel,
     handleExport,
     handleSort,
     handleFocus() {
@@ -363,6 +336,7 @@ export default {
     },
     // 获取实体账户列表
     getChannelData(value) {
+      this.loading = true;
       this.pagination.channelId = value || "";
       // 实体账户列表
       http.post(URL.channelList, this.pagination, this.getChannelResponse);
@@ -386,14 +360,6 @@ export default {
       }, 200);
       this.pagination.total = res.data.total;
       this.tableData = res.data.dataList || [];
-    },
-    handleChangePage(page) {
-      this.pagination.pageNumber = page;
-      this.getChannelData();
-    },
-    handleChangeSize(size) {
-      this.pagination.pageSize = size;
-      this.getChannelData();
     },
     // 用户代码模糊查询
     handleSearch(e) {
@@ -453,24 +419,6 @@ export default {
           this.cancel();
         });
       }
-    },
-    // 删除实体账户
-    deleteChannel(row) {
-      this.$Modal.confirm({
-        title: `确认删除实体账户吗？`,
-        content: "<p>此操作不可逆</p>",
-        onOk: () => {
-          http.delete(`${URL.channel}/${row.channelId}`, {messageType: '删除成功'}, () => {
-            this.getChannelData();
-          });
-        },
-        okText: "删除",
-      });
-    },
-    // 刷新
-    refresh() {
-      this.loading = true;
-      this.getChannelData();
     },
   },
 };
