@@ -269,11 +269,11 @@ export default {
     },
     handleChangePage(page) {
       this.pagination.pageNumber = page;
-      this.getUserData();
+      this.getRoleData();
     },
     handleChangeSize(size) {
       this.pagination.pageSize = size;
-      this.getUserData();
+      this.getRoleData();
     },
     // 角色弹窗
     modalUser(type, row) {

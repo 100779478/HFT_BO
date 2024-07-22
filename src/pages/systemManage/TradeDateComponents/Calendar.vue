@@ -142,9 +142,6 @@
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => deleteEnvironment(row)" class="table-operate">
-            删除
-          </div>
         </div>
       </template>
     </Table>
