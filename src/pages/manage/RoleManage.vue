@@ -65,6 +65,7 @@
             :width="1000"
             :mask-closable="false"
             :title="isNew ? '新增角色' : '编辑角色'"
+            :styles="{top: '20px'}"
         >
           <div class="modal">
             <Form
@@ -267,9 +268,10 @@ export default {
       this.roleInfo.scenesWinTypes = this.scenesList || []
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功'
+        msg: isNew ? '新增成功' : '修改成功',
+        url: isNew ? URL.role : `${URL.role}/${this.roleInfo.id}`
       };
-      http[config.method](URL.role, {...this.roleInfo, messageType: config.msg}, () => {
+      http[config.method](config.url, {...this.roleInfo, messageType: config.msg}, () => {
         this.getRoleData()
         this.cancel();
       });

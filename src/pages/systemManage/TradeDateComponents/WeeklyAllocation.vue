@@ -268,9 +268,10 @@ export default {
       this.weeklySetting.weekDay = moment(this.weeklySetting.tradingDay).isoWeekday();
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功'
+        msg: isNew ? '新增成功' : '修改成功',
+        url: URL.weekly
       };
-      http[config.method](URL.weekly, {...this.weeklySetting, messageType: config.msg}, () => {
+      http[config.method](config.url, {...this.weeklySetting, messageType: config.msg}, () => {
         this.getWeeklyList()
         this.cancel();
       });

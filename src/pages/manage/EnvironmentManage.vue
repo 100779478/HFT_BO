@@ -218,9 +218,10 @@ export default {
     ok(isNew) {
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功'
+        msg: isNew ? '新增成功' : '修改成功',
+        url: URL.editEnvironment
       };
-      http[config.method](URL.editEnvironment, {...this.environmentInfo, messageType: config.msg}, () => {
+      http[config.method](config.url, {...this.environmentInfo, messageType: config.msg}, () => {
         this.getEnvironmentData()
         this.cancel();
       });

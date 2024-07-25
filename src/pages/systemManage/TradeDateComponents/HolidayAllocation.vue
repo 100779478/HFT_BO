@@ -284,9 +284,10 @@ export default {
       }
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功'
+        msg: isNew ? '新增成功' : '修改成功',
+        url: URL.holiday
       };
-      http[config.method](URL.holiday, {...this.holidaySetting, messageType: config.msg}, () => {
+      http[config.method](config.url, {...this.holidaySetting, messageType: config.msg}, () => {
         this.getHolidayList()
         this.cancel();
       });

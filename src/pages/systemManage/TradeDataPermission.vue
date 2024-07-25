@@ -255,9 +255,10 @@ export default {
       }
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功'
+        msg: isNew ? '新增成功' : '修改成功',
+        url: URL.tradeData
       };
-      http[config.method](URL.tradeData, {...this.tradeInfo, messageType: config.msg}, () => {
+      http[config.method](config.url, {...this.tradeInfo, messageType: config.msg}, () => {
         this.getTradeData()
         this.cancel();
       });

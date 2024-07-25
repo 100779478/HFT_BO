@@ -22,23 +22,21 @@
                 style="cursor: pointer"
             />
           </Input>
+          <Select
+              v-model="pagination.ruleVettingStatus"
+              class="mr3"
+              style="width: 100px"
+              placeholder="审批状态"
+              :clearable="true"
+          >
+            <Option
+                v-for="item in this.$store.state.dictionary.dictionaryList.RuleVettingStatus"
+                :value="item.code"
+                :key="item.code"
+            >{{ item.description }}
+            </Option>
+          </Select>
         </form>
-      </Col>
-      <Col span="19" style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)">
-        <Select
-            v-model="pagination.ruleVettingStatus"
-            class="mr3"
-            style="width: 100px"
-            placeholder="审批状态"
-            :clearable="true"
-        >
-          <Option
-              v-for="item in this.$store.state.dictionary.dictionaryList.RuleVettingStatus"
-              :value="item.code"
-              :key="item.code"
-          >{{ item.description }}
-          </Option>
-        </Select>
       </Col>
       <Col style="position:absolute;right: 25px">
         <Button type="info" @click="refresh()" style="margin-right: 5px">
@@ -108,107 +106,16 @@ import {handleSort, getRuleFileType, getRuleType, getRuleVettingStatus} from "@/
 import {downLoadZip} from "@/utils/downLoadZip";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
+import {ruleVettingColumn} from "@/mixins/ruleComponentMixin";
 
 export default {
-  mixins:[tableMixin],
+  mixins: [tableMixin, ruleVettingColumn],
   data() {
-    let columns1 = [
-      {
-        title: "策略ID",
-        key: "ruleId",
-        minWidth: 120,
-        resizable: true,
-        sortable: 'custom',
-        width: null,
-      },
-      {
-        title: "策略文件类型",
-        key: "ruleFileType",
-        minWidth: 140,
-        resizable: true,
-        width: null,
-        sortable: 'custom',
-        render: (h, {row}) => {
-          const result = getRuleFileType(row.ruleFileType, true);
-          return h("span", result.description);
-        },
-      },
-      {
-        title: "策略文件存储位置",
-        key: "rulePath",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 220,
-      },
-      {
-        title: "策略版本",
-        key: "ruleVersion",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "策略名称",
-        key: "ruleName",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "用户代码",
-        key: "customerId",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "策略类型",
-        key: "ruleType",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 220,
-        render: (h, {row}) => {
-          const result = getRuleType(row.ruleType, true);
-          return h("span", result.description);
-        },
-      },
-      {
-        title: "状态",
-        key: "ruleVettingStatus",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-        sortable: 'custom',
-        render: (h, params) => {
-          const colorList = ["#dcba0e", "#19be6b", "#ed4014", "#616261"]
-          const statusInfo = getRuleVettingStatus(params.row.ruleVettingStatus)
-          const createIcon = (code) => {
-            return h("Icon", {
-              props: {
-                type: "ios-radio-button-on",
-                color: colorList[code],
-              },
-            });
-          };
-          return h("span", [
-            createIcon(statusInfo.code - 1),
-            statusInfo.description,
-          ]);
-        },
-      },
-      {title: "操作", slot: "operator", width: 180},
-    ];
     let pagination = {
       ruleVettingStatus: '',
       ruleName: ""
     };
     return {
-      columns1,
       pagination,
     };
   },
