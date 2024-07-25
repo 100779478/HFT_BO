@@ -78,7 +78,7 @@ input:-webkit-autofill {
             <FormItem label="外部接口类型" prop="apiType">
               <Select
                   v-model="channelInfo.apiType"
-                  placeholder="请选择通道类型"
+                  placeholder="请选择外部接口类型"
                   :maxlength="32"
                   @on-change="getApiTerminalType"
                   :disabled="!isNew"
@@ -93,9 +93,9 @@ input:-webkit-autofill {
             </FormItem>
           </Col>
           <Col :span="18">
-            <FormItem label="通道类型" prop="terminalType">
+            <FormItem label="通道类型" prop="channelType">
               <Select
-                  v-model="channelInfo.terminalType"
+                  v-model="channelInfo.channelType"
                   placeholder="请选择通道类型"
                   :maxlength="32"
                   :disabled="!isNew"
@@ -305,12 +305,12 @@ export default {
       userValidRules: {
         channelId: [{required: true, message: "请输入通道ID"}],
         apiType: [{required: true, message: "请选择外部接口类型"}],
-        terminalType: [{required: true, message: "请选择通道类型"}],
+        channelType: [{required: true, message: "请选择通道类型"}],
       },
       channelInfo: {
         channelId: "",
         apiType: "",
-        terminalType: "",
+        channelType: "",
         active: true,
         password: "",
         userId: "",
@@ -320,7 +320,7 @@ export default {
       channelType: [],
       // 通道
       channelTrade: [],
-      terminalType: [],
+      // terminalType: [],
       columns1,
       pagination,
       showAddModal: false,
@@ -375,7 +375,7 @@ export default {
       // 使用 selectedValue 获取选中项的值
       const selectedItem = this.channelType.find((item) => item.code === e);
       this.showAccountAndPwd = e !== 'o'
-      this.terminalType = selectedItem?.channelTypes;
+      // this.terminalType = selectedItem?.channelTypes;
     },
     getChannelResponse(res) {
       setTimeout(() => {
@@ -409,7 +409,7 @@ export default {
         this.channelInfo = {
           channelId: "",
           apiType: "",
-          terminalType: "",
+          channelType: "",
           active: true,
           password: "",
           userId: "",
@@ -421,7 +421,7 @@ export default {
         this.showAccountAndPwd = row.apiType !== 'o'
         Object.assign(this.channelInfo, row);
         this.channelInfo.apiType = row.apiType;
-        this.channelInfo.terminalType = row.terminalType;
+        this.channelInfo.channelType = row.channelType;
       }
     },
     // 新增弹窗确认按键
@@ -434,7 +434,7 @@ export default {
         this.$Message.error("请选择外部接口类型");
         return;
       }
-      if (!this.channelInfo.terminalType) {
+      if (!this.channelInfo.channelType) {
         this.$Message.error("请选择通道类型");
         return;
       }
