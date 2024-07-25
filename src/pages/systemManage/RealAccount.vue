@@ -290,10 +290,13 @@ export default {
         channelId: [{required: true, message: "请输入通道ID"}],
         apiType: [{required: true, message: "请选择外部接口类型"}],
         channelType: [{required: true, message: "请选择通道类型"}],
+        // userId: [{ required: true, message: "请输入交易账号" }],
+        // password: [{ required: true, message: "请输入密码" }],
+        // active: [{ required: false, message: "请选择状态" }],
       },
       channelInfo: {
         channelId: "",
-        apiType: "",
+        apiType: [],
         channelType: "",
         active: true,
         password: "",
@@ -303,7 +306,6 @@ export default {
       channelType: [],
       // 通道
       channelTrade: [],
-      // terminalType: [],
       columns1,
       pagination,
       showAddModal: false,
@@ -346,10 +348,7 @@ export default {
       this.channelTrade = getChannelType()
     },
     getApiTerminalType(e) {
-      // 使用 selectedValue 获取选中项的值
-      const selectedItem = this.channelType.find((item) => item.code === e);
       this.showAccountAndPwd = e !== 'o'
-      // this.terminalType = selectedItem?.channelTypes;
     },
     getChannelResponse(res) {
       setTimeout(() => {
