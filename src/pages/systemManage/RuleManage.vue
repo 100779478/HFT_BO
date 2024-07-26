@@ -107,7 +107,7 @@
                 </Col>
                 <Col :span="18">
                   <FormItem label="策略文件存储位置" prop="rulePath">
-                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300">
+                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%">
                       <Input
                           disabled
                           v-model="userStrategyInfo.rulePath"

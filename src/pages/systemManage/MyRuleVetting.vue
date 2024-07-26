@@ -120,13 +120,15 @@
                 </Col>
                 <Col :span="18">
                   <FormItem label="策略文件存储位置" prop="rulePath">
-                    <Input
-                        disabled
-                        v-model="userStrategyInfo.rulePath"
-                        placeholder="请输入策略文件存储位置"
-                        autocomplete="off"
-                        :maxlength="32"
-                    ></Input>
+                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%">
+                      <Input
+                          disabled
+                          v-model="userStrategyInfo.rulePath"
+                          placeholder="请输入策略文件存储位置"
+                          autocomplete="off"
+                          :maxlength="32"
+                      ></Input>
+                    </Tooltip>
                   </FormItem>
                 </Col>
                 <Col :span="18">
