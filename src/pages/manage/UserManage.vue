@@ -336,11 +336,11 @@ export default {
     };
     const activeList = [
       {
-        value: true,
+        value: 1,
         label: '已启用'
       },
       {
-        value: false,
+        value: 0,
         label: '已禁用'
       },
     ]

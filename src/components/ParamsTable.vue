@@ -10,7 +10,7 @@ export default {
     },
     readOnly: {
       type: Boolean,
-      default:'false'
+      default: 'false'
     }
   },
   data() {
