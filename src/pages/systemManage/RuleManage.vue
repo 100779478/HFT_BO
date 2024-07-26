@@ -108,7 +108,7 @@
                 </Col>
                 <Col :span="18">
                   <FormItem label="策略文件存储位置" prop="rulePath">
-                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300">
+                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%;">
                       <Input
                           disabled
                           v-model="userStrategyInfo.rulePath"
@@ -613,27 +613,34 @@ export default {
     handleShowParamsTable(e) {
       this.chooseRule = e === '8';
       this.fileName = ""
-      switch (e) {
-          // 0 银行间双边做市策略-->./Rules/libMM_strategy.so
-          // 1 银行间指示性报价策略->./Rules/indicative_strategy.so
-          // 3 交易所新债平台做市策略-->./Rules/libmm_strategy_rate.so
-          // 4 交易所固收平台做市策略-->./Rules/libmm_strategy_fi.so
-        case '0':
-          this.userStrategyInfo.rulePath = './Rules/libMM_strategy.so'
-          break
-        case '1':
-          this.userStrategyInfo.rulePath = './Rules/indicative_strategy.so'
-          break
-        case '3':
-          this.userStrategyInfo.rulePath = './Rules/libmm_strategy_rate.so'
-          break
-        case '4':
-          this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
-          break
-        default:
-          this.userStrategyInfo.rulePath = this.rulePath || this.userStrategyInfo.rulePath
-          break
-      }
+      const strategyPaths = {
+        '1': './Rules/libMM_strategy.so',          // 银行间双边做市策略
+        '6': './Rules/indicative_strategy.so',     // 银行间指示性报价策略
+        'a': './Rules/libmm_strategy_rate.so',     // 交易所新债平台做市策略
+        'b': './Rules/libmm_strategy_fi.so',       // 交易所固收平台做市策略
+        'c': './Rules/libBond_Spread.so'           // 套利策略
+      };
+      this.userStrategyInfo.rulePath = strategyPaths[e] || this.rulePath || this.userStrategyInfo.rulePath;
+      // switch (e) {
+      //   case '1':
+      //     this.userStrategyInfo.rulePath = './Rules/libMM_strategy.so'
+      //     break
+      //   case '6':
+      //     this.userStrategyInfo.rulePath = './Rules/indicative_strategy.so'
+      //     break
+      //   case 'a':
+      //     this.userStrategyInfo.rulePath = './Rules/libmm_strategy_rate.so'
+      //     break
+      //   case 'b':
+      //     this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
+      //     break
+      //   case 'c':
+      //     this.userStrategyInfo.rulePath = './Rules/libBond_Spread.so'
+      //     break
+      //   default:
+      //     this.userStrategyInfo.rulePath = this.rulePath || this.userStrategyInfo.rulePath
+      //     break
+      // }
     }
     ,
 // 用户策略弹窗
