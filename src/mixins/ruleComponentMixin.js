@@ -106,27 +106,15 @@ const ruleComponentMixin = {
         },
         handleShowParamsTable(e) {
             this.chooseRule = e === '8';
-            switch (e) {
-                // 0 银行间双边做市策略-->./Rules/libMM_strategy.so
-                // 1 银行间指示性报价策略->./Rules/indicative_strategy.so
-                // 3 交易所新债平台做市策略-->./Rules/libmm_strategy_rate.so
-                // 4 交易所固收平台做市策略-->./Rules/libmm_strategy_fi.so
-                case '0':
-                    this.userStrategyInfo.rulePath = './Rules/libMM_strategy.so'
-                    break
-                case '1':
-                    this.userStrategyInfo.rulePath = './Rules/indicative_strategy.so'
-                    break
-                case '3':
-                    this.userStrategyInfo.rulePath = './Rules/libmm_strategy_rate.so'
-                    break
-                case '4':
-                    this.userStrategyInfo.rulePath = './Rules/libmm_strategy_fi.so'
-                    break
-                default:
-                    this.userStrategyInfo.rulePath = this.rulePath || this.userStrategyInfo.rulePath
-                    break
-            }
+            this.fileName = ""
+            const strategyPaths = {
+                '1': './Rules/libMM_strategy.so',          // 银行间双边做市策略
+                '6': './Rules/indicative_strategy.so',     // 银行间指示性报价策略
+                'a': './Rules/libmm_strategy_rate.so',     // 交易所新债平台做市策略
+                'b': './Rules/libmm_strategy_fi.so',       // 交易所固收平台做市策略
+                'c': './Rules/libBond_Spread.so'           // 套利策略
+            };
+            this.userStrategyInfo.rulePath = strategyPaths[e] || this.rulePath || this.userStrategyInfo.rulePath;
         },
         // 新增弹窗关闭
         cancel() {
