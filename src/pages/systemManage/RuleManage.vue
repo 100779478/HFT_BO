@@ -86,11 +86,16 @@
                         :maxlength="32"
                         @on-change="fetchNewPolicyInfo"
                     >
+<!--                      <Option-->
+<!--                          v-for="item in getRuleFileType()"-->
+<!--                          :key="item.code"-->
+<!--                          :value="item.code"-->
+<!--                      >{{ item.description }}-->
+<!--                      </Option>-->
                       <Option
-                          v-for="item in getRuleFileType()"
-                          :key="item.code"
-                          :value="item.code"
-                      >{{ item.description }}
+                          :key="'0'"
+                          :value="'0'"
+                      >{{ 'C++策略' }}
                       </Option>
                     </Select>
                   </FormItem>
@@ -563,6 +568,7 @@ export default {
     },
 // 新建策略时获取策略ID及存储位置
     fetchNewPolicyInfo(code) {
+      console.log(code,1111)
       if (this.isNew && code) {
         http.get(`${URL.ruleIdPath}?type=${code}`, (response) => {
           const {ruleId, rulePath} = response.data;
