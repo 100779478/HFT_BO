@@ -118,7 +118,6 @@
                           v-model="userStrategyInfo.rulePath"
                           placeholder="请输入策略文件存储位置"
                           autocomplete="off"
-                          :maxlength="32"
                       ></Input>
                     </Tooltip>
                   </FormItem>
