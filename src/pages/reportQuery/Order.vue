@@ -390,7 +390,6 @@ export default {
       endDate: "",
       startTime: "",
       endTime: "",
-      URL
     };
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     let timeRange = [];
@@ -404,6 +403,7 @@ export default {
       searchParams,
       dateRange,
       timeRange,
+      URL
     };
   },
   mounted() {
