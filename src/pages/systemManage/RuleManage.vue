@@ -64,7 +64,7 @@
             draggable
             sticky
             mask
-            :width="chooseRule ? 1300 : 600"
+            :width="false ? 1300 : 600"
             :mask-closable="false"
             :title="isNew ? '新增用户策略' : '编辑用户策略'"
         >
@@ -86,12 +86,12 @@
                         :maxlength="32"
                         @on-change="fetchNewPolicyInfo"
                     >
-<!--                      <Option-->
-<!--                          v-for="item in getRuleFileType()"-->
-<!--                          :key="item.code"-->
-<!--                          :value="item.code"-->
-<!--                      >{{ item.description }}-->
-<!--                      </Option>-->
+                      <!--                      <Option-->
+                      <!--                          v-for="item in getRuleFileType()"-->
+                      <!--                          :key="item.code"-->
+                      <!--                          :value="item.code"-->
+                      <!--                      >{{ item.description }}-->
+                      <!--                      </Option>-->
                       <Option
                           :key="'0'"
                           :value="'0'"
@@ -179,14 +179,14 @@
                   <FormItem label="">
                     <input type="file" id="fileInput" style="display: none;"
                            @change="handleFileChange($event,fileType)">
-                    <Button v-show="userStrategyInfo.ruleType==='8'" @click="uploadFile('strategy')" class="btn"
+                    <Button v-show="false" @click="uploadFile('strategy')" class="btn"
                             style="margin-right: 5px"
                             type="success">
                       <Icon type="md-cloud-upload"/>
                       上传策略文件
                     </Button>
                     <Icon
-                        v-show="uploadFlag"
+                        v-show="false"
                         type="ios-checkmark-circle"
                         color="green"
                         size="23"/>
@@ -196,7 +196,7 @@
               </Form>
             </div>
             <div class="modal__content-right"
-                 v-show="chooseRule"
+                 v-show="false"
             >
               <Button @click="uploadFile('param')" class="btn" type="info">
                 <Icon type="md-arrow-round-forward"/>
@@ -566,7 +566,7 @@ export default {
     },
 // 新建策略时获取策略ID及存储位置
     fetchNewPolicyInfo(code) {
-      console.log(code,1111)
+      console.log(code, 1111)
       if (this.isNew && code) {
         http.get(`${URL.ruleIdPath}?type=${code}`, (response) => {
           const {ruleId, rulePath} = response.data;
