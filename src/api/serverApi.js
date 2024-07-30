@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV;
-// const devUrl = "http://58.250.164.226:31004"; //POC
-const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+const devUrl = "http://58.250.164.226:31004"; //POC
+// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =

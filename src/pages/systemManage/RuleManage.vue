@@ -456,7 +456,8 @@ export default {
                     display: "flex",
                     alignItems: "center", // 垂直居中对齐
                     justifyContent: "center", // 水平居中对齐
-                    height: "100%" // 确保容器占满整个高度
+                    height: "100%", // 确保容器占满整个高度
+                    marginLeft: "10px"
                   }
                 }, [
                   h('span', '策略ID：'),
@@ -466,7 +467,7 @@ export default {
                       disabled: true
                     },
                     style: {
-                      width: "200px"
+                      width: "180px"
                     }
                   })
                 ]),
