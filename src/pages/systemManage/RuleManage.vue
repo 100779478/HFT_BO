@@ -244,6 +244,7 @@
             </a>
             <DropdownMenu slot="list">
               <DropdownItem name="param">策略参数</DropdownItem>
+              <DropdownItem name="copy">复制策略</DropdownItem>
               <DropdownItem name="dele" style="color: #ed4014"
               >删除策略
               </DropdownItem
@@ -420,6 +421,7 @@ export default {
       showAddModal: false,
       isNew: true,
       userList: [],
+      copyCount: 1,
       URL
     };
   },
@@ -444,6 +446,69 @@ export default {
             okText: "确认",
           });
           break;
+        case "copy":
+          const vm = this
+          this.$Modal.confirm({
+            render: (h) => {
+              return h('div', [
+                h('div', {
+                  style: {
+                    display: "flex",
+                    alignItems: "center", // 垂直居中对齐
+                    justifyContent: "center", // 水平居中对齐
+                    height: "100%" // 确保容器占满整个高度
+                  }
+                }, [
+                  h('span', '策略ID：'),
+                  h('Input', {
+                    props: {
+                      value: row.ruleId,
+                      disabled: true
+                    },
+                    style: {
+                      width: "200px"
+                    }
+                  })
+                ]),
+                h('div', {
+                  style: {
+                    display: "flex",
+                    alignItems: "center", // 垂直居中对齐
+                    justifyContent: "center", // 水平居中对齐
+                    height: "100%", // 确保容器占满整个高度
+                    marginTop: "20px"
+                  }
+                }, [
+                  h('div', '复制次数：'),
+                  h('InputNumber', {
+                    props: {
+                      value: vm.copyCount
+                    },
+                    on: {
+                      input: (value) => {
+                        vm.copyCount = value;
+                      }
+                    },
+                    attrs: {
+                      placeholder: '请输入复制次数'
+                    },
+                    style: {
+                      width: "180px",
+                    }
+                  })
+                ])
+              ]);
+            },
+            onOk: () => {
+              const data = {
+                ruleId: row.ruleId,
+                copyCount: this.copyCount,
+                messageType: "复制成功"
+              }
+              http.post(URL.ruleCopy, data, this.getUserStrategyData)
+            },
+          });
+          break
         case "dele":
           this.$Modal.confirm({
             title: `确认删除策略吗？`,
