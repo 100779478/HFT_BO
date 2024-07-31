@@ -401,6 +401,7 @@ export default {
         ruleName: "",
         customerId: "",
         ruleType: "",
+        active:true,
         ruleParams: [],
       },
       tableData: [],
@@ -660,6 +661,7 @@ export default {
           ruleName: "",
           customerId: "",
           ruleType: "",
+          active:true,
           ruleParams: [],
         };
         Object.assign(this.userStrategyInfo, info);
