@@ -29,6 +29,7 @@
         <form autocomplete="off">
           <Input
               style="float: right; width: 160px; border-radius: 20px"
+              v-model="pagination.roleName"
               placeholder="角色名称"
               @on-keydown.enter="handleSearch"
               @on-change="handleSearch"
@@ -232,8 +233,7 @@ export default {
     handleExport,
     handleSort,
     // 获取角色列表
-    getRoleData(value) {
-      this.pagination.roleName = value || "";
+    getRoleData() {
       http.post(URL.roleList, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
@@ -249,10 +249,9 @@ export default {
       });
     },
     // 角色名称模糊查询
-    handleSearch(e) {
+    handleSearch() {
       this.pagination.pageNumber = 1;
-      let value = e.target.value;
-      this.getRoleData(value);
+      this.getRoleData();
     },
     // 删除角色
     deleteRole(row) {

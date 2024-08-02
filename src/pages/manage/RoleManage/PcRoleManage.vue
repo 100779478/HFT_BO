@@ -172,7 +172,6 @@ export default {
     }
   },
   mounted() {
-    this.getClientPermissionList()
     this.getScenesList()
   },
   methods: {
@@ -190,6 +189,7 @@ export default {
           }
         })
       })
+      this.getClientPermissionList()
     },
     // 设置权限列表
     setPermissions(res) {
@@ -206,8 +206,8 @@ export default {
       // 合并平铺为[{permissionId:1,readonly:true,....}]格式
       this.formData = this.pcPermissionList.map(item => item.details).flat(1) || []
       let list = this.currentPcList || []
-      this.formData.map(item => {
-        list.map(d => {
+      this.formData.forEach(item => {
+        list.forEach(d => {
           if (item.winType === d.winType) {
             item.readonly = d.readonly
             item.checked = true
