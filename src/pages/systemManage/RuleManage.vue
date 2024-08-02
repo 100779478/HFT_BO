@@ -487,7 +487,7 @@ export default {
         };
         Object.assign(this.userStrategyInfo, info);
       } else {
-        this.chooseRule = row.ruleType === '2'
+        this.chooseRule = row.ruleType === '8'
         this.isNew = false;
         this.showAddModal = true;
         this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
