@@ -25,36 +25,51 @@
     margin-bottom: 5px;
   }
 }
+
+.top {
+  margin: -10px 5px 5px 5px
+}
 </style>
 <template>
   <div>
-    <Row style="margin: 10px">
-      <Col class="mr3">
-        <form autocomplete="off">
+    <Row style="margin: 0 3px 0 3px">
+      <Col>
+        <form autocomplete="off" class="top">
           <Input
               v-model="pagination.ruleName"
-              style="float: right; width: 180px; border-radius: 20px"
+              style=" width: 120px; border-radius: 20px"
+              class="mr3"
               placeholder="策略名称"
-              @on-keydown.enter="handleSearch"
-              @on-change="handleSearch"
-          >
-            <Icon
-                type="ios-search"
-                slot="suffix"
-                size="19"
-                @click.native="handleSearch"
-                style="cursor: pointer"
-            />
-          </Input>
+          > </Input>
+          <Input
+              v-model="pagination.customerId"
+              style=" width: 120px; border-radius: 20px"
+              class="mr3"
+              placeholder="用户代码"
+          > </Input>
           <Select
-              v-model="pagination.ruleVettingStatus"
+              v-model="pagination.ruleType"
               class="mr3"
               style="width: 100px"
-              placeholder="审批状态"
+              placeholder="策略类型"
               :clearable="true"
           >
             <Option
-                v-for="item in this.$store.state.dictionary.dictionaryList.RuleVettingStatus"
+                v-for="item in this.$store.state.dictionary.dictionaryList.RuleMakeMarketType"
+                :value="item.code"
+                :key="item.code"
+            >{{ item.description }}
+            </Option>
+          </Select>
+          <Select
+              v-model="pagination.active"
+              class="mr3"
+              style="width: 100px"
+              placeholder="状态"
+              :clearable="true"
+          >
+            <Option
+                v-for="item in activeList"
                 :value="item.code"
                 :key="item.code"
             >{{ item.description }}
@@ -62,13 +77,17 @@
           </Select>
         </form>
       </Col>
-      <Col style="position: absolute;right: 25px">
-        <Button type="primary" @click="refresh()" style="margin-right: 5px">
+      <Col style="position: absolute;right: 25px" class="mr3">
+        <Button type="primary" @click="handleSearch" class="top">
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.myVettingExport, this.pagination, '我的审批')"
-        >
+        <Button type="info" @click="modalUser('new')" class="top">
+          <Icon type="md-add"/>
+          新增策略
+        </Button>
+        <Button class="top" type="success"
+                @click="()=>handleExport(URL.ruleExportMarket, this.pagination, '做市策略管理')">
           <Icon type="md-download"/>
           导出
         </Button>
@@ -77,11 +96,11 @@
             draggable
             sticky
             mask
-            :width="chooseRule ? 1300 : 600"
+            :width="600"
             :mask-closable="false"
-            :title=" '编辑用户策略'"
+            :title="isNew ? '新增做市策略' : '编辑做市策略'"
         >
-          <div :class="[chooseRule ? 'modal__content' : '']">
+          <div class="modal__content">
             <div class="modal__content-left">
               <Form
                   ref="ruleForm"
@@ -96,6 +115,7 @@
                     <Select
                         v-model="userStrategyInfo.ruleFileType"
                         placeholder="请选择策略文件类型"
+                        disabled
                         :maxlength="32"
                         @on-change="fetchNewPolicyInfo"
                     >
@@ -153,20 +173,19 @@
                   </FormItem>
                 </Col>
                 <Col :span="18">
-                  <FormItem label="用户代码" prop="customerIds">
+                  <FormItem label="用户代码" prop="customerId">
                     <Select
-                        v-model="userStrategyInfo.customerIds"
+                        v-model="userStrategyInfo.customerId"
                         placeholder="请选择用户代码"
                         :maxlength="32"
-                        multiple
+                        :disabled="!isNew"
                         filterable
-                        :max-tag-count="1"
                     >
                       <Option
                           v-for="item in userList"
                           :key="item.customerId"
                           :value="item.customerId"
-                      >{{ item.customerId + `(${item.customerName})` }}
+                      >{{ item.customerId }}
                       </Option>
                     </Select>
                   </FormItem>
@@ -188,40 +207,12 @@
                     </Select>
                   </FormItem>
                 </Col>
-                <Col :span="20">
-                  <FormItem label="">
-                    <input type="file" id="fileInput" style="display: none;"
-                           @change="handleFileChange($event,fileType,URL.uploadVetting)">
-                    <Button v-show="chooseRule" @click="uploadFile('strategy')" class="btn"
-                            style="margin-right: 5px"
-                            type="success">
-                      <Icon type="md-cloud-upload"/>
-                      上传策略文件
-                    </Button>
-                    <Icon
-                        v-show="uploadFlag"
-                        type="ios-checkmark-circle"
-                        color="green"
-                        size="23"/>
-                  </FormItem>
-                </Col>
               </Form>
-            </div>
-            <div class="modal__content-right"
-                 v-show="chooseRule"
-            >
-              <Button @click="uploadFile('param')" class="btn" type="info">
-                <Icon type="md-arrow-round-forward"/>
-                导入参数列表
-              </Button>
-              <Button @click="addRow" class="btn" type="success">添加参数</Button>
-              <Button @click="clearParamList" class="btn" type="error">清空列表</Button>
-              <ParamsTable :paramList="paramList" :readOnly="false"/>
             </div>
           </div>
           <div slot="footer">
             <Button type="text" @click="cancel">取消</Button>
-            <Button type="primary" @click="ok()">确定</Button>
+            <Button type="primary" @click="ok(isNew)">确定</Button>
           </div>
         </Modal>
       </Col>
@@ -235,15 +226,15 @@
         ref="table"
         :loading="loading"
         border
-        @on-sort-change="e=>handleSort(e,this.getMyVettingList)"
+        @on-sort-change="e=>handleSort(e,this.getUserStrategyData)"
     >
       <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
           <div @click="() => modalUser('modify', row)" class="table-operate">
             编辑
           </div>
-          <div @click="() => handleCancelVetting(row)" class="table-operate">
-            撤销
+          <div @click="() => changeUserStatus(row)" class="table-operate">
+            {{ !row.active ? "启用" : "禁用" }}
           </div>
           <Dropdown
               trigger="hover"
@@ -256,7 +247,7 @@
             </a>
             <template v-slot:list>
               <DropdownMenu>
-                <DropdownItem name="param">策略参数</DropdownItem>
+                <DropdownItem name="dele" style="color: #ed4014">删除策略</DropdownItem>
               </DropdownMenu>
             </template>
           </Dropdown>
@@ -272,8 +263,8 @@
             :page-size-opts="[20, 50, 100, 200]"
             show-sizer
             show-total
-            @on-page-size-change="e=>handleChangePage('pageSize', e, getMyVettingList)"
-            @on-change="e=>handleChangePage('pageNumber',e,getMyVettingList)"
+            @on-page-size-change="e=>handleChangePage('pageSize', e, getUserStrategyData)"
+            @on-change="e=>handleChangePage('pageNumber',e,getUserStrategyData)"
         />
       </div>
     </template>
@@ -282,106 +273,221 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
-import ParamsTable from "@/components/ParamsTable.vue";
+import {getRuleFileType, getRuleMakeMarketType} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
-import {ruleComponentMixin, ruleVettingColumn} from "@/mixins/ruleComponentMixin";
+import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
+import {ACTIVE_LIST} from "@/common/constant";
 
 export default {
-  components: {ParamsTable},
-  mixins: [tableMixin, ruleComponentMixin, ruleVettingColumn],
+  mixins: [tableMixin, ruleComponentMixin],
   data() {
+    let columns1 = [
+      {
+        title: "策略ID",
+        key: "ruleId",
+        minWidth: 120,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "策略文件类型",
+        key: "ruleFileType",
+        minWidth: 140,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+        render: (h, {row}) => {
+          const result = getRuleFileType(row.ruleFileType, true);
+          return h("span", result.description);
+        },
+      },
+      {
+        title: "策略文件存储位置",
+        key: "rulePath",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 220,
+      },
+      {
+        title: "策略版本",
+        key: "ruleVersion",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "策略名称",
+        key: "ruleName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "用户代码",
+        key: "customerId",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "策略类型",
+        key: "ruleType",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 220,
+        render: (h, {row}) => {
+          const result = getRuleMakeMarketType(row.ruleType, true);
+          return h("span", result.description);
+        },
+      },
+      {
+        title: "策略状态",
+        key: "active",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+        sortable: 'custom',
+        render: (h, params) => {
+          const iconOpen = h("Icon", {
+            props: {
+              type: "ios-radio-button-on",
+              color: "#19be6b",
+            },
+          });
+          const iconClose = h("Icon", {
+            props: {
+              type: "ios-radio-button-on",
+              color: "#ed4014",
+            },
+          });
+          return h("span", [
+            params.row.active ? iconOpen : iconClose,
+            params.row.active ? "  已启用" : "  已禁用",
+          ]);
+        },
+      },
+      {title: "操作", slot: "operator", width: 180},
+    ];
     let pagination = {
-      ruleVettingStatus: '',
-      ruleName: ""
+      ruleName: "",
+      ruleType: "",
+      customerId: "",
+      active: "",
     };
-    let userStrategyInfo = {
-      customerIds: [],
-    }
     return {
+      activeList: ACTIVE_LIST,
+      fileName: "",
+      columns1,
       pagination,
+      userValidRules: {},
       showAddModal: false,
-      userStrategyInfo
+      isNew: true,
+      selectedEnv: null,
     };
   },
   mounted() {
-    this.getMyVettingList();
+    this.getUserStrategyData();
     this.getUserList();
   },
   methods: {
     // 更多操作
     doOperate(name, row) {
       switch (name) {
-        case "param":
-          this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
-          this.$Modal.info({
-            render: (h) => h(ParamsTable, {props: {paramList: this.paramList, readOnly: true}}),
-            width: 650, // 设置宽度
-            okText: "确认",
-          });
+        case "dele":
+          this.deleteRow(URL.rule, row.ruleId, '做市策略', this.getUserStrategyData)
           break;
         default:
       }
     },
-    // 获取用户策略列表
-    getMyVettingList() {
+    // 获取策略列表
+    getUserStrategyData() {
       this.loading = true;
-      http.post(URL.myVetting, this.pagination, this.getUserResponse);
+      http.post(URL.ruleListMarket, this.pagination, this.getUserResponse);
     },
-    // 用户策略代码模糊查询
+    // 策略代码模糊查询
     handleSearch() {
       this.pagination.pageNumber = 1;
-      this.getMyVettingList();
+      this.getUserStrategyData();
     },
-    // 用户策略弹窗
+    // 策略弹窗
     modalUser(type, row) {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.paramList = []
       this.uploadFlag = false
-      this.chooseRule = row.ruleType === '8'
-      this.showAddModal = true;
-      this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
-      // 只读下拉框展示需改为字符串类型
-      this.paramList.forEach(param => param.readOnly = String(param.readOnly));
-      Object.assign(this.userStrategyInfo, row);
-    },
-    // 新增弹窗确认按键
-    ok() {
-      // 检查重复的 name 字段
-      const duplicateNames = this.checkDuplicateNames(this.paramList);
-      if (duplicateNames.length > 0) {
-        const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
-        const message = `参数名重复：${messages.join('、')}`;
-        // 有重复的 name 字段，显示警告消息
-        this.showMessage(message, 'error', 6)
+      if (type === "new") {
+        this.isNew = true;
+        this.showAddModal = true;
+        const info = {
+          id: "",
+          ruleFileType: this.$store.state.dictionary.dictionaryList.RuleFileType[0].code,
+          ruleId: "",
+          rulePath: "",
+          ruleVersion: "",
+          ruleName: "",
+          customerId: "",
+          ruleType: "",
+          active: true,
+          ruleParams: [],
+        };
+        Object.assign(this.userStrategyInfo, info);
+        this.fetchNewPolicyInfo(this.userStrategyInfo.ruleFileType)
       } else {
-        // 没有重复的 name 字段，执行提交操作
-        // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
-        this.paramList.forEach(param => param.readOnly = String(param.readOnly));
-        this.userStrategyInfo.customerIds = row.customers.map(v => v.customerId)
-        this.userStrategyInfo.ruleParams = this.paramList;
-        if (!this.userStrategyInfo.rulePath) {
-          this.$Message.warning('策略存储路径不能为空')
-          return
-        }
-        http.post(URL.updateVetting, {...this.userStrategyInfo, messageType: '修改成功'}, (res) => {
-          if (res.code === '0') {
-            this.getMyVettingList();
-            this.cancel();
-          }
-        });
+        this.isNew = false;
+        this.showAddModal = true;
+        // 只读下拉框展示需改为字符串类型
+        Object.assign(this.userStrategyInfo, row);
       }
     },
-    // 撤销审批策略
-    handleCancelVetting(row) {
-      let ruleId = row.ruleId;
-      http.post(`${URL.cancelVetting}`, {ruleId, messageType: "撤销成功"}, this.getMyVettingList);
+    // 新增弹窗确认按键
+    ok(isNew) {
+      if (!this.userStrategyInfo.rulePath) {
+        this.$Message.warning('策略存储路径不能为空')
+        return
+      }
+      const config = {
+        method: isNew ? 'put' : 'post',
+        msg: isNew ? '新增成功' : '修改成功',
+        url: URL.ruleMarket
+      };
+      http[config.method](config.url, {...this.userStrategyInfo, messageType: config.msg}, (res) => {
+        if (res.code === '0') {
+          this.getUserStrategyData();
+          this.cancel();
+        }
+      });
     },
-    // 刷新
-    refresh() {
-      this.getMyVettingList();
-      this.getUserList();
+    // 启用策略
+    handleActiveEnable(res) {
+      if (res.code !== "0") {
+        this.$Message.error("启用失败：" + res.msg);
+        return;
+      }
+      this.$Message.success(`策略已启用`);
+      this.getUserStrategyData();
+    },
+    // 🈲用策略
+    handleActiveDisable(res) {
+      if (res.code !== "0") {
+        this.$Message.error("禁用失败：" + res.msg);
+        return;
+      }
+      this.$Message.success(`策略已禁用`);
+      this.getUserStrategyData();
+    },
+    changeUserStatus(row) {
+      let data = row.ruleId;
+      if (!row.active) {
+        http.post(`${URL.rule}/${data}/enable`, {}, this.handleActiveEnable);
+      } else {
+        http.post(`${URL.rule}/${data}/disable`, {}, this.handleActiveDisable);
+      }
     },
   },
 }

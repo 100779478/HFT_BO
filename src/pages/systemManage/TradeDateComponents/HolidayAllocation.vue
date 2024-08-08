@@ -134,7 +134,7 @@
         <Icon type="md-add"/>
         新增
       </Button>
-      <Button type="success" @click="getHolidayList()" class="top">
+      <Button type="primary" @click="getHolidayList()" class="top">
         <Icon type="md-search"/>
         查询
       </Button>

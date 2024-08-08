@@ -7,10 +7,10 @@
     <Row style="margin: 10px">
       <Col span="">
         <form autocomplete="off">
-          <Select v-model="pagination.actives" multiple style="width:180px;float: right;margin-left:5px"
+          <Select v-model="pagination.actives" style="width:100px;float: right;margin-left:5px" :clearable="true"
                   @on-change="handleSearch">
-            <Option v-for="item in activeList" :value="item.value" :key="item.value">{{
-                item.label
+            <Option v-for="item in activeList" :value="item.code" :key="item.code">{{
+                item.description
               }}
             </Option>
           </Select>
@@ -211,6 +211,7 @@ import {encryptionModePassword, getUserType, handleExport, handleSort} from "@/c
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import {tableMixin} from "@/mixins/tableMixin";
+import {ACTIVE_LIST} from "@/common/constant";
 
 export default {
   components: {InputPassword, ResetPwdModal},
@@ -324,23 +325,13 @@ export default {
       customerName: "",
       actives: [],
     };
-    const activeList = [
-      {
-        value: 1,
-        label: '已启用'
-      },
-      {
-        value: 0,
-        label: '已禁用'
-      },
-    ]
     return {
       showPwdModal: false,
       row: '',
       strength: '0',
       resetPassword: "",
       confirmPassword: "",
-      activeList,
+      activeList: ACTIVE_LIST,
       pwdStrengthLevel: '0',
       tableHeight: window.innerHeight - 220,
       userValidRules: {
@@ -509,7 +500,7 @@ export default {
         // this.$Message.error("禁用失败：" + res.msg);
         return;
       }
-      this.$Message.error(`用户已禁用`);
+      this.$Message.success(`用户已禁用`);
       this.getUserData();
     },
     changeUserStatus(row) {

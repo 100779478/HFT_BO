@@ -1,26 +1,6 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
 
-.ivu-table-tip {
-  font-size: 26px;
-}
-
-.page-bottom {
-  float: right;
-  margin-top: 20px;
-}
-
-.table-content {
-  //border: 1px solid #e8eaec;
-
-  .table-operate {
-    font-size: 14px;
-    color: rgb(2, 175, 241);
-    margin-right: 6px;
-    cursor: pointer;
-  }
-}
-
 .top {
   margin: -10px 5px 5px 5px
 }
@@ -114,12 +94,13 @@
       ></DatePicker>
     </form>
     <div style="float: right">
-      <Button type="info" @click="modalUser()" class="top">
-        计算
-      </Button>
-      <Button type="success" @click="getCalendarList()" class="top">
+      <Button type="primary" @click="getCalendarList()" class="top">
         <Icon type="md-search"/>
         查询
+      </Button>
+      <Button type="info" @click="modalUser()" class="top">
+        <Icon type="md-calculator"/>
+        计算
       </Button>
       <Button type="success" @click="()=>handleExport(URL.calendarExport,this.pagination,'交易日历')" class="top">
         <Icon type="md-download"/>

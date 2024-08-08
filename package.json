@@ -1,9 +1,10 @@
 {
   "name": "bo-project",
-  "version": "1.1.0",
+  "version": "1.5.6",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
+    "version": "node ./update-version.js",
     "build": "vue-cli-service build",
     "report": "vue-cli-service build --report",
     "lint": "vue-cli-service lint"
@@ -20,7 +21,8 @@
     "view-router": "^0.2.3",
     "vue": "^2.7.16",
     "vue-router": "^3.0.0",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "webpack": "^5.93.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
