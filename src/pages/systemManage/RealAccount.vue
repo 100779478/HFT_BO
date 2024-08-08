@@ -400,10 +400,8 @@ export default {
           password: "",
           userId: "",
           id: "",
-        }
           channelLabel: "",
         };
-        Object.assign(this.channelInfo, info);
       } else {
         this.isNew = false;
         this.showAddModal = true;
