@@ -33,13 +33,13 @@ export const time = {
 /**
  * @description: 查找数据字典对应数据
  * @date: 2024--07--03 16:56:41
- * @params {dictionaryKey} 数字字典类型
- * @params {code}
+ * @param {string} dictionaryKey 数字字典类型
+ * @param {string} code
  * @returns {object} 整个类型的数据列表 或 对应code的某条数据
  */
 
 function findDictionaryList(dictionaryKey, code) {
-    const dictionaryList = store.state.dictionary.dictionaryList[dictionaryKey];
+    const dictionaryList = store.state.dictionary.dictionaryList[dictionaryKey] || [];
     if (code) {
         return dictionaryList.find((item) => item.code === code) || {};
     }
@@ -101,9 +101,14 @@ export function RulePropType(code) {
     return findDictionaryList('RulePropType', code)
 }
 
-// 策略类型
-export function getRuleType(code) {
-    return findDictionaryList('RuleType', code)
+// 做市策略类型
+export function getRuleMakeMarketType(code) {
+    return findDictionaryList('RuleMakeMarketType', code)
+}
+
+// 量化策略类型
+export function getRuleQuantType(code) {
+    return findDictionaryList('RuleQuantType', code)
 }
 
 // 交易通道类型
@@ -227,8 +232,8 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
  */
 
 export function handleExport(url, params, name) {
+    delete params.sortField;
     delete params.sort
-    delete params.sortField
     delete params.pageNumber
     delete params.pageSize
     delete params.total

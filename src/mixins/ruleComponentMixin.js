@@ -1,5 +1,5 @@
 import {http} from "@/utils/request";
-import {getRuleFileType, getRuleType, handleExport, handleSort} from "@/common/common";
+import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {URL} from "@/api/serverApi";
 
@@ -21,7 +21,6 @@ const ruleComponentMixin = {
             rulePath: '',
             uploadFlag: false,
             chooseRule: false,
-            userValidRules: {},
             userStrategyInfo: {
                 ruleFileType: "",
                 ruleId: "",
@@ -30,8 +29,10 @@ const ruleComponentMixin = {
                 ruleName: "",
                 customerId: "",
                 ruleType: "",
+                active: true,
                 ruleParams: [],
             },
+            userValidRules: {},
             paramList,
             userList: [],
         };
@@ -39,7 +40,7 @@ const ruleComponentMixin = {
     methods: {
         handleExport,
         getRuleFileType,
-        getRuleType,
+        getRuleMakeMarketType,
         handleSort,
         // 清空参数列表
         clearParamList() {
@@ -239,28 +240,28 @@ const ruleVettingColumn = {
                 width: null,
                 minWidth: 120,
             },
+            // {
+            //     title: "用户代码",
+            //     key: "customerId",
+            //     sortable: 'custom',
+            //     resizable: true,
+            //     width: null,
+            //     minWidth: 120,
+            // },
+            // {
+            //     title: "策略类型",
+            //     key: "ruleType",
+            //     sortable: 'custom',
+            //     resizable: true,
+            //     width: null,
+            //     minWidth: 220,
+            //     render: (h, {row}) => {
+            //         const result = getRuleMakeMarketType(row.ruleType, true);
+            //         return h("span", result.description);
+            //     },
+            // },
             {
-                title: "用户代码",
-                key: "customerId",
-                sortable: 'custom',
-                resizable: true,
-                width: null,
-                minWidth: 120,
-            },
-            {
-                title: "策略类型",
-                key: "ruleType",
-                sortable: 'custom',
-                resizable: true,
-                width: null,
-                minWidth: 220,
-                render: (h, {row}) => {
-                    const result = getRuleType(row.ruleType, true);
-                    return h("span", result.description);
-                },
-            },
-            {
-                title: "状态",
+                title: "策略状态",
                 key: "ruleVettingStatus",
                 resizable: true,
                 width: null,

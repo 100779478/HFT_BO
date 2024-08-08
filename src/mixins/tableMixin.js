@@ -26,7 +26,7 @@ export const tableMixin = {
     methods: {
         // 监听窗口
         calculateTableHeight() {
-            return window.innerHeight - 220;
+            return window.innerHeight - 210;
         },
         updateTableHeight() {
             this.tableHeight = this.calculateTableHeight();

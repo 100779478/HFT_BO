@@ -116,7 +116,7 @@
         <Icon type="md-add"/>
         新增
       </Button>
-      <Button type="success" @click="getWeeklyList()" class="top">
+      <Button type="primary" @click="getWeeklyList()" class="top">
         <Icon type="md-search"/>
         查询
       </Button>

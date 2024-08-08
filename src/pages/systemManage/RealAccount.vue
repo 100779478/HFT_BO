@@ -110,6 +110,18 @@ input:-webkit-autofill {
             </FormItem>
           </Col>
           <Col :span="18">
+            <FormItem label="通道名称" prop="channelLabel">
+              <form autocomplete="off">
+                <Input
+                    v-model="channelInfo.channelLabel"
+                    placeholder="请输入通道名称"
+                    :maxlength="25"
+                    show-message="false"
+                ></Input>
+              </form>
+            </FormItem>
+          </Col>
+          <Col :span="18">
             <FormItem label="交易账号" prop="userId"
                       v-show="showAccountAndPwd"
             >
@@ -243,6 +255,14 @@ export default {
         sortable: 'custom',
       },
       {
+        title: "通道名称",
+        key: "channelLabel",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+      },
+      {
         title: "交易账号",
         key: "userId",
         minWidth: 150,
@@ -301,6 +321,7 @@ export default {
         active: true,
         password: "",
         userId: "",
+        channelLabel: ""
       },
       // 外部接口
       channelType: [],
@@ -380,6 +401,9 @@ export default {
           userId: "",
           id: "",
         }
+          channelLabel: "",
+        };
+        Object.assign(this.channelInfo, info);
       } else {
         this.isNew = false;
         this.showAddModal = true;

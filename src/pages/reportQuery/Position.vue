@@ -58,7 +58,7 @@
         </form>
       </Col>
       <Col span="" class="mr3" style="flex-shrink: 0">
-        <Button type="info" @click="refresh()" class="mr3"
+        <Button type="primary" @click="refresh()" class="mr3"
         >
           <Icon type="md-search"/>
           查询

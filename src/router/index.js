@@ -92,7 +92,7 @@ const routes = [
                 name: "RuleManage",
                 component: () => import(/* webpackChunkName: "rule-manage" */ "@/pages/systemManage/RuleManage.vue"),
                 meta: {
-                    title: "用户策略管理",
+                    title: "策略管理",
                 },
             },
             {

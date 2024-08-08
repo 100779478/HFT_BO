@@ -65,12 +65,20 @@ import {getApiType, getChannelConnectStatus, handleSort, handleExport} from "@/c
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
-  mixins:[tableMixin],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
         title: "通道代码",
         key: "channelId",
+        minWidth: 100,
+        resizable: true,
+        width: null,
+        sortable: 'custom'
+      },
+      {
+        title: "通道名称",
+        key: "channelLabel",
         minWidth: 100,
         resizable: true,
         width: null,
@@ -100,10 +108,12 @@ export default {
           // 定义一个映射对象，将 code 映射到对应的颜色
           const codeToColor = {
             0: "#ff8000",
-            1: "#ff8000	",
+            1: "#ff8000",
             2: "#19be6b",
             3: "#ff0000",
+            'A': "#ff0000",
             9: "#ff0000",
+            4:"#ff8000"
           };
           const color = codeToColor[result.code] || "#ff0000"; // 默认颜色
           const iconStatus = h("Icon", {
@@ -166,11 +176,11 @@ export default {
     },
     // 获取状态连接列表
     getChannelStatus() {
-      this.loading = true;
+      // this.loading = true;
       http.post(`${URL.channelStatus}`, this.pagination, (res) => {
         setTimeout(() => {
           this.loading = false;
-        }, 200);
+        }, 0);
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList || [];
       });

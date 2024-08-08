@@ -79,7 +79,7 @@
         </form>
       </Col>
       <Col style="position:absolute;right: 25px">
-        <Button type="info" @click="refresh()"
+        <Button type="primary" @click="refresh()"
                 style="margin-right: 5px"
         >
           <Icon type="md-search"/>

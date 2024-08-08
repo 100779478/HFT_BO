@@ -39,7 +39,7 @@
         </form>
       </Col>
       <Col style="position:absolute;right: 25px">
-        <Button type="info" @click="refresh()" style="margin-right: 5px">
+        <Button type="primary" @click="refresh()" style="margin-right: 5px">
           <Icon type="md-search"/>
           查询
         </Button>
@@ -102,7 +102,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, getRuleFileType, getRuleType, getRuleVettingStatus} from "@/common/common";
+import {handleSort, getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus} from "@/common/common";
 import {downLoadZip} from "@/utils/downLoadZip";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
@@ -131,7 +131,7 @@ export default {
           this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
           this.$Modal.info({
             render: (h) => h(ParamsTable, {props: {paramList: this.paramList, readOnly: true}}),
-            width: 1100, // 设置宽度
+            width: 650, // 设置宽度
             okText: "确认",
           });
           break;

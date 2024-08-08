@@ -1,8 +1,13 @@
 const path = require('path');
 const {defineConfig} = require('@vue/cli-service');
+const {DefinePlugin} = require('webpack');
+const fs = require('fs');
+const packageJson = require('./package.json');
 const TerserPlugin = require('terser-webpack-plugin');
 const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
+
 module.exports = defineConfig({
+    outputDir: './dist/hft-bo-web',
     productionSourceMap: false,
     transpileDependencies: true,
     lintOnSave: false,
@@ -37,7 +42,22 @@ module.exports = defineConfig({
                 }
             }
         },
-        plugins: []
+        plugins: [
+            new DefinePlugin({
+                'process.env': {
+                    VERSION: JSON.stringify(packageJson.version),
+                },
+            }),
+            {
+                apply: (compiler) => {
+                    compiler.hooks.done.tap('CreateVersionFile', () => {
+                        const outputPath = compiler.options.output.path;
+                        const versionFilePath = path.join(outputPath, 'version.txt');
+                        fs.writeFileSync(versionFilePath, `Version: ${packageJson.version}\n`);
+                    });
+                },
+            },
+        ]
     },
     chainWebpack: config => {
         config.plugin('speed-measure-webpack-plugin')

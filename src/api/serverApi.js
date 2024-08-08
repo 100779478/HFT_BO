@@ -1,6 +1,7 @@
 const env = process.env.NODE_ENV;
-const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+// const devUrl = "http://58.250.164.226:31004"; //POC
+// const devUrl = "http://172.24.16.13:9888"; //POC
+const devUrl = "http://192.168.77.16:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -81,14 +82,24 @@ export const URL = {
     customChannel: "/cus-channel",
     // 导出分账户
     customChannelExport: "/cus-channel/export",
-    // 分页获取用户策略
-    ruleList: "/rule/list",
+    // 获取做市策略列表
+    ruleListMarket: "/rule/list/make-market",
+    // 导出做市策略列表
+    ruleExportMarket: "/rule/export/make-market",
+    // 新增、更新做市策略
+    ruleMarket: "/rule/make-market",
+    // 分页获取量化策略列表
+    ruleList: "/rule/list/quant",
     // 添加、修改、删除用户策略
     rule: "/rule",
-    // 导出用户策略列表
-    ruleExport: "/rule/export",
-    // 获取策略类型列表
-    ruleType: "/rule/type",
+    // 添加、修改、删除量化策略
+    ruleQuant: "/rule/quant",
+    // 导出量化策略列表
+    ruleExportQuant: "/rule/export/quant",
+    // 上传量化策略模板
+    ruleUploadQuant: "/rule/upload/quant",
+    // 获取量化策略实例列表
+    ruleQuantInstanceList: "/rule/list/quant/instance",
     // 获取策略ID及存储位置 GET
     ruleUpload: "/rule/upload",
     // 上传策略文件
