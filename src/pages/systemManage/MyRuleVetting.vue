@@ -180,7 +180,7 @@
                         @on-change="handleShowParamsTable"
                     >
                       <Option
-                          v-for="item in getRuleMakeMarketType()"
+                          v-for="item in getRuleQuantType()"
                           :key="item.code"
                           :value="item.code"
                       >{{ item.description }}
@@ -203,6 +203,7 @@
                         type="ios-checkmark-circle"
                         color="green"
                         size="23"/>
+                    <div>{{ this.fileName }}</div>
                   </FormItem>
                 </Col>
               </Form>
@@ -210,12 +211,10 @@
             <div class="modal__content-right"
                  v-show="chooseRule"
             >
-              <Button @click="uploadFile('param')" class="btn" type="info">
-                <Icon type="md-arrow-round-forward"/>
-                导入参数列表
-              </Button>
+              <Button @click="uploadFile('param')" class="btn" type="info">导入参数</Button>
               <Button @click="addRow" class="btn" type="success">添加参数</Button>
               <Button @click="clearParamList" class="btn" type="error">清空列表</Button>
+              <Button @click="exportParamList" class="btn" type="primary">导出参数</Button>
               <ParamsTable :paramList="paramList" :readOnly="false"/>
             </div>
           </div>
@@ -282,7 +281,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
+import {getRuleQuantType} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin, ruleVettingColumn} from "@/mixins/ruleComponentMixin";
@@ -301,6 +300,7 @@ export default {
     return {
       pagination,
       showAddModal: false,
+      fileName: "",
       userStrategyInfo
     };
   },
@@ -309,6 +309,7 @@ export default {
     this.getUserList();
   },
   methods: {
+    getRuleQuantType,
     // 更多操作
     doOperate(name, row) {
       switch (name) {
@@ -344,6 +345,7 @@ export default {
       this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
       // 只读下拉框展示需改为字符串类型
       this.paramList.forEach(param => param.readOnly = String(param.readOnly));
+      this.userStrategyInfo.customerIds = row.customers.map(v => v.customerId)
       Object.assign(this.userStrategyInfo, row);
     },
     // 新增弹窗确认按键
@@ -359,7 +361,6 @@ export default {
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
         this.paramList.forEach(param => param.readOnly = String(param.readOnly));
-        this.userStrategyInfo.customerIds = row.customers.map(v => v.customerId)
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.rulePath) {
           this.$Message.warning('策略存储路径不能为空')

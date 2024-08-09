@@ -46,6 +46,30 @@ const ruleComponentMixin = {
         clearParamList() {
             this.paramList = []
         },
+        exportParamList() {
+            // 将数据转换为 JSON 字符串
+            const jsonString = JSON.stringify(this.paramList, null, 2);
+            // 创建一个 Blob 对象
+            const blob = new Blob([jsonString], {type: 'application/json'});
+
+            if (typeof window !== 'undefined' && window.URL && window.URL.createObjectURL) {
+                // 在浏览器环境中创建下载链接
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'params-list.json';
+
+                // 触发下载
+                document.body.appendChild(a);
+                a.click();
+
+                // 清理
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            } else {
+                console.error('URL.createObjectURL is not supported in this environment.');
+            }
+        },
         // 添加一行参数列表
         addRow() {
             this.paramList.push({
@@ -130,6 +154,8 @@ const ruleComponentMixin = {
             });
         },
         handleFileChange(event, type, path) {
+            if (!this.userStrategyInfo.ruleId) return this.showMessage('请先获取策略ID', 'error');
+            this.fileName = event.target.files[0].name;
             // 获取用户选择的文件
             const file = event.target.files[0];
             if (file) {
