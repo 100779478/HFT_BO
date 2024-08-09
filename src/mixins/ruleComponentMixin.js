@@ -47,8 +47,11 @@ const ruleComponentMixin = {
             this.paramList = []
         },
         exportParamList() {
+            const data = {
+                param: this.paramList
+            }
             // 将数据转换为 JSON 字符串
-            const jsonString = JSON.stringify(this.paramList, null, 2);
+            const jsonString = JSON.stringify(data, null, 2);
             // 创建一个 Blob 对象
             const blob = new Blob([jsonString], {type: 'application/json'});
 
