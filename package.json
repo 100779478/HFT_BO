@@ -1,6 +1,6 @@
 {
   "name": "bo-project",
-  "version": "1.5.6",
+  "version": "2.7.4",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",

@@ -247,12 +247,10 @@
         <div class="modal__content-right"
              v-show="chooseRule"
         >
-          <Button @click="uploadFile('param')" class="btn" type="info">
-            <Icon type="md-arrow-round-forward"/>
-            导入参数列表
-          </Button>
+          <Button @click="uploadFile('param')" class="btn" type="info">导入参数</Button>
           <Button @click="addRow" class="btn" type="success">添加参数</Button>
           <Button @click="clearParamList" class="btn" type="error">清空列表</Button>
+          <Button @click="exportParamList" class="btn" type="primary">导出参数</Button>
           <ParamsTable :paramList="paramList" :readOnly="false"/>
         </div>
       </div>
