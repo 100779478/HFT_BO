@@ -51,18 +51,21 @@
               style="width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="实例名称"
+              @on-change="handleSearch"
           />
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="用户代码"
+              @on-change="handleSearch"
           />
           <Input
               v-model="pagination.ruleTag"
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="标签"
+              @on-change="handleSearch"
           />
           <Select
               v-model="pagination.active"
@@ -70,6 +73,7 @@
               style="width: 100px"
               placeholder="状态"
               :clearable="true"
+              @on-change="handleSearch"
           >
             <Option
                 v-for="item in activeList"
@@ -85,89 +89,13 @@
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.ruleExportQuant, this.pagination, '策略实例')" class="mr3">
+        <Button type="success" @click="()=>handleExport(URL.ruleExportInstance, this.pagination, '策略实例')"
+                class="mr3">
           <Icon type="md-download"/>
           导出
         </Button>
       </Col>
     </Row>
-    <Modal
-        v-model="showAddModal"
-        draggable
-        sticky
-        mask
-        :width="1300"
-        :mask-closable="false"
-        title="查看策略实例"
-    >
-      <div class="modal__content">
-        <div class="modal__content-left">
-          <Form
-              ref="ruleForm"
-              :model="instanceStrategyInfo"
-              :label-width="210"
-              label-colon
-              autocomplete="off"
-          >
-            <Col :span="18">
-              <FormItem label="实例ID">
-                <Input
-                    v-model="instanceStrategyInfo.ruleId"
-                    disabled
-                    :maxlength="20"
-                    show-message="false"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="实例名称">
-                <Input
-                    v-model="instanceStrategyInfo.ruleName"
-                    disabled
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="用户代码">
-                <Input
-                    v-model="instanceStrategyInfo.customerId"
-                    disabled
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="标签">
-                <Input
-                    v-model="instanceStrategyInfo.ruleTag"
-                    disabled
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="状态">
-                <i-Switch
-                    v-model="instanceStrategyInfo.active"
-                    disabled
-                    style="margin-top: 5px"
-                />
-              </FormItem>
-            </Col>
-          </Form>
-        </div>
-        <div class="modal__content-right">
-          <ParamsTable :paramList="paramList" :readOnly="true"/>
-        </div>
-      </div>
-      <div slot="footer">
-        <Button type="primary" @click="()=>this.showAddModal=false">确定</Button>
-      </div>
-    </Modal>
     <Table
         :columns="columns1" style="clear: both"
         :data="tableData"
@@ -178,19 +106,7 @@
         :loading="loading"
         border
         @on-sort-change="e=>handleSort(e,this.getUserStrategyData)"
-    >
-      <template v-slot:operator="{ row }">
-        <div @click.stop style="display: flex; justify-content: flex-start">
-          <div @click="() => modalUser('modify', row)" class="table-operate">
-            查看
-          </div>
-          <div @click="() => deleteRow(URL.rule, row.ruleId, '策略实例', this.getUserStrategyData)"
-               class="table-operate">
-            删除
-          </div>
-        </div>
-      </template>
-    </Table>
+    />
     <template>
       <div class="page-bottom">
         <Page
@@ -278,7 +194,6 @@ export default {
           ]);
         },
       },
-      {title: "操作", slot: "operator", width: 180},
     ];
     let pagination = {
       ruleName: "",
@@ -287,20 +202,11 @@ export default {
       customerId: "",
       active: ""
     };
-    let instanceStrategyInfo = {
-      ruleId: null,
-      ruleName: null,
-      customerId: null,
-      ruleTag: null,
-      active: true,
-    }
     return {
-      instanceStrategyInfo,
       columns1,
       pagination,
       loading: false,
       activeList: ACTIVE_LIST,
-      showAddModal: false,
     };
   },
   computed: {
@@ -328,17 +234,6 @@ export default {
     handleSearch() {
       this.pagination.pageNumber = 1;
       this.getUserStrategyData();
-    },
-    // 策略实例弹窗
-    modalUser(type, row) {
-      // 清除表单验证信息（初始化）
-      this.$refs.ruleForm.resetFields();
-      this.paramList = []
-      this.showAddModal = true;
-      this.paramList = JSON.parse(JSON.stringify(row.ruleProps))
-      // 只读下拉框展示需改为字符串类型
-      this.paramList.forEach(param => param.readOnly = String(param.readOnly));
-      Object.assign(this.instanceStrategyInfo, row);
     },
   },
 }

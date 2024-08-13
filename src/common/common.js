@@ -232,12 +232,8 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
  */
 
 export function handleExport(url, params, name) {
-    delete params.sortField;
-    delete params.sort
-    delete params.pageNumber
-    delete params.pageSize
-    delete params.total
-    http.post(url, {...params, responseType: "blob"}, (res) => {
+    const {sortField, sort, pageNumber, pageSize, total, ...data} = params
+    http.post(url, {...data, responseType: "blob"}, (res) => {
         const blob = res;
         // 创建link标签
         const link = document.createElement("a");

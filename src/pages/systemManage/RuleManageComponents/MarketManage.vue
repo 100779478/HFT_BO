@@ -40,19 +40,22 @@
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="策略名称"
+              @on-change="handleSearch"
           > </Input>
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="用户代码"
+              @on-change="handleSearch"
           > </Input>
           <Select
               v-model="pagination.ruleType"
               class="mr3"
-              style="width: 100px"
+              style="width: auto"
               placeholder="策略类型"
               :clearable="true"
+              @on-change="handleSearch"
           >
             <Option
                 v-for="item in this.$store.state.dictionary.dictionaryList.RuleMakeMarketType"
@@ -67,6 +70,7 @@
               style="width: 100px"
               placeholder="状态"
               :clearable="true"
+              @on-change="handleSearch"
           >
             <Option
                 v-for="item in activeList"
@@ -147,7 +151,7 @@
                           v-model="userStrategyInfo.rulePath"
                           placeholder="请输入策略文件存储位置"
                           autocomplete="off"
-                          :maxlength="32"
+                          :maxlength="256"
                       ></Input>
                     </Tooltip>
                   </FormItem>

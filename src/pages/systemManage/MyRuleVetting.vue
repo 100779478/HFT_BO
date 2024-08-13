@@ -67,7 +67,7 @@
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.myVettingExport, this.pagination, '我的审批')"
+        <Button type="success" @click="()=>handleExport(URL.myVettingExport, this.pagination, '我的策略申请')"
         >
           <Icon type="md-download"/>
           导出
@@ -127,7 +127,7 @@
                           v-model="userStrategyInfo.rulePath"
                           placeholder="请输入策略文件存储位置"
                           autocomplete="off"
-                          :maxlength="32"
+                          :maxlength="256"
                       ></Input>
                     </Tooltip>
                   </FormItem>

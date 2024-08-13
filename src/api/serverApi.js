@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://172.24.16.13:9888"; //POC
-const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+const devUrl = "https://172.24.16.13:9888"; //POC
+// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -178,4 +178,6 @@ export const URL = {
     vettingExport: '/rule-vetting/export',
     // 导出我的策略审批单列表
     myVettingExport: '/rule-vetting/export/my',
+    // 导出策略实例
+    ruleExportInstance: '/rule/export/quant/instance',
 };

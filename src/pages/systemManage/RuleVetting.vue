@@ -39,7 +39,7 @@
         </form>
       </Col>
       <Col style="position:absolute;right: 25px">
-        <Button type="primary" @click="refresh()" style="margin-right: 5px">
+        <Button type="primary" @click="getVettingList" style="margin-right: 5px">
           <Icon type="md-search"/>
           查询
         </Button>

@@ -38,7 +38,7 @@ export const tableMixin = {
         /**
          * 处理表格分页切换
          *
-         * @param {string} type - 分页类型（'currentPage' 或 'pageSize'）
+         * @param {string} type - 分页类型（'pageNumber' 或 'pageSize'）
          * @param {number} value - 分页类型的新值
          * @param {Function} fn - 用于重新获取列表数据的函数
          */

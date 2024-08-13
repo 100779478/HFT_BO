@@ -56,12 +56,14 @@
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="策略名称"
+              @on-change="handleSearch"
           />
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="用户代码"
+              @on-change="handleSearch"
           />
           <Select
               v-model="pagination.ruleType"
@@ -69,6 +71,7 @@
               style="width: 100px"
               placeholder="策略类型"
               :clearable="true"
+              @on-change="handleSearch"
           >
             <Option
                 v-for="item in this.$store.state.dictionary.dictionaryList.RuleQuantType"
@@ -83,6 +86,7 @@
               style="width: 100px"
               placeholder="状态"
               :clearable="true"
+              @on-change="handleSearch"
           >
             <Option
                 v-for="item in activeList"
@@ -159,11 +163,10 @@
               <FormItem label="策略文件存储位置" prop="rulePath">
                 <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%">
                   <Input
-                      disabled
                       v-model="userStrategyInfo.rulePath"
                       placeholder="请输入策略文件存储位置"
                       autocomplete="off"
-                      :maxlength="32"
+                      :maxlength="256"
                   ></Input>
                 </Tooltip>
               </FormItem>
@@ -333,7 +336,7 @@ export default {
       {
         title: "策略ID",
         key: "ruleId",
-        minWidth: 60,
+        minWidth: 95,
         resizable: true,
         sortable: 'custom',
         width: null,
@@ -417,7 +420,7 @@ export default {
         key: "active",
         resizable: true,
         width: null,
-        minWidth: 60,
+        minWidth: 95,
         sortable: 'custom',
         render: (h, params) => {
           const iconOpen = h("Icon", {
@@ -597,7 +600,11 @@ export default {
         this.paramList.forEach(param => param.readOnly = String(param.readOnly))
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.rulePath) {
-          this.$Message.warning('策略存储路径不能为空')
+          this.$Message.warning('策略文件存储位置不能为空')
+          return
+        }
+        if (this.userStrategyInfo.rulePath.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
+          this.$Message.warning('策略文件类型为C++时，策略文件存储位置需要以.so结尾')
           return
         }
         const config = {
@@ -625,7 +632,6 @@ export default {
     // 🈲用策略
     handleActiveDisable(res) {
       if (res.code !== "0") {
-        this.$Message.error("禁用失败：" + res.msg);
         return;
       }
       this.$Message.success(`策略已禁用`);
@@ -633,6 +639,7 @@ export default {
     },
     changeUserStatus(row) {
       let data = row.ruleId;
+      console.log(1111, data)
       if (!row.active) {
         http.post(`${URL.rule}/${data}/enable`, {}, this.handleActiveEnable);
       } else {
