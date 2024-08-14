@@ -32,10 +32,10 @@
         </form>
       </Col>
       <Col style="position: absolute;right: 25px">
-        <!--        <Button type="info" @click="modalUser('new')">-->
-        <!--          <Icon type="md-add"/>-->
-        <!--          新增用户-->
-        <!--        </Button>-->
+        <Button type="info" @click="modalUser('new')" class="mr3">
+          <Icon type="md-add"/>
+          新增用户
+        </Button>
         <!--        <Button type="success" @click="refresh()">-->
         <!--          <Icon type="md-refresh"/>-->
         <!--          刷新-->

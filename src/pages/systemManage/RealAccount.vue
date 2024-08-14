@@ -255,7 +255,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -354,9 +354,9 @@ export default {
       },
       tableData: [],
       // 外部接口
-      channelType: [],
+      channelType: getApiType(),
       // 通道
-      channelTrade: [],
+      channelTrade: getChannelType(),
       terminalType: [],
       columns1,
       pagination,
@@ -370,10 +370,6 @@ export default {
       this.tableHeight = window.innerHeight - 220
     })
     this.getChannelData();
-    // 获取外部接口类型
-    this.getAPIType();
-    // 获取通道类型
-    this.getTerminalType();
   },
   unMounted() {
     window.removeEventListener('resize', () => {
@@ -401,7 +397,6 @@ export default {
       this.$refs.password.focus();
     },
     handleBlur() {
-      console.log(222, this.typeInput)
       this.typeInput = false
     },
     // 获取实体账户列表
@@ -409,17 +404,6 @@ export default {
       this.pagination.channelId = value || "";
       // 实体账户列表
       http.post(URL.channelList, this.pagination, this.getChannelResponse);
-    },
-    getAPIType() {
-      // 外部接口类型
-      http.get(URL.apiType, (res) => {
-        this.channelType = res.data;
-      });
-    },
-    getTerminalType() {
-      http.get(URL.channelType, (res) => {
-        this.channelTrade = res.data;
-      });
     },
     getApiTerminalType(e) {
       // 使用 selectedValue 获取选中项的值
@@ -525,8 +509,6 @@ export default {
       //   channelId: "",
       // };
       this.getChannelData();
-      this.getAPIType();
-      this.getTerminalType();
     },
     // 导出列表
     handleExportOrders() {

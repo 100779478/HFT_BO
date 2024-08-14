@@ -82,23 +82,30 @@ export function getHedgeType(code) {
 // 交易通道类型
 export function getChannelType(code) {
     let result = {};
-    store.state.dictionaryList.ChannelType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    if (code) {
+        store.state.dictionaryList.ChannelType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+        return result;
+    }
+    return store.state.dictionaryList.ChannelType;
 }
 
 // 接口类型
 export function getApiType(code) {
     let result = {};
-    store.state.dictionaryList.ApiType.forEach((i) => {
-        if (i.code === code) {
-            result = i;
-        }
-    });
-    return result;
+    if (code) {
+        store.state.dictionaryList.ApiType.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+        return result;
+    } else {
+        return store.state.dictionaryList.ApiType
+    }
 }
 
 // 用户类型
@@ -109,7 +116,6 @@ export function getUserType(code) {
             result = i;
         }
     });
-    return result;
 }
 
 // 持仓方向
