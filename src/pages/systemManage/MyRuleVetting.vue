@@ -63,12 +63,12 @@
         </form>
       </Col>
       <Col style="position: absolute;right: 25px">
-        <Button type="primary" @click="refresh()" style="margin-right: 5px">
+        <Button type="primary" @click="refresh()" class="mr3">
           <Icon type="md-search"/>
           查询
         </Button>
         <Button type="success" @click="()=>handleExport(URL.myVettingExport, this.pagination, '我的策略申请')"
-        >
+                class="mr3">
           <Icon type="md-download"/>
           导出
         </Button>

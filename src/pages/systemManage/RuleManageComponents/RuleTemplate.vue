@@ -394,6 +394,7 @@ export default {
                 attrs: {
                   content: customerIds,
                   maxWidth: 600,
+                  transfer:true,
                 },
                 style: {
                   whiteSpace: "nowrap",

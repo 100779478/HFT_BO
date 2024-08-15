@@ -39,9 +39,13 @@
         </form>
       </Col>
       <Col style="position:absolute;right: 25px">
-        <Button type="primary" @click="getVettingList" style="margin-right: 5px">
+        <Button type="primary" @click="getVettingList" class="mr3">
           <Icon type="md-search"/>
           查询
+        </Button>
+        <Button type="success" @click="()=>handleExport(URL.vettingExport, this.pagination,'策略审批')" class="mr3">
+          <Icon type="md-download"/>
+          导出
         </Button>
       </Col>
     </Row>
@@ -102,7 +106,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus} from "@/common/common";
+import {handleSort, getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport} from "@/common/common";
 import {downLoadZip} from "@/utils/downLoadZip";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
@@ -124,6 +128,7 @@ export default {
     this.getVettingList();
   },
   methods: {
+    handleExport,
     handleSort,
     doOperate(name, row) {
       switch (name) {

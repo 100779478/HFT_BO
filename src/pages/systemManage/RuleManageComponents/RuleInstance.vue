@@ -67,21 +67,6 @@
               placeholder="标签"
               @on-change="handleSearch"
           />
-          <Select
-              v-model="pagination.active"
-              class="mr3"
-              style="width: 100px"
-              placeholder="状态"
-              :clearable="true"
-              @on-change="handleSearch"
-          >
-            <Option
-                v-for="item in activeList"
-                :value="item.code"
-                :key="item.code"
-            >{{ item.description }}
-            </Option>
-          </Select>
         </form>
       </Col>
       <Col span="" class="mr3" style="flex-shrink: 0">
@@ -168,39 +153,12 @@ export default {
         width: null,
         minWidth: 120,
       },
-      {
-        title: "策略状态",
-        key: "active",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-        sortable: 'custom',
-        render: (h, params) => {
-          const iconOpen = h("Icon", {
-            props: {
-              type: "ios-radio-button-on",
-              color: "#19be6b",
-            },
-          });
-          const iconClose = h("Icon", {
-            props: {
-              type: "ios-radio-button-on",
-              color: "#ed4014",
-            },
-          });
-          return h("span", [
-            params.row.active ? iconOpen : iconClose,
-            params.row.active ? "  已启用" : "  已禁用",
-          ]);
-        },
-      },
     ];
     let pagination = {
       ruleName: "",
       ruleId: null,
       ruleTag: "",
       customerId: "",
-      active: ""
     };
     return {
       columns1,
