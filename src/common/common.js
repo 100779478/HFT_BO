@@ -116,6 +116,7 @@ export function getUserType(code) {
             result = i;
         }
     });
+    return result
 }
 
 // 持仓方向
