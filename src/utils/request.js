@@ -190,6 +190,20 @@ export function defaultErrorHandler(error) {
         }
         Message.error(errorMessage);
     } catch (e) {
+        // 如果服务器返回的错误是JSON格式
+        if (error.response && error.response.data) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                try {
+                    const errorData = JSON.parse(reader.result);
+                    Message.error(errorData.errorMessage)
+                    // 处理错误信息
+                } catch (e) {
+                }
+            };
+            reader.readAsText(error.response.data)
+            return;
+        }
         Message.error('未知错误');
     }
 }
@@ -269,7 +283,7 @@ axiosInstance.interceptors.response.use(
             case 503:
             case 500:
             case 502:
-                Message.error("服务器连接失败！");
+                // Message.error("服务器连接失败！");
                 return Promise.reject(error);
             default:
                 return Promise.reject(error);

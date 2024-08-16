@@ -152,10 +152,10 @@ const ruleComponentMixin = {
             // 获取用户选择的文件
             const file = event.target.files[0];
             if (file) {
+                const fileName = file.name
                 // 根据 type 判断处理逻辑
                 if (type === 'strategy') {
                     if (!this.userStrategyInfo.ruleId) return this.showMessage('请先获取策略ID', 'error');
-                    this.fileName = event.target.files[0].name;
                     // 使用注释逻辑
                     const url = `${path}/${this.userStrategyInfo.ruleId}`;
                     // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
@@ -163,12 +163,9 @@ const ruleComponentMixin = {
                     // TODO: 调用上传操作的代码
                     http.uploadFile(url, file, {},
                         (response) => {
+                            this.fileName = fileName;
                             this.$Message.success('上传成功');
                             // 处理上传成功后的逻辑
-                        },
-                        (error) => {
-                            this.$Message.error('上传失败');
-                            // 处理上传失败后的逻辑
                         }
                     );
                     document.getElementById('fileInput').value = '';
@@ -261,26 +258,30 @@ const ruleVettingColumn = {
                 width: null,
                 minWidth: 120,
             },
-            // {
-            //     title: "用户代码",
-            //     key: "customerId",
-            //     sortable: 'custom',
-            //     resizable: true,
-            //     width: null,
-            //     minWidth: 120,
-            // },
-            // {
-            //     title: "策略类型",
-            //     key: "ruleType",
-            //     sortable: 'custom',
-            //     resizable: true,
-            //     width: null,
-            //     minWidth: 220,
-            //     render: (h, {row}) => {
-            //         const result = getRuleMakeMarketType(row.ruleType, true);
-            //         return h("span", result.description);
-            //     },
-            // },
+            {
+                title: "申请时间",
+                key: "submissionTime",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 170,
+            },
+            {
+                title: "审批人",
+                key: "approvalName",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 120,
+            },
+            {
+                title: "审批时间",
+                key: "approvalTime",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 120,
+            },
             {
                 title: "策略状态",
                 key: "ruleVettingStatus",
@@ -304,6 +305,14 @@ const ruleVettingColumn = {
                         statusInfo.description,
                     ]);
                 },
+            },
+            {
+                title: "备注",
+                key: "comment",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 180,
             },
             {title: "操作", slot: "operator", width: 180},
         ];

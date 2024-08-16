@@ -39,7 +39,10 @@ new Vue({
         if (sessionStorage.getItem('isPageReload')) {
             sessionStorage.removeItem('isPageReload');
             // 执行刷新后的操作，重定向到主页面
-            this.$router.replace({name: 'Dashboard'});
+            const mark = location.hash.substring(2)
+            if (mark !== 'login' && mark) {
+                this.$router.replace({name: 'Dashboard'});
+            }
         }
     },
     methods: {
