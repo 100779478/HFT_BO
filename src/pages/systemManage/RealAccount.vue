@@ -100,7 +100,7 @@ input:-webkit-autofill {
             <FormItem label="外部接口类型" prop="apiType">
               <Select
                   v-model="channelInfo.apiType"
-                  placeholder="请选择通道类型"
+                  placeholder="请选择外部接口类型"
                   :maxlength="32"
                   @on-change="getApiTerminalType"
                   :disabled="!isNew"
@@ -121,7 +121,6 @@ input:-webkit-autofill {
                   placeholder="请选择通道类型"
                   :maxlength="32"
                   :disabled="!isNew"
-                  v-if="isNew"
               >
                 <Option
                     v-for="item in channelTrade"
@@ -172,6 +171,44 @@ input:-webkit-autofill {
                 ></Input>
 
               </div>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="交易地址" prop="addressList">
+              <form autocomplete="off">
+                <Input
+                    v-model="channelInfo.addressList"
+                    placeholder="请输入交易地址"
+                    show-message="false"
+                ></Input>
+              </form>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="收盘时间" prop="closeTimePoint">
+              <TimePicker
+                  v-model="channelInfo.closeTimePoint"
+                  placeholder="请选择收盘时间"
+                  format="HH:mm:ss"
+                  style="width: 100%;"
+                  show-message="false"
+              ></TimePicker>
+            </FormItem>
+          </Col>
+          <Col :span="18">
+            <FormItem label="日志级别" prop="logLevel">
+              <Select
+                  v-model="channelInfo.logLevel"
+                  placeholder="请选择日志级别"
+                  :maxlength="32"
+              >
+                <Option
+                    v-for="item in logLevelList"
+                    :key="item.code"
+                    :value="item.code"
+                >{{ item.description }}
+                </Option>
+              </Select>
             </FormItem>
           </Col>
           <Col :span="18">
@@ -240,7 +277,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, handleSort, time} from "@/common/common";
+import {getApiType, getChannelType, getLogLevel, getUserType, handleSort, time} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -271,12 +308,32 @@ export default {
         sortable: 'custom',
       },
       {
-        title: "交易账号",
-        key: "userId",
+        title: "交易地址",
+        key: "addressList",
         minWidth: 150,
         resizable: true,
         width: null,
         sortable: 'custom',
+      },
+      {
+        title: "收盘时间",
+        key: "closeTimePoint",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+      },
+      {
+        title: "日志级别",
+        key: "logLevel",
+        minWidth: 150,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+        render: (h, {row}) => {
+          const result = getLogLevel(row.logLevel);
+          return h("span", result.description);
+        },
       },
       {
         title: "是否启用",
@@ -336,12 +393,16 @@ export default {
         active: true,
         password: "",
         userId: "",
+        addressList: "",
+        closeTimePoint: "",
+        logLevel: ""
       },
       tableData: [],
       // 外部接口
       channelType: getApiType(),
       // 通道
       channelTrade: getChannelType(),
+      logLevelList: getLogLevel(),
       terminalType: [],
       columns1,
       pagination,
@@ -426,7 +487,9 @@ export default {
           active: true,
           password: "",
           userId: "",
-          id: "",
+          addressList: "",
+          closeTimePoint: "",
+          logLevel: "",
         };
         Object.assign(this.channelInfo, info);
       } else {

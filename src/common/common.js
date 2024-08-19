@@ -89,8 +89,9 @@ export function getChannelType(code) {
             }
         });
         return result;
+    } else {
+        return store.state.dictionaryList.ChannelType;
     }
-    return store.state.dictionaryList.ChannelType;
 }
 
 // 接口类型
@@ -128,6 +129,21 @@ export function getPositionDirection(code) {
         }
     });
     return result;
+}
+
+// 日志级别
+export function getLogLevel(code) {
+    let result = {};
+    if (code) {
+        store.state.dictionaryList.LogLevel.forEach((i) => {
+            if (i.code === code) {
+                result = i;
+            }
+        });
+        return result;
+    } else {
+        return store.state.dictionaryList.LogLevel
+    }
 }
 
 // 表头排序
