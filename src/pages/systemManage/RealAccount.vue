@@ -130,20 +130,6 @@ input:-webkit-autofill {
                 >{{ item.name }}
                 </Option>
               </Select>
-              <Select
-                  v-model="channelInfo.terminalType"
-                  placeholder="请选择通道类型"
-                  :maxlength="32"
-                  :disabled="!isNew"
-                  v-else
-              >
-                <Option
-                    v-for="item in channelTrade"
-                    :key="item.code"
-                    :value="item.code"
-                >{{ item.name }}
-                </Option>
-              </Select>
             </FormItem>
           </Col>
           <Col :span="18">
@@ -202,7 +188,6 @@ input:-webkit-autofill {
           <Button type="primary" @click="ok(isNew)">确定</Button>
         </div>
       </Modal>
-      </Col>
     </Row>
     <Table
         :columns="columns1"
@@ -370,10 +355,6 @@ export default {
       this.tableHeight = window.innerHeight - 220
     })
     this.getChannelData();
-  },
-  unMounted() {
-    window.removeEventListener('resize', () => {
-    })
   },
   methods: {
     handleSort,
