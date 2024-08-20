@@ -52,7 +52,8 @@ export const http = {
         // 创建一个 data 的副本
         return axiosInstance.post(url, data, {responseType}).then((res) => {
             thenHandler(res)
-            if (res?.code === '0' && messageType) showNotification(messageType)
+            const msg = !res.okMessage ? messageType : res.okMessage
+            if (res?.code === '0' && messageType) showNotification(msg)
         }).catch(errorHandler);
     },
     uploadFile: (url, file, data = {}, thenHandler = () => {

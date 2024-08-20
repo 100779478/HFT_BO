@@ -115,6 +115,7 @@ const ruleComponentMixin = {
                 http.get(`${URL.ruleIdPath}?type=${code}`, (response) => {
                     const {ruleId, rulePath} = response.data;
                     this.userStrategyInfo.ruleId = ruleId;
+                    this.rulePath = rulePath
                     this.userStrategyInfo.rulePath = rulePath;
                 })
             }
@@ -135,6 +136,14 @@ const ruleComponentMixin = {
         handleShowParamsTable(e) {
             this.chooseRule = e === '8';
             this.fileName = ""
+            const strategyPaths = {
+                '1': './Rules/libMM_strategy.so',          // 银行间双边做市策略
+                '6': './Rules/indicative_strategy.so',     // 银行间指示性报价策略
+                'a': './Rules/libmm_strategy_rate.so',     // 交易所新债平台做市策略
+                'b': './Rules/libmm_strategy_fi.so',       // 交易所固收平台做市策略
+                'c': './Rules/libBond_Spread.so'           // 套利策略
+            };
+            this.userStrategyInfo.rulePath = strategyPaths[e] || this.rulePath || this.userStrategyInfo.rulePath;
         },
         // 新增弹窗关闭
         cancel() {
