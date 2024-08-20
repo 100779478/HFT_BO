@@ -7,7 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
 
 module.exports = defineConfig({
-    outputDir: './dist/hft-bo-web',
+    outputDir: './build/hft-bo-web',
     productionSourceMap: false,
     transpileDependencies: true,
     lintOnSave: false,

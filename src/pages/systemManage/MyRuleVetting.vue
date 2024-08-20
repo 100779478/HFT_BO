@@ -360,7 +360,7 @@ export default {
       } else {
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
-        this.paramList.forEach(param => param.readOnly = String(param.readOnly));
+        // this.paramList.forEach(param => param.readOnly = String(param.readOnly));
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.rulePath) {
           this.$Message.warning('策略存储路径不能为空')

@@ -52,7 +52,14 @@ export default {
         title: "参数默认值",
         key: "value",
         width: 150,
-        render: this.renderEditable
+        render: (h, params) => {
+          const {row} = params
+          if (row.type !== "0") {
+            return this.renderEditable(h, params)
+          } else {
+            return this.renderSelectCell(h, params)
+          }
+        }
       },
       // {
       //   title: "参数分组",
@@ -127,7 +134,7 @@ export default {
         this.paramList.splice(paramIndex, 1);
       }
     },
-// 渲染table列表
+    // 渲染table列表
     renderEditable(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
@@ -154,10 +161,24 @@ export default {
       if (this.readOnly) {
         // 只渲染 span 标签，同时判断展示
         const value = row[column.key].toString();
-        const options = column.key === "type" ? RulePropType() : [
-          {code: "true", description: "是"},
-          {code: "false", description: "否"},
-        ];
+        let options
+        switch (column.key) {
+          case "type":
+            options = RulePropType();
+            break
+          case "read":
+            options = [
+              {code: "true", description: "是"},
+              {code: "false", description: "否"},
+            ];
+            break
+          case "value" :
+            options = [
+              {code: "1", description: "是"},
+              {code: "0", description: "否"},
+            ]
+            break
+        }
         const displayValue = options.find(option => option.code === value)?.description || value;
         return h("span", displayValue);
       }
@@ -183,8 +204,21 @@ export default {
         {code: "true", description: "是"},
         {code: "false", description: "否"},
       ];
-      const options = column === "type" ? RulePropType() : readList;
-
+      let options
+      switch (column) {
+        case "type":
+          options = RulePropType();
+          break
+        case "read":
+          options = readList;
+          break
+        case "value" :
+          options = [
+            {code: "1", description: "是"},
+            {code: "0", description: "否"},
+          ]
+          break
+      }
       // 这里你可以根据需要动态生成 Options，例如从数据中获取选项列表
       return options.map((option) => {
         return h("Option", {

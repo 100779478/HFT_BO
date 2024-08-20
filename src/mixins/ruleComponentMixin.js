@@ -7,17 +7,17 @@ import {tableMixin} from "@/mixins/tableMixin";
 const ruleComponentMixin = {
     mixins: [tableMixin],
     data() {
-        let paramList = [
-            {
-                name: "account id",
-                description: "分账户",
-                type: 3,
-                value: "testgy_sim01",
-                group: "account",
-                range: '100',
-                readOnly: 'true'
-            },
-        ]
+        // let paramList = [
+        //     {
+        //         name: "account id",
+        //         description: "分账户",
+        //         type: 3,
+        //         value: "testgy_sim01",
+        //         group: "account",
+        //         range: '100',
+        //         readOnly: 'true'
+        //     },
+        // ]
         return {
             fileType: '',
             uploadFlag: false,
@@ -34,7 +34,7 @@ const ruleComponentMixin = {
                 ruleParams: [],
             },
             userValidRules: {},
-            paramList,
+            paramList: [],
             userList: [],
         };
     },

@@ -394,7 +394,7 @@ export default {
                 attrs: {
                   content: customerIds,
                   maxWidth: 600,
-                  transfer:true,
+                  transfer: true,
                 },
                 style: {
                   whiteSpace: "nowrap",
@@ -598,14 +598,18 @@ export default {
       } else {
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
-        this.paramList.forEach(param => param.readOnly = String(param.readOnly))
+        // this.paramList.forEach(param => param.readOnly = String(param.readOnly))
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.rulePath) {
-          this.$Message.warning('策略文件存储位置不能为空')
+          this.$Message.error('策略文件存储位置不能为空')
           return
         }
         if (this.userStrategyInfo.rulePath.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-          this.$Message.warning('策略文件类型为C++时，策略文件存储位置需要以.so结尾')
+          this.$Message.error('策略文件类型为C++时，策略文件存储位置需要以.so结尾')
+          return
+        }
+        if (this.userStrategyInfo.customerIds.length <= 0) {
+          this.$Message.error('用户代码不能为空')
           return
         }
         const config = {
