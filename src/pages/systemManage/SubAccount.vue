@@ -258,7 +258,7 @@ export default {
         minWidth: 110,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       // {
       //   title: "用户名称",
@@ -271,7 +271,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "分账号代码",
@@ -279,7 +279,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "交易接口类型",
@@ -287,7 +287,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "资产账户",
@@ -295,7 +295,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "组合账户",
@@ -303,7 +303,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "基金账户",
@@ -311,7 +311,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "交易员编号",
@@ -319,7 +319,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "备注",
@@ -327,7 +327,7 @@ export default {
         minWidth: 150,
         resizable: true,
         width: null,
-        sortable:'custom',
+        sortable: 'custom',
       },
       {
         title: "操作", slot: "operator", minWidth: 150, resizable: true,
@@ -417,28 +417,32 @@ export default {
     },
     getTradeChannelApi(e) {
       this.tradeChannel.map((d) => {
-        if (e == d.channelId) {
+        if (e === d.channelId) {
           this.channelInfo.tradeApiTypeName = d.apiTypeName;
         }
       });
-      if (this.channelInfo.tradeApiTypeName == "xQuant") {
+      if (this.channelInfo.tradeApiTypeName === "xQuant") {
         this.showLabel = true;
         this.assetLabel = "资产账户";
         this.positionLabel = "内证";
         this.foundationLabel = "基金账户";
-        this.traderLabel = "交易员编码";
-      } else if (this.channelInfo.tradeApiTypeName == "UFX") {
+        this.traderLabel = "交易员编号";
+      } else if (this.channelInfo.tradeApiTypeName === "UFX") {
         this.showLabel = true;
         this.assetLabel = "资产单元";
         this.positionLabel = "投资组合";
         this.foundationLabel = "基金账户";
         this.traderLabel = "股东账号";
+      } else if (this.channelInfo.tradeApiTypeName === 'xQuantTrade') {
+        this.showLabel = true
+        this.foundationLabel = "基金账户";
+        this.traderLabel = "交易员编号";
       } else {
         this.showLabel = false;
         this.assetLabel = "资产账户";
         this.positionLabel = "组合账户";
         this.foundationLabel = "基金账户";
-        this.traderLabel = "交易员编码";
+        this.traderLabel = "交易员编号";
       }
     },
     getChannelResponse(res) {

@@ -464,16 +464,23 @@ export default {
       //   this.userInfo.userType = null
       // }
       if (isNew) {
-        this.userInfo.password = this.$md5(this.userInfo.password);
-        http.put(URL.userEdit, this.userInfo, () => {
-          this.getUserData(), this.cancel();
+        if (!this.userInfo.customerId) {
+          this.$Message.error('用户代码不能为空')
+          return
+        }
+        // this.userInfo.password = this.$md5(this.userInfo.password);
+        const password = this.$md5(this.userInfo.password)
+        http.put(URL.userEdit, {...this.userInfo, password}, () => {
+          this.getUserData()
+          this.cancel();
         });
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
             this.userInfo,
             () => {
-              this.getUserData(), this.cancel();
+              this.getUserData()
+              this.cancel();
             }
         );
       }

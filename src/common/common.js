@@ -157,3 +157,58 @@ export function handleSort(col, func) {
     // this.getChannelStatus();
     func();
 }
+
+
+function str_to_hex3(s) {
+    return [...s].map(c => c.charCodeAt(0).toString(16));
+}
+
+/**
+ * 加密
+ * @param strPlainText
+ * @returns {*}
+ */
+export function encryptPassword(strPlainText) {
+    let temp_str = '';
+    for (let i = 0; i < strPlainText.length; i++) {
+        let rv = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        let rv_str = String.fromCharCode(rv % 255);
+        let iv = strPlainText.charCodeAt(i) ^ 86;
+        let ivc = String.fromCharCode(iv);
+        temp_str += rv_str + ivc;
+    }
+
+    let list_hex3 = str_to_hex3(temp_str);
+    for (let i = 0; i < list_hex3.length; i++) {
+        if (list_hex3[i].length === 1) {
+            list_hex3[i] = '0' + list_hex3[i];
+        }
+    }
+    return list_hex3.join('');
+}
+
+/**
+ * 解密
+ * @param hexstr
+ * @returns {*[]}
+ */
+function hex2string(hexstr) {
+    let list = [];
+    for (let i = 0; i < hexstr.length; i += 2) {
+        let oneValue = (parseInt(hexstr[i], 16) << 4) % 256;
+        let towValue = parseInt(hexstr[i + 1], 16) & 0xF;
+        let res = oneValue | towValue;
+        list.push(String.fromCharCode(res));
+    }
+    return list;
+}
+
+export function decryptPassword(strEncrypedText) {
+    let res_list = hex2string(strEncrypedText);
+    let pwd_list = [];
+    for (let i = 1; i < res_list.length; i += 2) {
+        let r1 = res_list[i].charCodeAt(0) ^ 86;
+        pwd_list.push(String.fromCharCode(r1));
+    }
+    return pwd_list.join('');
+}

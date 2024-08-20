@@ -277,7 +277,16 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, getLogLevel, getUserType, handleSort, time} from "@/common/common";
+import {
+  decryptPassword,
+  encryptPassword,
+  getApiType,
+  getChannelType,
+  getLogLevel,
+  getUserType,
+  handleSort,
+  time
+} from "@/common/common";
 
 export default {
   props: ["userId"],
@@ -498,6 +507,7 @@ export default {
         Object.assign(this.channelInfo, row);
         this.channelInfo.apiType = row.apiType;
         this.channelInfo.terminalType = row.terminalType;
+        this.channelInfo.password = decryptPassword(row.password)
       }
     },
     // 新增弹窗确认按键
@@ -514,13 +524,14 @@ export default {
         this.$Message.error("请选择通道类型");
         return;
       }
+      const password = encryptPassword(this.channelInfo.password);
       if (isNew) {
-        http.put(URL.channel, this.channelInfo, () => {
+        http.put(URL.channel, {...this.channelInfo, password}, () => {
           this.getChannelData();
           this.cancel();
         });
       } else {
-        http.post(URL.channel, this.channelInfo, () => {
+        http.post(URL.channel, {...this.channelInfo, password}, () => {
           this.getChannelData();
           this.cancel();
         });
