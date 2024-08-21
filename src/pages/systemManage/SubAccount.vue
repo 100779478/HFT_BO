@@ -116,8 +116,8 @@
                 <Input
                     v-model="channelInfo.accountId"
                     placeholder="请输入分账号代码"
-                    :maxlength="16"
                     show-message="false"
+                    :disabled="!isNew"
                 ></Input>
               </FormItem>
             </Col>
@@ -126,7 +126,6 @@
                 <Input
                     v-model="channelInfo.tradeApiTypeName"
                     placeholder="请输入交易接口类型"
-                    :maxlength="16"
                     show-message="false"
                     :disabled="true"
                 ></Input>
@@ -137,7 +136,6 @@
                 <Input
                     v-model="channelInfo.assetNo"
                     :placeholder="`请输入${this.assetLabel}`"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -145,7 +143,6 @@
                 <Input
                     v-model="channelInfo.combiNo"
                     :placeholder="`请输入${this.positionLabel}`"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -157,7 +154,6 @@
                 <Input
                     v-model="channelInfo.apiAccountId"
                     :placeholder="`请输入${this.foundationLabel}`"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -169,7 +165,6 @@
                 <Input
                     v-model="channelInfo.apiInvestorId"
                     :placeholder="`请输入${this.traderLabel}`"
-                    :maxlength="16"
                     show-message="false"
                 ></Input>
               </FormItem>
@@ -245,8 +240,6 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, time} from "@/common/common";
-import {getUserInfo} from "@/utils/token";
-import {Message} from "view-design";
 
 export default {
   props: ["userId"],
@@ -346,7 +339,7 @@ export default {
       assetLabel: "资产账户",
       positionLabel: "组合账户",
       foundationLabel: "基金账户",
-      traderLabel: "交易员编码",
+      traderLabel: "交易员编号",
       loading: true,
       tableHeight: window.innerHeight - 220,
       userValidRules: {
@@ -433,10 +426,6 @@ export default {
         this.positionLabel = "投资组合";
         this.foundationLabel = "基金账户";
         this.traderLabel = "股东账号";
-      } else if (this.channelInfo.tradeApiTypeName === 'xQuantTrade') {
-        this.showLabel = true
-        this.foundationLabel = "基金账户";
-        this.traderLabel = "交易员编号";
       } else {
         this.showLabel = false;
         this.assetLabel = "资产账户";
@@ -473,7 +462,7 @@ export default {
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
-        const info = {
+        this.channelInfo = {
           customerId: "",
           tradeChannel: "",
           customName: "",
@@ -486,11 +475,11 @@ export default {
           remark: "",
           id: "",
         };
-        this.channelInfo = info;
         Object.assign(this.channelInfo);
       } else {
         this.isNew = false;
         this.showAddModal = true;
+        this.getTradeChannelApi(row.tradeChannel)
         Object.assign(this.channelInfo, row);
         // this.channelInfo.customerId = row.customerId;
         // this.channelInfo.tradeChannel = row.tradeChannel;
