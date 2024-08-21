@@ -79,7 +79,7 @@
               height="14px"
           />
         </div>
-        <MenuList/>
+        <MenuList :is-collapsed="isCollapsed"/>
         <div
             style="position: absolute; bottom: 20%; right: 30px"
             v-if="!isCollapsed"
@@ -181,6 +181,7 @@ export default {
     ,
     showMenu(e) {
       this.isShowMenu = e
+      // this.isCollapsed = !e
     }
     ,
     currentUserInfo() {

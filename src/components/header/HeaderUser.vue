@@ -4,6 +4,9 @@
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   height: 50px;
   line-height: 50px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .select-style {
@@ -12,56 +15,54 @@
 }
 
 .icon-item {
-  margin: 0 5px 0 20px;
+  width: 20px; /* 确保宽度 */
+  height: 20px; /* 确保高度 */
+  margin: 15px 0 0 20px;
   color: #86909c;
-  cursor: pointer
+  cursor: pointer;
 }
 
 .rotate-icon {
   transform: rotate(-90deg);
+  transform-origin: center;
 }
 
 .env-area {
-  display: inline-block;
+  width: auto;
   margin-right: 8px;
-  height: 32px;
-  line-height: 32px
+  overflow: hidden;
 }
 
 .current-time {
-  width: 250px;
+  width: auto;
   display: inline-block;
   font-weight: bolder;
   margin-left: 15px;
+  overflow: hidden;
 }
 </style>
 <template>
   <div>
     <Header :style="{ padding: 0 }" class="layout-header-bar">
-      <Icon
-          @click.native="collapsedSider"
-          :class="{'rotate-icon':!showMenu}"
-          class="icon-item"
-          type="md-menu"
-          size="20"
-      ></Icon>
-      <Icon
-          type="md-refresh"
-          size="20"
-          class="icon-item"
-          @click="refresh"
-      >
-      </Icon>
-      <div class="current-time">当前时间：{{ currentTimeText }}</div>
-      <div
-          :style="{
-          float: 'right',
-          margin: '0 30px',
-        }"
-      >
-        <div class="env-area"
-             id="environmentDropdown"
+      <div style="display: flex;flex-wrap: nowrap">
+        <Icon
+            @click.native="collapsedSider"
+            :class="{'rotate-icon':!showMenu}"
+            class="icon-item"
+            type="md-menu"
+            size="20"
+        ></Icon>
+        <Icon
+            type="md-refresh"
+            size="20"
+            class="icon-item"
+            @click="refresh"
         >
+        </Icon>
+        <div class="current-time">当前时间：{{ currentTimeText }}</div>
+      </div>
+      <div style="margin-right:20px;display: flex">
+        <div class="env-area" id="environmentDropdown">
           <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
           <Select
               class="select-style"
@@ -73,24 +74,25 @@
                 :key="item.id"
                 :value="item.id"
             >{{ item.name }}
-            </Option
-            >
+            </Option>
           </Select>
         </div>
-        <Dropdown @on-click="handleClick">
-          <Avatar
-              style="background-color: #00abe4; cursor: pointer"
-              icon="md-person"
-          >
-          </Avatar>
-          <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
-          <template v-slot:list>
-            <DropdownMenu>
-              <DropdownItem name="changePassword">修改密码</DropdownItem>
-              <DropdownItem name="logout">退出登录</DropdownItem>
-            </DropdownMenu>
-          </template>
-        </Dropdown>
+        <div>
+          <Dropdown @on-click="handleClick">
+            <Avatar
+                style="background-color: #00abe4; cursor: pointer"
+                icon="md-person"
+            >
+            </Avatar>
+            <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
+            <template v-slot:list>
+              <DropdownMenu>
+                <DropdownItem name="changePassword">修改密码</DropdownItem>
+                <DropdownItem name="logout">退出登录</DropdownItem>
+              </DropdownMenu>
+            </template>
+          </Dropdown>
+        </div>
       </div>
     </Header>
     <Modal v-model="show" draggable

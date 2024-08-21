@@ -27,16 +27,15 @@
 }
 
 .collapsed-menu span {
-  width: 0px;
-  transition: width 0.2s ease;
+  width: 0; /* 收起时的宽度 */
+  transition: width 0.3s ease;
 }
 
 .collapsed-menu i {
-  transform: translateX(5px);
-  transition: font-size 0.2s ease 0.2s, transform 0.2s ease 0.2s;
+  //transform: translateX(5px);
+  transition: font-size 0.3s ease, transform 0.3s ease;
   vertical-align: middle;
-  font-size: 22px;
-  //   width: 100px;
+  font-size: 22px; /* 图标大小 */
 }
 
 .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu) {
@@ -45,8 +44,7 @@
   border-radius: 5px;
 }
 
-.ivu-menu-light.ivu-menu-vertical
-.ivu-menu-item-active:not(.ivu-menu-submenu):after {
+.ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
   display: none;
 }
 
@@ -63,37 +61,21 @@ a.ivu-menu-item {
   padding: 2px;
   margin: -1px;
 }
+
+.menu-container {
+  overflow-y: auto;
+  max-height: 92vh;
+}
+
+.menu-container::-webkit-scrollbar {
+  display: none; /* 隐藏 WebKit 浏览器中的滚动条 */
+}
+
 </style>
 <template>
   <div>
-    <!-- <Menu
-      :class="menuitemClasses"
-      theme="primary"
-      width="auto"
-      v-for="(item, index) in menuList"
-      :key="index"
-      :open-names="openNames"
-      :active-name="activeName"
-    >
-      <Submenu :name="item.title">
-        <template slot="title">
-          <Icon :type="item.icon" />
-          <span>{{ item.title }}</span>
-        </template>
-        <MenuItem
-          :name="itemChild.title"
-          :to="{ name: itemChild.path }"
-          v-for="(itemChild, indexChild) in item.children"
-          :key="indexChild"
-        >
-          <Icon :type="itemChild.icon" />
-          {{ itemChild.title }}
-        </MenuItem>
-      </Submenu>
-    </Menu> -->
-    <!-- 手风琴模式 -->
     <Menu
-        :class="menuitemClasses"
+        :class="[menuitemClasses,'menu-container']"
         theme="primary"
         width="auto"
         accordion
@@ -105,20 +87,21 @@ a.ivu-menu-item {
       </MenuItem>
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
-          <template slot="title">
-            <Icon :type="item.icon"/>
-            <span>{{ item.title }}</span>
-          </template>
-          <template v-for="itemChild in item.children">
-            <MenuItem
-                :name="itemChild.title"
-                :to="{ name: itemChild.path }"
-                :key="itemChild.title"
-            >
-              <Icon :type="itemChild.icon"/>
-              {{ itemChild.title }}
-            </MenuItem>
-          </template>
+            <template slot="title">
+              <Icon :type="item.icon"/>
+              <span>{{ item.title }}</span>
+            </template>
+            <template
+                v-for="itemChild in item.children">
+              <MenuItem
+                  :name="itemChild.title"
+                  :to="{ name: itemChild.path }"
+                  :key="itemChild.title"
+              >
+                <Icon :type="itemChild.icon"/>
+                {{ itemChild.title }}
+              </MenuItem>
+            </template>
         </Submenu>
       </template>
     </Menu>
@@ -129,9 +112,9 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 
 export default {
+  // props: ['isCollapsed'],
   data() {
     return {
-      // isCollapsed: false,
       menuList: [],
     };
   },
@@ -175,9 +158,5 @@ export default {
       this.menuList = data;
     },
   },
-  // updated() {
-  //   this.$router.push({ name: "Dashboard" });
-  //   // this.$router.push({ name: "UserManage" });
-  // },
 };
 </script>
