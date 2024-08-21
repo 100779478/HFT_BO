@@ -4,11 +4,10 @@ import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store";
-import showNotification from "@/utils/message";
 
 let is403MessageShown = false;
 const axiosInstance = axios.create({
-    // timeout: 1000,
+    timeout: 10000,
     baseURL: requestContextPath,
 });
 axiosInstance.defaults.headers['Access-Control-Allow-Origin'] = '*'
@@ -53,7 +52,7 @@ export const http = {
         return axiosInstance.post(url, data, {responseType}).then((res) => {
             thenHandler(res)
             const msg = !res.okMessage ? messageType : res.okMessage
-            if (res?.code === '0' && messageType) showNotification(msg)
+            if (res?.code === '0' && messageType) Message.success(msg)
         }).catch(errorHandler);
     },
     uploadFile: (url, file, data = {}, thenHandler = () => {
@@ -88,7 +87,7 @@ export const http = {
     //         })
     //         .then((res) => {
     //             thenHandler(res)
-    //             if (res?.code === '0' && data.messageType) showNotification(data.messageType)
+    //             if (res?.code === '0' && data.messageType) Message.success(data.messageType)
     //         })
     //         .catch(error => {
     //             // 在这里处理错误，包括获取blob类型的数据
@@ -139,7 +138,7 @@ export const http = {
     ) => {
         return axiosInstance.put(url, data).then((res) => {
             thenHandler(res)
-            if (res?.code === '0' && messageType) showNotification(messageType)
+            if (res?.code === '0' && messageType) Message.success(messageType)
         }).catch(errorHandler);
     },
 
@@ -163,7 +162,7 @@ export const http = {
             .delete(url, data)
             .then((res) => {
                 thenHandler(res)
-                if (res?.code === '0' && messageType) showNotification(messageType)
+                if (res?.code === '0' && messageType) Message.success(messageType)
             })
             .catch(errorHandler);
     },

@@ -53,6 +53,10 @@ module.exports = defineConfig({
                     compiler.hooks.done.tap('CreateVersionFile', () => {
                         const outputPath = compiler.options.output.path;
                         const versionFilePath = path.join(outputPath, 'version.txt');
+                        // 确保输出路径存在
+                        if (!fs.existsSync(outputPath)) {
+                            fs.mkdirSync(outputPath, {recursive: true});
+                        }
                         fs.writeFileSync(versionFilePath, `Version: ${packageJson.version}\n`);
                     });
                 },
