@@ -77,14 +77,16 @@
             </Option>
           </Select>
         </div>
-        <div>
+        <div style="white-space: nowrap">
           <Dropdown @on-click="handleClick">
             <Avatar
                 style="background-color: #00abe4; cursor: pointer"
                 icon="md-person"
             >
             </Avatar>
-            <span style="margin-left: 10px; cursor: pointer">你好, {{ username }}</span>
+            <div style="margin-left: 10px; cursor: pointer;display: inline-block;white-space: nowrap">
+              你好, {{ username }}
+            </div>
             <template v-slot:list>
               <DropdownMenu>
                 <DropdownItem name="changePassword">修改密码</DropdownItem>
