@@ -165,6 +165,7 @@
                   <Input
                       v-model="userStrategyInfo.rulePath"
                       placeholder="请输入策略文件存储位置"
+                      @on-change="handleChangeRulePath"
                       autocomplete="off"
                       :maxlength="256"
                   ></Input>

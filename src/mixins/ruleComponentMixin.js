@@ -120,6 +120,9 @@ const ruleComponentMixin = {
                 })
             }
         },
+        handleChangeRulePath(e) {
+            this.rulePath = e.target.value
+        },
         getUserResponse(res) {
             setTimeout(() => {
                 this.loading = false;
