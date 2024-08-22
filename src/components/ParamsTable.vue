@@ -19,7 +19,7 @@ export default {
         title: "参数名",
         key: "name",
         width: 150,
-        render: this.renderEditable
+        render: this.renderEditable,
       },
       {
         title: "参数描述",
@@ -143,7 +143,13 @@ export default {
         return h("span", row[column.key].toString());
       }
       // 渲染输入框
-      return h("Input", {
+      return h('Tooltip', {
+        props: {
+          maxWidth: 200,
+          disabled: !this.paramList[rowIndex][column.key],
+          content: row[column.key].toString(), // Poptip 显示的提示内容
+        },
+      }, [h("Input", {
         props: {
           value: row[column.key].toString(),
           disabled: this.readOnly,
@@ -151,9 +157,10 @@ export default {
         on: {
           input: (event) => {
             this.paramList[rowIndex][column.key] = event;
+            this.$forceUpdate()
           },
         },
-      });
+      })]);
     },
     renderSelectCell(h, params) {
       const {row, column} = params;
@@ -257,6 +264,18 @@ export default {
 </template>
 
 <style scoped lang="less">
+::v-deep .ivu-poptip-inner {
+  background-color: #515a6e !important;
+
+  .ivu-poptip-body-content-inner {
+    color: white !important;
+  }
+}
+
+::v-deep .ivu-poptip-popper[x-placement^=top] .ivu-poptip-arrow:after {
+  border-top-color: #515a6e;
+}
+
 .ivu-table-tip {
   font-size: 26px;
 }

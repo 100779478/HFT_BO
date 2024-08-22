@@ -7,7 +7,7 @@
     <Row style="margin: 10px">
       <Col span="">
         <form autocomplete="off">
-          <Select v-model="pagination.actives" style="width:100px;float: right;margin-left:5px" :clearable="true"
+          <Select v-model="pagination.active" style="width:100px;float: right;margin-left:5px" :clearable="true"
                   @on-change="handleSearch">
             <Option v-for="item in activeList" :value="item.code" :key="item.code">{{
                 item.description
@@ -261,7 +261,7 @@ export default {
                   maxWidth: 200,
                 },
                 style: {
-                  whiteSpace: "nowrap",
+                  // whiteSpace: "nowrap",
                 },
               },
               [
@@ -323,7 +323,7 @@ export default {
     ];
     let pagination = {
       customerName: "",
-      actives: [],
+      active: "",
     };
     return {
       showPwdModal: false,

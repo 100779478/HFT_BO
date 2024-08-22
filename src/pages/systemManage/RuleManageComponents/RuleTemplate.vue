@@ -161,14 +161,15 @@
             </Col>
             <Col :span="18">
               <FormItem label="策略文件存储位置" prop="rulePath">
-                <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%">
+                <Tooltip :disabled="!userStrategyInfo.rulePath" :content="userStrategyInfo.rulePath" max-width="300"
+                         style="width: 100%;">
                   <Input
                       v-model="userStrategyInfo.rulePath"
                       placeholder="请输入策略文件存储位置"
-                      @on-change="handleChangeRulePath"
+                      @change="handleChangeRulePath"
                       autocomplete="off"
                       :maxlength="256"
-                  ></Input>
+                  />
                 </Tooltip>
               </FormItem>
             </Col>
@@ -394,11 +395,11 @@ export default {
               {
                 attrs: {
                   content: customerIds,
-                  maxWidth: 600,
+                  maxWidth: 400,
                   transfer: true,
                 },
                 style: {
-                  whiteSpace: "nowrap",
+                  // whiteSpace: "nowrap",
                 },
               },
               [content]
@@ -463,7 +464,7 @@ export default {
       isNew: true,
       selectedEnv: null,
       selectedRowId: null,
-      userStrategyInfo
+      userStrategyInfo,
     };
   },
   mounted() {
