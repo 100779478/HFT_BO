@@ -326,6 +326,14 @@ export default {
         minWidth: 220,
       },
       {
+        title: "策略文件名称",
+        key: "ruleFileName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 220,
+      },
+      {
         title: "策略版本",
         key: "ruleVersion",
         sortable: 'custom',
