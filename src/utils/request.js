@@ -138,7 +138,8 @@ export const http = {
     ) => {
         return axiosInstance.put(url, data).then((res) => {
             thenHandler(res)
-            if (res?.code === '0' && messageType) Message.success(messageType)
+            const msg = !res.okMessage ? messageType : res.okMessage
+            if (res?.code === '0' && messageType) Message.success(msg)
         }).catch(errorHandler);
     },
 
@@ -162,7 +163,8 @@ export const http = {
             .delete(url, data)
             .then((res) => {
                 thenHandler(res)
-                if (res?.code === '0' && messageType) Message.success(messageType)
+                const msg = !res.okMessage ? messageType : res.okMessage
+                if (res?.code === '0' && messageType) Message.success(msg)
             })
             .catch(errorHandler);
     },
@@ -227,7 +229,7 @@ axiosInstance.interceptors.request.use((config) => {
     const token = getToken();
     if (!token) {
         if (!is403MessageShown) {
-            Message.error("登录过期，请重新登录！");
+            // Message.error("登录过期，请重新登录！");
             router.push("/login");
             is403MessageShown = true
         }
@@ -273,7 +275,7 @@ axiosInstance.interceptors.response.use(
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
-                    Message.error('连接失败')
+                    // Message.error('连接失败')
                     router.push({name: "Login"});
                     return Promise.reject(error);
                 }

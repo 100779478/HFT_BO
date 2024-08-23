@@ -144,16 +144,27 @@
                   </FormItem>
                 </Col>
                 <Col :span="18">
-                  <FormItem label="策略文件存储位置" prop="rulePath">
-                    <Tooltip :content="userStrategyInfo.rulePath" max-width="300" style="width: 100%">
+                  <FormItem label="策略文件路径" prop="ruleLocation">
+                    <Tooltip :content="userStrategyInfo.ruleLocation" max-width="300" style="width: 100%">
                       <Input
                           disabled
-                          v-model="userStrategyInfo.rulePath"
-                          placeholder="请输入策略文件存储位置"
+                          v-model="userStrategyInfo.ruleLocation"
+                          placeholder="请输入策略文件路径"
                           autocomplete="off"
                           :maxlength="256"
                       ></Input>
                     </Tooltip>
+                  </FormItem>
+                </Col>
+                <Col :span="18">
+                  <FormItem label="策略文件名称" prop="ruleFileName">
+                    <Input
+                        v-model="userStrategyInfo.ruleFileName"
+                        disabled
+                        placeholder="c++策略文件名称以.so结尾"
+                        autocomplete="off"
+                        :maxlength="32"
+                    ></Input>
                   </FormItem>
                 </Col>
                 <Col :span="18">
@@ -307,8 +318,8 @@ export default {
         },
       },
       {
-        title: "策略文件存储位置",
-        key: "rulePath",
+        title: "策略文件路径",
+        key: "ruleLocation",
         sortable: 'custom',
         resizable: true,
         width: null,
@@ -432,7 +443,7 @@ export default {
           id: "",
           ruleFileType: this.$store.state.dictionary.dictionaryList.RuleFileType[0].code,
           ruleId: "",
-          rulePath: "",
+          ruleLocation: "",
           ruleVersion: "",
           ruleName: "",
           customerId: "",
@@ -451,7 +462,7 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      if (!this.userStrategyInfo.rulePath) {
+      if (!this.userStrategyInfo.ruleLocation) {
         this.$Message.warning('策略存储路径不能为空')
         return
       }

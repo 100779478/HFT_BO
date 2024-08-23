@@ -160,17 +160,30 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="策略文件存储位置" prop="rulePath">
-                <Tooltip :disabled="!userStrategyInfo.rulePath" :content="userStrategyInfo.rulePath" max-width="300"
+              <FormItem label="策略文件路径" prop="ruleLocation">
+                <Tooltip :disabled="!userStrategyInfo.ruleLocation" :content="userStrategyInfo.ruleLocation"
+                         max-width="300"
                          style="width: 100%;">
                   <Input
-                      v-model="userStrategyInfo.rulePath"
-                      placeholder="请输入策略文件存储位置"
+                      disabled
+                      v-model="userStrategyInfo.ruleLocation"
+                      placeholder="请输入策略文件路径"
                       @change="handleChangeRulePath"
                       autocomplete="off"
                       :maxlength="256"
                   />
                 </Tooltip>
+              </FormItem>
+            </Col>
+            <Col :span="18">
+              <FormItem label="策略文件名称" prop="ruleFileName">
+                <Input
+                    v-model="userStrategyInfo.ruleFileName"
+                    :disabled="userStrategyInfo.ruleFileType==='1'"
+                    placeholder="c++策略文件名称以.so结尾"
+                    autocomplete="off"
+                    :maxlength="32"
+                ></Input>
               </FormItem>
             </Col>
             <Col :span="18">
@@ -356,12 +369,20 @@ export default {
         },
       },
       {
-        title: "策略文件存储位置",
-        key: "rulePath",
+        title: "策略文件路径",
+        key: "ruleLocation",
         sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 220,
+      },
+      {
+        title: "策略文件名称",
+        key: "ruleFileName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 140,
       },
       {
         title: "策略版本",
@@ -568,9 +589,10 @@ export default {
         this.showAddModal = true;
         const info = {
           ruleId: "",
-          rulePath: "",
+          ruleLocation: "",
           ruleVersion: "",
           ruleName: "",
+          ruleFileName: "",
           customerIds: [],
           ruleType: "",
           ruleParams: [],
@@ -602,12 +624,12 @@ export default {
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly))
         this.userStrategyInfo.ruleParams = this.paramList;
-        if (!this.userStrategyInfo.rulePath) {
-          this.$Message.error('策略文件存储位置不能为空')
+        if (!this.userStrategyInfo.ruleLocation) {
+          this.$Message.error('策略文件路径不能为空')
           return
         }
-        if (this.userStrategyInfo.rulePath.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-          this.$Message.error('策略文件类型为C++时，策略文件存储位置需要以.so结尾')
+        if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
+          this.$Message.error('策略文件类型为C++时，策略文件路径需要以.so结尾')
           return
         }
         if (this.userStrategyInfo.customerIds.length <= 0) {
@@ -646,7 +668,6 @@ export default {
     },
     changeUserStatus(row) {
       let data = row.ruleId;
-      console.log(1111, data)
       if (!row.active) {
         http.post(`${URL.rule}/${data}/enable`, {}, this.handleActiveEnable);
       } else {

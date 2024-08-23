@@ -25,7 +25,8 @@ const ruleComponentMixin = {
             userStrategyInfo: {
                 ruleFileType: "",
                 ruleId: "",
-                rulePath: "",
+                ruleLocation: "",
+                ruleFileName: "",
                 ruleVersion: "",
                 ruleName: "",
                 customerId: "",
@@ -116,8 +117,9 @@ const ruleComponentMixin = {
                     const {ruleId, rulePath} = response.data;
                     this.userStrategyInfo.ruleId = ruleId;
                     this.rulePath = rulePath
-                    this.userStrategyInfo.rulePath = rulePath;
+                    this.userStrategyInfo.ruleLocation = rulePath;
                 })
+                this.userStrategyInfo.ruleFileName = code === '1' ? 'main.py' : ""
             }
         },
         handleChangeRulePath(e) {
@@ -140,13 +142,25 @@ const ruleComponentMixin = {
             this.chooseRule = e === '8';
             this.fileName = ""
             const strategyPaths = {
-                '1': './Rules/libMM_strategy.so',          // 银行间双边做市策略
-                '6': './Rules/indicative_strategy.so',     // 银行间指示性报价策略
-                'a': './Rules/libmm_strategy_rate.so',     // 交易所新债平台做市策略
-                'b': './Rules/libmm_strategy_fi.so',       // 交易所固收平台做市策略
-                'c': './Rules/libBond_Spread.so'           // 套利策略
+                '1': './Rules/',          // 银行间双边做市策略
+                '6': './Rules/',          // 银行间指示性报价策略
+                'a': './Rules/',          // 交易所新债平台做市策略
+                'b': './Rules/',          // 交易所固收平台做市策略
+                'c': './Rules/'           // 套利策略
             };
-            this.userStrategyInfo.rulePath = strategyPaths[e] || this.rulePath || this.userStrategyInfo.rulePath;
+            const strategyFileName = {
+                '1': 'libMM_strategy.so',          // 银行间双边做市策略
+                '6': 'indicative_strategy.so',     // 银行间指示性报价策略
+                'a': 'libmm_strategy_rate.so',     // 交易所新债平台做市策略
+                'b': 'libmm_strategy_fi.so',       // 交易所固收平台做市策略
+                'c': 'libBond_Spread.so',          // 套利策略
+                '5': "",
+                '7': "",
+            };
+            if (this.userStrategyInfo.ruleFileType === '0') {
+                this.userStrategyInfo.ruleLocation = strategyPaths[e] || this.rulePath || this.userStrategyInfo.ruleLocation;
+                this.userStrategyInfo.ruleFileName = strategyFileName[e] !== undefined ? strategyFileName[e] : this.userStrategyInfo.ruleFileName;
+            }
         },
         // 新增弹窗关闭
         cancel() {
@@ -247,12 +261,20 @@ const ruleVettingColumn = {
                 },
             },
             {
-                title: "策略文件存储位置",
-                key: "rulePath",
+                title: "策略文件路径",
+                key: "ruleLocation",
                 sortable: 'custom',
                 resizable: true,
                 width: null,
                 minWidth: 220,
+            },
+            {
+                title: "策略文件名称",
+                key: "ruleFileName",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 140,
             },
             {
                 title: "策略版本",

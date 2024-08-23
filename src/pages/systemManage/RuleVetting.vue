@@ -147,12 +147,20 @@ export default {
         },
       },
       {
-        title: "策略文件存储位置",
-        key: "rulePath",
+        title: "策略文件路径",
+        key: "ruleLocation",
         sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 220,
+      },
+      {
+        title: "策略文件名称",
+        key: "ruleFileName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 140,
       },
       {
         title: "策略版本",
