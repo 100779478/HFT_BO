@@ -629,7 +629,7 @@ export default {
           return
         }
         if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-          this.$Message.error('策略文件类型为C++时，策略文件路径需要以.so结尾')
+          this.$Message.error('策略文件类型为C++时，策略文件名称需要以.so结尾')
           return
         }
         if (this.userStrategyInfo.customerIds.length <= 0) {

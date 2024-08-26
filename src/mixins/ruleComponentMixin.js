@@ -141,25 +141,19 @@ const ruleComponentMixin = {
         handleShowParamsTable(e) {
             this.chooseRule = e === '8';
             this.fileName = ""
-            const strategyPaths = {
-                '1': './Rules/',          // 银行间双边做市策略
-                '6': './Rules/',          // 银行间指示性报价策略
-                'a': './Rules/',          // 交易所新债平台做市策略
-                'b': './Rules/',          // 交易所固收平台做市策略
-                'c': './Rules/'           // 套利策略
-            };
-            const strategyFileName = {
-                '1': 'libMM_strategy.so',          // 银行间双边做市策略
-                '6': 'indicative_strategy.so',     // 银行间指示性报价策略
-                'a': 'libmm_strategy_rate.so',     // 交易所新债平台做市策略
-                'b': 'libmm_strategy_fi.so',       // 交易所固收平台做市策略
-                'c': 'libBond_Spread.so',          // 套利策略
-                '5': "",
-                '7': "",
+            // Configuration object to map strategy codes to their respective paths and filenames
+            const strategyConfig = {
+                '1': {path: './Rules/', fileName: 'libMM_strategy.so'},           // 银行间双边做市策略
+                '6': {path: './Rules/', fileName: 'indicative_strategy.so'},      // 银行间指示性报价策略
+                'a': {path: './Rules/', fileName: 'libmm_strategy_rate.so'},      // 交易所新债平台做市策略
+                'b': {path: './Rules/', fileName: 'libmm_strategy_fi.so'},        // 交易所固收平台做市策略
+                'c': {path: './Rules/', fileName: 'libBond_Spread.so'},           // 套利策略
+                '5': {path: '', fileName: ''},                                    // Placeholder for strategy 5
+                '7': {path: '', fileName: ''}                                     // Placeholder for strategy 7
             };
             if (this.userStrategyInfo.ruleFileType === '0') {
-                this.userStrategyInfo.ruleLocation = strategyPaths[e] || this.rulePath || this.userStrategyInfo.ruleLocation;
-                this.userStrategyInfo.ruleFileName = strategyFileName[e] !== undefined ? strategyFileName[e] : this.userStrategyInfo.ruleFileName;
+                this.userStrategyInfo.ruleLocation = strategyConfig[e].path || this.rulePath || this.userStrategyInfo.ruleLocation;
+                this.userStrategyInfo.ruleFileName = strategyConfig[e].fileName !== undefined ? strategyConfig[e].fileName : this.userStrategyInfo.ruleFileName;
             }
         },
         // 新增弹窗关闭
