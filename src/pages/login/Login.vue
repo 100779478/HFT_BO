@@ -64,6 +64,7 @@
           <div class="login-err">{{ passwordIncorrectMessage }}</div>
         </div>
       </div>
+      <div class="version">Version{{ version }}</div>
     </div>
   </div>
 </template>
@@ -101,6 +102,7 @@ export default {
         ],
         verify: [{required: true, message: "请输入验证码", trigger: "blur"}],
       },
+      version: null,
     };
   },
   methods: {
@@ -174,6 +176,9 @@ export default {
       });
     }
     ,
+  },
+  created() {
+    this.version = process.env.VERSION
   },
   mounted() {
     this.getEncryptionType()
@@ -253,4 +258,15 @@ export default {
   display: inline-block;
   margin-top: 50px;
 }
+
+.version {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
 </style>

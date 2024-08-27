@@ -14,7 +14,7 @@
               class="mr3"
               v-model="pagination.customerName"
               style="float: right; width: 160px; border-radius: 20px"
-              placeholder="客户名称"
+              placeholder="用户名称"
           >
           </Input>
         </form>
@@ -130,7 +130,7 @@ import moment from "moment/moment";
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
-  mixins:[tableMixin],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -142,7 +142,7 @@ export default {
         sortable: 'custom'
       },
       {
-        title: "客户编号",
+        title: "用户编号",
         key: "customerId",
         minWidth: 100,
         resizable: true,
@@ -150,7 +150,7 @@ export default {
         width: null,
       },
       {
-        title: "客户名称",
+        title: "用户名称",
         key: "customerName",
         minWidth: 100,
         resizable: true,
