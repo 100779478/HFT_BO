@@ -25,11 +25,11 @@
       >
         <Col :span="18">
           <FormItem label="年份">
-            <DatePicker type="year" placeholder="选择年份" style="width: 200px" v-model="year"></DatePicker>
+            <DatePicker type="year" placeholder="选择年份" style="width: 100px" v-model="year"></DatePicker>
           </FormItem>
         </Col>
         <Col :span="18">
-          <FormItem label="年份">
+          <FormItem label="交易所类型">
             <Select
                 v-model="exchangeCode"
                 class="mr3"
