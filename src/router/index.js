@@ -2,6 +2,7 @@ import vue from "vue";
 import VueRouter from "vue-router";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
+import {getToken} from "@/utils/token";
 
 vue.use(VueRouter);
 
@@ -194,7 +195,20 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
-    next();
+    // 检查用户是否已登录
+    const isAuthenticated = getToken(); // 从 Vuex 中获取登录状态
+
+    // 如果没有匹配到任何路由（包括通配符路由）
+    if (to.matched[0].path === '*') {
+        // 继续导航到通配符路径对应的页面
+        next();
+    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect') {
+        // 用户未登录且访问的不是允许的页面时，重定向到登录页
+        next({path: '/login'});
+    } else {
+        // 否则，继续导航
+        next();
+    }
 
 });
 export default router;
