@@ -1,16 +1,14 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
-// const devUrl = "https://58.250.164.226:39888"; // 1.5.6
+const devUrl = "https://58.250.164.226:39888"; // 1.5.6
 // const devUrl = "https://172.24.16.13:9888"; // 1.5.6
-const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
 console.log("current env :", env, requestContextPath);
 export const URL = {
-    // 长链接SSE
-    SSE: '/sse',
     // 获取加密类型
     encryption: '/config/password-type',
     // 数据字典
@@ -182,3 +180,7 @@ export const URL = {
     // 导出策略实例
     ruleExportInstance: '/rule/export/quant/instance',
 };
+export const sseUrl = {
+    // 长链接SSE
+    SSE: '/sse',
+}

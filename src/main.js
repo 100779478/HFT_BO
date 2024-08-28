@@ -8,8 +8,7 @@ import md5 from "js-md5";
 import 'intro.js/introjs.css';
 import introJs from 'intro.js';
 import {log} from "@/common/log";
-import {requestContextPath} from "@/api/serverApi";
-import {URL} from "@/api/serverApi";
+import {requestContextPath, sseUrl} from "@/api/serverApi";
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -77,7 +76,7 @@ new Vue({
             }
         }
         // 启动 SSE Worker
-        startSSE(requestContextPath + URL.SSE);
+        startSSE(requestContextPath + sseUrl.SSE);
     },
     methods: {
         handleBeforeUnload() {
