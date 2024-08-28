@@ -8,7 +8,8 @@ import md5 from "js-md5";
 import 'intro.js/introjs.css';
 import introJs from 'intro.js';
 import {log} from "@/common/log";
-import {closeEventSource} from "@/server/sse";
+import {requestContextPath} from "@/api/serverApi";
+import {URL} from "@/api/serverApi";
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -24,6 +25,37 @@ Vue.use(ViewUI);
 Vue.prototype.$introJs = introJs;
 Vue.prototype.$md5 = md5;
 Vue.prototype.$log = log;
+
+let sseWorker = null;
+
+function startSSE(url) {
+    if (window.Worker) {
+        if (sseWorker) {
+            sseWorker.terminate(); // 终止之前的 Worker
+        }
+        sseWorker = new Worker(new URL('@/server/sse.js', import.meta.url));
+        sseWorker.postMessage({type: 'start', url: url});
+        sseWorker.addEventListener('message', function (event) {
+            const {type, data, message} = event.data;
+            if (type === 'dictionaryList') {
+                store.commit('dictionary/dictionaryList', data);
+            } else if (type === 'error') {
+                ViewUI.Message.error(message);
+            }
+        });
+    } else {
+        console.error("Web Workers are not supported in this browser.");
+    }
+}
+
+function stopSSE() {
+    if (sseWorker) {
+        sseWorker.postMessage({type: 'close'});
+        sseWorker.terminate();
+        sseWorker = null;
+    }
+}
+
 
 new Vue({
     render: (h) => h(App),
@@ -44,6 +76,8 @@ new Vue({
                 this.$router.replace({name: 'Dashboard'});
             }
         }
+        // 启动 SSE Worker
+        startSSE(requestContextPath + URL.SSE);
     },
     methods: {
         handleBeforeUnload() {
@@ -52,8 +86,8 @@ new Vue({
         }
     },
     beforeDestroy() {
-        // 断开连接SSE
-        closeEventSource()
+        // 停止 SSE Worker
+        stopSSE();
         // 移除 beforeunload 事件监听器
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
     }

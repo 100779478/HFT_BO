@@ -118,7 +118,6 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {setUserInfo} from "@/utils/token";
 import {checkPwdExpiredTime} from "@/common/common";
-import {createEventSource} from "@/server/sse"
 
 export default {
   components: {Bread, MenuList, HeaderUser},
@@ -156,9 +155,6 @@ export default {
         });
       }
     })
-  },
-  mounted() {
-    createEventSource()
   },
   computed: {
     rotateIcon() {

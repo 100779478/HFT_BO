@@ -1,17 +1,23 @@
-import {requestContextPath, URL} from "@/api/serverApi";
-import {Message} from "view-design";
-import store from "@/store";
-
 let eventSource = null;
 let reconnectTimeout = null; // Variable to store timeout handler
 
-function createEventSource() {
+self.addEventListener('message', function (event) {
+    const {type, url} = event.data;
+
+    if (type === 'start') {
+        createEventSource(url);
+    } else if (type === 'close') {
+        closeEventSource();
+    }
+});
+
+function createEventSource(url) {
     if (eventSource) {
         eventSource.close();
         console.log("Existing connection to server closed.");
     }
 
-    eventSource = new EventSource(requestContextPath + URL.SSE);
+    eventSource = new EventSource(url);
 
     eventSource.onopen = function () {
         console.log("Connection to server opened.");
@@ -23,23 +29,24 @@ function createEventSource() {
         const {code, data, errorMessage} = JSON.parse(event.data);
         try {
             if (code === '0') {
-                store.commit('dictionary/dictionaryList', data);
+                // 发送数据到主线程
+                self.postMessage({type: 'dictionaryList', data});
             } else {
-                Message.error(errorMessage || '未知错误');
+                self.postMessage({type: 'error', message: errorMessage || '未知错误'});
             }
         } catch (e) {
-            Message.error('Failed to parse event data');
+            self.postMessage({type: 'error', message: 'Failed to parse event data'});
         }
     }, false);
 
     eventSource.onerror = function () {
-        Message.error('服务连接失败，请检查网络');
+        self.postMessage({type: 'error', message: '服务连接失败，请检查网络'});
         // Implement reconnection logic (replace with your desired strategy)
-        reconnectWithBackoff();
+        reconnectWithBackoff(url);
     };
 }
 
-function reconnectWithBackoff() {
+function reconnectWithBackoff(url) {
     // Define initial retry delay (in milliseconds)
     let retryDelay = 5000; // 1 second
 
@@ -48,7 +55,7 @@ function reconnectWithBackoff() {
 
     reconnectTimeout = setTimeout(() => {
         console.log(`Reconnecting to server in ${retryDelay / 1000} seconds...`);
-        createEventSource(); // Re-create the event source
+        createEventSource(url); // Re-create the event source
     }, retryDelay);
 }
 
@@ -60,5 +67,3 @@ function closeEventSource() {
         eventSource = null;
     }
 }
-
-export {createEventSource, closeEventSource};
