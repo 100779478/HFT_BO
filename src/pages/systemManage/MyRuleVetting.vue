@@ -352,6 +352,7 @@ export default {
       this.paramList = []
       this.uploadFlag = false
       this.chooseRule = row.ruleType === '8'
+      this.fileName = ""
       this.showAddModal = true;
       this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
       // 只读下拉框展示需改为字符串类型

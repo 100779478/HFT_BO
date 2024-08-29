@@ -584,6 +584,7 @@ export default {
       this.$refs.ruleForm.resetFields();
       this.paramList = []
       this.uploadFlag = false
+      this.fileName = ""
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;

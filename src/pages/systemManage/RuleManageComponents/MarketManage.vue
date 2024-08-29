@@ -405,7 +405,6 @@ export default {
     };
     return {
       activeList: ACTIVE_LIST,
-      fileName: "",
       columns1,
       pagination,
       userValidRules: {},
