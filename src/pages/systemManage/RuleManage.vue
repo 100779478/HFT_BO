@@ -402,7 +402,7 @@ export default {
         ruleName: "",
         customerId: "",
         ruleType: "",
-        active:true,
+        active: true,
         ruleParams: [],
       },
       tableData: [],
@@ -716,6 +716,7 @@ export default {
       this.$refs.ruleForm.resetFields();
       this.paramList = []
       this.uploadFlag = false
+      this.fileName = ""
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
@@ -727,7 +728,7 @@ export default {
           ruleName: "",
           customerId: "",
           ruleType: "",
-          active:true,
+          active: true,
           ruleParams: [],
         };
         Object.assign(this.userStrategyInfo, info);
