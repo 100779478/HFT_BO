@@ -104,7 +104,7 @@
         </Button>
         <Button type="info" @click="modalUser('new')" class="mr3">
           <Icon type="md-add"/>
-          新增策略
+          新增策略模板
         </Button>
         <Button type="success" @click="()=>handleExport(URL.ruleExportQuant, this.pagination, '策略模板')" class="mr3">
           <Icon type="md-download"/>
