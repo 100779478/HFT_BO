@@ -152,8 +152,8 @@ const ruleComponentMixin = {
                 '7': {path: '', fileName: ''}                                     // Placeholder for strategy 7
             };
             if (this.userStrategyInfo.ruleFileType === '0') {
-                this.userStrategyInfo.ruleLocation = strategyConfig[e].path || this.rulePath || this.userStrategyInfo.ruleLocation;
-                this.userStrategyInfo.ruleFileName = strategyConfig[e].fileName !== undefined ? strategyConfig[e].fileName : this.userStrategyInfo.ruleFileName;
+                this.userStrategyInfo.ruleLocation = strategyConfig[e]?.path || this.rulePath || this.userStrategyInfo.ruleLocation;
+                this.userStrategyInfo.ruleFileName = strategyConfig[e]?.fileName !== undefined ? strategyConfig[e]?.fileName : "";
             }
         },
         // 新增弹窗关闭
@@ -183,8 +183,8 @@ const ruleComponentMixin = {
                     // TODO: 调用上传操作的代码
                     http.uploadFile(url, file, {},
                         (response) => {
-                                this.fileName = fileName;
-                                this.$Message.success('上传成功');
+                            this.fileName = fileName;
+                            this.$Message.success('上传成功');
                             // 处理上传成功后的逻辑
                         }
                     );

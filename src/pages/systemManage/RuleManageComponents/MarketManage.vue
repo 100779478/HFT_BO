@@ -88,7 +88,7 @@
         </Button>
         <Button type="info" @click="modalUser('new')" class="top">
           <Icon type="md-add"/>
-          新增策略
+          新增做市策略
         </Button>
         <Button class="top" type="success"
                 @click="()=>handleExport(URL.ruleExportMarket, this.pagination, '做市策略管理')">
