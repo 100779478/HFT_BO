@@ -171,6 +171,7 @@ const ruleComponentMixin = {
         handleFileChange(event, type, path) {
             // 获取用户选择的文件
             const file = event.target.files[0];
+            console.log(this.userStrategyInfo.ruleId, 1123123, file)
             if (file) {
                 const fileName = file.name
                 // 根据 type 判断处理逻辑
