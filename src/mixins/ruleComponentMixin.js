@@ -153,7 +153,7 @@ const ruleComponentMixin = {
             };
             if (this.userStrategyInfo.ruleFileType === '0') {
                 this.userStrategyInfo.ruleLocation = strategyConfig[e]?.path || this.rulePath || this.userStrategyInfo.ruleLocation;
-                this.userStrategyInfo.ruleFileName = strategyConfig[e]?.fileName !== undefined ? strategyConfig[e]?.fileName : "";
+                this.userStrategyInfo.ruleFileName = strategyConfig[e]?.fileName !== undefined ? strategyConfig[e]?.fileName : this.userStrategyInfo.ruleFileName;
             }
         },
         // 新增弹窗关闭
@@ -175,19 +175,22 @@ const ruleComponentMixin = {
                 const fileName = file.name
                 // 根据 type 判断处理逻辑
                 if (type === 'strategy') {
-                    if (!this.userStrategyInfo.ruleId) return this.showMessage('请先获取策略ID', 'error');
-                    // 使用注释逻辑
-                    const url = `${path}/${this.userStrategyInfo.ruleId}`;
-                    // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
-                    console.log('选择的文件：', file, event);
-                    // TODO: 调用上传操作的代码
-                    http.uploadFile(url, file, {},
-                        (response) => {
-                            this.fileName = fileName;
-                            this.$Message.success('上传成功');
-                            // 处理上传成功后的逻辑
-                        }
-                    );
+                    if (!this.userStrategyInfo.ruleId) {
+                        this.showMessage('请先获取策略ID', 'error')
+                    } else {
+                        // 使用注释逻辑
+                        const url = `${path}/${this.userStrategyInfo.ruleId}`;
+                        // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
+                        console.log('选择的文件：', file, event);
+                        // TODO: 调用上传操作的代码
+                        http.uploadFile(url, file, {},
+                            (response) => {
+                                this.fileName = fileName;
+                                this.$Message.success('上传成功');
+                                // 处理上传成功后的逻辑
+                            }
+                        );
+                    }
                     document.getElementById('fileInput').value = '';
                 } else {
                     // 使用处理 JSON 文件的逻辑
