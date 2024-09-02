@@ -57,6 +57,7 @@ export default {
           if (row.type !== "0") {
             return this.renderEditable(h, params)
           } else {
+            // row.value = row.value || 0;
             return this.renderSelectCell(h, params)
           }
         }
