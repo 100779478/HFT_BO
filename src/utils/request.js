@@ -55,7 +55,8 @@ export const http = {
             if (res?.code === '0' && messageType) Message.success(msg)
         }).catch(errorHandler);
     },
-    uploadFile: (url, file, data = {}, thenHandler = () => {
+    uploadFile: (url, file, data = {}, cancelToken, progressCallBack = () => {
+    }, thenHandler = () => {
     }, errorHandler = defaultErrorHandler,) => {
         const formData = new FormData();
         formData.append("file", file);  // 通过 "file" 字段传递文件
@@ -70,13 +71,27 @@ export const http = {
                 headers: {
                     "Content-Type": "multipart/form-data",  // 设置请求头为multipart/form-data
                 },
+                onUploadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100 / progressEvent.total))
+                    progressCallBack(percentCompleted)
+                },
+                cancelToken: cancelToken // 将取消令牌传递给请求
             })
             .then((res) => {
                 if (!res.code) {
                     thenHandler(res)
                 }
             })
-            .catch(errorHandler);
+            .catch((err) => {
+                if (axios.isCancel(err)) {
+                    console.log('Request canceled:', err.message); // 如果请求被取消，记录取消信息
+                    // 可以在这里执行取消请求后的操作，比如显示一个提示
+                    Message.error(err.message)
+                } else {
+                    errorHandler(err); // 处理其他类型的错误
+                }
+                progressCallBack(0)
+            });
     },
     /**
      * HTTP PUT 请求
@@ -240,6 +255,9 @@ axiosInstance.interceptors.response.use(
                 break
             case 401:
                 return Promise.reject(error);
+            case 413:
+                Message.error("策略文件超出最大限制")
+                return
             case 503:
             case 500:
             case 502:

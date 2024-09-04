@@ -25,6 +25,11 @@
     margin-bottom: 5px;
   }
 }
+
+.progress-content {
+  display: flex;
+  align-content: center;
+}
 </style>
 <template>
   <div>
@@ -203,18 +208,28 @@
                   <FormItem label="">
                     <input type="file" id="fileInput" style="display: none;"
                            @change="handleFileChange($event,fileType,URL.uploadVetting)">
-                    <Button v-show="chooseRule" @click="uploadFile('strategy')" class="btn"
-                            style="margin-right: 5px"
-                            type="success">
-                      <Icon type="md-cloud-upload"/>
-                      上传策略文件
-                    </Button>
-                    <Icon
-                        v-show="uploadFlag"
-                        type="ios-checkmark-circle"
-                        color="green"
-                        size="23"/>
-                    <div>{{ this.fileName }}</div>
+                    <div class="progress-content" v-show="chooseRule">
+                      <Button @click="uploadFile('strategy')" class="btn"
+                              style="margin-right: 5px"
+                              type="success">
+                        <Icon type="md-cloud-upload"/>
+                        上传策略文件
+                      </Button>
+                      <i-Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
+                                :size="30"
+                                :stroke-color="'#19be6b'"
+                                :trail-width="10"
+                                :stroke-width="13"
+                      >
+                        <Icon v-if="this.fileName" type="ios-checkmark" size="25"
+                              style="font-weight: bold;color: #19be6b"></Icon>
+                        <span v-else class="demo-Circle-inner"
+                              style="font-size:11px">{{ fileUploadProgress - 1 }}%</span>
+                      </i-Circle>
+                    </div>
+                    <div style="height: 20px">
+                      {{ this.fileName }}
+                    </div>
                   </FormItem>
                 </Col>
               </Form>
@@ -350,9 +365,9 @@ export default {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.paramList = []
-      this.uploadFlag = false
       this.chooseRule = row.ruleType === '8'
       this.fileName = ""
+      this.fileUploadProgress = 0
       this.showAddModal = true;
       this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
       // 只读下拉框展示需改为字符串类型

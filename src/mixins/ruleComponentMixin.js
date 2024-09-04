@@ -3,6 +3,7 @@ import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExpo
 import ParamsTable from "@/components/ParamsTable.vue";
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
+import axios from "axios";
 
 const ruleComponentMixin = {
     mixins: [tableMixin],
@@ -37,6 +38,8 @@ const ruleComponentMixin = {
             userValidRules: {},
             paramList: [],
             userList: [],
+            fileUploadProgress: 0,
+            cancelTokenSource: null, // 用于保存取消令牌源
         };
     },
     methods: {
@@ -78,13 +81,13 @@ const ruleComponentMixin = {
         // 添加一行参数列表
         addRow() {
             this.paramList.push({
-                name: "",
-                description: "",
-                type: "",
-                value: "",
-                group: "",
-                range: "",
-                readOnly: "false"
+                name: null,
+                description: null,
+                type: null,
+                value: null,
+                // group: null,
+                // range: null,
+                // readOnly: "false"
             },);
         },
         // 检查重复的 name 字段的函数
@@ -141,6 +144,7 @@ const ruleComponentMixin = {
         handleShowParamsTable(e) {
             this.chooseRule = e === '8';
             this.fileName = ""
+            this.fileUploadProgress = 0
             // Configuration object to map strategy codes to their respective paths and filenames
             const strategyConfig = {
                 '1': {path: './Rules/', fileName: 'libMM_strategy.so'},           // 银行间双边做市策略
@@ -160,6 +164,10 @@ const ruleComponentMixin = {
         cancel() {
             this.showAddModal = false;
             this.paramList = []
+            // 关闭弹窗时取消上传请求
+            if (this.cancelTokenSource) {
+                this.cancelTokenSource.cancel('已取消上传策略文件');
+            }
         },
         // 公共方法：显示消息提示
         showMessage(content, type = 'info', duration = 6) {
@@ -171,20 +179,31 @@ const ruleComponentMixin = {
         handleFileChange(event, type, path) {
             // 获取用户选择的文件
             const file = event.target.files[0];
-            console.log(this.userStrategyInfo.ruleId, 1123123, file)
             if (file) {
                 const fileName = file.name
                 // 根据 type 判断处理逻辑
                 if (type === 'strategy') {
+                    this.fileUploadProgress = 0
+                    this.fileName = ""
                     if (!this.userStrategyInfo.ruleId) {
                         this.showMessage('请先获取策略ID', 'error')
                     } else {
+                        // 取消之前的请求（如果有的话）
+                        if (this.cancelTokenSource) {
+                            this.cancelTokenSource.cancel('已取消上传策略文件');
+                        }
+                        // 创建新的取消令牌源
+                        this.cancelTokenSource = axios.CancelToken.source();
                         // 使用注释逻辑
                         const url = `${path}/${this.userStrategyInfo.ruleId}`;
+                        // 创建一个取消令牌
                         // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
                         console.log('选择的文件：', file, event);
                         // TODO: 调用上传操作的代码
-                        http.uploadFile(url, file, {},
+                        http.uploadFile(url, file, {}, this.cancelTokenSource.token, // 传递取消令牌
+                            progressPercent => {
+                                this.fileUploadProgress = progressPercent
+                            },
                             (response) => {
                                 this.fileName = fileName;
                                 this.$Message.success('上传成功');
