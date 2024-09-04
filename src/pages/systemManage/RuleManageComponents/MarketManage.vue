@@ -442,7 +442,6 @@ export default {
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.paramList = []
-      this.uploadFlag = false
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;

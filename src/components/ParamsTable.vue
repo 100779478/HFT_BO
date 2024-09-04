@@ -117,7 +117,7 @@ export default {
     // 补全字段
     normalizeParamList() {
       // 定义所有可能的字段
-      const allFields = ['name', 'description', 'type', 'value', 'group', 'range', 'readOnly'];
+      const allFields = ['name', 'description', 'type', 'value'];
       // 遍历 paramList，确保每一行都包含完整的字段
       this.paramList.forEach((param) => {
         // 使用 Object.assign 为缺失的字段添加默认值
