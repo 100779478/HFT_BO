@@ -167,17 +167,19 @@ export function defaultErrorHandler(error) {
     } catch (e) {
         // 如果服务器返回的错误是JSON格式
         if (error.response && error.response.data) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                try {
-                    const errorData = JSON.parse(reader.result);
-                    Message.error(errorData.errorMessage)
-                    // 处理错误信息
-                } catch (e) {
-                }
-            };
-            reader.readAsText(error.response.data)
-            return;
+            if (error.response.data instanceof Blob || error.response.data instanceof File) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    try {
+                        const errorData = JSON.parse(reader.result);
+                        Message.error(errorData.errorMessage)
+                        // 处理错误信息
+                    } catch (e) {
+                    }
+                };
+                reader.readAsText(error.response.data)
+                return;
+            }
         }
         Message.error('未知错误');
     }
