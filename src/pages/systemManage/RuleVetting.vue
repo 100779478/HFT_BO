@@ -117,6 +117,7 @@ import {downLoadZip} from "@/utils/downLoadZip";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ruleVettingColumn} from "@/mixins/ruleComponentMixin";
+import {showParamList} from "@/utils/paramList";
 
 export default {
   mixins: [tableMixin],
@@ -260,12 +261,7 @@ export default {
     doOperate(name, row) {
       switch (name) {
         case "param":
-          this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
-          this.$Modal.info({
-            render: (h) => h(ParamsTable, {props: {paramList: this.paramList, readOnly: true}}),
-            width: 650, // 设置宽度
-            okText: "确认",
-          });
+          showParamList.call(this, row)
           break;
         case 'down':
           this.downloadRuleApproval(row)

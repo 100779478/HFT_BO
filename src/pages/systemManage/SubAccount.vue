@@ -233,7 +233,7 @@ import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
   props: ["userId"],
-  mixins:[tableMixin],
+  mixins: [tableMixin],
   data() {
     let columns1 = [
       {
@@ -394,7 +394,7 @@ export default {
       http.get(URL.tradeChannel, (res) => {
         // 交易通道数组初始化
         // 西部：过滤类型为Market的通道
-        this.tradeChannel = res.data.filter(d => d.terminalType !== '2');
+        this.tradeChannel = res.data.filter(d => d.channelType !== '2');
       });
     },
     getUserData() {
