@@ -1,6 +1,5 @@
 import {http} from "@/utils/request";
 import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
-import ParamsTable from "@/components/ParamsTable.vue";
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
 import axios from "axios";

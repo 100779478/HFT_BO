@@ -1,6 +1,6 @@
 {
   "name": "hft-bo-web",
-  "version": "2.3.2",
+  "version": "2.4.2",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",

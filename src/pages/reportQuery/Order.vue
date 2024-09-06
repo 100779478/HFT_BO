@@ -293,7 +293,7 @@ export default {
       },
       {
         title: "报单量",
-        key: "volumeTraded",
+        key: "volume",
         minWidth: 150,
         resizable: true,
         sortable: 'custom',
