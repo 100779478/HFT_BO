@@ -231,17 +231,17 @@
                         <Icon type="md-cloud-upload"/>
                         上传策略文件
                       </Button>
-                      <i-Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
-                                :size="30"
-                                :stroke-color="'#19be6b'"
-                                :trail-width="10"
-                                :stroke-width="13"
+                      <Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
+                              :size="30"
+                              :stroke-color="'#19be6b'"
+                              :trail-width="10"
+                              :stroke-width="13"
                       >
                         <Icon v-if="this.fileName" type="ios-checkmark" size="25"
                               style="font-weight: bold;color: #19be6b"></Icon>
                         <span v-else class="demo-Circle-inner"
                               style="font-size:11px">{{ fileUploadProgress - 1 }}%</span>
-                      </i-Circle>
+                      </Circle>
                     </div>
                     <div style="height: 20px">
                       {{ this.fileName }}
@@ -323,16 +323,129 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getRuleQuantType} from "@/common/common";
+import {getRuleFileType, getRuleQuantType} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
-import {ruleComponentMixin, ruleVettingColumn} from "@/mixins/ruleComponentMixin";
+import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
 import {showParamList} from "@/utils/paramList";
+import {renderRuleApprovalStatus} from "@/utils/renderRuleApprovalStatus";
 
 export default {
   components: {ParamsTable},
-  mixins: [tableMixin, ruleComponentMixin, ruleVettingColumn],
+  mixins: [tableMixin, ruleComponentMixin],
   data() {
+    let columns1 = [
+      {
+        title: "策略ID",
+        key: "ruleId",
+        minWidth: 120,
+        resizable: true,
+        sortable: 'custom',
+        width: null,
+      },
+      {
+        title: "策略文件类型",
+        key: "ruleFileType",
+        minWidth: 140,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+        render: (h, {row}) => {
+          const result = getRuleFileType(row.ruleFileType, true);
+          return h("span", result.description);
+        },
+      },
+      {
+        title: "策略文件路径",
+        key: "ruleLocation",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 220,
+      },
+      {
+        title: "策略文件名称",
+        key: "ruleFileName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 140,
+      },
+      {
+        title: "策略版本",
+        key: "ruleVersion",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "策略名称",
+        key: "ruleName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "策略服务节点名称",
+        key: "ruleNodeName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
+        title: "策略服务节点Ip",
+        key: "ruleNodeIp",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
+        title: "申请时间",
+        key: "submissionTime",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 170,
+      },
+      {
+        title: "审批人",
+        key: "approvalName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "审批时间",
+        key: "approvalTime",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "策略状态",
+        key: "ruleVettingStatus",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+        sortable: 'custom',
+        render: renderRuleApprovalStatus
+      },
+      {
+        title: "备注",
+        key: "comment",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 180,
+      },
+      {title: "操作", slot: "operator", width: 180},
+    ];
     let pagination = {
       ruleVettingStatus: '',
       ruleName: ""
@@ -342,6 +455,7 @@ export default {
     }
     return {
       pagination,
+      columns1,
       showAddModal: false,
       fileName: "",
       userStrategyInfo

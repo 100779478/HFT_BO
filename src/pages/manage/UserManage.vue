@@ -109,7 +109,7 @@
             </Col>
             <Col :span="18">
               <FormItem label="状态" prop="active">
-                <i-Switch v-model="userInfo.active" style="margin-top: 5px"/>
+                <Switch v-model="userInfo.active" style="margin-top: 5px"/>
               </FormItem>
             </Col>
             <Col :span="18">

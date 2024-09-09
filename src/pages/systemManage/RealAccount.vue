@@ -168,7 +168,7 @@ input:-webkit-autofill {
           </Col>
           <Col :span="18">
             <FormItem label="状态" prop="active">
-              <i-Switch
+              <Switch
                   v-model="channelInfo.active"
                   style="margin-top: 5px"
               />

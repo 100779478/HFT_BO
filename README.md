@@ -64,6 +64,10 @@
 - 量化策略、策略审批中新增策略服务节点`ruleNodeName`字段
 - 量化策略列表、策略审批新增策略服务节点`ruleNodeName、ruleNodeIp`
 
+### 优化
+
+- 配置iView-loader,解决iView组件 忽略前缀i的问题
+
 ## 版本 2.4.2 更新日志  Sep 06, 2024
 
 ### 修复问题

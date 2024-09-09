@@ -275,7 +275,7 @@
                     <Icon type="md-cloud-upload"/>
                     上传策略文件
                   </Button>
-                  <i-Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
+                  <Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
                             :size="30"
                             :stroke-color="'#19be6b'"
                             :trail-width="10"
@@ -285,7 +285,7 @@
                           style="font-weight: bold;color: #19be6b"></Icon>
                     <span v-else class="demo-Circle-inner"
                           style="font-size:11px">{{ fileUploadProgress - 1 }}%</span>
-                  </i-Circle>
+                  </Circle>
                 </div>
                 <div style="height: 20px">
                   {{ this.fileName }}
