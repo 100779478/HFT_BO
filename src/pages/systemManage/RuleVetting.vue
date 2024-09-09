@@ -114,10 +114,9 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleSort, getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport} from "@/common/common";
 import {downLoadZip} from "@/utils/downLoadZip";
-import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
-import {ruleVettingColumn} from "@/mixins/ruleComponentMixin";
 import {showParamList} from "@/utils/paramList";
+import {renderRuleApprovalStatus} from "@/utils/renderRuleApprovalStatus";
 
 export default {
   mixins: [tableMixin],
@@ -234,22 +233,7 @@ export default {
         width: null,
         minWidth: 120,
         sortable: 'custom',
-        render: (h, params) => {
-          const colorList = ["#dcba0e", "#19be6b", "#ed4014", "#616261"]
-          const statusInfo = getRuleVettingStatus(params.row.ruleVettingStatus)
-          const createIcon = (code) => {
-            return h("Icon", {
-              props: {
-                type: "ios-radio-button-on",
-                color: colorList[code],
-              },
-            });
-          };
-          return h("span", [
-            createIcon(statusInfo.code - 1),
-            statusInfo.description,
-          ]);
-        },
+        render: renderRuleApprovalStatus
       },
       {
         title: "备注",

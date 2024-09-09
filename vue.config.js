@@ -98,6 +98,15 @@ module.exports = defineConfig({
             }
         })
 
+        config.module
+            .rule("vue")
+            .use("iview-loader") // 解决iview组件 忽略前缀i的问题
+            .loader("iview-loader")
+            .options({
+                prefix: false,
+            })
+            .end();
+
         // if (process.env.NODE_ENV === 'production') { // 去除console.log输出
         //     config.optimization
         //         .minimizer('terser')
