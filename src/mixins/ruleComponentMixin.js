@@ -32,6 +32,7 @@ const ruleComponentMixin = {
                 customerId: "",
                 ruleType: "",
                 active: true,
+                ruleNodeName:"",
                 ruleParams: [],
             },
             userValidRules: {},
@@ -39,6 +40,7 @@ const ruleComponentMixin = {
             userList: [],
             fileUploadProgress: 0,
             cancelTokenSource: null, // 用于保存取消令牌源
+            ruleMonitorNodes: [], // 策略服务节点
         };
     },
     methods: {
@@ -139,6 +141,12 @@ const ruleComponentMixin = {
             http.get(URL.userList, (res) => {
                 this.userList = res.data;
             });
+        },
+        // 获取策略服务节点列表
+        getRuleMonitorNodesList() {
+            http.get(URL.ruleMonitorNodes, (res) => {
+                this.ruleMonitorNodes = res.data
+            })
         },
         handleShowParamsTable(e) {
             this.chooseRule = e === '8';
@@ -307,6 +315,22 @@ const ruleVettingColumn = {
                 resizable: true,
                 width: null,
                 minWidth: 120,
+            },
+            {
+                title: "策略服务节点名称",
+                key: "ruleNodeName",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 160,
+            },
+            {
+                title: "策略服务节点Ip",
+                key: "ruleNodeIp",
+                sortable: 'custom',
+                resizable: true,
+                width: null,
+                minWidth: 160,
             },
             {
                 title: "申请时间",
