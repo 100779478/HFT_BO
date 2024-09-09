@@ -154,6 +154,24 @@
               </FormItem>
             </Col>
             <Col :span="18">
+              <FormItem label="策略类型" prop="ruleType">
+                <Select
+                    v-model="userStrategyInfo.ruleType"
+                    placeholder="请选择策略类型"
+                    :maxlength="32"
+                    @on-change="handleShowParamsTable"
+                >
+                  <Option
+                      v-for="item in getRuleQuantType()"
+                      :key="item.code"
+                      :value="item.code"
+                  >{{ item.description }}
+                  </Option>
+                </Select>
+              </FormItem>
+            </Col>
+
+            <Col :span="18">
               <FormItem label="策略ID" prop="ruleId">
                 <Input
                     v-model="userStrategyInfo.ruleId"
@@ -231,18 +249,17 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="策略类型" prop="ruleType">
+              <FormItem label="策略服务节点名称" prop="ruleNodeName">
                 <Select
-                    v-model="userStrategyInfo.ruleType"
-                    placeholder="请选择策略类型"
+                    v-model="userStrategyInfo.ruleNodeName"
+                    placeholder="请选择策略服务节点"
                     :maxlength="32"
-                    @on-change="handleShowParamsTable"
                 >
                   <Option
-                      v-for="item in getRuleQuantType()"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.description }}
+                      v-for="item in ruleMonitorNodes"
+                      :key="item.ruleNodeName"
+                      :value="item.ruleNodeName"
+                  >{{ item.ruleNodeName }}
                   </Option>
                 </Select>
               </FormItem>
@@ -456,6 +473,22 @@ export default {
         },
       },
       {
+        title: "策略服务节点名称",
+        key: "ruleNodeName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
+        title: "策略服务节点Ip",
+        key: "ruleNodeIp",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
         title: "策略状态",
         key: "active",
         resizable: true,
@@ -507,6 +540,7 @@ export default {
   mounted() {
     this.getUserStrategyData();
     this.getUserList();
+    this.getRuleMonitorNodesList()
   },
   methods: {
     getRuleQuantType,
@@ -520,7 +554,7 @@ export default {
     doOperate(name, row) {
       switch (name) {
         case "param":
-          showParamList.call(this,row)
+          showParamList.call(this, row)
           break;
         case "upload":
           this.handleUploadToProduct(row)
@@ -609,6 +643,7 @@ export default {
           ruleType: "",
           ruleParams: [],
           active: true,
+          ruleNodeName: ""
         };
         Object.assign(this.userStrategyInfo, info);
       } else {

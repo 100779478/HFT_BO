@@ -133,6 +133,23 @@
                   </FormItem>
                 </Col>
                 <Col :span="18">
+                  <FormItem label="策略类型" prop="ruleType">
+                    <Select
+                        v-model="userStrategyInfo.ruleType"
+                        placeholder="请选择策略类型"
+                        :maxlength="32"
+                        @on-change="handleShowParamsTable"
+                    >
+                      <Option
+                          v-for="item in getRuleMakeMarketType()"
+                          :key="item.code"
+                          :value="item.code"
+                      >{{ item.description }}
+                      </Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col :span="18">
                   <FormItem label="策略ID" prop="ruleId">
                     <Input
                         v-model="userStrategyInfo.ruleId"
@@ -201,23 +218,6 @@
                           :key="item.customerId"
                           :value="item.customerId"
                       >{{ item.customerId }}
-                      </Option>
-                    </Select>
-                  </FormItem>
-                </Col>
-                <Col :span="18">
-                  <FormItem label="策略类型" prop="ruleType">
-                    <Select
-                        v-model="userStrategyInfo.ruleType"
-                        placeholder="请选择策略类型"
-                        :maxlength="32"
-                        @on-change="handleShowParamsTable"
-                    >
-                      <Option
-                          v-for="item in getRuleMakeMarketType()"
-                          :key="item.code"
-                          :value="item.code"
-                      >{{ item.description }}
                       </Option>
                     </Select>
                   </FormItem>

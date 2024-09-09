@@ -1,11 +1,11 @@
 {
   "name": "hft-bo-web",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve",
     "version": "node ./update-version.js",
-    "build": "vue-cli-service build",
+    "build": "npm run version && vue-cli-service build",
     "report": "vue-cli-service build --report",
     "lint": "vue-cli-service lint"
   },

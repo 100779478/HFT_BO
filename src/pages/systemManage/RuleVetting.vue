@@ -180,6 +180,22 @@ export default {
         minWidth: 120,
       },
       {
+        title: "策略服务节点名称",
+        key: "ruleNodeName",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
+        title: "策略服务节点Ip",
+        key: "ruleNodeIp",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
         title: "申请人",
         key: "submissionName",
         sortable: 'custom',
