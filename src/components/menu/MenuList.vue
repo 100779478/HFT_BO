@@ -87,21 +87,21 @@ a.ivu-menu-item {
       </MenuItem>
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
-            <template slot="title">
-              <Icon :type="item.icon"/>
-              <span>{{ item.title }}</span>
-            </template>
-            <template
-                v-for="itemChild in item.children">
-              <MenuItem
-                  :name="itemChild.title"
-                  :to="{ name: itemChild.path }"
-                  :key="itemChild.title"
-              >
-                <Icon :type="itemChild.icon"/>
-                {{ itemChild.title }}
-              </MenuItem>
-            </template>
+          <template slot="title">
+            <Icon :type="item.icon"/>
+            <span>{{ item.title }}</span>
+          </template>
+          <template
+              v-for="itemChild in item.children">
+            <MenuItem
+                :name="itemChild.title"
+                :to="{ name: itemChild.path }"
+                :key="itemChild.title"
+            >
+              <Icon :type="itemChild.icon"/>
+              {{ itemChild.title }}
+            </MenuItem>
+          </template>
         </Submenu>
       </template>
     </Menu>
@@ -131,31 +131,39 @@ export default {
   methods: {
     getMenuList(res) {
       let dataInit = res.data;
-      const data = [];
-      dataInit.forEach((item) => {
-        if (item.parentId === null) {
-          data.push({
+
+      /**
+       * 解析菜单转化为树形结构
+       * @param {Array} dataInit - 菜单初始化数据
+       * @returns {Array} 转换后的菜单数组
+       */
+      function buildTree(dataInit) {
+        const data = [];
+        const map = new Map();
+        // 创建节点并存储在 map 中
+        dataInit.forEach((item) => {
+          const node = {
             id: item.id,
             icon: item.icon,
             title: item.name,
             path: item.code,
             children: [],
-          });
-        } else {
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].id === item.parentId) {
-              data[i].children.push({
-                id: item.id,
-                icon: item.icon,
-                title: item.name,
-                path: item.code,
-                parentId: item.parentId,
-              });
+          };
+          map.set(item.id, node);
+          if (item.parentId === null) {
+            data.push(node);
+          } else {
+            // 将子节点添加到其父节点的 children 数组中
+            const parentNode = map.get(item.parentId);
+            if (parentNode) {
+              parentNode.children.push(node);
             }
           }
-        }
-      });
-      this.menuList = data;
+        });
+        return data;
+      }
+
+      this.menuList = buildTree(dataInit);
     },
   },
 };

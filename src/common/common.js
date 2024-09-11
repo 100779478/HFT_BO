@@ -5,11 +5,29 @@ import moment from "moment/moment";
 import router from "@/router";
 import {Message} from "view-design";
 
-// fill number into some length string
+/**
+ * 用0填充数字，使其达到指定的长度
+ * @param {number} number - 需要填充的数字
+ * @param {number} length - 指定的长度
+ * @returns {string} 填充后的数字字符串
+ */
+
 export const fillNumber = (number, length) => {
     return (new Array(length).join(0) + number).slice(-length);
 };
-// timeObject
+
+/**
+ * 将日期对象转换为本地化的时间对象
+ * @param {Date} date - JavaScript日期对象
+ * @returns {Object} 包含本地化时间信息的对象
+ *  - year: 年份（四位数）
+ *  - month: 月份（两位数，补零）
+ *  - date: 日期（两位数，补零）
+ *  - hour: 小时（两位数，补零）
+ *  - minute: 分钟（两位数，补零）
+ *  - second: 秒钟（两位数，补零）
+ */
+
 const dateToLocaleObject = (date) => {
     return {
         year: date.getYear() + 1900,
@@ -20,6 +38,11 @@ const dateToLocaleObject = (date) => {
         second: fillNumber(date.getSeconds(), 2),
     };
 };
+
+/**
+ * 时间处理模块，包含日期相关的工具函数
+ */
+
 export const time = {
     dateToLocaleObject,
     UTCToLocale: (UTC10) => {
@@ -46,97 +69,97 @@ function findDictionaryList(dictionaryKey, code) {
     return dictionaryList;
 }
 
-// 订单状态
+// 订单状态枚举
 export function getOrderStatus(code) {
     return findDictionaryList('OrderStatus', code)
 }
 
-// 方向
+// 方向枚举
 export function getDirection(code) {
     return findDictionaryList('Direction', code)
 }
 
-// 开平
+// 开平枚举
 export function getOffsetType(code) {
     return findDictionaryList('OffsetType', code)
 }
 
-// 连接状态
+// 连接状态枚举
 export function getChannelConnectStatus(code) {
     return findDictionaryList('ChannelConnectStatus', code)
 }
 
-// 投保套利
+// 投保套利枚举
 export function getHedgeType(code) {
     return findDictionaryList('HedgeType', code)
 }
 
-// 接口类型
+// 接口类型枚举
 export function getApiType(code) {
     return findDictionaryList('ApiType', code)
 }
 
-// 业务类型
+// 业务类型枚举
 export function getLogicType(code) {
     return findDictionaryList('LogicType', code)
 }
 
-// 用户类型
+// 用户类型枚举
 export function getUserType(code) {
     return findDictionaryList('UserType', code)
 }
 
-// 持仓方向
+// 持仓方向枚举
 export function getPositionDirection(code) {
     return findDictionaryList('PositionDirection', code)
 }
 
-// 策略文件类型
+// 策略文件类型枚举
 export function getRuleFileType(code) {
     return findDictionaryList('RuleFileType', code)
 }
 
-// 策略参数类型
+// 策略参数类型枚举
 export function RulePropType(code) {
     return findDictionaryList('RulePropType', code)
 }
 
-// 做市策略类型
+// 做市策略类型枚举
 export function getRuleMakeMarketType(code) {
     return findDictionaryList('RuleMakeMarketType', code)
 }
 
-// 量化策略类型
+// 量化策略类型枚举
 export function getRuleQuantType(code) {
     return findDictionaryList('RuleQuantType', code)
 }
 
-// 交易通道类型
+// 交易通道类型枚举
 export function getChannelType(code) {
     return findDictionaryList('ChannelType', code)
 }
 
-// 操作系统类型
+// 操作系统类型枚举
 export function getOperatingLogType(code) {
     return findDictionaryList('OperatingLogType', code)
 }
 
-// 星期
+// 星期枚举
 export function getDayOfWeek(code) {
     return findDictionaryList('DayOfWeek', code)
 }
 
-// 交易所类型
+// 交易所类型枚举
 export function getTradeExchangeType(code) {
     return findDictionaryList('TradeExchangeType', code)
 }
 
-// 策略审批单状态
+// 策略审批单状态枚举
 export function getRuleVettingStatus(code) {
     return findDictionaryList('RuleVettingStatus', code)
 }
 
-// 密码强度校验类型
+// 密码强度校验类型枚举
 export function getPasswordStrength(code) {
     return findDictionaryList('PasswordStrength', code)
 }
