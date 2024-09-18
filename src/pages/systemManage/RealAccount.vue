@@ -36,7 +36,7 @@ input:-webkit-autofill {
           <Icon type="md-add"/>
           新增实体账户
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.channelTradeExport,this.pagination,'实体账户')" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.channelTradeExport,this.pagination,'实体账户')" class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -224,6 +224,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   props: ["userId"],
@@ -308,8 +309,8 @@ export default {
       typeInput: true,
       userValidRules: {
         channelId: [{required: true, message: "请输入通道ID"}],
-        apiType: [{required: true, message: "请选择外部接口类型"}],
-        channelType: [{required: true, message: "请选择通道类型"}],
+        apiType: [{required: true, message: ERROR_MSG.externalInterfaceTypeEmpty}],
+        channelType: [{required: true, message: ERROR_MSG.channelTypeEmpty}],
         // userId: [{ required: true, message: "请输入交易账号" }],
         // password: [{ required: true, message: "请输入密码" }],
         // active: [{ required: false, message: "请选择状态" }],
@@ -414,24 +415,24 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.channelInfo.channelId) {
-        this.$Message.error("通道ID不能为空");
+        this.$Message.error(ERROR_MSG.channelIdEmpty);
         return;
       }
       if (!this.channelInfo.apiType) {
-        this.$Message.error("请选择外部接口类型");
+        this.$Message.error(ERROR_MSG.externalInterfaceTypeEmpty);
         return;
       }
       if (!this.channelInfo.channelType) {
-        this.$Message.error("请选择通道类型");
+        this.$Message.error(ERROR_MSG.channelTypeEmpty);
         return;
       }
       if (isNew) {
-        http.put(URL.channel, {...this.channelInfo, messageType: '新增成功'}, () => {
+        http.put(URL.channel, {...this.channelInfo, messageType: SUCCESS_MSG.addSuccess}, () => {
           this.getChannelData();
           this.cancel();
         });
       } else {
-        http.post(URL.channel, {...this.channelInfo, messageType: '修改成功'}, () => {
+        http.post(URL.channel, {...this.channelInfo, messageType: SUCCESS_MSG.modifySuccess}, () => {
           this.getChannelData();
           this.cancel();
         });

@@ -17,14 +17,14 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderSysId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="报单编号"
           >
           </Input>
         </form>
         <form autocomplete="off">
           <Input
-              class="mr3 input-form"
+              class="mr-3 input-form"
               v-model="searchParams.tradeId"
               placeholder="成交编号"
           >
@@ -33,7 +33,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="策略编号"
               @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
           >
@@ -42,7 +42,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -50,7 +50,7 @@
         <form autocomplete="off">
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择起始日期"
@@ -62,7 +62,7 @@
           ></DatePicker>
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择结束日期"
@@ -73,7 +73,7 @@
               autocomplete="false"
           ></DatePicker>
           <TimePicker
-              class="mr3"
+              class="mr-3"
               type="timerange"
               placement="bottom-end"
               placeholder="选择时间"
@@ -83,14 +83,14 @@
           ></TimePicker>
         </form>
       </Col>
-      <Col span="" class="mr3" style="flex-shrink: 0">
-        <Button type="primary" @click="refresh()" class="mr3"
+      <Col span="" class="mr-3" style="flex-shrink: 0">
+        <Button type="primary" @click="refresh()" class="mr-3"
         >
           <Icon type="md-search"/>
           查询
         </Button
         >
-        <Button type="success" @click="handleExportDeals()" class="mr3"
+        <Button type="success" @click="handleExportDeals()" class="mr-3"
         >
           <Icon type="md-download"/>
           导出

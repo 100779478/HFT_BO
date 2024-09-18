@@ -36,7 +36,7 @@
           <Icon type="md-add"/>
           新增用户
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.userExport, this.pagination,'用户管理')" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.userExport, this.pagination,'用户管理')" class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -93,7 +93,7 @@
               <FormItem label="用户类型" prop="userType">
                 <Select
                     v-model="userInfo.userType"
-                    class="mr3"
+                    class="mr-3"
                     style="width: 120px"
                     placeholder="用户类型"
                 >
@@ -211,7 +211,7 @@ import {encryptionModePassword, getUserType, handleExport, handleSort} from "@/c
 import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import {tableMixin} from "@/mixins/tableMixin";
-import {ACTIVE_LIST} from "@/common/constant";
+import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   components: {InputPassword, ResetPwdModal},
@@ -452,20 +452,24 @@ export default {
       this.userInfo.roleIds = list;
       delete (this.userInfo.roles)
       if (!this.userInfo.customerId) {
-        this.$Message.warning('请填写用户账号')
+        this.$Message.warning(ERROR_MSG.userAccountEmpty)
       }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
-          this.$Message.warning('密码不允许包含空格')
+          this.$Message.warning(ERROR_MSG.passwordContainsSpace)
         } else if (!this.userInfo.password) {
-          this.$Message.warning('请填写密码')
+          this.$Message.warning(ERROR_MSG.passwordEmpty)
         } else if (this.pwdStrengthLevel < 3) {
-          this.$Message.error("密码强度不足")
+          this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
         } else {
           const encryptedPassword = encryptionModePassword(passType, this.userInfo.password);
           console.log('pw:', this.userInfo.password, encryptedPassword)
-          http.put(URL.userEdit, {...this.userInfo, password: encryptedPassword, messageType: '新增成功'}, (res) => {
+          http.put(URL.userEdit, {
+            ...this.userInfo,
+            password: encryptedPassword,
+            messageType: SUCCESS_MSG.addSuccess
+          }, (res) => {
             if (res.code === '0') {
               this.getUserData()
               this.cancel();
@@ -475,7 +479,7 @@ export default {
       } else {
         http.post(
             `${URL.userEdit}/${this.userInfo.customerId}`,
-            {...this.userInfo, messageType: '修改成功'},
+            {...this.userInfo, messageType: SUCCESS_MSG.modifySuccess},
             (res) => {
               if (res.code === '0') {
                 this.getUserData()
@@ -491,7 +495,7 @@ export default {
         // this.$Message.error("启用失败：" + res.msg);
         return;
       }
-      this.$Message.success(`用户已启用`);
+      this.$Message.success(SUCCESS_MSG.userEnabled);
       this.getUserData();
     },
     // 🈲用用户
@@ -500,7 +504,7 @@ export default {
         // this.$Message.error("禁用失败：" + res.msg);
         return;
       }
-      this.$Message.success(`用户已禁用`);
+      this.$Message.success(ERROR_MSG.userDisabled);
       this.getUserData();
     },
     changeUserStatus(row) {
@@ -508,7 +512,7 @@ export default {
       // let customerName = row.customerName;
       let customerId = Number(getUserInfo());
       if (data === customerId) {
-        this.$Message.error("无法禁用自己");
+        this.$Message.error(ERROR_MSG.unableToDisableYourself);
         return;
       }
       if (!row.active) {
@@ -533,11 +537,11 @@ export default {
     },
     sureModifyImg() {
       if (this.resetPassword === '' || this.confirmPassword === '') {
-        this.$Message.error('密码不能为空')
+        this.$Message.error(ERROR_MSG.passwordEmpty)
       } else if (this.resetPassword !== this.confirmPassword) {
-        this.$Message.error('两次密码输入不一致')
+        this.$Message.error(ERROR_MSG.passwordsMismatch)
       } else if (this.strength < 3) {
-        this.$Message.warning('密码强度不足')
+        this.$Message.warning(ERROR_MSG.passwordStrengthInsufficient)
       } else {
         this.moreOperations(this.row, 'resetPassword')
         this.showPwdModal = false
@@ -550,7 +554,7 @@ export default {
         http.post(URL.userReset, {
           customerId: row.customerId,
           password,
-          messageType: '重置成功'
+          messageType: SUCCESS_MSG.resetSuccess
         });
       }
       setTimeout(() => {

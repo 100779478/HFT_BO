@@ -22,7 +22,7 @@
         </Button
         >
         <Button type="success" @click="()=>handleExport(URL.channelStatusExport, this.pagination,'连接状态')"
-                class="mr3"
+                class="mr-3"
         >
           <Icon type="md-download"/>
           导出

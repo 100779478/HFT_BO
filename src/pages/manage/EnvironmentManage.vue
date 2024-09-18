@@ -31,7 +31,7 @@
           新增环境
         </Button
         >
-        <Button type="success" @click="()=>handleExport(URL.environmentExport, this.pagination,'环境管理')" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.environmentExport, this.pagination,'环境管理')" class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -124,6 +124,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
+import {SUCCESS_MSG} from "@/common/constant";
 
 export default {
   props: ["userId"],
@@ -218,7 +219,7 @@ export default {
     ok(isNew) {
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功',
+        msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
         url: URL.editEnvironment
       };
       http[config.method](config.url, {...this.environmentInfo, messageType: config.msg}, () => {

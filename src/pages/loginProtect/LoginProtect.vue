@@ -22,6 +22,7 @@ import {encryptionModePassword} from "@/common/common";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import router from "@/router";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   name: "LoginProtect",
@@ -49,27 +50,27 @@ export default {
     },
     ok() {
       if (this.oldPassword === "") {
-        this.$Message.error("请输入旧密码");
+        this.$Message.error(ERROR_MSG.oldPasswordEmpty);
         return;
       }
       if (this.newPassword === "") {
-        this.$Message.error("请输入新密码");
+        this.$Message.error(ERROR_MSG.newPasswordEmpty);
         return;
       }
       if (this.confirmPassword === "") {
-        this.$Message.error("请输入确认密码");
+        this.$Message.error(ERROR_MSG.confirmPasswordEmpty);
         return;
       }
       if (this.newPassword.includes(' ')) {
-        this.$Message.warning('密码不允许包含空格')
+        this.$Message.warning(ERROR_MSG.passwordContainsSpace)
         return;
       }
       if (this.strength < 3) {
-        this.$Message.error("密码强度不足")
+        this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
         return;
       }
       if (this.newPassword !== this.confirmPassword) {
-        this.$Message.warning("两次密码输入不一致");
+        this.$Message.warning(ERROR_MSG.passwordsMismatch);
         return;
       }
       const passType = sessionStorage.getItem('passType')
@@ -84,7 +85,7 @@ export default {
     },
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
-        this.$Message.success("修改成功");
+        this.$Message.success(SUCCESS_MSG.modifySuccess);
         this.$router.push({name: 'Login'})
       }
     },

@@ -17,7 +17,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -25,7 +25,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.combiNo"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="持仓账号"
           >
           </Input>
@@ -33,7 +33,7 @@
         <form autocomplete="off">
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择起始日期"
@@ -45,7 +45,7 @@
           ></DatePicker>
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择结束日期"
@@ -57,14 +57,14 @@
           ></DatePicker>
         </form>
       </Col>
-      <Col span="" class="mr3" style="flex-shrink: 0">
-        <Button type="primary" @click="refresh()" class="mr3"
+      <Col span="" class="mr-3" style="flex-shrink: 0">
+        <Button type="primary" @click="refresh()" class="mr-3"
         >
           <Icon type="md-search"/>
           查询
         </Button
         >
-        <Button type="success" @click="handleExportPosition()" class="mr3"
+        <Button type="success" @click="handleExportPosition()" class="mr-3"
         >
           <Icon type="md-download"/>
           导出

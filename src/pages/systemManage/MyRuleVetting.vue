@@ -34,7 +34,7 @@
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col class="mr3">
+      <Col class="mr-3">
         <form autocomplete="off">
           <Input
               v-model="pagination.ruleName"
@@ -53,7 +53,7 @@
           </Input>
           <Select
               v-model="pagination.ruleVettingStatus"
-              class="mr3"
+              class="mr-3"
               style="width: 100px"
               placeholder="审批状态"
               :clearable="true"
@@ -68,12 +68,12 @@
         </form>
       </Col>
       <Col style="position: absolute;right: 25px">
-        <Button type="primary" @click="refresh()" class="mr3">
+        <Button type="primary" @click="refresh()" class="mr-3">
           <Icon type="md-search"/>
           查询
         </Button>
         <Button type="success" @click="()=>handleExport(URL.myVettingExport, this.pagination, '我的策略申请')"
-                class="mr3">
+                class="mr-3">
           <Icon type="md-download"/>
           导出
         </Button>
@@ -329,6 +329,7 @@ import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
 import {showParamList} from "@/utils/paramList";
 import {renderRuleApprovalStatus} from "@/utils/renderRuleApprovalStatus";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   components: {ParamsTable},
@@ -517,10 +518,10 @@ export default {
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly));
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.ruleLocation) {
-          this.$Message.warning('策略存储路径不能为空')
+          this.$Message.warning(ERROR_MSG.storagePathEmpty)
           return
         }
-        http.post(URL.updateVetting, {...this.userStrategyInfo, messageType: '修改成功'}, (res) => {
+        http.post(URL.updateVetting, {...this.userStrategyInfo, messageType: SUCCESS_MSG.modifySuccess}, (res) => {
           if (res.code === '0') {
             this.getMyVettingList();
             this.cancel();
@@ -531,7 +532,7 @@ export default {
     // 撤销审批策略
     handleCancelVetting(row) {
       let ruleId = row.ruleId;
-      http.post(`${URL.cancelVetting}`, {ruleId, messageType: "撤销成功"}, this.getMyVettingList);
+      http.post(`${URL.cancelVetting}`, {ruleId, messageType: SUCCESS_MSG.revokeSuccess}, this.getMyVettingList);
     },
     // 刷新
     refresh() {

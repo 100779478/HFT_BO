@@ -32,7 +32,7 @@
           <FormItem label="交易所类型">
             <Select
                 v-model="exchangeCode"
-                class="mr3"
+                class="mr-3"
                 style="width: 100px"
                 placeholder="交易所类型"
             >
@@ -56,7 +56,7 @@
     <form style="float: left" class="top" autocomplete="off">
       <Select
           v-model="pagination.exchangeCode"
-          class="mr3"
+          class="mr-3"
           style="width: 100px"
           placeholder="交易所类型"
       >
@@ -70,7 +70,7 @@
       </Select>
       <DatePicker
           split-panels
-          class="mr3"
+          class="mr-3"
           type="date"
           placement="bottom-end"
           placeholder="选择起始日期"
@@ -82,7 +82,7 @@
       ></DatePicker>
       <DatePicker
           split-panels
-          class="mr3"
+          class="mr-3"
           type="date"
           placement="bottom-end"
           placeholder="选择结束日期"
@@ -141,6 +141,7 @@ import {formatDate, getDayOfWeek, getTradeExchangeType, handleExport, handleSort
 import moment from "moment";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 import {tableMixin} from "@/mixins/tableMixin";
+import {SUCCESS_MSG} from "@/common/constant";
 
 export default {
   props: ["userId"],
@@ -280,7 +281,7 @@ export default {
     // 新增弹窗确认按键
     ok() {
       const year = moment(this.year).format('YYYY')
-      http.post(`${URL.calendarCalculate}`, {year, exchangeCode: this.exchangeCode, messageType: '计算成功'}, (res) => {
+      http.post(`${URL.calendarCalculate}`, {year, exchangeCode: this.exchangeCode, messageType: SUCCESS_MSG.calculationSuccess}, (res) => {
         if (res.code === '0') {
           this.showAddModal = false
           this.getCalendarList();

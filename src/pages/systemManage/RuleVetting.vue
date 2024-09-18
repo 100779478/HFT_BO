@@ -5,7 +5,7 @@
 <template>
   <div>
     <Row style="margin: 10px">
-      <Col class="mr3">
+      <Col class="mr-3">
         <form autocomplete="off">
           <Input
               v-model="pagination.ruleName"
@@ -24,7 +24,7 @@
           </Input>
           <Select
               v-model="pagination.ruleVettingStatus"
-              class="mr3"
+              class="mr-3"
               style="width: 100px"
               placeholder="审批状态"
               :clearable="true"
@@ -39,11 +39,11 @@
         </form>
       </Col>
       <Col style="position:absolute;right: 25px">
-        <Button type="primary" @click="getVettingList" class="mr3">
+        <Button type="primary" @click="getVettingList" class="mr-3">
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.vettingExport, this.pagination,'策略审批')" class="mr3">
+        <Button type="success" @click="()=>handleExport(URL.vettingExport, this.pagination,'策略审批')" class="mr-3">
           <Icon type="md-download"/>
           导出
         </Button>
@@ -117,6 +117,7 @@ import {downLoadZip} from "@/utils/downLoadZip";
 import {tableMixin} from "@/mixins/tableMixin";
 import {showParamList} from "@/utils/paramList";
 import {renderRuleApprovalStatus} from "@/utils/renderRuleApprovalStatus";
+import {SUCCESS_MSG} from "@/common/constant";
 
 export default {
   mixins: [tableMixin],
@@ -286,7 +287,7 @@ export default {
     handleRuleApproval(row, status) {
       // 使用解构和剩余运算符去掉 index 和 rowKey 属性
       const {ruleId} = row;
-      const messageType = status ? "通过" : "拒绝";
+      const messageType = status ? SUCCESS_MSG.approved : SUCCESS_MSG.rejected;
       const url = status ? URL.agreeVetting : URL.refuseVetting
       this.$Modal.confirm({
         title: `确认${messageType}审批吗？`,
@@ -325,7 +326,7 @@ export default {
       const {ruleId} = row
       const data = {
         ruleId,
-        messageType: '下载成功',
+        messageType: SUCCESS_MSG.downloadSuccess,
         responseType: 'blob',
       }
       downLoadZip(URL.vettingDownload, data, "审批文件")

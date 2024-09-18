@@ -49,33 +49,33 @@
           <Input
               v-model="pagination.ruleName"
               style="width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="实例名称"
               @on-change="handleSearch"
           />
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="用户代码"
               @on-change="handleSearch"
           />
           <Input
               v-model="pagination.ruleTag"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="标签"
               @on-change="handleSearch"
           />
         </form>
       </Col>
-      <Col span="" class="mr3" style="flex-shrink: 0">
-        <Button type="primary" @click="handleSearch" class="mr3">
+      <Col span="" class="mr-3" style="flex-shrink: 0">
+        <Button type="primary" @click="handleSearch" class="mr-3">
           <Icon type="md-search"/>
           查询
         </Button>
         <Button type="success" @click="()=>handleExport(URL.ruleExportInstance, this.pagination, '策略实例')"
-                class="mr3">
+                class="mr-3">
           <Icon type="md-download"/>
           导出
         </Button>

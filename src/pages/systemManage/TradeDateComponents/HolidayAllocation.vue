@@ -27,7 +27,7 @@
           <FormItem label="起始日期" prop="startDate">
             <DatePicker
                 split-panels
-                class="mr3"
+                class="mr-3"
                 type="date"
                 placement="bottom-end"
                 placeholder="选择起始日期"
@@ -43,7 +43,7 @@
           <FormItem label="结束日期" prop="endDate">
             <DatePicker
                 split-panels
-                class="mr3"
+                class="mr-3"
                 type="date"
                 placement="bottom-end"
                 placeholder="选择结束日期"
@@ -59,7 +59,7 @@
           <FormItem label="交易所类型" prop="exchangeCode">
             <Select
                 v-model="holidaySetting.exchangeCode"
-                class="mr3"
+                class="mr-3"
                 style="width: 100px"
                 placeholder="交易所类型"
             >
@@ -92,7 +92,7 @@
     <form style="float: left" class="top" autocomplete="off">
       <Select
           v-model="pagination.exchangeCode"
-          class="mr3"
+          class="mr-3"
           style="width: 100px"
           placeholder="交易所类型"
       >
@@ -106,7 +106,7 @@
       </Select>
       <DatePicker
           split-panels
-          class="mr3"
+          class="mr-3"
           type="date"
           placement="bottom-end"
           placeholder="选择起始日期"
@@ -118,7 +118,7 @@
       ></DatePicker>
       <DatePicker
           split-panels
-          class="mr3"
+          class="mr-3"
           type="date"
           placement="bottom-end"
           placeholder="选择结束日期"
@@ -187,6 +187,7 @@ import {formatDate, getTradeExchangeType, handleExport} from "@/common/common";
 import moment from "moment/moment";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 import {tableMixin} from "@/mixins/tableMixin";
+import {SUCCESS_MSG} from "@/common/constant";
 
 export default {
   mixins: [tradeExchangeMixin, tableMixin],
@@ -284,7 +285,7 @@ export default {
       }
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功',
+        msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
         url: URL.holiday
       };
       http[config.method](config.url, {...this.holidaySetting, messageType: config.msg}, () => {

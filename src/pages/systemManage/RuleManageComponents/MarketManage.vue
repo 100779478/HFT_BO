@@ -38,20 +38,20 @@
           <Input
               v-model="pagination.ruleName"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="策略名称"
               @on-change="handleSearch"
           > </Input>
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="用户代码"
               @on-change="handleSearch"
           > </Input>
           <Select
               v-model="pagination.ruleType"
-              class="mr3"
+              class="mr-3"
               style="width: auto"
               placeholder="策略类型"
               :clearable="true"
@@ -66,7 +66,7 @@
           </Select>
           <Select
               v-model="pagination.active"
-              class="mr3"
+              class="mr-3"
               style="width: 100px"
               placeholder="状态"
               :clearable="true"
@@ -81,7 +81,7 @@
           </Select>
         </form>
       </Col>
-      <Col style="position: absolute;right: 25px" class="mr3">
+      <Col style="position: absolute;right: 25px" class="mr-3">
         <Button type="primary" @click="handleSearch" class="top">
           <Icon type="md-search"/>
           查询
@@ -291,7 +291,7 @@ import {URL} from "@/api/serverApi";
 import {getRuleFileType, getRuleMakeMarketType} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
-import {ACTIVE_LIST} from "@/common/constant";
+import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   mixins: [tableMixin, ruleComponentMixin],
@@ -469,12 +469,12 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.userStrategyInfo.ruleLocation) {
-        this.$Message.warning('策略存储路径不能为空')
+        this.$Message.warning(ERROR_MSG.storagePathEmpty)
         return
       }
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功',
+        msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
         url: URL.ruleMarket
       };
       http[config.method](config.url, {...this.userStrategyInfo, messageType: config.msg}, (res) => {
@@ -487,10 +487,10 @@ export default {
     // 启用策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
-        this.$Message.error("启用失败：" + res.msg);
+        this.$Message.error(ERROR_MSG.enableFail + res.msg);
         return;
       }
-      this.$Message.success(`策略已启用`);
+      this.$Message.success(SUCCESS_MSG.ruleIsActive);
       this.getUserStrategyData();
     },
     // 🈲用策略
@@ -499,7 +499,7 @@ export default {
         this.$Message.error("禁用失败：" + res.msg);
         return;
       }
-      this.$Message.success(`策略已禁用`);
+      this.$Message.success(ERROR_MSG.ruleDisabled);
       this.getUserStrategyData();
     },
     changeUserStatus(row) {

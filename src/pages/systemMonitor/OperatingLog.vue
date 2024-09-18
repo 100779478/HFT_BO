@@ -11,7 +11,7 @@
       >
         <form autocomplete="off">
           <Input
-              class="mr3"
+              class="mr-3"
               v-model="pagination.customerName"
               style="float: right; width: 160px; border-radius: 20px"
               placeholder="用户名称"
@@ -20,7 +20,7 @@
         </form>
         <form autocomplete="off">
           <Input
-              class="mr3"
+              class="mr-3"
               v-model="pagination.transactionName"
               style="float: right; width: 160px; border-radius: 20px"
               placeholder="操作业务"
@@ -29,7 +29,7 @@
         </form>
         <Select
             v-model="pagination.operatingLogType"
-            class="mr3"
+            class="mr-3"
             style="width: 100px"
             placeholder="操作系统"
             :clearable="true"
@@ -45,7 +45,7 @@
         <form autocomplete="off">
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择起始日期"
@@ -57,7 +57,7 @@
           ></DatePicker>
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择结束日期"
@@ -68,7 +68,7 @@
               autocomplete="false"
           ></DatePicker>
           <TimePicker
-              class="mr3"
+              class="mr-3"
               type="timerange"
               placement="bottom-end"
               placeholder="选择时间"
@@ -86,7 +86,7 @@
           查询
         </Button
         >
-        <Button type="success" @click="handleExportLog()" class="mr3"
+        <Button type="success" @click="handleExportLog()" class="mr-3"
         >
           <Icon type="md-download"/>
           导出

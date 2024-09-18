@@ -17,7 +17,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderInnerId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="报单内部编号"
           >
           </Input>
@@ -25,7 +25,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.orderSysId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="报单编号"
           >
           </Input>
@@ -33,7 +33,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="策略编号"
               type="text"
               @on-keyup="()=>this.searchParams.ruleId=this.searchParams.ruleId.replace(/[^\d]/g,'')"
@@ -43,7 +43,7 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="合约代码"
           >
           </Input>
@@ -51,14 +51,14 @@
         <form autocomplete="off">
           <Input
               v-model="searchParams.customerId"
-              class="mr3 input-form"
+              class="mr-3 input-form"
               placeholder="用户编号"
           >
           </Input>
         </form>
         <Select
             v-model="searchParams.orderStatus"
-            class="mr3"
+            class="mr-3"
             style="width: 180px"
             placeholder="报单状态"
             :clearable="true"
@@ -76,7 +76,7 @@
         <form autocomplete="off">
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择起始日期"
@@ -88,7 +88,7 @@
           ></DatePicker>
           <DatePicker
               split-panels
-              class="mr3"
+              class="mr-3"
               type="date"
               placement="bottom-end"
               placeholder="选择结束日期"
@@ -99,7 +99,7 @@
               autocomplete="false"
           ></DatePicker>
           <TimePicker
-              class="mr3"
+              class="mr-3"
               type="timerange"
               placement="bottom-end"
               placeholder="选择时间"
@@ -109,14 +109,14 @@
           ></TimePicker>
         </form>
       </Col>
-      <Col class="mr3" style="flex-shrink: 0">
-        <Button type="primary" @click="refresh()" class="mr3"
+      <Col class="mr-3" style="flex-shrink: 0">
+        <Button type="primary" @click="refresh()" class="mr-3"
         >
           <Icon type="md-search"/>
           查询
         </Button
         >
-        <Button type="success" @click="handleExportOrders()" class="mr3"
+        <Button type="success" @click="handleExportOrders()" class="mr-3"
         >
           <Icon type="md-download"/>
           导出

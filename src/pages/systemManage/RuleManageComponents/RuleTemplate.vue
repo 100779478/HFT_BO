@@ -59,20 +59,20 @@
           <Input
               v-model="pagination.ruleName"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="策略名称"
               @on-change="handleSearch"
           />
           <Input
               v-model="pagination.customerId"
               style=" width: 120px; border-radius: 20px"
-              class="mr3"
+              class="mr-3"
               placeholder="用户代码"
               @on-change="handleSearch"
           />
           <Select
               v-model="pagination.ruleType"
-              class="mr3"
+              class="mr-3"
               style="width: 100px"
               placeholder="策略类型"
               :clearable="true"
@@ -87,7 +87,7 @@
           </Select>
           <Select
               v-model="pagination.active"
-              class="mr3"
+              class="mr-3"
               style="width: 100px"
               placeholder="状态"
               :clearable="true"
@@ -102,16 +102,16 @@
           </Select>
         </form>
       </Col>
-      <Col span="" class="mr3" style="flex-shrink: 0">
-        <Button type="primary" @click="handleSearch" class="mr3">
+      <Col span="" class="mr-3" style="flex-shrink: 0">
+        <Button type="primary" @click="handleSearch" class="mr-3">
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="info" @click="modalUser('new')" class="mr3">
+        <Button type="info" @click="modalUser('new')" class="mr-3">
           <Icon type="md-add"/>
           新增策略模板
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.ruleExportQuant, this.pagination, '策略模板')" class="mr3">
+        <Button type="success" @click="()=>handleExport(URL.ruleExportQuant, this.pagination, '策略模板')" class="mr-3">
           <Icon type="md-download"/>
           导出
         </Button>
@@ -276,10 +276,10 @@
                     上传策略文件
                   </Button>
                   <Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
-                            :size="30"
-                            :stroke-color="'#19be6b'"
-                            :trail-width="10"
-                            :stroke-width="13"
+                          :size="30"
+                          :stroke-color="'#19be6b'"
+                          :trail-width="10"
+                          :stroke-width="13"
                   >
                     <Icon v-if="this.fileName" type="ios-checkmark" size="25"
                           style="font-weight: bold;color: #19be6b"></Icon>
@@ -373,7 +373,7 @@ import {getRuleFileType, getRuleQuantType} from "@/common/common";
 import ParamsTable from "@/components/ParamsTable.vue";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
-import {ACTIVE_LIST} from "@/common/constant";
+import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 import {showParamList} from "@/utils/paramList";
 
 export default {
@@ -605,7 +605,7 @@ export default {
             const data = {
               ruleId,
               productEnvId: this.selectedEnv,
-              messageType: "上传成功"
+              messageType: SUCCESS_MSG.uploadSuccess
             }
             http.post(URL.ruleUploadProduct, data)
           },
@@ -672,20 +672,20 @@ export default {
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly))
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.ruleLocation) {
-          this.$Message.error('策略文件路径不能为空')
+          this.$Message.error(ERROR_MSG.filePathEmpty)
           return
         }
         if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-          this.$Message.error('策略文件类型为C++时，策略文件名称需要以.so结尾')
+          this.$Message.error(ERROR_MSG.fileTypeCPlusPlus)
           return
         }
         if (this.userStrategyInfo.customerIds.length <= 0) {
-          this.$Message.error('用户代码不能为空')
+          this.$Message.error(ERROR_MSG.userCodeEmpty)
           return
         }
         const config = {
           method: isNew ? 'put' : 'post',
-          msg: isNew ? '新增成功' : '修改成功',
+          msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
           url: URL.ruleQuant
         };
         http[config.method](config.url, {...this.userStrategyInfo, messageType: config.msg}, (res) => {
@@ -699,10 +699,10 @@ export default {
     // 启用策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
-        this.$Message.error("启用失败：" + res.msg);
+        this.$Message.error(ERROR_MSG.enableFail + res.msg);
         return;
       }
-      this.$Message.success(`策略已启用`);
+      this.$Message.success(SUCCESS_MSG.ruleIsActive);
       this.getUserStrategyData();
     },
     // 🈲用策略
@@ -710,7 +710,7 @@ export default {
       if (res.code !== "0") {
         return;
       }
-      this.$Message.success(`策略已禁用`);
+      this.$Message.success(ERROR_MSG.ruleDisabled);
       this.getUserStrategyData();
     },
     changeUserStatus(row) {

@@ -32,7 +32,7 @@
         </Button
         >
         <Button type="success" @click="()=>handleExport(URL.customChannelExport, this.pagination,'分账户管理')"
-                class="mr3"
+                class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -230,6 +230,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {getLogicType, handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   props: ["userId"],
@@ -338,7 +339,7 @@ export default {
       traderLabel: "交易员编码",
       userValidRules: {
         customerId: [{required: true, message: "请选择用户代码"}],
-        tradeChannel: [{required: true, message: "请选择交易通道"}],
+        tradeChannel: [{required: true, message: ERROR_MSG.tradeChannelEmpty}],
         accountId: [{required: true, message: "请输入分账号代码"}],
         tdApiType: [{required: true, message: "请输入交易接口类型"}],
         combiNo: [{required: true, message: "请输入持仓账户"}],
@@ -517,22 +518,22 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (
-          !this.checkField("customerId", "用户代码不能为空") ||
-          !this.checkField("tradeChannel", "请选择交易通道") ||
-          !this.checkField("logicType", "请选择业务类型") ||
-          !this.checkField("accountId", "请填写分账号代码") ||
+          !this.checkField("customerId", ERROR_MSG.userCodeEmpty) ||
+          !this.checkField("tradeChannel", ERROR_MSG.tradeChannelEmpty) ||
+          !this.checkField("logicType", ERROR_MSG.logicTypeEmpty) ||
+          !this.checkField("accountId", ERROR_MSG.accountIdEmpty) ||
           // !this.checkField("assetNo", `${this.assetLabel}不能为空`) ||
           !this.checkField("combiNo", `${this.positionLabel}不能为空`)
       ) {
         return;
       }
       if (isNew) {
-        http.put(URL.customChannel, {...this.channelInfo, messageType: '新增成功'}, () => {
+        http.put(URL.customChannel, {...this.channelInfo, messageType: SUCCESS_MSG.addSuccess}, () => {
           this.getChannelData()
           this.cancel();
         });
       } else {
-        http.post(URL.customChannel, {...this.channelInfo, messageType: '修改成功'}, () => {
+        http.post(URL.customChannel, {...this.channelInfo, messageType: SUCCESS_MSG.modifySuccess}, () => {
           this.getChannelData()
           this.cancel();
         });

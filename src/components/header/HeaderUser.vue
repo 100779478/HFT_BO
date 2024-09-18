@@ -119,6 +119,7 @@ import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import InputPassword from "@/components/InputPassword.vue";
 import {encryptionModePassword} from "@/common/common";
 import moment from "moment";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 
 export default {
@@ -205,7 +206,7 @@ export default {
         if (res.code === "0") {
           this.getCurrentEnv()
           this.exitIntro()
-          this.$Message.success("环境设置成功");
+          this.$Message.success(SUCCESS_MSG.envSetupSuccess);
           // 重载当前路由页面
           this.reload();
         }
@@ -233,32 +234,32 @@ export default {
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
         this.show = false;
-        this.$Message.success("修改成功");
+        this.$Message.success(SUCCESS_MSG.modifySuccess);
       }
     },
     ok() {
       if (this.oldPassword === "") {
-        this.$Message.error("请输入旧密码");
+        this.$Message.error(ERROR_MSG.oldPasswordEmpty);
         return;
       }
       if (this.newPassword === "") {
-        this.$Message.error("请输入新密码");
+        this.$Message.error(ERROR_MSG.newPasswordEmpty);
         return;
       }
       if (this.confirmPassword === "") {
-        this.$Message.error("请输入确认密码");
+        this.$Message.error(ERROR_MSG.confirmPasswordEmpty);
         return;
       }
       if (this.newPassword.includes(' ')) {
-        this.$Message.warning('密码不允许包含空格')
+        this.$Message.warning(ERROR_MSG.passwordContainsSpace)
         return;
       }
       if (this.strength < 3) {
-        this.$Message.error("密码强度不足")
+        this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
         return;
       }
       if (this.newPassword !== this.confirmPassword) {
-        this.$Message.warning("两次密码输入不一致");
+        this.$Message.warning(ERROR_MSG.passwordsMismatch);
         return;
       }
       const passType = sessionStorage.getItem('passType')

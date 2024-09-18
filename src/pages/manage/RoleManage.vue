@@ -52,7 +52,7 @@
           新增角色
         </Button
         >
-        <Button type="success" @click="()=>handleExport(URL.roleExport, this.pagination,'角色管理')" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.roleExport, this.pagination,'角色管理')" class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -157,6 +157,7 @@ import RolePermissionComponent from "@/pages/manage/RoleManage/RolePermissionCom
 import PcRoleManage from "@/pages/manage/RoleManage/PcRoleManage.vue";
 import {mapState} from "vuex";
 import {tableMixin} from "@/mixins/tableMixin";
+import {SUCCESS_MSG} from "@/common/constant";
 
 export default {
   components: {PcRoleManage, RolePermissionComponent},
@@ -267,7 +268,7 @@ export default {
       this.roleInfo.scenesWinTypes = this.scenesList || []
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功',
+        msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
         url: isNew ? URL.role : `${URL.role}/${this.roleInfo.id}`
       };
       http[config.method](config.url, {...this.roleInfo, messageType: config.msg}, () => {

@@ -3,6 +3,7 @@ import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExpo
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
 import axios from "axios";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 const ruleComponentMixin = {
     mixins: [tableMixin],
@@ -213,7 +214,7 @@ const ruleComponentMixin = {
                             },
                             (response) => {
                                 this.fileName = fileName;
-                                this.$Message.success('上传成功');
+                                this.$Message.success(SUCCESS_MSG.uploadSuccess);
                                 // 处理上传成功后的逻辑
                             }
                         );
@@ -239,7 +240,7 @@ const ruleComponentMixin = {
                                     this.showMessage(message, 'error', 6)
                                 } else {
                                     // 没有重复的 name 字段，显示成功消息
-                                    this.$Message.success('导入参数列表成功');
+                                    this.$Message.success(SUCCESS_MSG.importSuccess);
                                 }
                                 // 更新 paramList
                                 this.paramList = jsonContent;
@@ -252,7 +253,7 @@ const ruleComponentMixin = {
                         reader.readAsText(file);
                     } else {
                         // 文件不是 JSON 类型，进行相应的处理
-                        this.$Message.error('选择的文件不是 JSON 文件');
+                        this.$Message.error(ERROR_MSG.fileNotJson);
                     }
                 }
             }

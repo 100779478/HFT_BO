@@ -31,7 +31,7 @@
           新增权限
         </Button
         >
-        <Button type="success" @click="()=>handleExport(URL.tradeDataExport, this.pagination,'权限管理')" class="mr3"
+        <Button type="success" @click="()=>handleExport(URL.tradeDataExport, this.pagination,'权限管理')" class="mr-3"
         >
           <Icon type="md-download"/>
           导出
@@ -137,6 +137,7 @@ import {URL} from "@/api/serverApi";
 import {handleExport, handleSort} from "@/common/common";
 import {Message} from "view-design";
 import {tableMixin} from "@/mixins/tableMixin";
+import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 export default {
   props: ["userId"],
@@ -247,15 +248,15 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.tradeInfo.managerId) {
-        Message.error('请选择管理用户')
+        Message.error(ERROR_MSG.adminUserEmpty)
         return
       } else if (!this.tradeInfo.traderIds.length) {
-        Message.error('请选择交易员')
+        Message.error(ERROR_MSG.traderEmpty)
         return
       }
       const config = {
         method: isNew ? 'put' : 'post',
-        msg: isNew ? '新增成功' : '修改成功',
+        msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
         url: URL.tradeData
       };
       http[config.method](config.url, {...this.tradeInfo, messageType: config.msg}, () => {
