@@ -1,160 +1,257 @@
-<style lang="less">
-.bck {
-  height: 90%;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.title {
-  margin: 30px;
-  color: #070707;
-  font-size: 2rem;
-  text-align: center;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  z-index: 2; /* 确保标题在canvas上层 */
-  position: relative; /* 确保z-index生效 */
-}
-
-.curEnv {
-  width: 300px;
-  font-size: 22px;
-  font-weight: bolder;
-  color: #070707;
-  text-align: center;
-  margin: 20px auto 0 auto;
-  z-index: 2; /* 确保当前环境文字在canvas上层 */
-  position: relative; /* 确保z-index生效 */
-}
-
-.shine-span {
-  background: black linear-gradient(to left, transparent, rgba(255, 255, 255, 0.8), transparent) no-repeat 0 0;
-  background-size: 10% 100%;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: shine 4s linear infinite;
-}
-
-@keyframes shine {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 100% 0;
-  }
-}
-
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1; /* 确保canvas在最底层 */
-}
-</style>
-
 <template>
-  <div class="bck">
-    <!--    <canvas ref="canvas"></canvas>-->
-    <h1 class="title shine-span">欢迎使用本系统</h1>
-    <div class="curEnv title" id="currentEnv">
-      当前环境为：{{ currentEnv }}
-    </div>
-  </div>
+  <div id="chart" style="width: 90%; height: 800px;"></div>
 </template>
 
 <script>
-import introMixin from "@/mixins/introMixin";
+import * as echarts from 'echarts';
 
 export default {
-  mixins: [introMixin],
-  mounted() {
-    // this.initCanvas();
+  data() {
+    return {
+      multiRowData: [
+        [[{value: 10, color: '#ff0000'}, {value: 60}], [{value: 88, color: '#00ff00'}, {value: 76}]],
+        [[{value: 15}], [{value: 80}]],
+        [[{value: 20}, {
+          value: 20,
+          color: '#00ff00',
+        }, {value: 20}, {value: 20, color: '#ff0000', shadow: 1}], [{value: 70}, {
+          value: 60,
+          color: '#ff0000'
+        }, {value: 20}, {value: 20}]],
+        [[{value: 15}, {value: 80, color: '#00ff00'}, {
+          value: 80,
+          color: '#00ff00'
+        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        [[{value: 55}], [{value: 80}]],
+        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        [[{value: 85, color: '#ff0000', shadow: 0}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 15}, {value: 80, color: '#00ff00'}, {
+          value: 80,
+          color: '#00ff00'
+        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        [[{value: 55}], [{value: 80}]],
+        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        [[{value: 15}, {value: 80, color: '#00ff00'}, {
+          value: 80,
+          color: '#00ff00'
+        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        [[{value: 55}], [{value: 80}]],
+        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+      ],
+      processedData: [],
+      showDetails: false,
+    };
   },
-  computed: {
-    currentEnv() {
-      return this.$store.state.environment.currentEnv || '未选择';
-    },
+  mounted() {
+    this.processedData = this.multiRowData.map((row, index) => {
+      const avgY1 = this.calculateAverage(row[0]); // 计算第一列的平均值
+      const avgY2 = this.calculateAverage(row[1]); // 计算第二列的平均值
+      return [index, avgY1, avgY2]; // 将 xValue, avgY1, avgY2 返回
+    })
+    this.initChart();
   },
   methods: {
-    initCanvas() {
-      const canvas = this.$refs.canvas;
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      const particles = [];
-      const colors = ["#ffffff", "#ff99cc", "#ccffff", "#99ffcc", "#ffcc99"];
-      const maxParticles = 200;
-
-      function Particle(x, y, radius) {
-        this.init(x, y, radius);
-      }
-
-      Particle.prototype.init = function (x, y, radius) {
-        this.x = x || Math.random() * canvas.width;
-        this.y = y || Math.random() * canvas.height;
-        this.radius = radius || Math.random() * 2 + 1;
-        this.color = colors[Math.floor(Math.random() * colors.length)];
-        this.dx = (Math.random() - 0.5) * 4;
-        this.dy = (Math.random() - 0.5) * 4;
-        this.alpha = 1;
-        this.life = Math.random() * 50 + 50;
-        this.angle = Math.random() * Math.PI * 2;
-        this.spin = (Math.random() - 0.5) * 0.2;
-        this.growth = Math.random() * 0.02;
-      };
-
-      Particle.prototype.draw = function () {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle);
-        ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI * 2, false);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-        ctx.closePath();
-        ctx.restore();
-      };
-
-      Particle.prototype.update = function () {
-        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
-          this.dx = -this.dx;
-        }
-        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
-          this.dy = -this.dy;
-        }
-
-        this.x += this.dx;
-        this.y += this.dy;
-        this.angle += this.spin;
-        this.radius += this.growth;
-        this.alpha -= 1 / this.life;
-
-        this.draw();
-
-        if (this.alpha <= 0 || this.radius <= 0) {
-          this.init();
-        }
-      };
-
-      function initParticles() {
-        for (let i = 0; i < maxParticles; i++) {
-          const particle = new Particle();
-          particles.push(particle);
-        }
-      }
-
-      function animate() {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach((particle) => particle.update());
-      }
-
-      initParticles();
-      animate();
+    // 计算平均值函数
+    calculateAverage(values) {
+      const sum = values.reduce((acc, obj) => acc + obj.value, 0);
+      return sum / values.length;
     },
-  },
+    initChart() {
+
+      const chartDom = document.getElementById('chart');
+      const myChart = echarts.init(chartDom);
+
+      const option = {
+        xAxis: {
+          type: 'category',
+          data: ['10:20', '10:25', '10:30', '10:35', '10:40', '10:45', '10:50', '10:20', '10:25', '10:30', '10:35', '10:40', '10:45', '10:50', '10:20', '10:25', '10:30', '10:35', '10:40', '10:45', '10:50',] // X轴时间数据
+        },
+        yAxis: {
+          type: 'value'
+        },
+        dataZoom: [
+          {
+            type: 'slider',
+            show: false,
+            xAxisIndex: [0],
+            start: 0,
+            end: 100
+          },
+          {
+            type: 'inside',
+            xAxisIndex: [0],
+            start: 0,
+            end: 100
+          }
+        ],
+        series: [
+          {
+            type: 'custom',
+            renderItem: (params, api) => {
+              const xValue = params.dataIndex; // 获取X轴值
+              const yValues1 = this.multiRowData[params.dataIndex][0]; // 获取第一列的Y轴值（数组）
+              const yValues2 = this.multiRowData[params.dataIndex][1]; // 获取第二列的Y轴值（数组）
+              // 计算 Y 轴的平均值作为展示的 Y 坐标
+              const avgYValue1 = yValues1.reduce((sum, item) => sum + item.value, 0) / yValues1.length;
+              const avgYValue2 = yValues2.reduce((sum, item) => sum + item.value, 0) / yValues2.length;
+              const coord = api.coord([xValue, avgYValue1]); // 转换为坐标点
+              const upperShadowHeight = yValues1.length * 5;
+              const volumeHeight = yValues1.length * 15;
+              const lowerShadowHeight = yValues1.length * 5;
+              const totalHeight = yValues1.length * 25;
+
+              // 基础的children
+              const baseChildren = [
+                {
+                  type: 'line',
+                  shape: {
+                    x1: coord[0],
+                    y1: coord[1] - upperShadowHeight - volumeHeight / 2,
+                    x2: coord[0],
+                    y2: coord[1] - volumeHeight / 2
+                  },
+                  style: {
+                    stroke: '#c4c1c1',
+                    lineWidth: 2
+                  }
+                },
+                {
+                  type: 'line',
+                  shape: {
+                    x1: coord[0],
+                    y1: coord[1] - volumeHeight / 2,
+                    x2: coord[0],
+                    y2: coord[1] + volumeHeight / 2
+                  },
+                  style: {
+                    // stroke: '#f30202',
+                    stroke: Math.random() > 0.5 ? '#49d035' : '#f30202',
+                    lineWidth: 4
+                  }
+                },
+                {
+                  type: 'line',
+                  shape: {
+                    x1: coord[0],
+                    y1: coord[1] + volumeHeight / 2,
+                    x2: coord[0],
+                    y2: coord[1] + volumeHeight / 2 + lowerShadowHeight
+                  },
+                  style: {
+                    stroke: '#c4c1c1',
+                    lineWidth: 2
+                  }
+                },
+              ];
+              let dynamicTextChildren = []
+              // 动态生成文本的 children
+              if (this.showDetails) {
+                baseChildren.push({
+                      type: 'rect',
+                      shape: {
+                        x: coord[0] - 50,
+                        y: coord[1] - totalHeight / 2,
+                        width: 100,
+                        height: totalHeight
+                      },
+                      style: {
+                        fill: '#fff',
+                        stroke: '#c4c1c1',
+                        lineWidth: 2
+                      }
+                    },
+                    {
+                      type: 'text',
+                      style: {
+                        text: `5    :    1`,
+                        x: coord[0],
+                        y: coord[1] - totalHeight / 2 - 20, // 动态调整Y坐标
+                        textAlign: 'center',
+                        fill: '#000',
+                        font: 'bold 14px Arial',
+                      }
+                    },
+                )
+                dynamicTextChildren = yValues1.map((item, index) => {
+                  const firstText = {
+                    type: 'text',
+                    style: {
+                      text: `${item.value}`, // 显示 item.value
+                      x: coord[0] - 20, // 根据需要调整 X 轴位置，向左偏移
+                      y: coord[1] + (index * 20) - totalHeight / 3, // 动态调整 Y 坐标
+                      textAlign: 'right', // 右对齐
+                      fill: item.color || 'black', // 为 item.value 设置颜色
+                      font: 'bold 14px Arial',
+                    }
+                  };
+
+                  const secondText = {
+                    type: 'text',
+                    style: {
+                      text: `${yValues2[index].value}`, // 显示 yValues2[index].value
+                      x: coord[0] + 20, // 根据需要调整 X 轴位置，向右偏移
+                      y: coord[1] + (index * 20) - totalHeight / 3, // 动态调整 Y 坐标
+                      textAlign: 'left', // 左对齐
+                      fill: yValues2[index].color || 'black', // 为 yValues2[index].value 设置颜色
+                      font: 'bold 14px Arial',
+                    }
+                  };
+                  // 判断是否有 shadow 属性，如果有，添加阴影块
+                  const thirdRect = item.shadow !== undefined ? {
+                    type: 'rect',
+                    shape: {
+                      x: coord[0] - 50, // 从图表左侧开始
+                      y: coord[1] - totalHeight / 2, // 从顶部开始，覆盖整个图表高度
+                      width: api.getWidth(), // 延伸到图表最右侧
+                      height: totalHeight // 覆盖图表的高度
+                    },
+                    style: {
+                      fill: item.shadow === 1 ? 'rgba(80, 220, 99, 0.56)' : 'rgba(220,80,80,0.56)', // 模拟阴影效果
+                    },
+                    z2:100,
+                    ignore:true,
+                  } : null; // 如果没有 shadow 属性，不添加 thirdRect
+                  return thirdRect ? [firstText, secondText, thirdRect] : [firstText, secondText];
+                }).flat(); // 使用 flat() 将嵌套数组展平成一个数组
+              }
+              // 合并基础 children 和动态生成的 text children
+              return {
+                type: 'group',
+                children: baseChildren.concat(dynamicTextChildren) // 合并两个children数组
+              };
+            },
+            data: this.processedData // 使用多行数据
+          }
+        ]
+      };
+
+      myChart.setOption(option);
+      // 监听缩放事件
+      myChart.on('dataZoom', (params) => {
+        const zoomRange = params.batch[0].end - params.batch[0].start;
+        this.showDetails = zoomRange <= 45;
+      });
+
+      // 支持图表的自适应
+      window.addEventListener('resize', () => {
+        myChart.resize();
+      });
+    }
+  }
 };
 </script>
+
+<style scoped>
+#chart {
+  width: 100%;
+  height: 600px;
+}
+</style>

@@ -9,6 +9,10 @@ import 'intro.js/introjs.css';
 import introJs from 'intro.js';
 import {log} from "@/common/log";
 import {requestContextPath, sseUrl} from "@/api/serverApi";
+import * as echarts from 'echarts/core'
+import {CustomChart, LineChart} from 'echarts/charts';
+import {TitleComponent, TooltipComponent, GridComponent, GraphicComponent} from 'echarts/components';
+import {CanvasRenderer} from 'echarts/renderers';
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -18,12 +22,24 @@ import {requestContextPath, sseUrl} from "@/api/serverApi";
 //
 // console.log('Current script src:', scriptElement.src);
 
+// 全局引入 ECharts
+echarts.use([
+    CanvasRenderer,
+    LineChart,
+    TitleComponent,
+    TooltipComponent,
+    GridComponent,
+    GraphicComponent,
+    CustomChart
+]);
+
 // Attach config to Vue prototype
 Vue.config.productionTip = false;
 Vue.use(ViewUI);
 Vue.prototype.$introJs = introJs;
 Vue.prototype.$md5 = md5;
 Vue.prototype.$log = log;
+Vue.prototype.$echarts = echarts;
 
 let sseWorker = null;
 
