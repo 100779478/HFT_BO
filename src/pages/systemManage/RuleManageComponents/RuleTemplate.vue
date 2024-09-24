@@ -143,6 +143,7 @@
                     placeholder="请选择策略文件类型"
                     :maxlength="32"
                     @on-change="fetchNewPolicyInfo"
+                    :disabled="!isNew"
                 >
                   <Option
                       v-for="item in getRuleFileType()"
