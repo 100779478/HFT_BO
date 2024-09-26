@@ -333,10 +333,8 @@ export default {
       confirmPassword: "",
       activeList: ACTIVE_LIST,
       pwdStrengthLevel: '0',
-      tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
-        // customerName: [{required: true, message: "请输入用户名称"}],
         password: [{required: true, message: "请输入密码"}],
         userType: [{required: true, message: "请选择用户类型"}],
         roles: [{required: false, message: "请选择用户角色"}],
