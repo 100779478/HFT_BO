@@ -1,5 +1,5 @@
 <template>
-  <div id="chart" style="width: 90%; height: 800px;"></div>
+  <div id="chart" style="width: 90%; height: 90vh;"></div>
 </template>
 
 <script>
@@ -9,42 +9,45 @@ export default {
   data() {
     return {
       multiRowData: [
-        [[{value: 10, color: '#ff0000'}, {value: 60}], [{value: 88, color: '#00ff00'}, {value: 76}]],
-        [[{value: 15}], [{value: 80}]],
-        [[{value: 20}, {
-          value: 20,
-          color: '#00ff00',
-        }, {value: 20}, {value: 20, color: '#ff0000', shadow: 1}], [{value: 70}, {
-          value: 60,
-          color: '#ff0000'
-        }, {value: 20}, {value: 20}]],
-        [[{value: 15}, {value: 80, color: '#00ff00'}, {
-          value: 80,
+        [[{value: 10, color: '#ff0000', shadow: 1}, {value: 60, shadow: 1}], [{
+          value: 88,
           color: '#00ff00'
-        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
-        [[{value: 55}], [{value: 80}]],
-        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
-        [[{value: 85, color: '#ff0000', shadow: 0}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 15}, {value: 80, color: '#00ff00'}, {
-          value: 80,
-          color: '#00ff00'
-        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
-        [[{value: 55}], [{value: 80}]],
-        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
-        [[{value: 15}, {value: 80, color: '#00ff00'}, {
-          value: 80,
-          color: '#00ff00'
-        }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
-        [[{value: 55}], [{value: 80}]],
-        [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
-        [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        }, {value: 76}]],
+        // [[{value: 15}], [{value: 80}]],
+        // [[{value: 20}, {
+        //   value: 20,
+        //   color: '#00ff00',
+        // }, {value: 20}, {value: 20, color: '#ff0000', shadow: 1}], [{value: 70}, {
+        //   value: 60,
+        //   color: '#ff0000'
+        // }, {value: 20}, {value: 20}]],
+        // [[{value: 15}, {value: 80, color: '#00ff00'}, {
+        //   value: 80,
+        //   color: '#00ff00'
+        // }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        // [[{value: 55}], [{value: 80}]],
+        // [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        // [[{value: 85, color: '#ff0000', shadow: 0}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 15}, {value: 80, color: '#00ff00'}, {
+        //   value: 80,
+        //   color: '#00ff00'
+        // }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        // [[{value: 55}], [{value: 80}]],
+        // [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
+        // [[{value: 15}, {value: 80, color: '#00ff00'}, {
+        //   value: 80,
+        //   color: '#00ff00'
+        // }], [{value: 80, color: '#ff0000'}, {value: 80}, {value: 80}]],
+        // [[{value: 55}], [{value: 80}]],
+        // [[{value: 35, color: '#00ff00'}, {value: 55}], [{value: 80}, {value: 55}]],
+        // [[{value: 85, color: '#ff0000'}], [{value: 80}]],
       ],
       processedData: [],
       showDetails: false,
@@ -121,7 +124,8 @@ export default {
                   style: {
                     stroke: '#c4c1c1',
                     lineWidth: 2
-                  }
+                  },
+                  z2: 100,
                 },
                 {
                   type: 'line',
@@ -135,7 +139,8 @@ export default {
                     // stroke: '#f30202',
                     stroke: Math.random() > 0.5 ? '#49d035' : '#f30202',
                     lineWidth: 4
-                  }
+                  },
+                  z2: 100,
                 },
                 {
                   type: 'line',
@@ -148,13 +153,15 @@ export default {
                   style: {
                     stroke: '#c4c1c1',
                     lineWidth: 2
-                  }
+                  },
+                  z2: 100,
                 },
               ];
               let dynamicTextChildren = []
               // 动态生成文本的 children
-              if (this.showDetails) {
-                baseChildren.push({
+              if (!this.showDetails) {
+                baseChildren.push(
+                    {
                       type: 'rect',
                       shape: {
                         x: coord[0] - 50,
@@ -180,6 +187,7 @@ export default {
                       }
                     },
                 )
+                let count = 0
                 dynamicTextChildren = yValues1.map((item, index) => {
                   const firstText = {
                     type: 'text',
@@ -214,10 +222,9 @@ export default {
                       height: totalHeight // 覆盖图表的高度
                     },
                     style: {
-                      fill: item.shadow === 1 ? 'rgba(80, 220, 99, 0.56)' : 'rgba(220,80,80,0.56)', // 模拟阴影效果
+                      fill: item.shadow === 1 ? 'rgba(80,220,99,0.26)' : 'rgba(220,80,80,0.27)', // 模拟阴影效果
                     },
-                    z2:100,
-                    ignore:true,
+                    z2: 200,
                   } : null; // 如果没有 shadow 属性，不添加 thirdRect
                   return thirdRect ? [firstText, secondText, thirdRect] : [firstText, secondText];
                 }).flat(); // 使用 flat() 将嵌套数组展平成一个数组
