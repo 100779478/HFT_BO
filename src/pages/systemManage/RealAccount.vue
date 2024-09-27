@@ -136,7 +136,7 @@ input:-webkit-autofill {
             </FormItem>
           </Col>
           <Col :span="18">
-            <FormItem label="密码" prop="password"
+            <FormItem label="密码(加密)" prop="password"
                       v-show="showAccountAndPwd"
             >
               <div style="position: relative; height: 34px; overflow: hidden;">
@@ -153,7 +153,6 @@ input:-webkit-autofill {
                       :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
                   ></Input>
                 </form>
-
                 <!-- 上面的 Input 隐藏 -->
                 <Input
                     @on-focus="handleFocus2"
