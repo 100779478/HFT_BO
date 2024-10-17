@@ -182,7 +182,6 @@ export default {
       {
         title: "策略服务节点名称",
         key: "ruleNodeName",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 160,
@@ -190,7 +189,6 @@ export default {
       {
         title: "策略服务节点Ip",
         key: "ruleNodeIp",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 160,
