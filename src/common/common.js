@@ -173,10 +173,27 @@ export function handleSort(col, func) {
     func();
 }
 
-// ===============================================自定义密码加密============================================
+// ===============================================自定义密码加密===============================================
 function str_to_hex3(s) {
     return [...s].map(c => c.charCodeAt(0).toString(16));
 }
+
+function hex2string(hexstr) {
+    let list = [];
+    for (let i = 0; i < hexstr.length; i += 2) {
+        let oneValue = (parseInt(hexstr[i], 16) << 4) % 256;
+        let towValue = parseInt(hexstr[i + 1], 16) & 0xF;
+        let res = oneValue | towValue;
+        list.push(String.fromCharCode(res));
+    }
+    return list;
+}
+
+/**
+ * python密码加密
+ * @param {String,Number} strPlainText 当前密码
+ * @returns {string}
+ */
 
 function encryptPassword(strPlainText) {
     let temp_str = '';
@@ -198,6 +215,22 @@ function encryptPassword(strPlainText) {
 }
 
 /**
+ * python密码解密
+ * @param {String,Number} strEncrypedText 当前密码
+ * @returns {string}
+ */
+
+function decryptPassword(strEncrypedText) {
+    let res_list = hex2string(strEncrypedText);
+    let pwd_list = [];
+    for (let i = 1; i < res_list.length; i += 2) {
+        let r1 = res_list[i].charCodeAt(0) ^ 86;
+        pwd_list.push(String.fromCharCode(r1));
+    }
+    return pwd_list.join('');
+}
+
+/**
  * @description: 根据类型加密密码
  * @date: 2024--03--26 15:32:56
  * @param {String} type 当前加密类型
@@ -216,6 +249,8 @@ export function encryptionModePassword(type, pwd) {
             throw new Error('Unsupported encryption type');
     }
 }
+
+// =========================================================================================================
 
 /**
  * @description: 转换日期类型为20240101

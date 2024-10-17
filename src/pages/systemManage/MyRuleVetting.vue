@@ -101,6 +101,7 @@
                     <Select
                         v-model="userStrategyInfo.ruleFileType"
                         placeholder="请选择策略文件类型"
+                        disabled
                         :maxlength="32"
                         @on-change="fetchNewPolicyInfo"
                     >
@@ -118,6 +119,7 @@
                     <Select
                         v-model="userStrategyInfo.ruleType"
                         placeholder="请选择策略类型"
+                        disabled
                         :maxlength="32"
                         @on-change="handleShowParamsTable"
                     >
@@ -391,7 +393,6 @@ export default {
       {
         title: "策略服务节点名称",
         key: "ruleNodeName",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 160,
@@ -399,7 +400,6 @@ export default {
       {
         title: "策略服务节点Ip",
         key: "ruleNodeIp",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 160,

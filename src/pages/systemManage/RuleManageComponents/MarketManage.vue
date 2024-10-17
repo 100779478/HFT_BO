@@ -137,6 +137,7 @@
                     <Select
                         v-model="userStrategyInfo.ruleType"
                         placeholder="请选择策略类型"
+                        :disabled="!isNew"
                         :maxlength="32"
                         @on-change="handleShowParamsTable"
                     >
