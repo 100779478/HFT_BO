@@ -44,7 +44,7 @@
           collapsible
           :collapsed-width="78"
           v-model="isCollapsed"
-          width="260px"
+          :width="sideWidth"
           style="background-color: #09357e"
       >
         <div style="margin: 15px 30px" v-if="!isCollapsed">
@@ -133,6 +133,7 @@ export default {
       isCollapsed: false,
       isRouterAlive: true,
       envList: [],
+      sideWidth: 250,
       isShowMenu: true,
       serverTime: '',
     };
@@ -161,32 +162,38 @@ export default {
       return ["menu-icon", this.isCollapsed ? "rotate-icon" : ""];
     },
   },
+  mounted() {
+    window.addEventListener('resize', this.updateSideWidth);
+    this.updateSideWidth();
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateSideWidth);
+  },
   methods: {
     // 将环境菜单传值给header组件
     toHeaderEnv(ev) {
       this.envList = ev;
-    }
-    ,
+    },
     // 通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
     reload() {
       this.isRouterAlive = false;
       this.$nextTick(() => {
         this.isRouterAlive = true;
       });
-    }
-    ,
+    },
     showMenu(e) {
       this.isShowMenu = e
       // this.isCollapsed = !e
-    }
-    ,
+    },
     currentUserInfo() {
       http.get(URL.current, (response) => {
         this.currentUser = response.data;
         setUserInfo(response.data.customerId);
       });
+    },
+    updateSideWidth() {
+      this.sideWidth = Math.min(window.innerWidth * 0.15, 250); // 最大为250px
     }
-    ,
   },
 };
 </script>

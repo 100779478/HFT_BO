@@ -517,14 +517,17 @@ export default {
     },
     // 新增弹窗确认按键
     ok(isNew) {
-      if (
-          !this.checkField("customerId", ERROR_MSG.userCodeEmpty) ||
-          !this.checkField("tradeChannel", ERROR_MSG.tradeChannelEmpty) ||
-          !this.checkField("logicType", ERROR_MSG.logicTypeEmpty) ||
-          !this.checkField("accountId", ERROR_MSG.accountIdEmpty) ||
-          // !this.checkField("assetNo", `${this.assetLabel}不能为空`) ||
-          !this.checkField("combiNo", `${this.positionLabel}不能为空`)
-      ) {
+      const fieldsToCheck = [
+        {field: 'customerId', message: ERROR_MSG.userCodeEmpty},
+        {field: 'tradeChannel', message: ERROR_MSG.tradeChannelEmpty},
+        {field: 'logicType', message: ERROR_MSG.logicTypeEmpty},
+        {field: 'accountId', message: ERROR_MSG.accountIdEmpty},
+        // { field: 'assetNo', message: `${this.assetLabel}不能为空` }, // 如有需要可解注释
+        {field: 'combiNo', message: `${this.positionLabel}不能为空`}
+      ];
+      // 使用数组和every方法来检查所有字段
+      const isValid = fieldsToCheck.every(({field, message}) => this.checkField(field, message));
+      if (!isValid) {
         return;
       }
       if (isNew) {
