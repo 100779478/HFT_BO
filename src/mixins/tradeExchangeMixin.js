@@ -10,7 +10,8 @@ export default {
         // 初始化监听防止data中数据复制为undefined
         tradeExchangeTypeList: {
             handler(newVal) {
-                if (newVal.length) {
+                // 如果exchangeCode有值，那么跳出赋值逻辑
+                if (newVal.length && !this.pagination.exchangeCode) {
                     // 初始化监听 赋值交易所类型下拉菜单
                     this.setExchangeCode(newVal[0].code);
                 }
