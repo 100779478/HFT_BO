@@ -149,7 +149,7 @@ input:-webkit-autofill {
                       ref="password"
                       v-model="channelInfo.password"
                       type="text"
-                      placeholder="请输入密码"
+                      :placeholder="this.encryptionPwd?'请输入原始密码':'请输入加密密码'"
                       :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
                   ></Input>
                 </form>
@@ -158,11 +158,12 @@ input:-webkit-autofill {
                     @on-focus="handleFocus2"
                     v-model="channelInfo.password"
                     type="password"
-                    placeholder="请输入密码"
+                    :placeholder="this.encryptionPwd?'请输入原始密码':'请输入加密密码'"
                     autocomplete="new-password"
                     :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
                 ></Input>
               </div>
+              <Checkbox v-model="encryptionPwd">输入原始密码</Checkbox>
             </FormItem>
           </Col>
           <Col :span="18">
@@ -221,7 +222,7 @@ input:-webkit-autofill {
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
+import {decryptPassword, encryptPassword, getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
@@ -331,6 +332,7 @@ export default {
       pagination,
       showAddModal: false,
       isNew: true,
+      encryptionPwd: false,
       showAccountAndPwd: true,
     };
   },
@@ -340,6 +342,12 @@ export default {
     this.getAPIType();
     // 获取通道类型
     this.getTerminalType();
+  },
+  watch: {
+    // 如果加密状态发生改变则清空密码，防止重复加密
+    encryptionPwd(newValue, oldValue) {
+      this.channelInfo.password = null
+    }
   },
   methods: {
     handleExport,
@@ -425,15 +433,22 @@ export default {
         this.$Message.error(ERROR_MSG.channelTypeEmpty);
         return;
       }
+      if (this.encryptionPwd) {
+        this.channelInfo.password = encryptPassword(this.channelInfo.password)
+      }
       if (isNew) {
         http.put(URL.channel, {...this.channelInfo, messageType: SUCCESS_MSG.addSuccess}, () => {
           this.getChannelData();
           this.cancel();
+          // 默认每次新增或编辑加密密码都为空
+          this.encryptionPwd = false
         });
       } else {
         http.post(URL.channel, {...this.channelInfo, messageType: SUCCESS_MSG.modifySuccess}, () => {
           this.getChannelData();
           this.cancel();
+          // 默认每次新增或编辑加密密码都为空
+          this.encryptionPwd = false
         });
       }
     },

@@ -195,7 +195,7 @@ function hex2string(hexstr) {
  * @returns {string}
  */
 
-function encryptPassword(strPlainText) {
+export function encryptPassword(strPlainText) {
     let temp_str = '';
     for (let i = 0; i < strPlainText.length; i++) {
         let rv = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
@@ -220,7 +220,7 @@ function encryptPassword(strPlainText) {
  * @returns {string}
  */
 
-function decryptPassword(strEncrypedText) {
+export function decryptPassword(strEncrypedText) {
     let res_list = hex2string(strEncrypedText);
     let pwd_list = [];
     for (let i = 1; i < res_list.length; i += 2) {
