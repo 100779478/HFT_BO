@@ -135,7 +135,7 @@ input:-webkit-autofill {
               </form>
             </FormItem>
           </Col>
-          <Col :span="18">
+          <Col :span="20">
             <FormItem label="密码(加密)" prop="password"
                       v-show="showAccountAndPwd"
             >
@@ -149,7 +149,7 @@ input:-webkit-autofill {
                       ref="password"
                       v-model="channelInfo.password"
                       type="text"
-                      :placeholder="this.encryptionPwd?'请输入原始密码':'请输入加密密码'"
+                      placeholder="若勾选输入原始密码，会自动加密保存"
                       :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
                   ></Input>
                 </form>
@@ -158,7 +158,7 @@ input:-webkit-autofill {
                     @on-focus="handleFocus2"
                     v-model="channelInfo.password"
                     type="password"
-                    :placeholder="this.encryptionPwd?'请输入原始密码':'请输入加密密码'"
+                    placeholder="若勾选输入原始密码，会自动加密保存"
                     autocomplete="new-password"
                     :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? 'auto' : '1', opacity: typeInput ? '0' : '1' }"
                 ></Input>
