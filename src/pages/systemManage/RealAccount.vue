@@ -49,6 +49,7 @@ input:-webkit-autofill {
           sticky
           mask
           :width="600"
+          :closable="false"
           :mask-closable="false"
           :title="isNew ? '新增实体账户' : '编辑实体账户'"
       >
@@ -143,7 +144,6 @@ input:-webkit-autofill {
                 <!-- 下面的 Input 覆盖上面的 Input -->
                 <form autocomplete="off">
                   <Input
-                      v-show="showAccountAndPwd"
                       @on-focus="handleFocus"
                       @on-blur="handleBlur"
                       ref="password"
@@ -151,6 +151,7 @@ input:-webkit-autofill {
                       type="text"
                       placeholder="若勾选输入原始密码，会自动加密保存"
                       :style="{ position: 'absolute', top: '0', left: '0', zIndex: typeInput ? '2' : 'auto', opacity: typeInput ? '1' : '0' }"
+                      autocomplete="new-account"
                   ></Input>
                 </form>
                 <!-- 上面的 Input 隐藏 -->
@@ -176,7 +177,11 @@ input:-webkit-autofill {
           </Col>
         </Form>
         <div slot="footer">
-          <Button type="text" @click="cancel">取消</Button>
+          <Button type="text" @click="()=>{
+            cancel()
+            this.encryptionPwd=false
+          }">取消
+          </Button>
           <Button type="primary" @click="ok(isNew)">确定</Button>
         </div>
       </Modal>
@@ -360,7 +365,7 @@ export default {
       this.$refs.password.focus();
     },
     handleBlur() {
-      this.typeInput = false
+      this.typeInput = true
     },
     // 获取实体账户列表
     getChannelData(value) {
@@ -433,7 +438,7 @@ export default {
         this.$Message.error(ERROR_MSG.channelTypeEmpty);
         return;
       }
-      if (this.encryptionPwd) {
+      if (this.encryptionPwd && null !== this.channelInfo.password) {
         this.channelInfo.password = encryptPassword(this.channelInfo.password)
       }
       if (isNew) {

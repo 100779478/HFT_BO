@@ -342,7 +342,7 @@ export default {
         tradeChannel: [{required: true, message: ERROR_MSG.tradeChannelEmpty}],
         accountId: [{required: true, message: "请输入分账号代码"}],
         tdApiType: [{required: true, message: "请输入交易接口类型"}],
-        combiNo: [{required: true, message: "请输入持仓账户"}],
+        combiNo: [{required: true, message: `请输入${this.positionLabel}`}],
         logicType: [{required: true, message: "请选择业务类型"}],
         assetNo: [{required: false, message: "请输入资产账户"}],
       },
@@ -467,8 +467,9 @@ export default {
         this.setLabelsByTdApiType(this.channelInfo.tdApiType);
       }
     },
-    // modal弹窗联动展示
+    // modal弹窗联动展示 tdApiType--> apiType
     setLabelsByTdApiType(tdApiType) {
+      console.log(tdApiType, 111)
       switch (tdApiType) {
         case '6':
           this.assetLabel = '资金账户';
@@ -482,12 +483,12 @@ export default {
           this.positionLabel = '持仓账户';
           this.showLabel = false;
           break;
-          // case '5':
-          //   this.assetLabel = '资产单元';
-          //   this.positionLabel = '投资组合';
-          //   this.foundationLabel = '基金账户';
-          //   this.traderLabel = '股东账号';
-          //   break;
+        case '5': // ufx
+          // this.assetLabel = '资产单元';
+          // this.positionLabel = '投资组合';
+          // this.foundationLabel = '基金账户';
+          this.traderLabel = '股东代码';
+          break;
           // case '4':
           // case '6':
           // case 'l':

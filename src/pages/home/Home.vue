@@ -192,7 +192,8 @@ export default {
       });
     },
     updateSideWidth() {
-      this.sideWidth = Math.min(window.innerWidth * 0.15, 250); // 最大为250px
+      const calculatedWidth = window.innerWidth * 0.15;
+      this.sideWidth = Math.max(180, Math.min(calculatedWidth, 250));// 180-250px之间
     }
   },
 };
