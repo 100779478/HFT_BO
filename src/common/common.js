@@ -259,7 +259,7 @@ export function encryptionModePassword(type, pwd) {
  * @returns {String}
  */
 export function formatDate(date) {
-    return moment(date).isValid() ? moment(date).format("YYYYMMDD") : null;
+    return moment(date).isValid() ? moment(date).format("YYYYMMDD") : "";
 }
 
 /**

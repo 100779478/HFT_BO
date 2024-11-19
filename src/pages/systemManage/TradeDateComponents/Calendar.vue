@@ -183,7 +183,7 @@ export default {
         }
       },
       {
-        title: "是否交易",
+        title: "是否交易日",
         key: "trading",
         minWidth: 100,
         resizable: true,
@@ -281,7 +281,11 @@ export default {
     // 新增弹窗确认按键
     ok() {
       const year = moment(this.year).format('YYYY')
-      http.post(`${URL.calendarCalculate}`, {year, exchangeCode: this.exchangeCode, messageType: SUCCESS_MSG.calculationSuccess}, (res) => {
+      http.post(`${URL.calendarCalculate}`, {
+        year,
+        exchangeCode: this.exchangeCode,
+        messageType: SUCCESS_MSG.calculationSuccess
+      }, (res) => {
         if (res.code === '0') {
           this.showAddModal = false
           this.getCalendarList();
