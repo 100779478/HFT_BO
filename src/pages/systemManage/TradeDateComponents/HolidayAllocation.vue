@@ -226,8 +226,8 @@ export default {
       endDate: moment().format("YYYYMMDD")
     }
     let pagination = {
-      startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
-      endDate: moment().format("YYYYMMDD"),
+      startDate: moment().startOf('year').format('YYYY-MM-DD'),
+      endDate: moment().endOf('year').format('YYYY-MM-DD'),
       exchangeCode: null,
     };
     return {
@@ -245,6 +245,7 @@ export default {
     handleExport,
     // 获取状态连接列表
     getHolidayList() {
+      this.loading = true
       this.pagination.startDate = formatDate(this.pagination.startDate)
       this.pagination.endDate = formatDate(this.pagination.endDate)
       http.post(`${URL.holidayList}`, this.pagination, (res) => {

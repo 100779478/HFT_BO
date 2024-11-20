@@ -5,7 +5,9 @@
       <TabPane name="2" label="周末工作日配置" icon="ios-hammer"></TabPane>
       <TabPane name="3" label="节假日配置" icon="ios-hammer"></TabPane>
     </Tabs>
-    <component :is="activeComponent"></component>
+    <keep-alive>
+      <component :is="activeComponent"></component>
+    </keep-alive>
   </div>
 </template>
 

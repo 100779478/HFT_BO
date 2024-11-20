@@ -368,9 +368,8 @@ export default {
       this.typeInput = true
     },
     // 获取实体账户列表
-    getChannelData(value) {
+    getChannelData() {
       this.loading = true;
-      this.pagination.channelId = value || "";
       // 实体账户列表
       http.post(URL.channelList, this.pagination, this.getChannelResponse);
     },
@@ -392,10 +391,9 @@ export default {
       this.tableData = res.data.dataList || [];
     },
     // 用户代码模糊查询
-    handleSearch(e) {
-      let value = e.target.value;
+    handleSearch() {
       this.pagination.pageNumber = 1;
-      this.getChannelData(value);
+      this.getChannelData();
     },
     // 用户弹窗
     modalChannel(type, row) {

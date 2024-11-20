@@ -213,8 +213,8 @@ export default {
       comment: ""
     }
     let pagination = {
-      startDate: moment().subtract(1, 'month').format("YYYYMMDD"),
-      endDate: moment().format("YYYYMMDD"),
+      startDate: moment().startOf('year').format('YYYY-MM-DD'),
+      endDate: moment().endOf('year').format('YYYY-MM-DD'),
       exchangeCode: null,
     };
     return {
@@ -232,6 +232,7 @@ export default {
     handleExport,
     // 获取周末工作日列表
     getWeeklyList() {
+      this.loading = true
       this.pagination.startDate = formatDate(this.pagination.startDate)
       this.pagination.endDate = formatDate(this.pagination.endDate)
       http.post(`${URL.weeklyList}`, this.pagination, (res) => {

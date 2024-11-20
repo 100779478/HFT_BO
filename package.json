@@ -1,9 +1,9 @@
 {
   "name": "hft-bo-web",
-  "version": "2.8.5",
+  "version": "2.8.6",
   "private": true,
   "scripts": {
-    "start": "vue-cli-service serve",
+    "start": "npm run version && vue-cli-service serve",
     "version": "node ./update-version.js",
     "build": "npm run version && vue-cli-service build",
     "report": "vue-cli-service build --report",

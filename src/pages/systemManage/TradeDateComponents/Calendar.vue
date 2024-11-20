@@ -94,13 +94,13 @@
       ></DatePicker>
     </form>
     <div style="float: right">
-      <Button type="primary" @click="getCalendarList()" class="top">
-        <Icon type="md-search"/>
-        查询
-      </Button>
       <Button type="info" @click="modalUser()" class="top">
         <Icon type="md-calculator"/>
         计算
+      </Button>
+      <Button type="primary" @click="getCalendarList()" class="top">
+        <Icon type="md-search"/>
+        查询
       </Button>
       <Button type="success" @click="()=>handleExport(URL.calendarExport,this.pagination,'交易日历')" class="top">
         <Icon type="md-download"/>
@@ -111,6 +111,7 @@
         style="clear: both"
         :columns="columns1"
         :data="tableData"
+        :loading="loading"
         size="small"
         class="table-content"
         :height="tableHeight"
@@ -240,8 +241,8 @@ export default {
       },
     ];
     let pagination = {
-      startDate: moment().format("YYYYMMDD"),
-      endDate: moment().format("YYYYMMDD"),
+      startDate: moment().startOf('year').format('YYYY-MM-DD'),
+      endDate: moment().endOf('year').format('YYYY-MM-DD'),
       exchangeCode: null,
     };
     return {
@@ -262,6 +263,7 @@ export default {
     handleSort,
     // 获取交易日历
     getCalendarList() {
+      this.loading = true
       this.pagination.startDate = formatDate(this.pagination.startDate)
       this.pagination.endDate = formatDate(this.pagination.endDate)
       http.post(`${URL.calendarList}`, this.pagination, (res) => {

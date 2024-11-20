@@ -384,9 +384,8 @@ export default {
     handleExport,
     handleSort,
     // 获取分账户列表
-    getChannelData(value) {
+    getChannelData() {
       this.loading = true;
-      this.pagination.accountId = value || "";
       // 分账户列表
       http.post(URL.channelTrade, this.pagination, this.getChannelResponse);
     },
@@ -425,10 +424,9 @@ export default {
       this.tableData = res.data.dataList || [];
     },
     // 用户代码模糊查询
-    handleSearch(e) {
-      let value = e.target.value;
+    handleSearch() {
       this.pagination.pageNumber = 1;
-      this.getChannelData(value);
+      this.getChannelData();
     },
     // 用户弹窗
     modalChannel(type, row) {
