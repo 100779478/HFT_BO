@@ -145,7 +145,7 @@ export default {
 
     },
     loginError(error) {
-      console.log(error);
+      console.log("LoginError", error);
       this.closeLoading();
       defaultErrorHandler(error);
       this.handleGetVerifyImg();

@@ -467,7 +467,6 @@ export default {
     },
     // modal弹窗联动展示 tdApiType--> apiType
     setLabelsByTdApiType(tdApiType) {
-      console.log(tdApiType, 111)
       switch (tdApiType) {
         case '6':
           this.assetLabel = '资金账户';

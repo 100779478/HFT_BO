@@ -153,19 +153,27 @@ const ruleComponentMixin = {
             this.chooseRule = e === '8';
             this.fileName = ""
             this.fileUploadProgress = 0
-            // Configuration object to map strategy codes to their respective paths and filenames
+            // 配置对象，将策略代码映射到各自的路径和文件名
             const strategyConfig = {
                 '1': {path: './Rules/', fileName: 'libMM_strategy.so'},           // 银行间双边做市策略
                 '6': {path: './Rules/', fileName: 'indicative_strategy.so'},      // 银行间指示性报价策略
                 'a': {path: './Rules/', fileName: 'libmm_strategy_rate.so'},      // 交易所新债平台做市策略
                 'b': {path: './Rules/', fileName: 'libmm_strategy_fi.so'},        // 交易所固收平台做市策略
                 'c': {path: './Rules/', fileName: 'libBond_Spread.so'},           // 套利策略
-                '5': {path: '', fileName: ''},                                    // Placeholder for strategy 5
-                '7': {path: '', fileName: ''}                                     // Placeholder for strategy 7
             };
-            if (this.userStrategyInfo.ruleFileType === '0') {
-                this.userStrategyInfo.ruleLocation = strategyConfig[e]?.path || this.rulePath || this.userStrategyInfo.ruleLocation;
-                this.userStrategyInfo.ruleFileName = strategyConfig[e]?.fileName !== undefined ? strategyConfig[e]?.fileName : this.userStrategyInfo.ruleFileName;
+            // 判断 e 是否在 strategyConfig 中存在对应的配置
+            if (strategyConfig[e]) {
+                // 如果存在配置，并且 ruleFileType 是 '0'，则设置规则文件路径和文件名
+                if (this.userStrategyInfo.ruleFileType === '0') {
+                    // 如果有对应的路径配置，则使用配置的路径，否则使用默认路径
+                    this.userStrategyInfo.ruleLocation = strategyConfig[e].path || this.rulePath || this.userStrategyInfo.ruleLocation;
+                    // 如果有对应的文件名配置，则使用配置的文件名，否则保持原来的文件名
+                    this.userStrategyInfo.ruleFileName = strategyConfig[e].fileName !== undefined ? strategyConfig[e].fileName : this.userStrategyInfo.ruleFileName;
+                }
+            } else {
+                // 如果 e 没有在配置中，清空规则文件路径和文件名
+                this.userStrategyInfo.ruleLocation = '';
+                this.userStrategyInfo.ruleFileName = '';
             }
         },
         // 新增弹窗关闭
@@ -177,7 +185,12 @@ const ruleComponentMixin = {
                 this.cancelTokenSource.cancel('已取消上传策略文件');
             }
         },
-        // 公共方法：显示消息提示
+        /**
+         * 消息提示
+         * @param content - 消息内容
+         * @param type - 消息提示类型，默认INFO
+         * @param duration - 提示延迟关闭时间，默认6秒
+         */
         showMessage(content, type = 'info', duration = 6) {
             this.$Message[type]({
                 content,
@@ -205,8 +218,15 @@ const ruleComponentMixin = {
                         // 使用注释逻辑
                         const url = `${path}/${this.userStrategyInfo.ruleId}`;
                         // 创建一个取消令牌
-                        // 执行上传操作，你可以调用相应的上传方法，比如 http.uploadFile
                         console.log('选择的文件：', file, event);
+
+                        // const reader = new FileReader();
+                        // reader.onload = (e) => {
+                        //     // 将文件内容转换为base64编码的字符串
+                        //     this.userStrategyInfo.ruleFileContent = e.target.result;  // 可以选择 base64 或 ArrayBuffer
+                        // };
+                        // reader.readAsDataURL(file);  // 读取为base64
+
                         // TODO: 调用上传操作的代码
                         http.uploadFile(url, file, {}, this.cancelTokenSource.token, // 传递取消令牌
                             progressPercent => {

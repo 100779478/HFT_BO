@@ -462,7 +462,6 @@ export default {
           this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
         } else {
           const encryptedPassword = encryptionModePassword(passType, this.userInfo.password);
-          console.log('pw:', this.userInfo.password, encryptedPassword)
           http.put(URL.userEdit, {
             ...this.userInfo,
             password: encryptedPassword,
