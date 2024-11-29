@@ -44,6 +44,7 @@ const ERROR_MSG = {
     channelTypeEmpty: "请选择通道类型",
     adminUserEmpty: "请选择管理用户",
     traderEmpty: "请选择交易员",
+    fileExceedsLimit: "策略文件大小超过最大限制"
 };
 
 /**

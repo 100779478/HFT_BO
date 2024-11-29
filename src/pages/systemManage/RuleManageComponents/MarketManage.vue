@@ -185,26 +185,26 @@
                     ></Input>
                   </FormItem>
                 </Col>
-                <Col :span="18">
-                  <FormItem label="策略版本" prop="ruleVersion">
-                    <Input
-                        v-model="userStrategyInfo.ruleVersion"
-                        placeholder="请输入策略版本"
-                        autocomplete="off"
-                        :maxlength="32"
-                    ></Input>
-                  </FormItem>
-                </Col>
-                <Col :span="18">
-                  <FormItem label="策略名称" prop="ruleName">
-                    <Input
-                        v-model="userStrategyInfo.ruleName"
-                        placeholder="请输入策略名称"
-                        autocomplete="off"
-                        :maxlength="32"
-                    ></Input>
-                  </FormItem>
-                </Col>
+                <!--                <Col :span="18">-->
+                <!--                  <FormItem label="策略版本" prop="ruleVersion">-->
+                <!--                    <Input-->
+                <!--                        v-model="userStrategyInfo.ruleVersion"-->
+                <!--                        placeholder="请输入策略版本"-->
+                <!--                        autocomplete="off"-->
+                <!--                        :maxlength="32"-->
+                <!--                    ></Input>-->
+                <!--                  </FormItem>-->
+                <!--                </Col>-->
+                <!--                <Col :span="18">-->
+                <!--                  <FormItem label="策略名称" prop="ruleName">-->
+                <!--                    <Input-->
+                <!--                        v-model="userStrategyInfo.ruleName"-->
+                <!--                        placeholder="请输入策略名称"-->
+                <!--                        autocomplete="off"-->
+                <!--                        :maxlength="32"-->
+                <!--                    ></Input>-->
+                <!--                  </FormItem>-->
+                <!--                </Col>-->
                 <Col :span="18">
                   <FormItem label="用户代码" prop="customerId">
                     <Select
@@ -246,27 +246,31 @@
     >
       <template v-slot:operator="{ row }">
         <div @click.stop style="display: flex; justify-content: flex-start">
-          <div @click="() => modalUser('modify', row)" class="table-operate">
-            编辑
-          </div>
+          <!--          <div @click="() => modalUser('modify', row)" class="table-operate">-->
+          <!--            编辑-->
+          <!--          </div>-->
           <div @click="() => changeUserStatus(row)" class="table-operate">
             {{ !row.active ? "启用" : "禁用" }}
           </div>
-          <Dropdown
-              trigger="hover"
-              transfer
-              @on-click="doOperate($event, row)"
-          >
-            <a style="color: #02aff1; font-size: 14px">
-              {{ "更多" }}
-              <Icon type="ios-arrow-down"></Icon>
-            </a>
-            <template v-slot:list>
-              <DropdownMenu>
-                <DropdownItem name="dele" style="color: #ed4014">删除策略</DropdownItem>
-              </DropdownMenu>
-            </template>
-          </Dropdown>
+          <div class="table-operate" style="color:red;"
+               @click="doOperate('dele', row)">
+            删除
+          </div>
+          <!--          <Dropdown-->
+          <!--              trigger="hover"-->
+          <!--              transfer-->
+          <!--              @on-click="doOperate($event, row)"-->
+          <!--          >-->
+          <!--            <a style="color: #02aff1; font-size: 14px">-->
+          <!--              {{ "更多" }}-->
+          <!--              <Icon type="ios-arrow-down"></Icon>-->
+          <!--            </a>-->
+          <!--            <template v-slot:list>-->
+          <!--              <DropdownMenu>-->
+          <!--                <DropdownItem name="dele" style="color: #ed4014">删除策略</DropdownItem>-->
+          <!--              </DropdownMenu>-->
+          <!--            </template>-->
+          <!--          </Dropdown>-->
         </div>
       </template>
     </Table>
@@ -333,22 +337,6 @@ export default {
         resizable: true,
         width: null,
         minWidth: 220,
-      },
-      {
-        title: "策略版本",
-        key: "ruleVersion",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "策略名称",
-        key: "ruleName",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
       },
       {
         title: "用户代码",
@@ -451,8 +439,8 @@ export default {
           ruleFileType: this.$store.state.dictionary.dictionaryList.RuleFileType[0].code,
           ruleId: "",
           ruleLocation: "",
-          ruleVersion: "",
-          ruleName: "",
+          // ruleVersion: "",
+          // ruleName: "",
           customerId: "",
           ruleType: "",
           active: true,

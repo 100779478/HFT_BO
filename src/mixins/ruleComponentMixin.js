@@ -1,5 +1,5 @@
 import {http} from "@/utils/request";
-import {getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport, handleSort} from "@/common/common";
+import {getRuleFileType, getRuleMakeMarketType, handleExport, handleSort} from "@/common/common";
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
 import axios from "axios";
@@ -32,7 +32,7 @@ const ruleComponentMixin = {
                 ruleName: "",
                 customerId: "",
                 ruleType: "",
-                active: true,
+                // active: true,
                 ruleNodeName: "",
                 ruleParams: [],
             },
@@ -40,7 +40,7 @@ const ruleComponentMixin = {
             paramList: [],
             userList: [],
             fileUploadProgress: 0,
-            cancelTokenSource: null, // 用于保存取消令牌源
+            // cancelTokenSource: null, // 用于保存取消令牌源
             ruleMonitorNodes: [], // 策略服务节点
         };
     },
@@ -172,8 +172,8 @@ const ruleComponentMixin = {
                 }
             } else {
                 // 如果 e 没有在配置中，清空规则文件路径和文件名
-                this.userStrategyInfo.ruleLocation = '';
-                this.userStrategyInfo.ruleFileName = '';
+                this.userStrategyInfo.ruleLocation = this.rulePath || this.userStrategyInfo.ruleLocation || '';
+                this.userStrategyInfo.ruleFileName = this.userStrategyInfo.ruleFileName || '';
             }
         },
         // 新增弹窗关闭
@@ -181,9 +181,9 @@ const ruleComponentMixin = {
             this.showAddModal = false;
             this.paramList = []
             // 关闭弹窗时取消上传请求
-            if (this.cancelTokenSource) {
-                this.cancelTokenSource.cancel('已取消上传策略文件');
-            }
+            // if (this.cancelTokenSource) {
+            //     this.cancelTokenSource.cancel('已取消上传策略文件');
+            // }
         },
         /**
          * 消息提示
@@ -200,6 +200,20 @@ const ruleComponentMixin = {
         handleFileChange(event, type, path) {
             // 获取用户选择的文件
             const file = event.target.files[0];
+            // 模拟文件上传过程
+            const fakeUpload = (fileName) => {
+                let progress = 0;
+                const interval = setInterval(() => {
+                    if (progress < 100) {
+                        progress += Math.random() * 100; // 随机增加进度
+                        this.fileUploadProgress = Math.min(Math.round(progress), 100); // 更新进度条（最大100%）
+                    } else {
+                        clearInterval(interval); // 上传完成
+                        this.$Message.success(SUCCESS_MSG.uploadSuccess);
+                        this.fileName = fileName;
+                    }
+                }, 300); // 每300ms更新一次进度
+            };
             if (file) {
                 const fileName = file.name
                 // 根据 type 判断处理逻辑
@@ -210,34 +224,44 @@ const ruleComponentMixin = {
                         this.showMessage('请先获取策略ID', 'error')
                     } else {
                         // 取消之前的请求（如果有的话）
-                        if (this.cancelTokenSource) {
-                            this.cancelTokenSource.cancel('已取消上传策略文件');
-                        }
-                        // 创建新的取消令牌源
-                        this.cancelTokenSource = axios.CancelToken.source();
+                        // if (this.cancelTokenSource) {
+                        //     this.cancelTokenSource.cancel('已取消上传策略文件');
+                        // }
+                        // // 创建新的取消令牌源
+                        // this.cancelTokenSource = axios.CancelToken.source();
                         // 使用注释逻辑
-                        const url = `${path}/${this.userStrategyInfo.ruleId}`;
+                        // const url = `${path}/${this.userStrategyInfo.ruleId}`;
                         // 创建一个取消令牌
-                        console.log('选择的文件：', file, event);
 
-                        // const reader = new FileReader();
-                        // reader.onload = (e) => {
-                        //     // 将文件内容转换为base64编码的字符串
-                        //     this.userStrategyInfo.ruleFileContent = e.target.result;  // 可以选择 base64 或 ArrayBuffer
-                        // };
-                        // reader.readAsDataURL(file);  // 读取为base64
+                        // 将字节转换为 MB
+                        let sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+
+                        console.log('选择的文件：', sizeInMB, file, event);
+
+                        if (sizeInMB >= 50) {
+                            this.$Message.error(ERROR_MSG.fileExceedsLimit)
+                            return
+                        }
+
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            // 将文件内容转换为base64编码的字符串
+                            this.userStrategyInfo.ruleFileBytesStr = e.target.result.split(",")[1];  // 可以选择 base64 或 ArrayBuffer
+                        };
+                        reader.readAsDataURL(file);  // 读取为base64
+                        // reader.readAsArrayBuffer(file);  // 读取为ArrayBuffer
+
+                        fakeUpload(fileName)
 
                         // TODO: 调用上传操作的代码
-                        http.uploadFile(url, file, {}, this.cancelTokenSource.token, // 传递取消令牌
-                            progressPercent => {
-                                this.fileUploadProgress = progressPercent
-                            },
-                            (response) => {
-                                this.fileName = fileName;
-                                this.$Message.success(SUCCESS_MSG.uploadSuccess);
-                                // 处理上传成功后的逻辑
-                            }
-                        );
+                        // http.uploadFile(url, file, {}, this.cancelTokenSource.token, // 传递取消令牌
+                        //     progressPercent => {
+                        //         this.fileUploadProgress = progressPercent
+                        //     },
+                        //     (response) => {
+                        //         // 处理上传成功后的逻辑
+                        //     }
+                        // );
                     }
                     document.getElementById('fileInput').value = '';
                 } else {

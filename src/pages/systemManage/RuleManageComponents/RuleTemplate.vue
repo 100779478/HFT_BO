@@ -524,6 +524,7 @@ export default {
     };
     let userStrategyInfo = {
       customerIds: [],
+      ruleFileBytesStr: null
     }
     return {
       activeList: ACTIVE_LIST,
@@ -630,6 +631,7 @@ export default {
       this.paramList = []
       this.fileName = ""
       this.fileUploadProgress = 0
+      this.userStrategyInfo.ruleFileBytesStr = null
       if (type === "new") {
         this.isNew = true;
         this.showAddModal = true;
@@ -642,7 +644,6 @@ export default {
           customerIds: [],
           ruleType: "",
           ruleParams: [],
-          active: true,
           ruleNodeName: ""
         };
         Object.assign(this.userStrategyInfo, info);

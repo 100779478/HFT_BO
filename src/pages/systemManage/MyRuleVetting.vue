@@ -453,6 +453,7 @@ export default {
     };
     let userStrategyInfo = {
       customerIds: [],
+      ruleFileBytesStr: null
     }
     return {
       pagination,
@@ -496,6 +497,7 @@ export default {
       this.chooseRule = row.ruleType === '8'
       this.fileName = ""
       this.fileUploadProgress = 0
+      this.userStrategyInfo.ruleFileBytesStr = null
       this.showAddModal = true;
       this.paramList = JSON.parse(JSON.stringify(row.ruleParams))
       // 只读下拉框展示需改为字符串类型
