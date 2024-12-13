@@ -9,7 +9,7 @@
           <Input
               v-model="pagination.accountId"
               style="float: right; width: 180px; border-radius: 20px"
-              placeholder="分账号代码"
+              placeholder="分账户代码"
               @on-keydown.enter="handleSearch"
               @on-change="handleSearch"
           >
@@ -89,10 +89,10 @@
               </FormItem>
             </Col>
             <Col :span="18">
-              <FormItem label="分账号代码" prop="accountId">
+              <FormItem label="分账户代码" prop="accountId">
                 <Input
                     v-model="channelInfo.accountId"
-                    placeholder="请输入分账号代码"
+                    placeholder="请输入分账户代码"
                     :maxlength="20"
                     show-message="false"
                     :disabled="!isNew"
@@ -259,7 +259,7 @@ export default {
         sortable: 'custom',
       },
       {
-        title: "分账号代码",
+        title: "分账户代码",
         key: "accountId",
         minWidth: 150,
         resizable: true,
@@ -340,7 +340,7 @@ export default {
       userValidRules: {
         customerId: [{required: true, message: "请选择用户代码"}],
         tradeChannel: [{required: true, message: ERROR_MSG.tradeChannelEmpty}],
-        accountId: [{required: true, message: "请输入分账号代码"}],
+        accountId: [{required: true, message: "请输入分账户代码"}],
         tdApiType: [{required: true, message: "请输入交易接口类型"}],
         combiNo: [{required: true, message: `请输入${this.positionLabel}`}],
         logicType: [{required: true, message: "请选择业务类型"}],

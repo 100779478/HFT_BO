@@ -7,6 +7,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 const SpeedMeasureWebpackPlugin = require('speed-measure-webpack-plugin');
 // const CompressionPlugin = require('compression-webpack-plugin');
 module.exports = defineConfig({
+    devServer: {
+        historyApiFallback: true,
+        allowedHosts: "all",
+    },
     outputDir: './build/hft-bo-web',
     productionSourceMap: false,
     transpileDependencies: true,

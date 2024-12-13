@@ -38,7 +38,7 @@ const ERROR_MSG = {
     ruleDisabled: "策略已禁用",
     tradeChannelEmpty: "请选择交易通道",
     logicTypeEmpty: "请选择业务类型",
-    accountIdEmpty: "请填写分账号代码",
+    accountIdEmpty: "请填写分账户代码",
     unableToDisableYourself: "无法禁用自己",
     externalInterfaceTypeEmpty: "请选择外部接口类型",
     channelTypeEmpty: "请选择通道类型",
