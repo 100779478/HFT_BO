@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV;
-const devUrl = "http://58.250.164.226:31004"; //POC
-// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+// const devUrl = "http://58.250.164.226:31004"; //POC
+const devUrl = "http://192.168.50.143:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -145,4 +145,8 @@ export const URL = {
     scenes: "/scenes",
     // 获取所有客户端权限列表
     clientPermission: "/client-permission",
+    // 获取双边订单列表，分页接口
+    bilateralOrder: '/bilateral-order/list',
+    // 导出双边订单列表
+    bilateralOrderExport: '/bilateral-order/export',
 };
