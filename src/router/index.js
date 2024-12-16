@@ -149,6 +149,14 @@ const routes = [
             },
             // 报表查询
             {
+                path: "/home/report-query/bilater-order",
+                name: "BilaterOrder",
+                component: () => import(/* webpackChunkName: "orders" */ "@/pages/reportQuery/BilaterOrder"),
+                meta: {
+                    title: "双边订单",
+                },
+            },
+            {
                 path: "/home/report-query/orders",
                 name: "Order",
                 component: () => import(/* webpackChunkName: "orders" */ "@/pages/reportQuery/Order"),

@@ -1,9 +1,9 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
 // const devUrl = "https://58.250.164.226:39888"; // 1.5.6
-const devUrl = "https://172.24.16.13:9888"; // 1.5.6
+// const devUrl = "https://172.24.16.13:9888"; // 1.5.6
 // const devUrl = "https://10.210.6.241:8888"; // 1.5.6
-// const devUrl = "http://192.168.50.64:9000"; // 玺子哥
+const devUrl = "http://192.168.50.143:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -182,6 +182,10 @@ export const URL = {
     ruleExportInstance: '/rule/export/quant/instance',
     // 获取策略服务节点列表
     ruleMonitorNodes: '/rule/monitor/nodes',
+    // 获取双边订单列表，分页接口
+    bilateralOrder: '/bilateral-order/list',
+    // 导出双边订单列表
+    bilateralOrderExport: '/bilateral-order/export',
 };
 export const sseUrl = {
     // 长链接SSE
