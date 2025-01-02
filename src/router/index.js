@@ -132,8 +132,8 @@ const routes = [
             },
             // 报表查询
             {
-                path: "/home/report-query/bilater-order",
-                name: "BilaterOrder",
+                path: "/home/report-query/bilateral-order",
+                name: "BilateralOrder",
                 component: () => import(/* webpackChunkName: "orders" */ "@/pages/reportQuery/BilaterOrder"),
                 meta: {
                     title: "双边订单",
