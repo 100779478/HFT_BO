@@ -292,18 +292,6 @@ export default {
         },
       },
       {
-        title: "报单状态",
-        key: "orderStatus",
-        minWidth: 150,
-        resizable: true,
-        width: null,
-        sortable: 'custom',
-        render: (h, {row}) => {
-          const result = getOrderStatus(row.orderStatus);
-          return h("span", result.description);
-        },
-      },
-      {
         title: "买报单价格",
         key: "bidPrice",
         minWidth: 150,
