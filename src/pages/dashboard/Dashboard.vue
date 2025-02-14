@@ -1,5 +1,5 @@
-<style lang="less">
-.bck {
+<style lang="less" scoped>
+.back {
   height: 90%;
   position: relative;
   overflow: hidden;
@@ -54,7 +54,7 @@ canvas {
 </style>
 
 <template>
-  <div class="bck">
+  <div class="back">
     <!--    <canvas ref="canvas"></canvas>-->
     <h1 class="title shine-span">欢迎使用本系统</h1>
     <div class="curEnv title" id="currentEnv">
@@ -70,6 +70,8 @@ export default {
   mixins: [introMixin],
   mounted() {
     // this.initCanvas();
+    document.documentElement.style.setProperty('--modal-backcolor', '#FFFFFF')
+    document.documentElement.style.setProperty('--text-color', '#fff')
   },
   computed: {
     currentEnv() {

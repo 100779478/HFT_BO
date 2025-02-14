@@ -1,0 +1,69 @@
+@font-face {
+    font-family: "iconfont"; /* Project id 4804564 */
+    src: url('iconfont.woff2?t=1739498409005') format('woff2'),
+    url('iconfont.woff?t=1739498409005') format('woff'),
+    url('iconfont.ttf?t=1739498409005') format('truetype');
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yidu:before {
+    content: "\e63e";
+    font-size: 13px;
+    color: blue;
+}
+
+.icon-chenggong:before {
+    content: "\e671";
+    font-size: 17px;
+    color: #0cbb18;
+}
+
+.icon-youjiantou:before {
+    content: "\e600";
+    font-size: 10px;
+}
+
+.icon-zuojiantou:before {
+    content: "\e601";
+    font-size: 10px;
+}
+
+.icon-zuojiantou:hover, .icon-youjiantou:hover {
+    color: darkgray;
+    cursor: pointer;
+}
+
+.icon-warn:before {
+    content: "\e6d0";
+    color: red;
+    font-weight: normal;
+    font-size: 15px;
+}
+
+.icon-tishi:before {
+    content: "\e8ba";
+    color: orange;
+    font-weight: normal;
+    font-size: 15px;
+}
+
+.icon-iconfontzhizuobiaozhun023113:before {
+    content: "\e673";
+    color: #0CBB18;
+    font-weight: normal;
+    font-size: 8px;
+}
+
+.icon-new:before {
+    content: "\e673";
+    color: #0CBB18;
+    font-weight: normal;
+    font-size: 15px;
+}

@@ -1,21 +1,27 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
 // const devUrl = "https://58.250.164.226:39888"; // 1.5.6
-// const devUrl = "https://172.24.16.13:9888"; // 1.5.6
+const devUrl = "https://172.24.16.13:9888"; // 1.5.6
 // const devUrl = "https://10.210.6.241:8888"; // 1.5.6
-const devUrl = "http://192.168.50.143:9000"; // 玺子哥
+// const devUrl = "http://192.168.50.108:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
     (env === "development" ? devUrl : proUrl) + "/hft-bos";
 console.log("current env :", env, requestContextPath);
 export const URL = {
+    // =============================================基础配置=============================================
     // 获取加密类型
     encryption: '/config/password-type',
     // 数据字典
     dictionaryList: "/config/static-enums",
     // 页面配置
     template: "/template",
+    // 用户菜单列表
+    menus: "/customer/menus",
+    // 获取当前用户信息
+    current: "/customer/current",
+    // =============================================登录页面=============================================
     // 用户登录
     login: "/customer/login",
     // 等保
@@ -28,10 +34,7 @@ export const URL = {
     verifyCode: "/customer/captcha",
     // 退出登录
     logout: "/customer/logout",
-    // 用户菜单列表
-    menus: "/customer/menus",
-    // 获取当前用户信息
-    current: "/customer/current",
+    // =============================================用户角色管理=============================================
     // 获取分页用户列表
     user: "/customer/list",
     // 编辑用户，
@@ -48,6 +51,11 @@ export const URL = {
     roleList: "/role/list",
     // 导出角色管理
     roleExport: "/role/export",
+    // 获取所有场景列表
+    scenes: "/scenes",
+    // 获取所有客户端权限列表
+    clientPermission: "/client-permission",
+    // =============================================系统管理=============================================
     // 查询环境列表
     environment: "/env/list",
     // 获取所有环境列表
@@ -106,32 +114,12 @@ export const URL = {
     ruleConfig: "/rule/config",
     // 上传策略参数
     ruleIdPath: "/rule/rule-id-path",
-    // 获取连接状态
-    channelStatus: "/channel-status/list",
-    // 导出连接状态
-    channelStatusExport: "/channel-status/export",
-    // 获取订单列表
-    orders: "/order/list",
-    // 导出订单
-    ordersExport: "/order/export",
-    // 获取成交列表
-    deals: "/deal/list",
-    // 导出成交
-    dealsExport: "/deal/export",
-    // 获取持仓列表
-    position: "/position/list",
-    // 导出持仓
-    positionExport: "/position/export",
     // 交易数据权限管理
     tradeDataList: "/trade-data-permission/list",
     // 新增、修改、删除交易数据权限
     tradeData: "/trade-data-permission",
     // 导出交易数据权限
     tradeDataExport: "/trade-data-permission/export",
-    // 操作日志导出
-    logExport: "/log/export",
-    // 操作日志列表
-    logList: "/log/list",
     // 获取节假日列表
     holidayList: "/calendar/holiday/list",
     // 新增删除修改节假日
@@ -150,10 +138,6 @@ export const URL = {
     weeklyExport: "/calendar/trading-day/export",
     // 导出节假日
     holidayExport: "/calendar/holiday/export",
-    // 获取所有场景列表
-    scenes: "/scenes",
-    // 获取所有客户端权限列表
-    clientPermission: "/client-permission",
     // 获取策略审批单列表
     vetting: '/rule-vetting/list',
     // 获取我的策略审批单列表
@@ -182,6 +166,34 @@ export const URL = {
     ruleExportInstance: '/rule/export/quant/instance',
     // 获取策略服务节点列表
     ruleMonitorNodes: '/rule/monitor/nodes',
+    // =============================================系统监控=============================================
+    // 获取连接状态
+    channelStatus: "/channel-status/list",
+    // 导出连接状态
+    channelStatusExport: "/channel-status/export",
+    // 操作日志导出
+    logExport: "/log/export",
+    // 操作日志列表
+    logList: "/log/list",
+    // 做市监控
+    makeMarket: '/make-market',
+    // 做市监控义务数据列表
+    makeMarketList: '/make-market/list',
+    // 导出做市义务数据列表
+    makeMarketListExport: '/make-market/export',
+    // =============================================报表查询=============================================
+    // 获取订单列表
+    orders: "/order/list",
+    // 导出订单
+    ordersExport: "/order/export",
+    // 获取成交列表
+    deals: "/deal/list",
+    // 导出成交
+    dealsExport: "/deal/export",
+    // 获取持仓列表
+    position: "/position/list",
+    // 导出持仓
+    positionExport: "/position/export",
     // 获取双边订单列表，分页接口
     bilateralOrder: '/bilateral-order/list',
     // 导出双边订单列表

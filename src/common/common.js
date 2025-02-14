@@ -164,6 +164,21 @@ export function getPasswordStrength(code) {
     return findDictionaryList('PasswordStrength', code)
 }
 
+// 做市义务监控详情状态枚举
+export function getMakeMarketStatisticsItemStatus(code) {
+    return findDictionaryList('MakeMarketStatisticsItemStatus', code)
+}
+
+// 做市义务监控统计状态枚举
+export function getMakeMarketStatisticsStatus(code) {
+    return findDictionaryList('MakeMarketStatisticsStatus', code)
+}
+
+// 做市义务债券类型枚举
+export function getSecurityType(code) {
+    return findDictionaryList('SecurityType', code)
+}
+
 // 表头排序
 export function handleSort(col, func) {
     // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值
@@ -307,4 +322,15 @@ export function handleExport(url, params, name) {
         document.body.removeChild(link);
         Message.success(`导出${name}成功`)
     });
+}
+
+/**
+ * 时间戳转化为时分秒
+ */
+export function secondsToHMS(seconds) {
+    let h = Math.floor(seconds / 3600);  // 计算小时
+    seconds %= 3600;  // 更新剩余秒数
+    let m = Math.floor(seconds / 60);  // 计算分钟
+    let s = seconds % 60;  // 计算秒数
+    return `${h}时${m}分${s}秒`;
 }

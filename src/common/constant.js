@@ -21,6 +21,7 @@ const ERROR_MSG = {
     oldPasswordEmpty: "请输入旧密码",
     newPasswordEmpty: "请输入新密码",
     confirmPasswordEmpty: "请输入确认密码",
+    customerIdContainsSpace: "用户代码不允许包含空格",
     passwordContainsSpace: "密码不允许包含空格",
     passwordStrengthInsufficient: "密码强度不足",
     passwordsMismatch: "两次密码输入不一致",
@@ -68,4 +69,16 @@ const SUCCESS_MSG = {
     calculationSuccess: "计算成功",
 }
 
-export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG}
+/**
+ * 做市监控展示图标
+ */
+
+const ICON_LIST = {
+    '1': 'icon-yidu',// MADE 已报
+    '2': 'icon-chenggong',// SUCCESS 已达标
+    '3': 'icon-tishi',// WARN 警告
+    '4': 'icon-warn',// FAILED 失败
+    '5': 'icon-iconfontzhizuobiaozhun023113',// 新增
+}
+
+export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST}

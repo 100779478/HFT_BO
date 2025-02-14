@@ -148,6 +148,7 @@ export default {
       console.log("LoginError", error);
       this.closeLoading();
       defaultErrorHandler(error);
+      this.formInline.verifyCode = null
       this.handleGetVerifyImg();
     }
     ,

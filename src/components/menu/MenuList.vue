@@ -85,6 +85,10 @@ a.ivu-menu-item {
         <Icon type="md-home"/>
         首页
       </MenuItem>
+<!--      <MenuItem name="Monitor" :to="{ name: 'Monitor' }">-->
+<!--        <Icon type="md-home"/>-->
+<!--        做市监控CLIENT-->
+<!--      </MenuItem>-->
       <template v-for="item in menuList">
         <Submenu :name="item.title" :key="item.title">
           <template slot="title">

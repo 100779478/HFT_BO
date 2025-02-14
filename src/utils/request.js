@@ -178,10 +178,8 @@ export function defaultErrorHandler(error) {
                     }
                 };
                 reader.readAsText(error.response.data)
-                return;
             }
         }
-        Message.error('未知错误');
     }
 }
 

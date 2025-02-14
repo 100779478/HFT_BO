@@ -12,7 +12,7 @@
 }
 
 .icon-item {
-  margin: 0 5px 0 20px;
+  margin: 0 5px 0 5px;
   color: #86909c;
   cursor: pointer
 }
@@ -38,21 +38,19 @@
 <template>
   <div>
     <Header :style="{ padding: 0 }" class="layout-header-bar">
-      <Icon
-          @click.native="collapsedSider"
-          :class="{'rotate-icon':!showMenu}"
-          class="icon-item"
-          type="md-menu"
-          size="20"
-      ></Icon>
-      <Icon
-          type="md-refresh"
-          size="20"
-          class="icon-item"
-          @click="refresh"
-      >
-      </Icon>
-      <div class="current-time">当前时间：{{ currentTimeText }}</div>
+      <div style="margin-left: 20px;display: inline-block">
+        <Icon
+            @click.native="collapsedSider"
+            :class="{'rotate-icon':!showMenu}"
+            class="icon-item"
+            type="md-menu"
+            size="20"
+        />
+        <Icon type="md-expand" size="20"
+              class="icon-item"
+              @click="expandScreen"
+        />
+      </div>
       <div
           :style="{
           float: 'right',
@@ -64,6 +62,7 @@
         >
           <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
           <Select
+              :transfer="true"
               class="select-style"
               @on-change="postEnvironmentList"
               v-model="environmentId"
@@ -77,7 +76,7 @@
             >
           </Select>
         </div>
-        <Dropdown @on-click="handleClick">
+        <Dropdown @on-click="handleClick" :transfer="true">
           <Avatar
               style="background-color: #00abe4; cursor: pointer"
               icon="md-person"
@@ -118,7 +117,6 @@ import introMixin from "@/mixins/introMixin";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import InputPassword from "@/components/InputPassword.vue";
 import {encryptionModePassword} from "@/common/common";
-import moment from "moment";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 
@@ -139,15 +137,10 @@ export default {
       environmentId: "",
       showMenu: true,
       currentTime: "",
-      currentTimeText: ""
     };
   },
   mounted() {
     this.getEnvironmentList();
-    this.updateElapsedTime(); // 初始化显示
-    this.timer = setInterval(() => {
-      this.updateElapsedTime();
-    }, 1000);
   },
   watch: {
     envList: function () {
@@ -155,14 +148,6 @@ export default {
     },
   },
   methods: {
-    updateElapsedTime() {
-      if (this.currentTime === "") {
-        this.currentTime = this.serverTime ? new Date(this.serverTime).getTime() : ''
-      } else {
-        this.currentTime += 1000;
-      }
-      this.currentTimeText = this.currentTime ? moment(new Date(this.currentTime + 1000)).format("yyyy-MM-DD HH:mm:ss") : ''
-    },
     onPasswordChange(val) {
       this.newPassword = val;
     },
@@ -226,17 +211,58 @@ export default {
         });
       }
     },
-    //页面刷新
-    refresh() {
-      location.reload();
-      // this.$router.push("/refresh");
+// 全屏
+    expandScreen() {
+      if (this.isFullScreen()) {
+        this.exitFullScreen();
+      } else {
+        this.requestFullScreen();
+      }
+    }
+    ,
+// 判断是否已经是全屏
+    isFullScreen() {
+      return (
+          document.fullscreenElement ||
+          document.webkitFullscreenElement ||
+          document.mozFullScreenElement ||
+          document.msFullscreenElement
+      );
+    }
+    ,
+// 请求全屏
+    requestFullScreen() {
+      const docElm = document.documentElement;
+      if (docElm.requestFullscreen) {
+        docElm.requestFullscreen();
+      } else if (docElm.webkitRequestFullscreen) { // Safari
+        docElm.webkitRequestFullscreen();
+      } else if (docElm.mozRequestFullScreen) { // Firefox
+        docElm.mozRequestFullScreen();
+      } else if (docElm.msRequestFullscreen) { // IE/Edge
+        docElm.msRequestFullscreen();
+      }
+    }
+    ,
+// 退出全屏
+    exitFullScreen() {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) { // Safari
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+      }
     },
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
         this.show = false;
         this.$Message.success(SUCCESS_MSG.modifySuccess);
       }
-    },
+    }
+    ,
     ok() {
       if (this.oldPassword === "") {
         this.$Message.error(ERROR_MSG.oldPasswordEmpty);
@@ -271,14 +297,13 @@ export default {
       };
       //修改密码http请求
       http.post(URL.modification, params, this.modificationPasswordSuccess);
-    },
+    }
+    ,
     cancel() {
       this.show = false;
-    },
+    }
+    ,
   },
-  beforeDestroy() {
-    // 组件销毁时清除定时器
-    clearInterval(this.timer);
-  }
-};
+}
+;
 </script>

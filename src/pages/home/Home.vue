@@ -45,7 +45,7 @@
           :collapsed-width="78"
           v-model="isCollapsed"
           :width="sideWidth"
-          style="background-color: #09357e"
+          style="background-color: #09357e;"
       >
         <div style="margin: 15px 30px" v-if="!isCollapsed">
           <img

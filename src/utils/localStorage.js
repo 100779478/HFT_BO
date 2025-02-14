@@ -50,7 +50,13 @@ export const getLocalDictionaryList = () => {
             // 交易所类型枚举：列举不同的交易所类型，如股票、期货等
             TradeExchangeType: [],
             // 策略审批单状态枚举：描述策略审批单的不同状态，如待审核、已通过等
-            RuleVettingStatus: []
+            RuleVettingStatus: [],
+            // 做市义务监控详情状态: 已报、已达标、警告、失败
+            MakeMarketStatisticsItemStatus: [],
+            // 做市义务监控统计状态: 正常、强提醒、弱提醒
+            MakeMarketStatisticsStatus: [],
+            // 做市义务债券类型: 政策性金融债、国债、地方政府债等
+            SecurityType: [],
         };
     }
 };

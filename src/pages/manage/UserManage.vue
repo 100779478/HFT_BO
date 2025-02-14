@@ -456,6 +456,8 @@ export default {
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
           this.$Message.warning(ERROR_MSG.passwordContainsSpace)
+        } else if (this.userInfo.customerId.includes(' ')) {
+          this.$Message.warning(ERROR_MSG.customerIdContainsSpace)
         } else if (!this.userInfo.password) {
           this.$Message.warning(ERROR_MSG.passwordEmpty)
         } else if (this.pwdStrengthLevel < 3) {

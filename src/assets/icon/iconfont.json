@@ -1,0 +1,58 @@
+{
+  "id": "4804564",
+  "name": "hft-bo-web",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8862778",
+      "name": "已读",
+      "font_class": "yidu",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "10666917",
+      "name": "成功",
+      "font_class": "chenggong",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "1718355",
+      "name": "右箭头",
+      "font_class": "youjiantou",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "1718358",
+      "name": "左箭头",
+      "font_class": "zuojiantou",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "6932373",
+      "name": "warn2",
+      "font_class": "warn",
+      "unicode": "e6d0",
+      "unicode_decimal": 59088
+    },
+    {
+      "icon_id": "11372710",
+      "name": "提示",
+      "font_class": "tishi",
+      "unicode": "e8ba",
+      "unicode_decimal": 59578
+    },
+    {
+      "icon_id": "1166030",
+      "name": "NEW",
+      "font_class": "iconfontzhizuobiaozhun023113",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import dictionary from './modules/dictionary';
 import role from './modules/role';
 import environment from "@/store/modules/environment";
 import rule from "@/store/modules/rule";
-
+import makeStatus from "@/store/modules/makeStatus";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -12,6 +12,7 @@ export default new Vuex.Store({
         dictionary,
         environment,
         role,
-        rule
+        rule,
+        makeStatus,
     },
 });

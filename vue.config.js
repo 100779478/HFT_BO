@@ -60,19 +60,43 @@ module.exports = defineConfig({
                     VERSION: JSON.stringify(packageJson.version),
                 },
             }),
-            // {
-            //     apply: (compiler) => {
-            //         compiler.hooks.done.tap('CreateVersionFile', () => {
-            //             const outputPath = compiler.options.output.path;
-            //             const versionFilePath = path.join(outputPath, 'version.txt');
-            //             // 确保输出路径存在
-            //             if (!fs.existsSync(outputPath)) {
-            //                 fs.mkdirSync(outputPath, {recursive: true});
-            //             }
-            //             fs.writeFileSync(versionFilePath, `Version: ${packageJson.version}\n`);
-            //         });
-            //     },
-            // },
+            {
+                apply: (compiler) => {
+                    compiler.hooks.done.tap('CreateVersionFile', () => {
+                        const outputPath = compiler.options.output.path;
+                        const versionFilePath = path.join(outputPath, 'version.json');
+                        const readmePath = path.join(__dirname, 'README.md');
+
+                        // 读取 README.md 文件
+                        const readmeContent = fs.readFileSync(readmePath, 'utf8');
+
+                        // 正则表达式匹配最新版本号下的更新内容
+                        const versionRegex = /##\s*版本\s([0-9]+\.[0-9]+\.[0-9]+)\s更新日志\s([^\r\n]*)[\s\S]+?(?=##\s*版本\s[0-9]+\.[0-9]+\.[0-9]+|$)/g;
+
+                        let match;
+                        let latestUpdateContent = '';
+
+                        // 只提取最新的版本的更新内容
+                        if ((match = versionRegex.exec(readmeContent))) {
+                            latestUpdateContent = match[0].trim();  // 获取最新版本号对应的更新内容
+                        }
+
+                        // 创建版本信息的 JSON 对象
+                        const versionInfo = {
+                            timeStamp: Date.now(),
+                            updateContent: latestUpdateContent  // 只保留最新版本的更新内容
+                        };
+
+                        // 确保输出路径存在
+                        if (!fs.existsSync(outputPath)) {
+                            fs.mkdirSync(outputPath, {recursive: true});
+                        }
+
+                        // 写入到版本文件中
+                        fs.writeFileSync(versionFilePath, JSON.stringify(versionInfo, null, 2));
+                    });
+                },
+            }
         ]
     },
     chainWebpack: config => {

@@ -156,11 +156,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {
-  getOrderStatus,
-  getDirection,
-  getOffsetType, handleSort, handleExport,
-} from "@/common/common";
+import {getOrderStatus, handleExport, handleSort,} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
@@ -271,18 +267,6 @@ export default {
       //     return h("span", result.description);
       //   },
       // },
-      {
-        title: "报单状态",
-        key: "orderStatus",
-        minWidth: 150,
-        resizable: true,
-        width: null,
-        sortable: 'custom',
-        render: (h, {row}) => {
-          const result = getOrderStatus(row.orderStatus);
-          return h("span", result.description);
-        },
-      },
       {
         title: "报单状态",
         key: "orderStatus",

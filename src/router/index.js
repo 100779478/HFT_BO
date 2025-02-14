@@ -1,7 +1,5 @@
 import vue from "vue";
 import VueRouter from "vue-router";
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
 import {getToken} from "@/utils/token";
 
 vue.use(VueRouter);
@@ -32,12 +30,23 @@ const routes = [
         name: "NotFound",
         component: () => import(/* webpackChunkName: "notFound" */ "@/pages/notFound/NotFound"),
     },
+    // 做市监控
+    {
+        path: "/monitor",
+        name: "Monitor",
+        component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/systemMonitor/MakeMarket.vue"),
+        meta: {
+            title: "做市监控",
+        },
+    },
     {
         path: "/home",
         name: "Home",
         component: () => import(/* webpackChunkName: "home" */ "@/pages/home/Home"),
         children: [
-            // 主页
+            // ====================================================================================================
+            // ===============================================主页===============================================
+            // ====================================================================================================
             {
                 path: "/home/dashboard",
                 name: "Dashboard",
@@ -46,7 +55,9 @@ const routes = [
                     title: "主页",
                 },
             },
-            // 用户角色管理
+            // ====================================================================================================
+            // ===============================================用户角色管理===============================================
+            // ====================================================================================================
             {
                 path: "/home/manage/user-manage",
                 name: "UserManage",
@@ -63,7 +74,9 @@ const routes = [
                     title: "用户角色管理/角色管理",
                 },
             },
-            // 系统管理
+            // ====================================================================================================
+            // ===============================================系统管理===============================================
+            // ====================================================================================================
             {
                 path: "/home/sys-manage/environment-manage",
                 name: "EnvironmentManage",
@@ -93,7 +106,7 @@ const routes = [
                 name: "RuleManage",
                 component: () => import(/* webpackChunkName: "rule-manage" */ "@/pages/systemManage/RuleManage.vue"),
                 meta: {
-                    title: "策略管理",
+                    title: "系统管理/策略管理",
                 },
             },
             {
@@ -120,37 +133,55 @@ const routes = [
                     title: "系统管理/我的审批",
                 },
             },
-            // 系统监控
             {
-                path: "/home/sys-monitor/channel-status",
-                name: "ChannelStatusManage",
-                component: () => import(/* webpackChunkName: "channel-status" */ "@/pages/systemMonitor/ChannelStatusManage"),
-                meta: {
-                    title: "连接状态",
-                },
-            },
-            // 主页
-            {
-                path: "/home/sys-monitor/trade-calendar",
+                path: "/home/sys-manage/trade-calendar",
                 name: "TradeCalendar",
                 component: () => import(/* webpackChunkName: "trade-calendar" */ "@/pages/systemManage/TradeCalendar.vue"),
                 meta: {
                     title: "系统管理/交易日历",
                 },
             },
-            // 操作日志
+            // ====================================================================================================
+            // ===============================================系统监控===============================================
+            // ====================================================================================================
+            {
+                path: "/home/sys-monitor/channel-status",
+                name: "ChannelStatusManage",
+                component: () => import(/* webpackChunkName: "channel-status" */ "@/pages/systemMonitor/ChannelStatusManage"),
+                meta: {
+                    title: "系统监控/连接状态",
+                },
+            },
             {
                 path: "/home/sys-monitor/operating-log",
                 name: "OperatingLog",
                 component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/OperatingLog"),
                 meta: {
-                    title: "操作日志",
+                    title: "系统监控/操作日志",
                 },
             },
-            // 报表查询
             {
-                path: "/home/report-query/bilater-order",
-                name: "BilaterOrder",
+                path: "/home/sys-monitor/make-market",
+                name: "MakeMarket",
+                component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/systemMonitor/MakeMarket.vue"),
+                meta: {
+                    title: "系统监控/做市义务监控统计",
+                },
+            },
+            {
+                path: "/home/sys-monitor/make-market-list",
+                name: "MakeMarketList",
+                component: () => import(/* webpackChunkName: "orders" */ "@/pages/systemMonitor/MakeMarketList.vue"),
+                meta: {
+                    title: "系统监控/做市义务监控历史",
+                },
+            },
+            // ====================================================================================================
+            // ===============================================报表查询===============================================
+            // ====================================================================================================
+            {
+                path: "/home/report-query/bilateral-order",
+                name: "BilateralOrder",
                 component: () => import(/* webpackChunkName: "orders" */ "@/pages/reportQuery/BilaterOrder"),
                 meta: {
                     title: "双边订单",
