@@ -195,15 +195,25 @@ axiosInstance.interceptors.request.use((config) => {
     ) {
         return config;
     }
+    // 自动刷新获取数据字典
     const excludedRoutes = ['Login', 'Dashboard', 'Home'];
     if (!localStorage.dictionaryList && (!excludedRoutes.includes(router.currentRoute.name))) {
         http.get(URL.dictionaryList, res => store.commit("dictionary/dictionaryList", res.data))
     }
     const token = getToken();
     if (!token) {
-        if (!is403MessageShown) {
-            // Message.error("登录过期，请重新登录！");
-            router.push("/login");
+        // 客户端页面特殊处理登录请求
+        if ('Monitor' === router.currentRoute.name) {
+            console.log("重新登陆刷新token")
+            http.post(URL.login, {
+                username: '123',
+                password: 123456,
+                messageType: '登录成功'
+            }, (res) => {
+                console.log('llllll', res)
+            });
+        } else if (!is403MessageShown) {
+            router.push({name: "Login"});
             is403MessageShown = true
         }
         return config;
@@ -248,9 +258,18 @@ axiosInstance.interceptors.response.use(
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
-                    // Message.error('连接失败')
+                    if ('Monitor' !== router.currentRoute.name) {
                     router.push({name: "Login"});
                     return Promise.reject(error);
+                    } else {
+                        http.post(URL.login, {
+                            username: '123',
+                            password: 123456,
+                            messageType: '登录成功'
+                        }, (res) => {
+                            console.log('ssssss', res)
+                        });
+                    }
                 }
                 break
             case 401:

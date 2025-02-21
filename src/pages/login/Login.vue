@@ -142,7 +142,6 @@ export default {
             }
           }
       )
-
     },
     loginError(error) {
       console.log("LoginError", error);

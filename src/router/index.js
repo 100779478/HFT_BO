@@ -20,24 +20,24 @@ const routes = [
     {
         path: "/login-protect",
         name: "LoginProtect",
-        component: () => import("@/pages/loginProtect/LoginProtect.vue"),
+        component: () => import(/* webpackChunkName: "login-protect" */ "@/pages/loginProtect/LoginProtect.vue"),
         meta: {
             title: "登录保护",
+        },
+    },
+    // 做市监控
+    {
+        path: "/monitor",
+        name: "Monitor",
+        component: () => import(/* webpackChunkName: "make-market" */ "@/pages/systemMonitor/MakeMarket.vue"),
+        meta: {
+            title: "做市监控",
         },
     },
     {
         path: "*",
         name: "NotFound",
         component: () => import(/* webpackChunkName: "notFound" */ "@/pages/notFound/NotFound"),
-    },
-    // 做市监控
-    {
-        path: "/monitor",
-        name: "Monitor",
-        component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/systemMonitor/MakeMarket.vue"),
-        meta: {
-            title: "做市监控",
-        },
     },
     {
         path: "/home",
@@ -236,12 +236,11 @@ router.beforeEach((to, from, next) => {
     }
     // 检查用户是否已登录
     const isAuthenticated = getToken(); // 从 Vuex 中获取登录状态
-
     // 如果没有匹配到任何路由（包括通配符路由）
     if (to.matched[0].path === '*') {
         // 继续导航到通配符路径对应的页面
         next();
-    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect') {
+    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'Monitor') {
         // 用户未登录且访问的不是允许的页面时，重定向到登录页
         next({path: '/login'});
     } else {

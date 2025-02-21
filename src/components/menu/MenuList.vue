@@ -135,7 +135,6 @@ export default {
   methods: {
     getMenuList(res) {
       let dataInit = res.data;
-
       /**
        * 解析菜单转化为树形结构
        * @param {Array} dataInit - 菜单初始化数据

@@ -48,6 +48,21 @@
     }
   }
 
+  .type-left-item {
+    flex: 0.3;
+    margin-bottom: 10px
+  }
+
+  .type-left-item:nth-child(2) {
+    flex: 0.6;
+    margin-bottom: 10px
+  }
+
+  .type-right-item {
+    flex: 0.15;
+    margin-bottom: 10px
+  }
+
   .header-content {
     display: flex;
     font-size: 14px;
@@ -87,12 +102,13 @@
 
   .title-info {
     //overflow: hidden;
+    will-change: transform;
     font-weight: bolder;
     width: auto;
     color: red;
     display: inline-block; /* 确保文字在一行内 */
     white-space: nowrap; /* 确保文字不换行 */
-    animation: init-scroll 40s linear, scroll 40s linear 5s infinite;
+    animation: init-scroll 50s linear, scroll 50s linear 5s infinite;
     margin-left: 30px;
   }
 
@@ -125,16 +141,6 @@
     height: 16px;
     margin-right: 8px;
     border-radius: 50%;
-  }
-
-  .type-left-item {
-    flex: 0.3;
-    margin-bottom: 10px
-  }
-
-  .type-right-item {
-    flex: 0.15;
-    margin-bottom: 10px
   }
 
   .debt-info {
@@ -303,7 +309,8 @@
 .modal-label {
   font-weight: bold;
   margin-right: 10px;
-  flex-basis: 120px;
+  flex-basis: 170px;
+  padding-left: 50px;
   white-space: nowrap;
 }
 
@@ -313,7 +320,6 @@
 }
 
 </style>
-
 <template>
   <div class="bck" :style="rootStyle">
     <div class="header-content">
@@ -325,15 +331,15 @@
           <div slot="content">
             <div class="color-info">
               <p><strong>图标说明：</strong></p>
-              <ol style="margin-left: 20px">
-                <li><i class="icon iconfont icon-new"></i>今日新上市的债券</li>
-                <li><i class="icon iconfont icon-warn"></i>当前债券做市情况为：失败</li>
-                <li><i class="icon iconfont icon-tishi"></i>当前债券做市情况为：警告</li>
-                <li><i class="icon iconfont icon-yidu"></i>当前债券做市情况为：已报</li>
-                <li><i class="icon iconfont icon-chenggong"></i>当前债券做市情况为：已达标</li>
+              <ol style="margin-left: 20px;">
+                <li><i class="icon iconfont icon-new"/>今日新上市的债券</li>
+                <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：失败</li>
+                <li><i class="icon iconfont icon-tishi"/>当前债券做市情况为：警告</li>
+                <li><i class="icon iconfont icon-yidu"/>当前债券做市情况为：已报</li>
+                <li><i class="icon iconfont icon-chenggong"/>当前债券做市情况为：已达标</li>
               </ol>
               <p><strong>操作说明：</strong></p>
-              <ol style="margin-left: 20px">
+              <ol style="margin-left: 20px;">
                 <li>双击滚动提醒可查看详细内容。</li>
                 <li>双击债券可查看详细信息。</li>
               </ol>
@@ -350,14 +356,26 @@
         {{ data.remindMessage }}
       </div>
       <div class="market-data">
-        已报：{{ data.madeCount ? data.madeCount : '--' }}
-        已达标：{{ data.successCount ? data.successCount : '--' }}
+        已报：{{ data.madeCount ?? '--' }}
+        已达标：{{ data.successCount ?? '--' }}
       </div>
     </div>
     <div class="content-body">
       <div class="content-body-left"
            :style="{ width: getWidth('left')}">
-        <div style="white-space: nowrap">利率债
+        <div style="white-space: nowrap">利率债</div>
+        <div style="font-size: 14px;font-weight: normal;text-align: left;padding: 0 50px">
+          <ul style="list-style: none;white-space: nowrap;height: 50px">
+            <li><i class="icon iconfont icon-chenggong"/>利率债不足30只</li>
+            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年
+              6 个关键期限中至少 5
+              个关键期限的新发国债进行做市
+            </li>
+            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年
+              6 个关键期限中至少 5
+              个关键期限的新发国债进行做市
+            </li>
+          </ul>
         </div>
         <div class="content-body-left-item">
           <div class="type-left-item" v-for="item in data.rates" :key="item.securityType">
@@ -406,7 +424,7 @@
           </div>
         </div>
       </div>
-      <div style="align-self: center">
+      <div style="align-items: center">
         <i v-show="toggle==='0'||toggle==='2'" class="icon iconfont icon-zuojiantou"
            @click="toggleVisibility('1')"></i>
         <i v-show="toggle==='0'||toggle==='1'" class="icon iconfont icon-youjiantou"
@@ -482,12 +500,12 @@ export default {
       toggle,
       sysSetting,
       timer: null,
-      graphSectionHeight: 'calc(100vh - 240px)', // 默认高度
+      graphSectionHeight: 'calc(100vh - 290px)', // 默认高度
     }
   },
   mounted() {
     const {name} = this.$route;
-    this.graphSectionHeight = name === 'Monitor' ? 'calc(100vh - 135px)' : 'calc(100vh - 240px)';
+    this.graphSectionHeight = name === 'Monitor' ? 'calc(100vh - 205px)' : 'calc(100vh - 290px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },
@@ -536,7 +554,7 @@ export default {
       content.pop()
       this.$Modal.info({
         render: h => {
-          return h('ul', {style: {fontWeight: 'bolder'}}, content.map(i => {
+          return h('ol', {style: {fontWeight: 'bolder'}}, content.map(i => {
             return h('li', {class: 'modal-li'}, i)
           }))
         }
@@ -615,6 +633,8 @@ export default {
             this.renderModalItem(h, '债券代码:', item.securityId),
             this.renderModalItem(h, '债券简称:', item.securityName),
             this.renderModalItem(h, '当前进度:', `${item.makeMarketProgress}%`),
+            this.renderModalItem(h, '关键期限:', item.securityTerm),
+            this.renderModalItem(h, '代偿期:', item.termToMaturityString),
             this.renderModalItem(h, '已报时长:', `${secondsToHMS(item.makeTime)}`),
             this.renderModalItem(h, '空白时长:', `${secondsToHMS(item.blankTime)}`),
             this.renderModalItem(h, '最大空白时长:', `${secondsToHMS(item.maxBlankTime)}`),

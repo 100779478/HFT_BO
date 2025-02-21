@@ -80,7 +80,7 @@
                     @on-change="getTradeChannelApi"
                 >
                   <Option
-                      v-for="(item,index) in tradeChannel"
+                      v-for="(item,index) in tradeChannelList"
                       :key="index"
                       :value="item.channelId"
                   >{{ item.channelId }}
@@ -361,7 +361,7 @@ export default {
         tdApiTypeName: "",
       },
       // 交易通道
-      tradeChannel: [],
+      tradeChannelList: [],
       // 用户列表
       userList: [],
       // 业务类型列表
@@ -392,9 +392,8 @@ export default {
     getTradeChannel() {
       // 获取交易通道
       http.get(URL.tradeChannel, (res) => {
-        // 交易通道数组初始化
-        // 西部：过滤类型为Market的通道
-        this.tradeChannel = res.data.filter(d => d.channelType !== '2');
+        // 过滤类型为Market的通道
+        this.tradeChannelList = res.data.filter(d => d.channelType !== '2');
       });
     },
     getUserData() {
@@ -404,7 +403,7 @@ export default {
     },
     getTradeChannelApi(e) {
       // 根据e查找对应的交易通道对象
-      const selectedChannel = this.tradeChannel.find(channel => e === channel.channelId);
+      const selectedChannel = this.tradeChannelList.find(channel => e === channel.channelId);
       if (selectedChannel) {
         // 更新tdApiType和其他相关状态
         this.channelInfo.tdApiType = selectedChannel.apiType;
@@ -456,7 +455,7 @@ export default {
         this.isNew = false;
         this.showAddModal = true;
         Object.assign(this.channelInfo, row);
-        const selectedChannel = this.tradeChannel.find(channel => row.tdApiType === channel.apiType);
+        const selectedChannel = this.tradeChannelList.find(channel => row.tdApiType === channel.apiType);
         if (selectedChannel) {
           this.channelInfo.tdApiType = selectedChannel.apiType;
           this.channelInfo.tdApiTypeName = selectedChannel.apiTypeName;

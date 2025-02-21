@@ -62,7 +62,6 @@
         >
           <span style="font-size: 17px; font-weight: bold;margin-left: 20px">环境：</span>
           <Select
-              :transfer="true"
               class="select-style"
               @on-change="postEnvironmentList"
               v-model="environmentId"
