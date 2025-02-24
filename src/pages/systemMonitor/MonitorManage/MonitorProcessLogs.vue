@@ -140,7 +140,6 @@ export default {
       {
         title: "进程名",
         key: "serviceName",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,
@@ -148,7 +147,6 @@ export default {
       {
         title: "日志文件名",
         key: "logFile",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,
@@ -156,7 +154,6 @@ export default {
       {
         title: "错误日志",
         key: "logErrorMessage",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,

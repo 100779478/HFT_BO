@@ -47,7 +47,7 @@
       >
         <form autocomplete="off">
           <Input
-              v-model="pagination.ruleName"
+              v-model="pagination.serviceName"
               style="width: 120px; border-radius: 20px"
               class="mr3"
               placeholder="进程名称"
