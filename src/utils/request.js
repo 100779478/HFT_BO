@@ -1,9 +1,10 @@
 import axios from "axios";
-import {getToken} from "./token";
+import {getToken, putToken} from "./token";
 import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store";
+import {encryptPassword} from "@/common/common";
 
 let is403MessageShown = false;
 const axiosInstance = axios.create({
@@ -196,25 +197,16 @@ axiosInstance.interceptors.request.use((config) => {
         return config;
     }
     // 自动刷新获取数据字典
-    const excludedRoutes = ['Login', 'Dashboard', 'Home'];
+    const excludedRoutes = ['Login', 'Dashboard', 'Home', 'Monitor'];
     if (!localStorage.dictionaryList && (!excludedRoutes.includes(router.currentRoute.name))) {
         http.get(URL.dictionaryList, res => store.commit("dictionary/dictionaryList", res.data))
     }
     const token = getToken();
     if (!token) {
         // 客户端页面特殊处理登录请求
-        if ('Monitor' === router.currentRoute.name) {
-            console.log("重新登陆刷新token")
-            http.post(URL.login, {
-                username: '123',
-                password: 123456,
-                messageType: '登录成功'
-            }, (res) => {
-                console.log('llllll', res)
-            });
-        } else if (!is403MessageShown) {
+        if ('Monitor' !== router.currentRoute.name && !is403MessageShown) {
             router.push({name: "Login"});
-            is403MessageShown = true
+            is403MessageShown = true;
         }
         return config;
     }
@@ -260,16 +252,17 @@ axiosInstance.interceptors.response.use(
                     is403MessageShown = true;
                     if ('Monitor' !== router.currentRoute.name) {
                     router.push({name: "Login"});
-                    return Promise.reject(error);
                     } else {
-                        http.post(URL.login, {
-                            username: '123',
-                            password: 123456,
-                            messageType: '登录成功'
+                        http.post(URL.clientLogin, {
+                            username: sessionStorage.getItem('customerid'),
+                            password: encryptPassword(sessionStorage.getItem('pwd')),
+                            messageType: '登录成功',
                         }, (res) => {
-                            console.log('ssssss', res)
+                            putToken(res.data.token); // 将 token 存储起来
+                            // router.go(0)
                         });
                     }
+                    return Promise.reject(error);
                 }
                 break
             case 401:

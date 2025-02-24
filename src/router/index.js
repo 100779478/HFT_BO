@@ -231,11 +231,12 @@ const router = new VueRouter({
     mode: "hash",
 });
 router.beforeEach((to, from, next) => {
+    console.log(1111112222, to, from)
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
     // 检查用户是否已登录
-    const isAuthenticated = getToken(); // 从 Vuex 中获取登录状态
+    const isAuthenticated = getToken(); // 获取登录状态
     // 如果没有匹配到任何路由（包括通配符路由）
     if (to.matched[0].path === '*') {
         // 继续导航到通配符路径对应的页面

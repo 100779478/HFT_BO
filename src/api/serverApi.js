@@ -1,9 +1,9 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
 // const devUrl = "https://58.250.164.226:39888"; // 1.5.6
-const devUrl = "https://172.24.16.13:9888"; // 1.5.6
+// const devUrl = "https://172.24.16.13:9888"; // 1.5.6
 // const devUrl = "https://10.210.6.241:8888"; // 1.5.6
-// const devUrl = "http://192.168.50.108:9000"; // 玺子哥
+const devUrl = "http://192.168.50.108:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -24,6 +24,8 @@ export const URL = {
     // =============================================登录页面=============================================
     // 用户登录
     login: "/customer/login",
+    // 客户端用户登录
+    clientLogin: "/customer/client-login",
     // 等保
     loginProtect: "/customer/password-expired-time",
     // 修改密码
@@ -177,10 +179,16 @@ export const URL = {
     logList: "/log/list",
     // 做市监控
     makeMarket: '/make-market',
+    // 做市监控带环境ID
+    makeMarketEnv: '/make-market/client',
     // 做市监控义务数据列表
     makeMarketList: '/make-market/list',
+    // 做市监控义务数据列表带环境ID
+    makeMarketListEnv: '/make-market/client',
     // 导出做市义务数据列表
     makeMarketListExport: '/make-market/export',
+    // 导出做市义务数据列表带环境ID
+    makeMarketListExportEnv: '/make-market/export/client',
     // =============================================报表查询=============================================
     // 获取订单列表
     orders: "/order/list",

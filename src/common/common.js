@@ -334,3 +334,20 @@ export function secondsToHMS(seconds) {
     let s = seconds % 60;  // 计算秒数
     return `${h}时${m}分${s}秒`;
 }
+
+/**
+ * 截取url参数
+ */
+export function queryParse(url) {
+    let paramObj = {};
+    if (url.indexOf('?') > -1) {
+        let _url = url.split('?')[1].split('#')[0];
+        let strArr = _url.split('&');
+        strArr.forEach(ele => {
+            let key = ele.split('=')[0];
+            paramObj[key] = ele.split('=')[1];
+        });
+
+    }
+    return paramObj;
+}

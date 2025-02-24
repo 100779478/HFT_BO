@@ -11,6 +11,7 @@ import {log} from "@/common/log";
 import {requestContextPath, sseUrl} from "@/api/serverApi";
 import '@/assets/icon/iconfont.css'
 import {http} from "@/utils/request";
+import {queryParse} from "@/common/common";
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -66,15 +67,26 @@ new Vue({
     //     Vue.prototype.$menuPath = this;
     // },
     created() {
+        const params = queryParse(window.location.href);
+        if (params) {
+            sessionStorage.setItem('customerid', params.customerid);
+            sessionStorage.setItem('pwd', params.pwd);
+            sessionStorage.setItem('envid', params.envid);
+        }
         // 添加 beforeunload 事件监听器
         window.addEventListener('beforeunload', this.handleBeforeUnload);
         // 检查是否是页面刷新
         if (sessionStorage.getItem('isPageReload')) {
             sessionStorage.removeItem('isPageReload');
-            // 执行刷新后的操作，重定向到主页面
+            // // 执行刷新后的操作，重定向到主页面
             const mark = location.hash.substring(2)
+            const markIndex = mark.indexOf('?')
+            // const markPosition = markIndex !== -1 ? mark.substring(0, markIndex) : mark
+            // const markPosition = markIndex !== -1 ? location.replace(location.href) : mark
             if (mark === 'monitor') {
                 this.$router.replace({name: 'Monitor'})
+            } else if (markIndex !== -1) {
+                location.replace(location.href)
             } else if (mark !== 'login' && mark) {
                 this.$router.replace({name: 'Dashboard'});
             }

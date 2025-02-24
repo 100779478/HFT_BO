@@ -479,7 +479,8 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {ICON_LIST} from "@/common/constant";
-import {getSecurityType, secondsToHMS} from "@/common/common";
+import {encryptPassword, getSecurityType, queryParse, secondsToHMS} from "@/common/common";
+import {getToken, putToken} from "@/utils/token";
 
 export default {
   data() {
@@ -496,6 +497,7 @@ export default {
       isFullScreenAlert: this.$store.state.makeStatus.system.isFullScreenAlert,
     }
     return {
+      envId: null,
       data,
       toggle,
       sysSetting,
@@ -503,9 +505,10 @@ export default {
       graphSectionHeight: 'calc(100vh - 290px)', // 默认高度
     }
   },
+  created() {
+  },
   mounted() {
-    const {name} = this.$route;
-    this.graphSectionHeight = name === 'Monitor' ? 'calc(100vh - 205px)' : 'calc(100vh - 290px)';
+    this.graphSectionHeight = this.isClientPage ? 'calc(100vh - 205px)' : 'calc(100vh - 290px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },
@@ -513,8 +516,11 @@ export default {
     ICON_LIST() {
       return ICON_LIST
     },
+    isClientPage() {
+      return this.$route.name === 'Monitor'
+    },
     rootStyle() {
-      const style = this.$route.name === 'Monitor'
+      const style = this.isClientPage
           ? {
             '--background-color': '#0C1A36',
             '--content-background-color': '#233450',
@@ -548,6 +554,44 @@ export default {
   },
   methods: {
     getSecurityType,
+    checkToken() {
+      // 获取查询字符串部分 (比如 ?customerid=test&pwd=123456&envid=2)
+      const params = queryParse(window.location.href);
+      sessionStorage.setItem('customerid', params.customerid);
+      sessionStorage.setItem('pwd', params.pwd);
+      sessionStorage.setItem('envid', params.envid);
+      // 检查是否有 token
+      const token = getToken();
+      if (!token) {
+        // 如果没有 token，先登录获取 token
+        http.post(URL.clientLogin, {
+          username: params.customerid,
+          password: encryptPassword(params.pwd),
+          messageType: '登录成功',
+        }, (res) => {
+          putToken(res.data.token); // 将 token 存储起来
+          this.getMakeMarket(); // 获取数据接口
+        });
+      } else {
+        // 如果已经有 token，直接调用数据接口
+        this.getMakeMarket();
+      }
+    },
+    getMakeMarket() {
+      const token = getToken(); // 获取 token
+      if (!token) {
+        // 如果没有 token，再次进行登录
+        this.checkToken();
+        return;
+      }
+      // 构建请求 URL
+      const url = this.isClientPage ? `${URL.makeMarketEnv}?envId=${sessionStorage.getItem('envid')}` : URL.makeMarket;
+      // 使用 token 访问数据接口
+      http.get(url, (res) => {
+        this.data = res.data;
+        this.$store.commit('makeStatus/setMakeStatus', this.data.status);
+      });
+    },
     // 查看消息提醒
     viewRemindMessage() {
       const content = this.data.remindMessage.split(';')
@@ -558,12 +602,6 @@ export default {
             return h('li', {class: 'modal-li'}, i)
           }))
         }
-      })
-    },
-    getMakeMarket() {
-      http.get(URL.makeMarket, (res) => {
-        this.data = res.data
-        this.$store.commit('makeStatus/setMakeStatus', this.data.status)
       })
     },
     showPercentColor(progress) {
@@ -651,10 +689,6 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.timer)
-    // if (this.$route.name === 'Monitor') {
-    //   document.documentElement.style.setProperty('--modal-backcolor', '#f4f7fa')
-    //   document.documentElement.style.setProperty('--text-color', '#fff')
-    // }
   }
 }
 ;
