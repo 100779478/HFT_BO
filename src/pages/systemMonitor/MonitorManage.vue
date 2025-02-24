@@ -1,12 +1,16 @@
 <template>
-  <div class="quantify">
-    <div class="quantify-template">
-      <div class="quantify-title">行情数据</div>
+  <div class="monitor">
+    <div class="monitor-item">
+      <div class="monitor-title">行情数据</div>
       <MarketData/>
     </div>
-    <div class="quantify-instance">
-      <div class="quantify-title" style="margin-top: 15px">监控进程</div>
+    <div class="monitor-item">
+      <div class="monitor-title">监控进程</div>
       <MonitorProcess/>
+    </div>
+    <div class="monitor-item">
+      <div class="monitor-title">监控日志</div>
+      <MonitorProcessLogs/>
     </div>
   </div>
 </template>
@@ -14,27 +18,32 @@
 <script>
 import MarketData from "@/pages/systemMonitor/MonitorManage/MarketData.vue";
 import MonitorProcess from "@/pages/systemMonitor/MonitorManage/MonitorProcess.vue";
+import MonitorProcessLogs from "@/pages/systemMonitor/MonitorManage/MonitorProcessLogs.vue";
 
 export default {
   name: "MonitorManage",
-  components: {MarketData, MonitorProcess}
+  components: {MonitorProcessLogs, MarketData, MonitorProcess}
 }
 </script>
 
 <style scoped lang="less">
-.quantify {
+.monitor {
   display: flex;
   flex-direction: column;
   //justify-content: space-between;
-  .quantify-title {
-    padding: 0 0 10px 10px;
+  .monitor-title {
+    padding-bottom: 10px;
     font-size: 18px;
     font-weight: bold;
   }
 
-  .quantify-template {
-    border-bottom: 2px solid black;
-    padding-bottom: 10px;
+  .monitor-item {
+    //border-bottom: 2px solid black;
+    padding: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-bottom: 10px;
     //width: 49%;
   }
 

@@ -104,7 +104,7 @@ export default {
   },
   methods: {
     calculateTableHeight() {
-      return window.innerHeight * 0.245;
+      return window.innerHeight * 0.43;
     },
     // 获取行情监控数据列表
     getMarketDataList() {

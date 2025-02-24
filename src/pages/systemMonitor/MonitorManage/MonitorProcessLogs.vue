@@ -40,19 +40,27 @@
 </style>
 <template>
   <div>
-    <Row style="margin: -5px 5px 5px 0px" justify="space-between" align="top">
+    <Row style="margin: -5px 5px 5px 0" justify="space-between" align="top">
       <Col
           span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
         <form autocomplete="off">
-          <Input
-              v-model="pagination.ruleName"
-              style="width: 120px; border-radius: 20px"
+          <Select
+              v-model="pagination.serviceName"
               class="mr3"
-              placeholder="进程名称"
-              @on-change="handleSearch"
-          />
+              style="width: 200px"
+              placeholder="操作系统"
+              :clearable="true"
+          >
+            <Option
+                v-for="item in this.processList"
+                :value="item"
+                :key="item"
+            >{{ item }}
+            </Option
+            >
+          </Select>
           <DatePicker
               split-panels
               class="mr3"
@@ -84,11 +92,11 @@
           <Icon type="md-search"/>
           查询
         </Button>
-        <Button type="success" @click="()=>handleExport(URL.marketProcessExport, this.pagination, '进程监控列表')"
-                class="mr3">
-          <Icon type="md-download"/>
-          导出
-        </Button>
+<!--        <Button type="success" @click="()=>handleExport(URL.marketProcessExport, this.pagination, '进程监控列表')"-->
+<!--                class="mr3">-->
+<!--          <Icon type="md-download"/>-->
+<!--          导出-->
+<!--        </Button>-->
       </Col>
     </Row>
     <Table
@@ -130,30 +138,6 @@ export default {
   data() {
     let columns1 = [
       {
-        title: "主键ID",
-        key: "id",
-        minWidth: 120,
-        resizable: true,
-        sortable: 'custom',
-        width: null,
-      },
-      {
-        title: "环境ID",
-        key: "envId",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "创建时间",
-        key: "createTime",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
         title: "进程名",
         key: "serviceName",
         sortable: 'custom',
@@ -162,100 +146,20 @@ export default {
         minWidth: 120,
       },
       {
-        title: "进程ID",
-        key: "pid",
+        title: "日志文件名",
+        key: "logFile",
         sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,
       },
       {
-        title: "程序启动状态",
-        key: "serviceStatus",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 130,
-        render: (h, params) => {
-          if (params.row.serviceStatus === 1) {
-            return h('div', '停止')
-          } else if (params.row.serviceStatus === 0) {
-            return h('div', '运行')
-          } else
-            return h('div', '')
-        }
-      },
-      {
-        title: "程序启动时间",
-        key: "startTime",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 130,
-      },
-      {
-        title: "程序CPU资源消耗百分比",
-        key: "cpuUse",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 190,
-      },
-      {
-        title: "程序版本",
-        key: "serviceVersion",
+        title: "错误日志",
+        key: "logErrorMessage",
         sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,
-      },
-      {
-        title: "程序CPU资源消耗百分比",
-        key: "cpuUse",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 190,
-      },
-      {
-        title: "程序md5码",
-        key: "serviceMd5",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "启用的端口号",
-        key: "listenPort",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 130,
-      },
-      {
-        title: "端口说明",
-        key: "portDescribe",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "告警状态",
-        key: "alerterStatus",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-        render: (h, params) => {
-          if (params.row.alerterStatus === 1) {
-            return h('div', '忽略')
-          } else if (params.row.alerterStatus === 0) {
-            return h('div', '已告警')
-          } else
-            return h('div', '')
-        }
       },
     ];
     let pagination = {
@@ -268,10 +172,12 @@ export default {
       columns1,
       dateRange,
       pagination,
+      processList: [],
       loading: false,
     };
   },
   mounted() {
+    this.getProcessList()
     this.getMarketProcessList()
   },
   methods: {
@@ -279,6 +185,12 @@ export default {
     handleSort,
     calculateTableHeight() {
       return window.innerHeight * 0.43;
+    },
+    // 获取进程列表
+    getProcessList() {
+      http.get(URL.marketProcessServices, res => {
+        this.processList = res.data
+      })
     },
     // 获取策略实例列表
     getMarketProcessList() {
@@ -289,7 +201,7 @@ export default {
       this.pagination.endDate = moment(this.dateRange.endDate).isValid()
           ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
-      http.post(URL.marketProcess, this.pagination, res => {
+      http.post(URL.marketProcessServicesLogs, this.pagination, res => {
         this.loading = false
         this.tableData = res.data.dataList
         this.pagination.total = res.data.total

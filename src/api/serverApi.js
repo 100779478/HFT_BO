@@ -185,6 +185,10 @@ export const URL = {
     marketProcess: '/monitor/process',
     // 导出进程监控列表
     marketProcessExport: '/monitor/process/export',
+    // 获取进程列表
+    marketProcessServices: '/monitor/process/services',
+    // 获取进程监控日志列表
+    marketProcessServicesLogs: '/monitor/process/service/logs',
 };
 export const sseUrl = {
     // 长链接SSE
