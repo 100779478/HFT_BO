@@ -1,7 +1,5 @@
 import vue from "vue";
 import VueRouter from "vue-router";
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
 import {getToken} from "@/utils/token";
 
 vue.use(VueRouter);
@@ -145,6 +143,15 @@ const routes = [
                 component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/OperatingLog"),
                 meta: {
                     title: "操作日志",
+                },
+            },
+            // 监控管理
+            {
+                path: "/home/sys-monitor/monitor-manage",
+                name: "Monitor",
+                component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/MonitorManage.vue"),
+                meta: {
+                    title: "监控管理",
                 },
             },
             // 报表查询

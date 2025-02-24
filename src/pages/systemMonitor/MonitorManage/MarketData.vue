@@ -1,0 +1,120 @@
+<style lang="less" scoped>
+@import "@/style/manage.less";
+
+.modal__content {
+  display: flex;
+}
+
+.modal__content-left {
+  flex-grow: 0.8; /* 占据60%的空间 */
+  /* 其他样式，如宽度、背景等 */
+}
+
+.ivu-select-dropdown {
+  z-index: 1000; /* 调整为合适的层叠顺序值 */
+}
+
+.modal__content-right {
+  //flex-grow: 0.4; /* 占据40%的空间，但这不是必需的，因为默认就是剩余空间 */
+  /* 其他样式，如宽度、背景等 */
+
+  .btn {
+    color: white;
+    font-weight: bold;
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.top {
+  margin: -10px 5px 5px 5px
+}
+
+.progress-content {
+  display: flex;
+  align-content: center;
+}
+
+::v-deep .ivu-table td,
+::v-deep .ivu-table th {
+  padding-top: 5px !important; /* 调整上边距 */
+  padding-bottom: 5px !important; /* 调整下边距 */
+  line-height: normal; /* 确保文本的行高正常 */
+  height: 12px !important;
+}
+
+::v-deep .ivu-table-row-highlight td {
+  background-color: #cdcecf !important; /* 自定义选中行的背景色 */
+  font-weight: bolder;
+}
+</style>
+<template>
+  <div>
+    <Table
+        :columns="columns1" style="clear: both"
+        :data="tableData"
+        class="table-content"
+        :height="tableHeight"
+        size="small"
+        ref="table"
+        :loading="loading"
+        border
+        highlight-row
+    >
+    </Table>
+  </div>
+</template>
+<script>
+import {http} from "@/utils/request";
+import {URL} from "@/api/serverApi";
+import {tableMixin} from "@/mixins/tableMixin";
+
+export default {
+  mixins: [tableMixin],
+  data() {
+    let columns1 = [
+      {
+        title: "监控指标类型",
+        key: "type",
+        minWidth: 95,
+        resizable: true,
+        width: null,
+      },
+      {
+        title: "类型补充说明",
+        key: "desc",
+        minWidth: 140,
+        resizable: true,
+        width: null,
+      },
+      {
+        title: "监控指标速率",
+        key: "speedRate",
+        resizable: true,
+        width: null,
+        minWidth: 220,
+      },
+    ];
+    return {
+      columns1,
+    };
+  },
+  mounted() {
+    this.getMarketDataList();
+  },
+  methods: {
+    calculateTableHeight() {
+      return window.innerHeight * 0.245;
+    },
+    // 获取行情监控数据列表
+    getMarketDataList() {
+      this.loading = true;
+      http.get(URL.marketData, (res) => {
+        this.tableData = res.data || []
+        this.loading = false
+      });
+    },
+  },
+}
+;
+</script>

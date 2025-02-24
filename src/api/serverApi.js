@@ -1,8 +1,8 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
-const devUrl = "https://58.250.164.226:39888"; // 1.5.6
+// const devUrl = "https://58.250.164.226:39888"; // 1.5.6
 // const devUrl = "https://172.24.16.13:9888"; // 1.5.6
-// const devUrl = "http://192.168.77.16:9000"; // 玺子哥
+const devUrl = "http://192.168.50.108:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -179,6 +179,12 @@ export const URL = {
     myVettingExport: '/rule-vetting/export/my',
     // 导出策略实例
     ruleExportInstance: '/rule/export/quant/instance',
+    // 查询行情监控数据
+    marketData: '/monitor/market-data',
+    // 获取进程监控列表
+    marketProcess: '/monitor/process',
+    // 导出进程监控列表
+    marketProcessExport: '/monitor/process/export',
 };
 export const sseUrl = {
     // 长链接SSE
