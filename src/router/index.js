@@ -176,6 +176,15 @@ const routes = [
                     title: "系统监控/做市义务监控历史",
                 },
             },
+            // 监控管理
+            {
+                path: "/home/sys-monitor/monitor-manage",
+                name: "Monitor",
+                component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/MonitorManage.vue"),
+                meta: {
+                    title: "监控管理",
+                },
+            },
             // ====================================================================================================
             // ===============================================报表查询===============================================
             // ====================================================================================================
@@ -187,6 +196,7 @@ const routes = [
                     title: "双边订单",
                 },
             },
+            // 报表查询
             {
                 path: "/home/report-query/orders",
                 name: "Order",
@@ -231,7 +241,6 @@ const router = new VueRouter({
     mode: "hash",
 });
 router.beforeEach((to, from, next) => {
-    console.log(1111112222, to, from)
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
