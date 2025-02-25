@@ -43,10 +43,10 @@
   height: 12px !important;
 }
 
-::v-deep .ivu-table-row-highlight td {
-  background-color: #cdcecf !important; /* 自定义选中行的背景色 */
-  font-weight: bolder;
-}
+//::v-deep .ivu-table-row-highlight td {
+//  background-color: #cdcecf !important; /* 自定义选中行的背景色 */
+//  font-weight: bolder;
+//}
 </style>
 <template>
   <div>
@@ -59,7 +59,6 @@
         ref="table"
         :loading="loading"
         border
-        highlight-row
     >
     </Table>
   </div>
@@ -76,7 +75,7 @@ export default {
       {
         title: "监控指标类型",
         key: "type",
-        minWidth: 95,
+        minWidth: 220,
         resizable: true,
         width: null,
       },
@@ -92,7 +91,77 @@ export default {
         key: "speedRate",
         resizable: true,
         width: null,
-        minWidth: 220,
+        minWidth: 120,
+      },
+      {
+        title: "connected",
+        key: "connected",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "key",
+        key: "key",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "listen",
+        key: "listen",
+        resizable: true,
+        width: null,
+        minWidth: 150,
+      },
+      {
+        title: "localIp",
+        key: "localIp",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "outPut",
+        key: "outPut",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "target",
+        key: "target",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "time",
+        key: "time",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+      },
+      {
+        title: "topic",
+        key: "topic",
+        resizable: true,
+        width: null,
+        minWidth: 160,
+      },
+      {
+        title: "type",
+        key: "type",
+        resizable: true,
+        width: null,
+        minWidth: 180,
+      },
+      {
+        title: "val",
+        key: "val",
+        resizable: true,
+        width: null,
+        minWidth: 120,
       },
     ];
     return {
