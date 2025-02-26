@@ -80,13 +80,6 @@ export default {
         width: null,
       },
       {
-        title: "类型补充说明",
-        key: "desc",
-        minWidth: 140,
-        resizable: true,
-        width: null,
-      },
-      {
         title: "监控指标速率",
         key: "speedRate",
         resizable: true,
