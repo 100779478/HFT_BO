@@ -146,6 +146,13 @@ export default {
         minWidth: 120,
       },
       {
+        title: "创建时间",
+        key: "createTime",
+        resizable: true,
+        width: null,
+        minWidth: 140,
+      },
+      {
         title: "日志文件名",
         key: "logFile",
         resizable: true,
