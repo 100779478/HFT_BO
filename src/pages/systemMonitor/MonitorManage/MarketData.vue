@@ -50,6 +50,42 @@
 </style>
 <template>
   <div>
+    <Row style="margin: -5px 5px 5px 0" justify="space-between" align="top">
+      <Col
+          span="22"
+          style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
+      >
+        <form autocomplete="off">
+          <Select
+              v-model="type"
+              class="mr3"
+              style="width: 120px"
+              placeholder="监控类型"
+              :clearable="true"
+              @on-change="getMarketDataList"
+          >
+            <Option
+                v-for="item in getMarketMonitorType()"
+                :value="item.code"
+                :key="item.code"
+            >{{ item.description }}
+            </Option
+            >
+          </Select>
+        </form>
+      </Col>
+      <Col span="" class="mr3" style="flex-shrink: 0">
+        <Button type="primary" @click="getMarketDataList" class="mr3">
+          <Icon type="md-search"/>
+          查询
+        </Button>
+        <!--        <Button type="success" @click="()=>handleExport(URL.marketProcessExport, this.pagination, '进程监控列表')"-->
+        <!--                class="mr3">-->
+        <!--          <Icon type="md-download"/>-->
+        <!--          导出-->
+        <!--        </Button>-->
+      </Col>
+    </Row>
     <Table
         :columns="columns1" style="clear: both"
         :data="tableData"
@@ -67,90 +103,53 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
+import {getMarketMonitorType} from "@/common/common";
 
 export default {
   mixins: [tableMixin],
   data() {
     let columns1 = [
       {
-        title: "监控指标类型",
-        key: "type",
+        title: "监控类型",
+        key: "marketMonitorType",
+        resizable: true,
+        width: null,
+        minWidth: 120,
+        render: (h, {row}) => {
+          const result = getMarketMonitorType(row.marketMonitorType);
+          return h("span", result.description);
+        },
+      },
+      {
+        title: "程序名称",
+        key: "appName",
         minWidth: 220,
         resizable: true,
         width: null,
       },
       {
-        title: "监控指标速率",
-        key: "speedRate",
+        title: "程序部署IP地址",
+        key: "localIP",
         resizable: true,
         width: null,
         minWidth: 120,
       },
       {
-        title: "connected",
-        key: "connected",
+        title: "程序端口",
+        key: "output",
         resizable: true,
         width: null,
         minWidth: 120,
       },
       {
-        title: "key",
+        title: "监控指标",
         key: "key",
         resizable: true,
         width: null,
         minWidth: 120,
       },
       {
-        title: "listen",
-        key: "listen",
-        resizable: true,
-        width: null,
-        minWidth: 150,
-      },
-      {
-        title: "localIp",
-        key: "localIp",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "outPut",
-        key: "outPut",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "target",
-        key: "target",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "time",
-        key: "time",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "topic",
-        key: "topic",
-        resizable: true,
-        width: null,
-        minWidth: 160,
-      },
-      {
-        title: "type",
-        key: "type",
-        resizable: true,
-        width: null,
-        minWidth: 180,
-      },
-      {
-        title: "val",
+        title: "监控值",
         key: "val",
         resizable: true,
         width: null,
@@ -159,19 +158,24 @@ export default {
     ];
     return {
       columns1,
+      type: ""
     };
   },
   mounted() {
     this.getMarketDataList();
   },
   methods: {
+    getMarketMonitorType,
     calculateTableHeight() {
       return window.innerHeight * 0.43;
     },
     // 获取行情监控数据列表
     getMarketDataList() {
       this.loading = true;
-      http.get(URL.marketData, (res) => {
+      if (this.type === undefined) {
+        this.type = ""
+      }
+      http.get(`${URL.marketData}?type=${this.type}`, (res) => {
         this.tableData = res.data || []
         this.loading = false
       });

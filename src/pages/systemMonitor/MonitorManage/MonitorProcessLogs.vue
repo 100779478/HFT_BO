@@ -52,6 +52,7 @@
               style="width: 200px"
               placeholder="操作系统"
               :clearable="true"
+              @on-change="getMarketProcessList"
           >
             <Option
                 v-for="item in this.processList"

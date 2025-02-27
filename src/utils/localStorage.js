@@ -27,7 +27,8 @@ export const getLocalDictionaryList = () => {
             OperatingLogType: [],
             DayOfWeek: [],
             TradeExchangeType: [],
-            RuleVettingStatus: []
+            RuleVettingStatus: [],
+            MarketMonitorType: [],
         };
     }
 };

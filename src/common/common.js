@@ -136,6 +136,11 @@ export function getRuleVettingStatus(code) {
     return findDictionaryList('RuleVettingStatus', code)
 }
 
+// 监控指标类型
+export function getMarketMonitorType(code) {
+    return findDictionaryList('MarketMonitorType', code)
+}
+
 // 密码强度校验类型
 export function getPasswordStrength(code) {
     return findDictionaryList('PasswordStrength', code)

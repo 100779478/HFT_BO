@@ -129,22 +129,22 @@ export default {
   mixins: [tableMixin],
   data() {
     let columns1 = [
-      {
-        title: "主键ID",
-        key: "id",
-        minWidth: 120,
-        resizable: true,
-        sortable: 'custom',
-        width: null,
-      },
-      {
-        title: "环境ID",
-        key: "envId",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
+      // {
+      //   title: "主键ID",
+      //   key: "id",
+      //   minWidth: 120,
+      //   resizable: true,
+      //   sortable: 'custom',
+      //   width: null,
+      // },
+      // {
+      //   title: "环境ID",
+      //   key: "envId",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
       {
         title: "创建时间",
         key: "createTime",
@@ -159,7 +159,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 160,
       },
       {
         title: "进程ID",
@@ -176,39 +176,37 @@ export default {
         resizable: true,
         width: null,
         minWidth: 130,
-        render: (h, params) => {
-          if (params.row.serviceStatus === 1) {
-            return h('div', '停止')
-          } else if (params.row.serviceStatus === 0) {
-            return h('div', '运行')
-          } else
-            return h('div', '')
-        }
+        render: (h, {row}) => {
+          const serviceStatus = row.serviceStatus;
+          // 使用对象映射描述
+          const statusMap = {
+            0: '运行',
+            1: '停止',
+          };
+          const description = statusMap[serviceStatus] || '';
+          // 定义一个映射对象，将 code 映射到对应的颜色
+          const codeToColor = {
+            0: '#19be6b',
+            1: '#ff0000',
+          };
+          const color = codeToColor[serviceStatus]; // 默认颜色已经定义在 codeToColor 中
+          const iconStatus = color ? h('Icon', {
+            props: {
+              type: 'ios-radio-button-on',
+              color: color,
+            },
+          }) : null;
+          return h('span', [iconStatus, description]);
+        },
       },
-      {
-        title: "程序启动时间",
-        key: "startTime",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 130,
-      },
-      {
-        title: "程序CPU资源消耗百分比",
-        key: "cpuUse",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 190,
-      },
-      {
-        title: "程序版本",
-        key: "serviceVersion",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
+      // {
+      //   title: "程序启动时间",
+      //   key: "startTime",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 130,
+      // },
       {
         title: "程序CPU资源消耗百分比",
         key: "cpuUse",
@@ -217,46 +215,62 @@ export default {
         width: null,
         minWidth: 190,
       },
+      // {
+      //   title: "程序版本",
+      //   key: "serviceVersion",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
       {
-        title: "程序md5码",
-        key: "serviceMd5",
+        title: "程序CPU资源消耗百分比",
+        key: "cpuUse",
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 190,
       },
-      {
-        title: "启用的端口号",
-        key: "listenPort",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 130,
-      },
-      {
-        title: "端口说明",
-        key: "portDescribe",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "告警状态",
-        key: "alerterStatus",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-        render: (h, params) => {
-          if (params.row.alerterStatus === 1) {
-            return h('div', '忽略')
-          } else if (params.row.alerterStatus === 0) {
-            return h('div', '已告警')
-          } else
-            return h('div', '')
-        }
-      },
+      // {
+      //   title: "程序md5码",
+      //   key: "serviceMd5",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
+      // {
+      //   title: "启用的端口号",
+      //   key: "listenPort",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 130,
+      // },
+      // {
+      //   title: "端口说明",
+      //   key: "portDescribe",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
+      // {
+      //   title: "告警状态",
+      //   key: "alerterStatus",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      //   render: (h, params) => {
+      //     if (params.row.alerterStatus === 1) {
+      //       return h('div', '忽略')
+      //     } else if (params.row.alerterStatus === 0) {
+      //       return h('div', '已告警')
+      //     } else
+      //       return h('div', '')
+      //   }
+      // },
     ];
     let pagination = {
       serviceName: "",
