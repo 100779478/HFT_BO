@@ -223,14 +223,6 @@ export default {
       //   width: null,
       //   minWidth: 120,
       // },
-      {
-        title: "程序CPU资源消耗百分比",
-        key: "cpuUse",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 190,
-      },
       // {
       //   title: "程序md5码",
       //   key: "serviceMd5",
