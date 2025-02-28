@@ -52,6 +52,7 @@
               style="width: 200px"
               placeholder="操作系统"
               :clearable="true"
+              @on-change="getMarketProcessList"
           >
             <Option
                 v-for="item in this.processList"
@@ -143,6 +144,13 @@ export default {
         resizable: true,
         width: null,
         minWidth: 120,
+      },
+      {
+        title: "创建时间",
+        key: "createTime",
+        resizable: true,
+        width: null,
+        minWidth: 140,
       },
       {
         title: "日志文件名",
