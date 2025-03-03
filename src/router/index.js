@@ -1,6 +1,8 @@
 import vue from "vue";
 import VueRouter from "vue-router";
-import {getToken} from "@/utils/token";
+import {getToken, putToken} from "@/utils/token";
+import {URL} from "@/api/serverApi";
+import {http} from "@/utils/request";
 
 vue.use(VueRouter);
 
@@ -28,10 +30,19 @@ const routes = [
     // 做市监控
     {
         path: "/monitor",
-        name: "Monitor",
+        name: "MonitorStatus",
         component: () => import(/* webpackChunkName: "make-market" */ "@/pages/systemMonitor/MakeMarket.vue"),
         meta: {
             title: "做市监控",
+        },
+    },
+    // 做市监控
+    {
+        path: "/monitor-history",
+        name: "MonitorHistory",
+        component: () => import(/* webpackChunkName: "make-market" */ "@/pages/systemMonitor/MakeMarketList.vue"),
+        meta: {
+            title: "做市监控历史",
         },
     },
     {
@@ -244,18 +255,70 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title ? `HFT-${to.meta.title}` : "找不到页面";
     }
+    let style;
+    // 特定路由为客户端
+    if (to.name === 'MonitorStatus' || to.name === 'MonitorHistory') {
+        sessionStorage.setItem('isClientPage', 'true')
+        style = {
+            '--background-color': '#0C1A36',
+            '--content-background-color': '#233450',
+            '--modal-backcolor': '#17315d',
+            '--text-color': '#fff',
+            '--primary-color': '#ce1d6d',
+            '--graph-item-backcolor': '#0C1A36',
+            '--debt-backcolor': '#0C1A36',
+            '--debt-text-color': '#fff',
+            '--graph-hover-color': '#4e5363',
+            '--checked-color':'#0C1A36',
+            '--table-hover':'#4e5363',
+        }
+    } else {
+        style = {
+            '--background-color': '#fff',
+            '--content-background-color': '#f4f7fa',
+            '--modal-backcolor': '#FFFFFF',
+            '--text-color': '#515a6e',
+            '--primary-color': '#007BFF',
+            '--checked-color':'#007BFF',
+            '--graph-item-backcolor': '#f4f7fa',
+            '--debt-backcolor': '#f4f7fa',
+            '--debt-text-color': '#133685',
+            '--graph-hover-color': '#ceced0',
+            '--table-hover':'#EBF7FF',
+        }
+        sessionStorage.removeItem('isClientPage')
+    }
+    // 动态修改 :root 中的 CSS 变量
+    Object.keys(style).forEach(key => {
+        document.documentElement.style.setProperty(key, style[key]);
+    });
     // 检查用户是否已登录
     const isAuthenticated = getToken(); // 获取登录状态
     // 如果没有匹配到任何路由（包括通配符路由）
     if (to.matched[0].path === '*') {
         // 继续导航到通配符路径对应的页面
         next();
-    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'Monitor') {
+    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'MonitorStatus' && to.name !== 'MonitorHistory') {
         // 用户未登录且访问的不是允许的页面时，重定向到登录页
         next({path: '/login'});
     } else {
+        if (!isAuthenticated && (to.name === 'MonitorStatus' || to.name === 'MonitorHistory')) {
+            sessionStorage.setItem('customerid', to.query.customerid);
+            sessionStorage.setItem('pwd', to.query.pwd);
+            sessionStorage.setItem('envid', to.query.envid);
+            http.post(URL.clientLogin, {
+                username: to.query.customerid,
+                password: to.query.pwd,
+                messageType: '登录成功',
+            }, (res) => {
+                putToken(res.data.token); // 将 token 存储起来
+                next()
+                // router.go(0)
+            });
+        } else {
         // 否则，继续导航
         next();
+        }
     }
 
 });

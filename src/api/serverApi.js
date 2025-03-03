@@ -1,9 +1,9 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
 // const devUrl = "https://58.250.164.226:39888"; // 1.5.6
-// const devUrl = "https://172.24.16.13:9888"; // 1.5.6
+const devUrl = "https://172.24.16.13:9888"; // 1.5.6
 // const devUrl = "https://10.210.6.241:8888"; // 1.5.6
-const devUrl = "http://192.168.50.108:9000"; // 玺子哥
+// const devUrl = "http://192.168.50.108:9000"; // 玺子哥
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -184,11 +184,21 @@ export const URL = {
     // 做市监控义务数据列表
     makeMarketList: '/make-market/list',
     // 做市监控义务数据列表带环境ID
-    makeMarketListEnv: '/make-market/client',
+    makeMarketListEnv: '/make-market/list/client',
     // 导出做市义务数据列表
-    makeMarketListExport: '/make-market/export',
+    makeMarketListExport: '/make-market/list/export',
     // 导出做市义务数据列表带环境ID
-    makeMarketListExportEnv: '/make-market/export/client',
+    makeMarketListExportEnv: '/make-market/list/export/client',
+    // 查询行情监控数据
+    marketData: '/monitor/market-data',
+    // 获取进程监控列表
+    marketProcess: '/monitor/process',
+    // 导出进程监控列表
+    marketProcessExport: '/monitor/process/export',
+    // 获取进程列表
+    marketProcessServices: '/monitor/process/services',
+    // 获取进程监控日志列表
+    marketProcessServicesLogs: '/monitor/process/service/logs',
     // =============================================报表查询=============================================
     // 获取订单列表
     orders: "/order/list",
@@ -206,16 +216,6 @@ export const URL = {
     bilateralOrder: '/bilateral-order/list',
     // 导出双边订单列表
     bilateralOrderExport: '/bilateral-order/export',
-    // 查询行情监控数据
-    marketData: '/monitor/market-data',
-    // 获取进程监控列表
-    marketProcess: '/monitor/process',
-    // 导出进程监控列表
-    marketProcessExport: '/monitor/process/export',
-    // 获取进程列表
-    marketProcessServices: '/monitor/process/services',
-    // 获取进程监控日志列表
-    marketProcessServicesLogs: '/monitor/process/service/logs',
 };
 export const sseUrl = {
     // 长链接SSE

@@ -2,7 +2,6 @@ import {http} from "@/utils/request";
 import {getRuleFileType, getRuleMakeMarketType, handleExport, handleSort} from "@/common/common";
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
-import axios from "axios";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 
 const ruleComponentMixin = {
@@ -187,11 +186,11 @@ const ruleComponentMixin = {
         },
         /**
          * 消息提示
-         * @param content - 消息内容
          * @param type - 消息提示类型，默认INFO
+         * @param content - 消息内容
          * @param duration - 提示延迟关闭时间，默认6秒
          */
-        showMessage(content, type = 'info', duration = 6) {
+        showMessage(type = 'info', content, duration = 6) {
             this.$Message[type]({
                 content,
                 duration,
@@ -281,7 +280,7 @@ const ruleComponentMixin = {
                                     const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
                                     const message = `参数名重复：${messages.join('、')}`;
                                     // 有重复的 name 字段，显示警告消息
-                                    this.showMessage(message, 'error', 6)
+                                    this.showMessage('error', message, 6)
                                 } else {
                                     // 没有重复的 name 字段，显示成功消息
                                     this.$Message.success(SUCCESS_MSG.importSuccess);

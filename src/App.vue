@@ -36,7 +36,7 @@ export default {
   methods: {
     updateShowFlash(myState, isFullScreenAlert) {
       // this.showFlash = (this.$route.name === 'MakeMarket' || this.$route.name === 'Monitor') && myState === '0' && isFullScreenAlert;
-      const isMonitorRoute = this.$route.name === "MakeMarket" || this.$route.name === "Monitor";
+      const isMonitorRoute = this.$route.name === "MakeMarket" || this.$route.name === "MonitorStatus";
       this.showFlash = isMonitorRoute && myState !== "1" && isFullScreenAlert;
       if (this.showFlash) {
         if (myState === '2') {

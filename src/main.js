@@ -12,6 +12,7 @@ import {requestContextPath, sseUrl} from "@/api/serverApi";
 import '@/assets/icon/iconfont.css'
 import {http} from "@/utils/request";
 import {queryParse} from "@/common/common";
+import {ClientRoutePage} from "@/common/constant";
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -83,8 +84,9 @@ new Vue({
             const markIndex = mark.indexOf('?')
             // const markPosition = markIndex !== -1 ? mark.substring(0, markIndex) : mark
             // const markPosition = markIndex !== -1 ? location.replace(location.href) : mark
-            if (mark === 'monitor') {
-                this.$router.replace({name: 'Monitor'})
+
+            if (ClientRoutePage[mark]) {
+                this.$router.replace({name: ClientRoutePage[mark]})
             } else if (markIndex !== -1) {
                 location.replace(location.href)
             } else if (mark !== 'login' && mark) {
@@ -93,77 +95,77 @@ new Vue({
         }
         // 启动 SSE Worker
         startSSE(requestContextPath + sseUrl.SSE);
-        if (process.env.NODE_ENV === 'production') {
-            // 读取当前版本
-            http.get(window.location.origin + `/version.json?t=${Date.now()}`, res => {
-                localStorage.setItem('timeStamp', res.timeStamp)
-            })
-            setInterval(() => {
-                // 读取当前页面版本时间戳
-                http.get(window.location.origin + `/version.json?t=${Date.now()}`, res => {
-                    if (localStorage.getItem('timeStamp') !== String(res.timeStamp)) {
-                        // 更新本地存储的版本号
-                        localStorage.setItem('timeStamp', res.timeStamp);
-                        // 将 `updateContent` 中的换行符替换为 `<br>` 标签
-                        // 同时去除 Markdown 的标题 `#` 和空格
-                        const formattedContent = res.updateContent
-                            .replace(/#{1,6}\s?/g, '')  // 去除 Markdown 标题的 `#`
-                            .replace(/\n/g, '<br>');     // 将换行符替换为 `<br>`
-                        this.$Notice.info({
-                            title: "检测到有新版本，请刷新页面",
-                            duration: 0,
-                            render: h => {
-                                return h(
-                                    'div',
-                                    [
-                                        h('div', {
-                                            domProps: {
-                                                innerHTML: `${formattedContent}`
-                                            },
-                                        }),
-                                        h(
-                                            'Button',
-                                            {
-                                                props: {
-                                                    type: 'primary',  // 默认的蓝色按钮
-                                                },
-                                                style: {
-                                                    marginTop: '10px',
-                                                    float: 'right'
-                                                },
-                                                on: {
-                                                    click: () => {
-                                                        this.$Spin.show({
-                                                            render: (h) => {
-                                                                return h('div', [
-                                                                    h('Icon', {
-                                                                        'class': 'demo-spin-icon-load',
-                                                                        props: {
-                                                                            type: 'ios-loading',
-                                                                            size: 18
-                                                                        }
-                                                                    }),
-                                                                    h('div', '正在更新版本...')
-                                                                ])
-                                                            }
-                                                        });
-                                                        setTimeout(() => {
-                                                            this.$Spin.hide();
-                                                            window.location.reload()
-                                                        }, 2000);
-                                                    }
-                                                }
-                                            },
-                                            '更新'
-                                        )
-                                    ]
-                                );
-                            }
-                        });
-                    }
-                })
-            }, 60000)
-        }
+        // if (process.env.NODE_ENV === 'production') {
+        //     // 读取当前版本
+        //     http.get(window.location.origin + `/version.json?t=${Date.now()}`, res => {
+        //         localStorage.setItem('timeStamp', res.timeStamp)
+        //     })
+        //     setInterval(() => {
+        //         // 读取当前页面版本时间戳
+        //         http.get(window.location.origin + `/version.json?t=${Date.now()}`, res => {
+        //             if (localStorage.getItem('timeStamp') !== String(res.timeStamp)) {
+        //                 // 更新本地存储的版本号
+        //                 localStorage.setItem('timeStamp', res.timeStamp);
+        //                 // 将 `updateContent` 中的换行符替换为 `<br>` 标签
+        //                 // 同时去除 Markdown 的标题 `#` 和空格
+        //                 const formattedContent = res.updateContent
+        //                     .replace(/#{1,6}\s?/g, '')  // 去除 Markdown 标题的 `#`
+        //                     .replace(/\n/g, '<br>');     // 将换行符替换为 `<br>`
+        //                 this.$Notice.info({
+        //                     title: "检测到有新版本，请刷新页面",
+        //                     duration: 0,
+        //                     render: h => {
+        //                         return h(
+        //                             'div',
+        //                             [
+        //                                 h('div', {
+        //                                     domProps: {
+        //                                         innerHTML: `${formattedContent}`
+        //                                     },
+        //                                 }),
+        //                                 h(
+        //                                     'Button',
+        //                                     {
+        //                                         props: {
+        //                                             type: 'primary',  // 默认的蓝色按钮
+        //                                         },
+        //                                         style: {
+        //                                             marginTop: '10px',
+        //                                             float: 'right'
+        //                                         },
+        //                                         on: {
+        //                                             click: () => {
+        //                                                 this.$Spin.show({
+        //                                                     render: (h) => {
+        //                                                         return h('div', [
+        //                                                             h('Icon', {
+        //                                                                 'class': 'demo-spin-icon-load',
+        //                                                                 props: {
+        //                                                                     type: 'ios-loading',
+        //                                                                     size: 18
+        //                                                                 }
+        //                                                             }),
+        //                                                             h('div', '正在更新版本...')
+        //                                                         ])
+        //                                                     }
+        //                                                 });
+        //                                                 setTimeout(() => {
+        //                                                     this.$Spin.hide();
+        //                                                     window.location.reload()
+        //                                                 }, 2000);
+        //                                             }
+        //                                         }
+        //                                     },
+        //                                     '更新'
+        //                                 )
+        //                             ]
+        //                         );
+        //                     }
+        //                 });
+        //             }
+        //         })
+        //     }, 60000)
+        // }
     },
     methods: {
         handleBeforeUnload() {

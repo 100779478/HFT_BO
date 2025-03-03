@@ -1,6 +1,14 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
 
+.bck {
+  height: 100%;
+  padding: 10px;
+  position: relative;
+  background-color: var(--background-color);
+  overflow: auto;
+  width: 100%;
+}
 .input-form {
   float: right;
   width: 145px;
@@ -8,11 +16,56 @@
 }
 
 .check-box {
-  margin: auto 5px
+  margin: auto 5px;
+  color: var(--text-color);
 }
+
+/* 使用::v-deep选择iview Input组件 */
+::v-deep .ivu-input {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+// 复选框颜色
+::v-deep .ivu-checkbox-checked .ivu-checkbox-inner {
+  background-color: var(--checked-color);
+}
+
+::v-deep .ivu-page-total, ::v-deep .ivu-select-selection, ::v-deep .ivu-select-item,
+::v-deep .ivu-input-suffix i, ::v-deep .ivu-date-picker-header, ::v-deep .ivu-date-picker-rel,
+::v-deep .ivu-page-item a {
+  color: var(--text-color);
+}
+
+::v-deep .ivu-select-item:hover {
+  background-color: var(--modal-backcolor);
+}
+
+::v-deep .ivu-table td,
+::v-deep .ivu-table th {
+  background-color: var(--background-color);
+  //border-color: var(--graph-hover-color);
+  color: var(--text-color);
+  padding-top: 5px !important; /* 调整上边距 */
+  padding-bottom: 5px !important; /* 调整下边距 */
+  line-height: normal; /* 确保文本的行高正常 */
+  height: 12px !important;
+}
+
+::v-deep .ivu-checkbox-inner, ::v-deep .ivu-page-next, .ivu-page-prev,
+::v-deep .ivu-table, ::v-deep .ivu-page-item, ::v-deep .ivu-page-disabled,
+::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-prev,
+::v-deep .ivu-select-item-focus {
+  background-color: var(--background-color);
+}
+
+::v-deep .ivu-picker-panel-body {
+  background-color: var(--background-color);
+}
+
 </style>
 <template>
-  <div>
+  <div class="bck">
     <Row style="margin: 10px" justify="space-between" align="top">
       <Col
           span="22"
@@ -39,7 +92,6 @@
               style="width: 125px"
               format="yyyy-MM-dd"
               v-model="dateRange.startDate"
-              :transfer="true"
               autocomplete="false"
           ></DatePicker>
           <DatePicker
@@ -51,7 +103,6 @@
               style="width: 125px"
               format="yyyy-MM-dd"
               v-model="dateRange.endDate"
-              :transfer="true"
               autocomplete="false"
           ></DatePicker>
         </form>
@@ -78,7 +129,6 @@
         class="table-content"
         :height="tableHeight"
         ref="table"
-        :loading="loading"
         border
         @on-sort-change="e=>handleSort(e,this.getOrderData)"
     >
@@ -103,7 +153,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getOrderStatus, handleExport, handleSort,} from "@/common/common";
+import {getSecurityType, handleExport, handleSort,} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
@@ -133,6 +183,10 @@ export default {
         resizable: true,
         width: null,
         sortable: 'custom',
+        render: (h, {row}) => {
+          const result = getSecurityType(row.securityDesc);
+          return h("span", result.description);
+        },
       },
       {
         title: "当天有效做市时间",
@@ -214,37 +268,48 @@ export default {
       blankTimeValid: false,
       startDate: "",
       endDate: "",
+      envId: sessionStorage.getItem('envid'),
     };
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     return {
       columns1,
       searchParams,
       dateRange,
+      tableHeight: sessionStorage.getItem('isClientPage') ? window.innerHeight - 115 : window.innerHeight - 210,
       URL
     };
   },
   mounted() {
     this.getOrderData();
   },
+  computed: {
+    isClientPage() {
+      return sessionStorage.getItem('isClientPage')
+    },
+  },
   methods: {
     handleSort,
+    // 监听窗口
+    calculateTableHeight() {
+      return this.isClientPage ? window.innerHeight - 115 : window.innerHeight - 210;
+    },
     // 获取订单列表
     getOrderData() {
-      this.loading = true;
       this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
           ? moment(this.dateRange.startDate).format("YYYYMMDD")
           : null;
       this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
           ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
+      if (this.searchParams.envId === 'undefined') {
+        delete this.searchParams.envId
+      }
       const payload = {
         ...this.pagination,
         ...this.searchParams,
       };
-      http.post(URL.makeMarketList, payload, (res) => {
-        setTimeout(() => {
-          this.loading = false;
-        }, 200);
+      const url = this.isClientPage ? URL.makeMarketListEnv : URL.makeMarketList;
+      http.post(url, payload, (res) => {
         this.pagination.total = res.data.total;
         this.tableData = res.data.dataList;
       });
@@ -266,7 +331,11 @@ export default {
       this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
           ? moment(this.dateRange.endDate).format("YYYYMMDD")
           : null;
-      handleExport(URL.makeMarketListExport, this.searchParams, '做市义务数据列表')
+      if (this.searchParams.envId === 'undefined') {
+        delete this.searchParams.envId
+      }
+      const url = this.isClientPage ? URL.makeMarketListExportEnv : URL.makeMarketListExport;
+      handleExport(url, this.searchParams, '做市义务数据列表')
     },
   },
 };
