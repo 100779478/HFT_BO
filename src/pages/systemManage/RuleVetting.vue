@@ -112,7 +112,7 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {handleSort, getRuleFileType, getRuleMakeMarketType, getRuleVettingStatus, handleExport} from "@/common/common";
+import {getRuleFileType, handleExport, handleSort} from "@/common/common";
 import {downLoadZip} from "@/utils/downLoadZip";
 import {tableMixin} from "@/mixins/tableMixin";
 import {showParamList} from "@/utils/paramList";
@@ -283,6 +283,7 @@ export default {
      * @param {Boolean} status -审批状态：通过 、拒绝
      */
     handleRuleApproval(row, status) {
+      this.comment = ""
       // 使用解构和剩余运算符去掉 index 和 rowKey 属性
       const {ruleId} = row;
       const messageType = status ? SUCCESS_MSG.approved : SUCCESS_MSG.rejected;
