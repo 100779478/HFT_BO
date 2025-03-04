@@ -215,6 +215,14 @@ export default {
         width: null,
         minWidth: 190,
       },
+      {
+        title: "程序内存资源消耗百分比",
+        key: "memoryUse",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 190,
+      },
       // {
       //   title: "程序版本",
       //   key: "serviceVersion",
