@@ -81,6 +81,16 @@
               </FormItem>
             </Col>
             <Col :span="18">
+              <FormItem label="企微ID" prop="oauserId">
+                <Input
+                    v-model="userInfo.oauserId"
+                    placeholder="请输入企微ID"
+                    autocomplete="off"
+                    :maxlength="32"
+                ></Input>
+              </FormItem>
+            </Col>
+            <Col :span="18">
               <form autocomplete="off">
                 <FormItem label="密码" prop="password" v-show="isNew">
                   <InputPassword v-if="showAddModal" :value="this.userInfo.password"
@@ -232,6 +242,14 @@ export default {
         sortable: 'custom'
       },
       {
+        title: "企微ID",
+        key: "oauserId",
+        minWidth: 100,
+        width: null,
+        resizable: true,
+        sortable: 'custom'
+      },
+      {
         title: "用户名称",
         key: "customerName",
         minWidth: 100,
@@ -356,7 +374,7 @@ export default {
       tableHeight: window.innerHeight - 220,
       userValidRules: {
         customerId: [{required: true, message: "请输入用户账号"}],
-        // customerName: [{required: true, message: "请输入用户名称"}],
+        // customerName: [{required: false, message: "请输入用户名称"}],
         password: [{required: true, message: "请输入密码"}],
         userType: [{required: true, message: "请选择用户类型"}],
         roles: [{required: false, message: "请选择用户角色"}],
@@ -366,6 +384,7 @@ export default {
         customerId: "",
         customerName: "",
         password: "",
+        oauserId:"",
         roles: [],
         active: true,
         roleStr: "",
@@ -461,6 +480,7 @@ export default {
         const info = {
           customerId: "",
           customerName: "",
+          oauserId:"",
           password: "",
           active: true,
           roleStr: "",
