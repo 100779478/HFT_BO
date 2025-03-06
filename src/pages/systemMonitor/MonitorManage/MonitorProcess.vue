@@ -239,14 +239,14 @@ export default {
         width: null,
         minWidth: 190,
       },
-      {
-        title: "CPU负载",
-        key: "loadAverage",
-        sortable: 'custom',
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
+      // {
+      //   title: "CPU负载",
+      //   key: "loadAverage",
+      //   sortable: 'custom',
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
       // {
       //   title: "程序版本",
       //   key: "serviceVersion",

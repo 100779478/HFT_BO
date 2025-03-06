@@ -141,20 +141,20 @@ export default {
         width: null,
         minWidth: 120,
       },
-      {
-        title: "监控指标",
-        key: "key",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
-      {
-        title: "监控值",
-        key: "val",
-        resizable: true,
-        width: null,
-        minWidth: 120,
-      },
+      // {
+      //   title: "监控指标",
+      //   key: "key",
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
+      // {
+      //   title: "监控值",
+      //   key: "val",
+      //   resizable: true,
+      //   width: null,
+      //   minWidth: 120,
+      // },
     ];
     return {
       columns1,
