@@ -270,7 +270,7 @@ export function encryptionModePassword(type, pwd) {
 /**
  * @description: 转换日期类型为20240101
  * @date: 2024--05--09 18:16:46
- * @params {data} 日期
+ * @param {Date} data日期
  * @returns {String}
  */
 export function formatDate(date) {
@@ -280,8 +280,8 @@ export function formatDate(date) {
 /**
  * @description: 检查密码是否过期
  * @date: 2024--06--03 10:54:22
- * @params {expiredTime} 过期时间
- * @params {serverTime} 服务器时间
+ * @param {String} expiredTime过期时间
+ * @param {String} serverTime服务器时间
  * @returns {Boolean} 是否过期
  */
 
@@ -298,9 +298,9 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
 /**
  * @description: 导出功能
  * @date: 2024--05--11 13:58:29
- * @params {url} 请求接口
- * @params {params} 请求参数
- * @params {name} 文件名称
+ * @param {String} url请求接口
+ * @param {String} params请求参数
+ * @param {String} name文件名称
  * @returns {File}
  */
 

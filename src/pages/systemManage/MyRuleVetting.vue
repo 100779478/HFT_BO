@@ -227,12 +227,18 @@
                     <input type="file" id="fileInput" style="display: none;"
                            @change="handleFileChange($event,fileType,URL.uploadVetting)">
                     <div class="progress-content" v-show="chooseRule">
-                      <Button @click="uploadFile('strategy')" class="btn"
-                              style="margin-right: 5px"
-                              type="success">
-                        <Icon type="md-cloud-upload"/>
-                        上传策略文件
-                      </Button>
+                      <Tooltip>
+                        <div slot="content">
+                          <p>C++策略文件格式必须为.so</p>
+                          <p>Python策略文件格式必须为.zip</p>
+                        </div>
+                        <Button @click="uploadFile('strategy')" class="btn"
+                                style="margin-right: 5px"
+                                type="success">
+                          <Icon type="md-cloud-upload"/>
+                          上传策略文件
+                        </Button>
+                      </Tooltip>
                       <Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
                               :size="30"
                               :stroke-color="'#19be6b'"
