@@ -53,10 +53,10 @@
     margin-bottom: 10px
   }
 
-  .type-left-item:nth-child(2) {
-    flex: 0.6;
-    margin-bottom: 10px
-  }
+  //.type-left-item:nth-child(2) {
+  //  flex: 0.3;
+  //  margin-bottom: 10px
+  //}
 
   .type-right-item {
     flex: 0.15;
@@ -321,7 +321,7 @@
 
 </style>
 <template>
-  <div class="bck" :style="rootStyle">
+  <div class="bck">
     <div class="header-content">
       <div class="market-info">
         <Tooltip theme="light" max-width="800" :transfer="true" placement="right">
@@ -364,19 +364,19 @@
       <div class="content-body-left"
            :style="{ width: getWidth('left')}">
         <div style="white-space: nowrap">利率债</div>
-        <div style="font-size: 14px;font-weight: normal;text-align: left;padding: 0 50px">
-          <ul style="list-style: none;white-space: nowrap;height: 50px">
-            <li><i class="icon iconfont icon-chenggong"/>利率债不足30只</li>
-            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年
-              6 个关键期限中至少 5
-              个关键期限的新发国债进行做市
-            </li>
-            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年
-              6 个关键期限中至少 5
-              个关键期限的新发国债进行做市
-            </li>
-          </ul>
-        </div>
+<!--        <div style="font-size: 14px;font-weight: normal;text-align: left;padding: 0 50px">-->
+<!--          <ul style="list-style: none;white-space: nowrap;height: 50px">-->
+<!--            <li><i class="icon iconfont icon-chenggong"/>利率债不足30只</li>-->
+<!--            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年-->
+<!--              6 个关键期限中至少 5-->
+<!--              个关键期限的新发国债进行做市-->
+<!--            </li>-->
+<!--            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年-->
+<!--              6 个关键期限中至少 5-->
+<!--              个关键期限的新发国债进行做市-->
+<!--            </li>-->
+<!--          </ul>-->
+<!--        </div>-->
         <div class="content-body-left-item">
           <div class="type-left-item" v-for="item in data.rates" :key="item.securityType">
             <div style="display: flex;flex-direction: column">
@@ -424,7 +424,7 @@
           </div>
         </div>
       </div>
-      <div style="align-items: center">
+      <div style="align-self: center">
         <i v-show="toggle==='0'||toggle==='2'" class="icon iconfont icon-zuojiantou"
            @click="toggleVisibility('1')"></i>
         <i v-show="toggle==='0'||toggle==='1'" class="icon iconfont icon-youjiantou"
@@ -479,8 +479,8 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {ICON_LIST} from "@/common/constant";
-import {encryptPassword, getSecurityType, queryParse, secondsToHMS} from "@/common/common";
-import {getToken, putToken} from "@/utils/token";
+import {getSecurityType, secondsToHMS} from "@/common/common";
+import {getToken} from "@/utils/token";
 
 export default {
   data() {
@@ -502,13 +502,13 @@ export default {
       toggle,
       sysSetting,
       timer: null,
-      graphSectionHeight: 'calc(100vh - 290px)', // 默认高度
+      graphSectionHeight: 'calc(100vh - 200px)', // 默认高度
     }
   },
   created() {
   },
   mounted() {
-    this.graphSectionHeight = this.isClientPage ? 'calc(100vh - 205px)' : 'calc(100vh - 290px)';
+    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 140px)' : 'calc(100vh - 220px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },
@@ -517,76 +517,39 @@ export default {
       return ICON_LIST
     },
     isClientPage() {
-      return this.$route.name === 'Monitor'
-    },
-    rootStyle() {
-      const style = this.isClientPage
-          ? {
-            '--background-color': '#0C1A36',
-            '--content-background-color': '#233450',
-            '--modal-backcolor': '#17315d',
-            '--text-color': '#fff',
-            '--primary-color': '#ce1d6d',
-            '--graph-item-backcolor': '#0C1A36',
-            '--debt-backcolor': '#0C1A36',
-            '--debt-text-color': '#fff',
-            '--graph-hover-color': '#4e5363',
-          }
-          : {
-            '--background-color': '#fff',
-            '--content-background-color': '#f4f7fa',
-            '--modal-backcolor': '#FFFFFF',
-            '--text-color': '#515a6e',
-            '--primary-color': '#007BFF',
-            '--graph-item-backcolor': '#f4f7fa',
-            '--debt-backcolor': '#f4f7fa',
-            '--debt-text-color': '#133685',
-            '--graph-hover-color': '#ceced0',
-          };
-      // 动态修改 :root 中的 CSS 变量
-      Object.keys(style).forEach(key => {
-        document.documentElement.style.setProperty(key, style[key]);
-      });
-
-      // 返回空对象，根样式不再传递给具体组件
-      return {};
+      return sessionStorage.getItem('isClientPage')
     },
   },
   methods: {
     getSecurityType,
-    checkToken() {
-      // 获取查询字符串部分 (比如 ?customerid=test&pwd=123456&envid=2)
-      const params = queryParse(window.location.href);
-      sessionStorage.setItem('customerid', params.customerid);
-      sessionStorage.setItem('pwd', params.pwd);
-      sessionStorage.setItem('envid', params.envid);
-      // 检查是否有 token
-      const token = getToken();
-      if (!token) {
-        // 如果没有 token，先登录获取 token
-        http.post(URL.clientLogin, {
-          username: params.customerid,
-          password: encryptPassword(params.pwd),
-          messageType: '登录成功',
-        }, (res) => {
-          putToken(res.data.token); // 将 token 存储起来
-          this.getMakeMarket(); // 获取数据接口
-        });
-      } else {
-        // 如果已经有 token，直接调用数据接口
-        this.getMakeMarket();
-      }
-    },
+    // checkToken() {
+    //   // 获取查询字符串部分 (比如 ?customerid=test&pwd=123456&envid=2)
+    //   const params = queryParse(window.location.href);
+    //   sessionStorage.setItem('customerid', params.customerid);
+    //   sessionStorage.setItem('pwd', params.pwd);
+    //   sessionStorage.setItem('envid', params.envid);
+    //   // 检查是否有 token
+    //   const token = getToken();
+    //   if (!token) {
+    //     // 如果没有 token，先登录获取 token
+    //     http.post(URL.clientLogin, {
+    //       username: params.customerid,
+    //       password: params.pwd,
+    //       messageType: '登录成功',
+    //     }, (res) => {
+    //       putToken(res.data.token); // 将 token 存储起来
+    //       this.getMakeMarket(); // 获取数据接口
+    //     });
+    //   } else {
+    //     // 如果已经有 token，直接调用数据接口
+    //     this.getMakeMarket();
+    //   }
+    // },
     getMakeMarket() {
-      const token = getToken(); // 获取 token
-      if (!token) {
-        // 如果没有 token，再次进行登录
-        this.checkToken();
-        return;
-      }
+      // const token = getToken(); // 获取 token
+      // const envId = sessionStorage.getItem('envid')
       // 构建请求 URL
       const url = this.isClientPage ? `${URL.makeMarketEnv}?envId=${sessionStorage.getItem('envid')}` : URL.makeMarket;
-      // 使用 token 访问数据接口
       http.get(url, (res) => {
         this.data = res.data;
         this.$store.commit('makeStatus/setMakeStatus', this.data.status);

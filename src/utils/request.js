@@ -4,7 +4,6 @@ import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store";
-import {encryptPassword} from "@/common/common";
 
 let is403MessageShown = false;
 const axiosInstance = axios.create({
@@ -197,14 +196,14 @@ axiosInstance.interceptors.request.use((config) => {
         return config;
     }
     // 自动刷新获取数据字典
-    const excludedRoutes = ['Login', 'Dashboard', 'Home', 'Monitor'];
+    const excludedRoutes = ['Login', 'Dashboard', 'Home', 'MonitorStatus', 'MonitorHistory'];
     if (!localStorage.dictionaryList && (!excludedRoutes.includes(router.currentRoute.name))) {
         http.get(URL.dictionaryList, res => store.commit("dictionary/dictionaryList", res.data))
     }
     const token = getToken();
     if (!token) {
         // 客户端页面特殊处理登录请求
-        if ('Monitor' !== router.currentRoute.name && !is403MessageShown) {
+        if ('MonitorStatus' !== router.currentRoute.name && 'MonitorHistory' !== router.currentRoute.name && router.currentRoute.name && !is403MessageShown) {
             router.push({name: "Login"});
             is403MessageShown = true;
         }
@@ -250,12 +249,12 @@ axiosInstance.interceptors.response.use(
             case 403:
                 if (!is403MessageShown) {
                     is403MessageShown = true;
-                    if ('Monitor' !== router.currentRoute.name) {
+                    if ('MonitorStatus' !== router.currentRoute.name && 'MonitorHistory' !== router.currentRoute.name) {
                     router.push({name: "Login"});
                     } else {
                         http.post(URL.clientLogin, {
                             username: sessionStorage.getItem('customerid'),
-                            password: encryptPassword(sessionStorage.getItem('pwd')),
+                            password: sessionStorage.getItem('pwd'),
                             messageType: '登录成功',
                         }, (res) => {
                             putToken(res.data.token); // 将 token 存储起来

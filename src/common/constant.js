@@ -84,9 +84,9 @@ const ICON_LIST = {
 /**
  * 客户端嵌入页面，token过期时过滤以下路由
  * */
-const FilterRoutePage = [
-    'Dashboard',
-    'Monitor'
-]
+const ClientRoutePage = {
+    'monitor': 'MonitorStatus',
+    'monitor-history': 'MonitorHistory',
+}
 
-export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, FilterRoutePage}
+export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, ClientRoutePage}

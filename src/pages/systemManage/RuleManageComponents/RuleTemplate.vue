@@ -672,7 +672,7 @@ export default {
         const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
         const message = `参数名重复：${messages.join('、')}`;
         // 有重复的 name 字段，显示警告消息
-        this.showMessage(message, 'error', 6)
+        this.showMessage('error', message, 6)
       } else {
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
