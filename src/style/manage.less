@@ -35,30 +35,145 @@
   }
 }
 
+/* 使用::v-deep选择iview Input组件 */
+::v-deep .ivu-input {
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+::v-deep .ivu-checkbox-checked .ivu-checkbox-inner {
+  background-color: var(--checked-color);
+}
+
+::v-deep .ivu-picker-panel-body,
+::v-deep .ivu-page-total, ::v-deep .ivu-select-selection, ::v-deep .ivu-select-item,
+::v-deep .ivu-input-suffix i, ::v-deep .ivu-date-picker-header, ::v-deep .ivu-date-picker-rel,
+::v-deep .ivu-page-item a {
+  color: var(--text-color);
+}
+
+::v-deep .ivu-select-item:hover {
+  background-color: var(--modal-backcolor);
+}
+
+::v-deep .ivu-table td,
+::v-deep .ivu-table th {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding-top: 5px !important; /* 调整上边距 */
+  padding-bottom: 5px !important; /* 调整下边距 */
+  line-height: normal; /* 确保文本的行高正常 */
+  height: 12px !important;
+}
+
+::v-deep .ivu-checkbox-inner, ::v-deep .ivu-page-next, .ivu-page-prev,
+::v-deep .ivu-table, ::v-deep .ivu-page-item, ::v-deep .ivu-page-disabled,
+::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-prev,
+::v-deep .ivu-select-item-focus {
+  background-color: var(--background-color);
+}
+
+::v-deep .ivu-date-picker-cells-cell {
+  color: var(--text-color);
+}
+
+::v-deep .ivu-date-picker-cells-cell:hover em{
+  background: var(--date-hover-color);
+}
+
+::v-deep .ivu-table-cell-tree {
+  background-color: var(--background-color);
+}
+
+//::v-deep .ivu-table th {
+//  border-bottom: 2px solid grey;
+//  border-right: 2px solid grey;
+//}
+//
+//::v-deep .ivu-table td {
+//  border-color: transparent;
+//  border-bottom: 1px solid grey;
+//}
+//
+//::v-deep .ivu-table-border:after, ::v-deep .ivu-table-border:before {
+//  border: 1px solid grey;
+//  zoom: 0.5;
+//}
+//
+//::v-deep .ivu-table-wrapper-with-border {
+//  border-top: 1px solid grey;
+//  border-left: 1px solid grey;
+//}
+
+
 .mr {
-  &-3 { margin-right: 3px; }
-  &-5 { margin-right: 5px; }
-  &-10 { margin-right: 10px; }
-  &-15 { margin-right: 15px; }
+  &-3 {
+    margin-right: 3px;
+  }
+
+  &-5 {
+    margin-right: 5px;
+  }
+
+  &-10 {
+    margin-right: 10px;
+  }
+
+  &-15 {
+    margin-right: 15px;
+  }
 }
 
 .ml {
-  &-3 { margin-left: 3px; }
-  &-5 { margin-left: 5px; }
-  &-10 { margin-left: 10px; }
-  &-15 { margin-left: 15px; }
+  &-3 {
+    margin-left: 3px;
+  }
+
+  &-5 {
+    margin-left: 5px;
+  }
+
+  &-10 {
+    margin-left: 10px;
+  }
+
+  &-15 {
+    margin-left: 15px;
+  }
 }
 
 .pr {
-  &-3 { padding-right: 3px; }
-  &-5 { padding-right: 5px; }
-  &-10 { padding-right: 10px; }
-  &-15 { padding-right: 15px; }
+  &-3 {
+    padding-right: 3px;
+  }
+
+  &-5 {
+    padding-right: 5px;
+  }
+
+  &-10 {
+    padding-right: 10px;
+  }
+
+  &-15 {
+    padding-right: 15px;
+  }
 }
 
 .pl {
-  &-3 { padding-left: 3px; }
-  &-5 { padding-left: 5px; }
-  &-10 { padding-left: 10px; }
-  &-15 { padding-left: 15px; }
+  &-3 {
+    padding-left: 3px;
+  }
+
+  &-5 {
+    padding-left: 5px;
+  }
+
+  &-10 {
+    padding-left: 10px;
+  }
+
+  &-15 {
+    padding-left: 15px;
+  }
 }

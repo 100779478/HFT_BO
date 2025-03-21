@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import {getToken, putToken} from "@/utils/token";
 import {URL} from "@/api/serverApi";
 import {http} from "@/utils/request";
+import {ClientRoutePage} from "@/common/constant";
 
 vue.use(VueRouter);
 
@@ -36,13 +37,31 @@ const routes = [
             title: "做市监控",
         },
     },
-    // 做市监控
+    // 做市监控历史
     {
         path: "/monitor-history",
         name: "MonitorHistory",
-        component: () => import(/* webpackChunkName: "make-market" */ "@/pages/systemMonitor/MakeMarketList.vue"),
+        component: () => import(/* webpackChunkName: "make-market-history" */ "@/pages/systemMonitor/MakeMarketList.vue"),
         meta: {
             title: "做市监控历史",
+        },
+    },
+    // 成交汇总
+    {
+        path: "/transaction-summary",
+        name: "TransactionSummary",
+        component: () => import(/* webpackChunkName: "transaction-summary" */ "@/pages/reportQuery/DealAggregate/TransactionSummary.vue"),
+        meta: {
+            title: "成交汇总",
+        },
+    },
+    // 分策略成交汇总
+    {
+        path: "/sub-rule-sum",
+        name: "SubRuleTransactionSummary",
+        component: () => import(/* webpackChunkName: "sub-rule-sum" */ "@/pages/reportQuery/DealAggregate/SubRuleTransactionSummary.vue"),
+        meta: {
+            title: "成交汇总",
         },
     },
     {
@@ -232,6 +251,14 @@ const routes = [
                     title: "持仓列表",
                 },
             },
+            {
+                path: "/home/report-query/deal-aggregate",
+                name: "DealAggregate",
+                component: () => import(/* webpackChunkName: "deal-aggregate" */ "@/pages/reportQuery/DealAggregate"),
+                meta: {
+                    title: "成交汇总",
+                },
+            },
         ],
     },
 // 刷新页面 必须保留
@@ -257,7 +284,7 @@ router.beforeEach((to, from, next) => {
     }
     let style;
     // 特定路由为客户端
-    if (to.name === 'MonitorStatus' || to.name === 'MonitorHistory') {
+    if (Object.values(ClientRoutePage).includes(to.name)) {
         sessionStorage.setItem('isClientPage', 'true')
         style = {
             '--background-color': '#0C1A36',
@@ -269,8 +296,9 @@ router.beforeEach((to, from, next) => {
             '--debt-backcolor': '#0C1A36',
             '--debt-text-color': '#fff',
             '--graph-hover-color': '#4e5363',
-            '--checked-color':'#0C1A36',
-            '--table-hover':'#4e5363',
+            '--checked-color': '#0C1A36',
+            '--table-hover': '#4e5363',
+            '--date-hover-color': '#697a89',
         }
     } else {
         style = {
@@ -279,12 +307,13 @@ router.beforeEach((to, from, next) => {
             '--modal-backcolor': '#FFFFFF',
             '--text-color': '#515a6e',
             '--primary-color': '#007BFF',
-            '--checked-color':'#007BFF',
+            '--checked-color': '#007BFF',
+            '--date-hover-color': '#E1F0FE',
             '--graph-item-backcolor': '#f4f7fa',
             '--debt-backcolor': '#f4f7fa',
             '--debt-text-color': '#133685',
             '--graph-hover-color': '#ceced0',
-            '--table-hover':'#EBF7FF',
+            '--table-hover': '#EBF7FF',
         }
         sessionStorage.removeItem('isClientPage')
     }
@@ -298,11 +327,15 @@ router.beforeEach((to, from, next) => {
     if (to.matched[0].path === '*') {
         // 继续导航到通配符路径对应的页面
         next();
-    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'MonitorStatus' && to.name !== 'MonitorHistory') {
+        // } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'MonitorStatus' && to.name !== 'MonitorHistory'
+        //     && to.name !== 'TransactionSummary' && to.name !== 'SubRuleTransactionSummary') {
+    } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && !Object.values(ClientRoutePage).includes(to.name)) {
         // 用户未登录且访问的不是允许的页面时，重定向到登录页
         next({path: '/login'});
     } else {
-        if (!isAuthenticated && (to.name === 'MonitorStatus' || to.name === 'MonitorHistory')) {
+        // if (!isAuthenticated && (to.name === 'MonitorStatus' || to.name === 'MonitorHistory' || to.name === 'TransactionSummary' ||
+        //     to.name === 'SubRuleTransactionSummary')) {
+        if (!isAuthenticated && Object.values(ClientRoutePage).includes(to.name)) {
             sessionStorage.setItem('customerid', to.query.customerid);
             sessionStorage.setItem('pwd', to.query.pwd);
             sessionStorage.setItem('envid', to.query.envid);
@@ -316,8 +349,8 @@ router.beforeEach((to, from, next) => {
                 // router.go(0)
             });
         } else {
-        // 否则，继续导航
-        next();
+            // 否则，继续导航
+            next();
         }
     }
 

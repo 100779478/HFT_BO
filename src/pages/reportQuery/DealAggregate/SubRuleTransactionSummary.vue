@@ -9,6 +9,7 @@
   overflow: auto;
   width: 100%;
 }
+
 .input-form {
   float: right;
   width: 145px;
@@ -20,9 +21,16 @@
   color: var(--text-color);
 }
 
+.updateTime {
+  color: var(--text-color);
+  line-height: 32px;
+  float: right;
+  position: absolute;
+  right: 20px
+}
 </style>
 <template>
-  <div class="bck">
+  <div class="bck" :style="{marginTop:isClientPage?'0': '-25px'}">
     <Row style="margin: 10px" justify="space-between" align="top">
       <Col
           span="22"
@@ -30,39 +38,45 @@
       >
         <form autocomplete="off">
           <Input
-              v-model="searchParams.securityId"
+              v-model="searchParams.commodityType"
               class="mr-3 input-form"
-              placeholder="债券代码"
+              placeholder="交易品种"
           >
           </Input>
         </form>
-        <Checkbox v-model="searchParams.newBond" class="mr-3 check-box">新发关键期限国债</Checkbox>
-        <Checkbox v-model="searchParams.makeTimeValid" class="mr-3 check-box">累计有效时间不足4小时</Checkbox>
-        <Checkbox v-model="searchParams.blankTimeValid" class="mr-3 check-box">空白时间超过30分钟</Checkbox>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.instrumentId"
+              class="mr-3 input-form"
+              placeholder="代码"
+          >
+          </Input>
+        </form>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.ruleId"
+              class="mr-3 input-form"
+              placeholder="策略ID"
+          >
+          </Input>
+        </form>
         <form autocomplete="off">
           <DatePicker
+              v-show="!isClientPage"
+              v-model="searchParams.tradingDay"
               split-panels
               class="mr-3"
               type="date"
               placement="bottom-end"
-              placeholder="选择起始日期"
+              placeholder="选择日期"
               style="width: 125px"
               format="yyyy-MM-dd"
-              v-model="dateRange.startDate"
-              autocomplete="false"
-          ></DatePicker>
-          <DatePicker
-              split-panels
-              class="mr-3"
-              type="date"
-              placement="bottom-end"
-              placeholder="选择结束日期"
-              style="width: 125px"
-              format="yyyy-MM-dd"
-              v-model="dateRange.endDate"
               autocomplete="false"
           ></DatePicker>
         </form>
+        <div class="updateTime">
+          更新时间：{{ updateTime ?? '暂无数据' }}
+        </div>
       </Col>
       <Col class="mr-3" style="flex-shrink: 0">
         <Button type="primary" @click="refresh()" class="mr-3"
@@ -86,6 +100,7 @@
         class="table-content"
         :height="tableHeight"
         ref="table"
+        row-key="quote"
         border
         @on-sort-change="e=>handleSort(e,this.getOrderData)"
     >
@@ -118,126 +133,141 @@ export default {
   data() {
     let columns1 = [
       {
-        title: "债券代码",
-        key: "securityId",
+        title: "交易所代码",
+        key: "exchangeId",
         minWidth: 120,
         resizable: true,
         width: null,
         sortable: 'custom',
       },
       {
-        title: "债券简称",
-        key: "securityName",
+        title: "策略ID",
+        key: "ruleId",
+        minWidth: 120,
+        resizable: true,
+        width: null,
+        sortable: 'custom',
+      },
+      {
+        title: "代码",
+        key: "instrumentId",
         minWidth: 150,
         resizable: true,
         width: null,
         sortable: 'custom',
+        tree: true
       },
       {
-        title: "债券类型名称",
-        key: "securityDesc",
-        minWidth: 150,
+        title: "买成交量",
+        key: "bidVolume",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
-        render: (h, {row}) => {
-          const result = getSecurityType(row.securityDesc);
-          return h("span", result.description);
-        },
+        align: 'right',
       },
       {
-        title: "当天有效做市时间",
-        key: "makeTime",
-        minWidth: 160,
+        title: "买成交笔数",
+        key: "bidNumber",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "待偿期",
-        key: "termToMaturityString",
-        minWidth: 150,
+        title: "买成交均价",
+        key: "bidAveragePrice",
+        minWidth: 100,
         resizable: true,
-        sortable: 'custom',
         width: null,
+        align: 'right',
       },
       {
-        title: "发行日",
-        key: "issueDate",
-        minWidth: 150,
+        title: "卖成交均价",
+        key: "offerAveragePrice",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "债券期限",
-        key: "securityTerm",
-        minWidth: 150,
+        title: "卖成交笔数",
+        key: "offerNumber",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "最大空白时间",
-        key: "maxBlankTime",
-        minWidth: 150,
+        title: "卖成交量",
+        key: "offerVolume",
+        minWidth: 100,
         resizable: true,
-        sortable: 'custom',
         width: null,
+        align: 'right',
       },
       {
-        title: "做市日期",
-        key: "lastUpdDate",
-        minWidth: 150,
+        title: "成交差额",
+        key: "dealSubtract",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "做市券种",
-        key: "securitySuperType",
-        minWidth: 150,
+        title: "买最低价",
+        key: "bidLowestPrice",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "是否有效时长不足4小时",
-        key: "makeTimeValid",
-        minWidth: 190,
+        title: "买最高价",
+        key: "bidHighestPrice",
+        minWidth: 100,
         resizable: true,
         width: null,
-        sortable: 'custom',
+        align: 'right',
       },
       {
-        title: "是否空白时长大于30分钟",
-        key: "blankTimeValid",
-        minWidth: 190,
+        title: "卖最低价",
+        key: "offerLowestPrice",
+        minWidth: 100,
         resizable: true,
-        sortable: 'custom',
         width: null,
+        align: 'right',
+      },
+      {
+        title: "卖最高价",
+        key: "offerHighestPrice",
+        minWidth: 100,
+        resizable: true,
+        width: null,
+        align: 'right',
       },
     ];
     let searchParams = {
-      securityId: "",
-      newBond: false,
-      makeTimeValid: false,
-      blankTimeValid: false,
-      startDate: "",
-      endDate: "",
+      commodityType: "",
+      instrumentId: "",
+      ruleId: "",
       envId: sessionStorage.getItem('envid'),
+      tradingDay: null
     };
-    let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     return {
       columns1,
       searchParams,
-      dateRange,
-      tableHeight: sessionStorage.getItem('isClientPage') ? window.innerHeight - 115 : window.innerHeight - 210,
+      updateTime: "",
+      timer: null,
+      tableHeight: sessionStorage.getItem('isClientPage') ? window.innerHeight - 115 : window.innerHeight - 240,
       URL
     };
   },
   mounted() {
-    this.getOrderData();
+    this.getOrderData()
+    // 30秒请求一次
+    this.timer = setInterval(() => {
+      this.getOrderData();
+    }, 30000)
   },
   computed: {
     isClientPage() {
@@ -248,26 +278,23 @@ export default {
     handleSort,
     // 监听窗口
     calculateTableHeight() {
-      return this.isClientPage ? window.innerHeight - 115 : window.innerHeight - 210;
+      return this.isClientPage ? window.innerHeight - 115 : window.innerHeight - 240;
     },
     // 获取订单列表
     getOrderData() {
-      this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
-          ? moment(this.dateRange.startDate).format("YYYYMMDD")
-          : null;
-      this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
-          ? moment(this.dateRange.endDate).format("YYYYMMDD")
-          : null;
       if (this.searchParams.envId === 'undefined') {
         delete this.searchParams.envId
       }
+      this.searchParams.tradingDay = moment(this.searchParams.tradingDay).isValid()
+          ? moment(this.searchParams.tradingDay).format("YYYYMMDD")
+          : null;
       const payload = {
         ...this.pagination,
         ...this.searchParams,
       };
-      const url = this.isClientPage ? URL.makeMarketListEnv : URL.makeMarketList;
-      http.post(url, payload, (res) => {
+      http.post(URL.dealStatisticRule, payload, (res) => {
         this.pagination.total = res.data.total;
+        this.updateTime = res.data.updateTime
         this.tableData = res.data.dataList;
       });
     },
@@ -282,18 +309,14 @@ export default {
     },
     // 导出列表
     handleExportOrders() {
-      this.searchParams.startDate = moment(this.dateRange.startDate).isValid()
-          ? moment(this.dateRange.startDate).format("YYYYMMDD")
-          : null;
-      this.searchParams.endDate = moment(this.dateRange.endDate).isValid()
-          ? moment(this.dateRange.endDate).format("YYYYMMDD")
-          : null;
       if (this.searchParams.envId === 'undefined') {
         delete this.searchParams.envId
       }
-      const url = this.isClientPage ? URL.makeMarketListExportEnv : URL.makeMarketListExport;
-      handleExport(url, this.searchParams, '做市义务数据列表')
+      handleExport(URL.dealStatisticRuleExport, this.searchParams, '做市义务数据列表')
     },
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  }
 };
 </script>

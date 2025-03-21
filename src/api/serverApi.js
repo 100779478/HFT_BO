@@ -1,9 +1,8 @@
 const env = process.env.NODE_ENV;
 // const devUrl = "http://58.250.164.226:31004"; // POC
-// const devUrl = "https://58.250.164.226:39888"; // 1.5.6
 // const devUrl = "https://172.24.16.13:9888"; // 1.5.6
-// const devUrl = "https://10.210.6.241:8888"; // 1.5.6
-const devUrl = "http://192.168.50.108:9000"; // 玺子哥
+// const devUrl = "http://192.168.50.108:9000"; // 玺子哥
+const devUrl = "http://192.168.50.161:9000"; // 李航
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -216,6 +215,14 @@ export const URL = {
     bilateralOrder: '/bilateral-order/list',
     // 导出双边订单列表
     bilateralOrderExport: '/bilateral-order/export',
+    // 分策略当日成交汇总查询
+    dealStatisticRule: '/deal-statistic/rule',
+    // 分策略当日成交汇总导出
+    dealStatisticRuleExport: '/deal-statistic/rule/export',
+    // 当日成交汇总
+    dealStatisticTotal: '/deal-statistic/total',
+    // 导出当日成交汇总
+    dealStatisticTotalExport: '/deal-statistic/total/export',
 };
 export const sseUrl = {
     // 长链接SSE
