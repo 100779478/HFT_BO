@@ -71,7 +71,7 @@
           ></DatePicker>
         </form>
         <div class="updateTime">
-          更新时间：{{ updateTime ?? '暂无数据' }}
+          更新时间：{{ updateTime || '暂无数据' }}
         </div>
       </Col>
       <Col class="mr-3" style="flex-shrink: 0">
@@ -124,6 +124,7 @@ import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {handleExport, handleSort,} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
+import {fixed} from "lodash/fp/_falseOptions";
 
 export default {
   mixins: [tableMixin],
@@ -145,7 +146,6 @@ export default {
         width: null,
         tree: true,
         renderHeader: (h, {column}) => {
-          console.log(column)
           return h('span', [h('span', column.title), h('Icon', {
             props: {
               type: !this.showTree ? 'md-more' : 'ios-more', // 按钮图标
@@ -190,6 +190,11 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.bidAveragePrice ? row.bidAveragePrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "卖成交均价",
@@ -198,6 +203,11 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.offerAveragePrice ? row.offerAveragePrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "卖成交笔数",
@@ -230,6 +240,11 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.bidLowestPrice ? row.bidLowestPrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "买最高价",
@@ -238,6 +253,11 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.bidHighestPrice ? row.bidHighestPrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "卖最低价",
@@ -246,6 +266,11 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.offerLowestPrice ? row.offerLowestPrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "卖最高价",
@@ -254,11 +279,16 @@ export default {
         resizable: true,
         width: null,
         align: 'right',
+        render: (h, params) => {
+          const {row} = params
+          const txt = row.offerHighestPrice ? row.offerHighestPrice.toFixed(4) : null
+          return h('span', txt)
+        }
       },
       {
         title: "数量单位",
         key: "unit",
-        minWidth: 150,
+        minWidth: 90,
         resizable: true,
         width: null,
       },
@@ -268,8 +298,8 @@ export default {
       instrumentId: "",
       ruleId: "",
       envId: sessionStorage.getItem('envid'),
-      // tradingDay: null
-      tradingDay: moment('2023-11-29').format("YYYYMMDD")
+      // tradingDay: null,
+      tradingDay: moment('20231129').format('YYYYMMDD'),
     };
     return {
       columns1,
@@ -339,7 +369,7 @@ export default {
       if (this.searchParams.envId === 'undefined') {
         delete this.searchParams.envId
       }
-      handleExport(URL.dealStatisticTotalExport, this.searchParams, '做市义务数据列表')
+      handleExport(URL.dealStatisticTotalExport, this.searchParams, '成交汇总列表')
     },
   },
   beforeDestroy() {

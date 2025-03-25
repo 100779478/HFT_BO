@@ -39,6 +39,7 @@
 ::v-deep .ivu-input {
   color: var(--text-color);
   background-color: var(--background-color);
+  border: 1px solid var(--border);
 }
 
 ::v-deep .ivu-checkbox-checked .ivu-checkbox-inner {
@@ -73,11 +74,16 @@
   background-color: var(--background-color);
 }
 
+::v-deep .ivu-checkbox-inner, ::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-disabled,
+::v-deep .ivu-page-prev {
+  border: 1px solid var(--border);
+}
+
 ::v-deep .ivu-date-picker-cells-cell {
   color: var(--text-color);
 }
 
-::v-deep .ivu-date-picker-cells-cell:hover em{
+::v-deep .ivu-date-picker-cells-cell:hover em {
   background: var(--date-hover-color);
 }
 
@@ -85,25 +91,25 @@
   background-color: var(--background-color);
 }
 
-//::v-deep .ivu-table th {
-//  border-bottom: 2px solid grey;
-//  border-right: 2px solid grey;
-//}
-//
-//::v-deep .ivu-table td {
-//  border-color: transparent;
-//  border-bottom: 1px solid grey;
-//}
-//
-//::v-deep .ivu-table-border:after, ::v-deep .ivu-table-border:before {
-//  border: 1px solid grey;
-//  zoom: 0.5;
-//}
-//
-//::v-deep .ivu-table-wrapper-with-border {
-//  border-top: 1px solid grey;
-//  border-left: 1px solid grey;
-//}
+::v-deep .ivu-table th {
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+::v-deep .ivu-table td {
+  border-color: transparent;
+  border-bottom: 1px solid var(--border);
+}
+
+::v-deep .ivu-table-border:after, ::v-deep .ivu-table-border:before {
+  border: 1px solid var(--border);
+  zoom: 0.5;
+}
+
+::v-deep .ivu-table-wrapper-with-border {
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+}
 
 
 .mr {

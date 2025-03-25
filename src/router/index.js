@@ -299,6 +299,7 @@ router.beforeEach((to, from, next) => {
             '--checked-color': '#0C1A36',
             '--table-hover': '#4e5363',
             '--date-hover-color': '#697a89',
+            '--border': '#2C4067',
         }
     } else {
         style = {
@@ -314,6 +315,7 @@ router.beforeEach((to, from, next) => {
             '--debt-text-color': '#133685',
             '--graph-hover-color': '#ceced0',
             '--table-hover': '#EBF7FF',
+            '--border': '#dadadd',
         }
         sessionStorage.removeItem('isClientPage')
     }
