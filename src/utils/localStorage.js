@@ -57,6 +57,8 @@ export const getLocalDictionaryList = () => {
             MakeMarketStatisticsStatus: [],
             // 做市义务债券类型: 政策性金融债、国债、地方政府债等
             SecurityType: [],
+            // 交易品种类型
+            CommodityType: [],
         };
     }
 };

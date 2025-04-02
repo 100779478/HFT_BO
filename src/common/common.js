@@ -179,6 +179,12 @@ export function getSecurityType(code) {
     return findDictionaryList('SecurityType', code)
 }
 
+// 交易品种类型
+export function getCommodityType(code) {
+    return findDictionaryList('CommodityType', code)
+}
+
+
 // 表头排序
 export function handleSort(col, func) {
     // 判断排序方式，如果为 'normal'，则设置为 'asc'，否则保持原值

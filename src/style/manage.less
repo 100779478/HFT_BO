@@ -54,7 +54,7 @@
 }
 
 ::v-deep .ivu-select-item:hover {
-  background-color: var(--modal-backcolor);
+  background-color: var(--select-hover-backcolor);
 }
 
 ::v-deep .ivu-table td,
@@ -72,6 +72,10 @@
 ::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-prev,
 ::v-deep .ivu-select-item-focus {
   background-color: var(--background-color);
+}
+
+::v-deep .ivu-select-item-selected{
+  color: #2db7f5;
 }
 
 ::v-deep .ivu-checkbox-inner, ::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-disabled,
@@ -94,6 +98,18 @@
 ::v-deep .ivu-table th {
   border-bottom: 1px solid var(--border);
   border-right: 1px solid var(--border);
+  background: var(--table-th);
+}
+
+::v-deep .ivu-table th::after {
+  content: '';
+  position: absolute;
+  top: 0; /* 从顶部开始 */
+  right: 0; /* 右侧对齐 */
+  bottom: 0; /* 到达底部 */
+  width: 2px; /* 边框宽度 */
+  //background: linear-gradient(to bottom, black, #5a5a5a, black); /* 从黑到白的渐变 */
+  background: var(--table-th-border); /* 从黑到白的渐变 */
 }
 
 ::v-deep .ivu-table td {

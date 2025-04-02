@@ -48,7 +48,7 @@ const routes = [
     },
     // 成交汇总
     {
-        path: "/transaction-summary",
+        path: "/deal",
         name: "TransactionSummary",
         component: () => import(/* webpackChunkName: "transaction-summary" */ "@/pages/reportQuery/DealAggregate/TransactionSummary.vue"),
         meta: {
@@ -57,9 +57,9 @@ const routes = [
     },
     // 分策略成交汇总
     {
-        path: "/sub-rule-sum",
+        path: "/sub-deal",
         name: "SubRuleTransactionSummary",
-        component: () => import(/* webpackChunkName: "sub-rule-sum" */ "@/pages/reportQuery/DealAggregate/SubRuleTransactionSummary.vue"),
+        component: () => import(/* webpackChunkName: "sub-deal" */ "@/pages/reportQuery/DealAggregate/SubRuleTransactionSummary.vue"),
         meta: {
             title: "成交汇总",
         },
@@ -290,8 +290,8 @@ router.beforeEach((to, from, next) => {
             '--background-color': '#0C1A36',
             '--content-background-color': '#233450',
             '--modal-backcolor': '#17315d',
+            '--select-hover-backcolor': '#17315d',
             '--text-color': '#fff',
-            '--primary-color': '#ce1d6d',
             '--graph-item-backcolor': '#0C1A36',
             '--debt-backcolor': '#0C1A36',
             '--debt-text-color': '#fff',
@@ -300,14 +300,16 @@ router.beforeEach((to, from, next) => {
             '--table-hover': '#4e5363',
             '--date-hover-color': '#697a89',
             '--border': '#2C4067',
+            '--table-th': '#1D2B48',
+            '--table-th-border': 'linear-gradient(to bottom, black, #5a5a5a, black)',
         }
     } else {
         style = {
             '--background-color': '#fff',
             '--content-background-color': '#f4f7fa',
             '--modal-backcolor': '#FFFFFF',
+            '--select-hover-backcolor': '#F3F3F3',
             '--text-color': '#515a6e',
-            '--primary-color': '#007BFF',
             '--checked-color': '#007BFF',
             '--date-hover-color': '#E1F0FE',
             '--graph-item-backcolor': '#f4f7fa',
@@ -316,6 +318,8 @@ router.beforeEach((to, from, next) => {
             '--graph-hover-color': '#ceced0',
             '--table-hover': '#EBF7FF',
             '--border': '#dadadd',
+            '--table-th': '#fff',
+            '--table-th-border': '',
         }
         sessionStorage.removeItem('isClientPage')
     }
@@ -329,14 +333,10 @@ router.beforeEach((to, from, next) => {
     if (to.matched[0].path === '*') {
         // 继续导航到通配符路径对应的页面
         next();
-        // } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && to.name !== 'MonitorStatus' && to.name !== 'MonitorHistory'
-        //     && to.name !== 'TransactionSummary' && to.name !== 'SubRuleTransactionSummary') {
     } else if (to.path !== '/login' && !isAuthenticated && to.path !== '/login-protect' && !Object.values(ClientRoutePage).includes(to.name)) {
         // 用户未登录且访问的不是允许的页面时，重定向到登录页
         next({path: '/login'});
     } else {
-        // if (!isAuthenticated && (to.name === 'MonitorStatus' || to.name === 'MonitorHistory' || to.name === 'TransactionSummary' ||
-        //     to.name === 'SubRuleTransactionSummary')) {
         if (!isAuthenticated && Object.values(ClientRoutePage).includes(to.name)) {
             sessionStorage.setItem('customerid', to.query.customerid);
             sessionStorage.setItem('pwd', to.query.pwd);
@@ -344,11 +344,12 @@ router.beforeEach((to, from, next) => {
             http.post(URL.clientLogin, {
                 username: to.query.customerid,
                 password: to.query.pwd,
-                messageType: '登录成功',
+                // messageType: '登录成功',
             }, (res) => {
                 putToken(res.data.token); // 将 token 存储起来
                 next()
                 // router.go(0)
+            }, () => {
             });
         } else {
             // 否则，继续导航

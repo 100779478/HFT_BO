@@ -88,8 +88,8 @@ const ICON_LIST = {
 const ClientRoutePage = {
     'monitor': 'MonitorStatus', // 做市监控
     'monitor-history': 'MonitorHistory', // 做市监控历史
-    'transaction-summary': 'TransactionSummary', // 成交汇总
-    'sub-rule-sum': 'SubRuleTransactionSummary', // 分策略成交汇总
+    'deal': 'TransactionSummary', // 成交汇总
+    'sub-deal': 'SubRuleTransactionSummary', // 分策略成交汇总
 }
 
 export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, ClientRoutePage}

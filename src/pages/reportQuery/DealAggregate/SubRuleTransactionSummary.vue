@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 @import url("@/style/manage.less");
+@import url("@/style/client.less");
 
 .bck {
   height: 100%;
@@ -31,18 +32,26 @@
 </style>
 <template>
   <div class="bck" :style="{marginTop:isClientPage?'0': '-25px'}">
-    <Row style="margin: 10px" justify="space-between" align="top">
+    <Row v-if="!isClientPage" style="margin: 10px" justify="space-between" align="top">
       <Col
           span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
       >
         <form autocomplete="off">
-          <Input
+          <Select
               v-model="searchParams.commodityType"
-              class="mr-3 input-form"
+              class="mr-3"
+              style="width: 130px"
               placeholder="交易品种"
+              :clearable="true"
           >
-          </Input>
+            <Option
+                v-for="item in this.$store.state.dictionary.dictionaryList.CommodityType"
+                :value="item.code"
+                :key="item.code"
+            >{{ item.description }}
+            </Option>
+          </Select>
         </form>
         <form autocomplete="off">
           <Input
@@ -91,6 +100,61 @@
           导出
         </Button
         >
+      </Col>
+    </Row>
+    <Row v-else style="margin: 10px" justify="space-between" align="top">
+      <Col
+          span="22"
+          style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 580px)"
+      >
+        <form autocomplete="off">
+          <span style="color: #fff;margin-right: 5px">交易品种</span>
+          <Select
+              v-model="searchParams.commodityType"
+              class="mr-3"
+              style="width: 130px"
+              placeholder="交易品种"
+          >
+            <Option
+                :value="1"
+                :key="1"
+            >全部
+            </Option>
+            <Option
+                v-for="item in this.$store.state.dictionary.dictionaryList.CommodityType"
+                :value="item.code"
+                :key="item.code"
+            >{{ item.description }}
+            </Option>
+          </Select>
+        </form>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.ruleId"
+              class="mr-3 input-form"
+              placeholder="策略ID"
+          >
+          </Input>
+        </form>
+      </Col>
+      <Col class="mr-3" style="flex-shrink: 0;display: flex">
+        <div style="color: var(--text-color);  line-height: 32px;margin-right: 25px">
+          更新时间：{{ updateTime || '暂无数据' }}
+        </div>
+        <Button type="primary" @click="refresh()" class="mr-3 client-button">
+          查询
+        </Button
+        >
+        <Icon type="md-exit" @click="handleExportOrders()" class="mr-3 client-icon"/>
+        <form autocomplete="off">
+          <Input
+              v-model="searchParams.instrumentId"
+              class="mr-3 input-form"
+              placeholder="债券代码"
+              @on-change="refresh"
+          >
+          </Input>
+        </form>
       </Col>
     </Row>
     <Table
@@ -277,7 +341,7 @@ export default {
       },
     ];
     let searchParams = {
-      commodityType: "",
+      commodityType: 1,
       instrumentId: "",
       ruleId: "",
       envId: sessionStorage.getItem('envid'),
@@ -321,8 +385,10 @@ export default {
       const payload = {
         ...this.pagination,
         ...this.searchParams,
+        commodityType: this.searchParams.commodityType === 1 ? "" : this.searchParams.commodityType,
       };
-      http.post(URL.dealStatisticRule, payload, (res) => {
+      const url = this.isClientPage ? URL.dealStatisticRule : URL.dealStatisticRuleWeb;
+      http.post(url, payload, (res) => {
         this.pagination.total = res.data.total;
         this.updateTime = res.data.updateTime
         this.tableData = res.data.dataList;
@@ -342,7 +408,12 @@ export default {
       if (this.searchParams.envId === 'undefined') {
         delete this.searchParams.envId
       }
-      handleExport(URL.dealStatisticRuleExport, this.searchParams, '分策略成交汇总列表')
+      const payload = {
+        ...this.searchParams,
+        commodityType: this.searchParams.commodityType === 1 ? "" : this.searchParams.commodityType,
+      }
+      const url = this.isClientPage ? URL.dealStatisticRuleExport : URL.dealStatisticRuleExportWeb;
+      handleExport(url, payload, '分策略成交汇总列表')
     },
   },
   beforeDestroy() {

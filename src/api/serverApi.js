@@ -1,8 +1,9 @@
 const env = process.env.NODE_ENV;
+const devUrl = "http://10.210.6.241:8888"; // POC
 // const devUrl = "http://58.250.164.226:31004"; // POC
-const devUrl = "https://172.24.16.13:9888"; // 1.5.7
+// const devUrl = "https://172.24.16.13:9888"; // 1.5.7
 // const devUrl = "http://192.168.50.108:9000"; // 玺子哥
-// const devUrl = "http://192.168.50.161:9000"; // 李航
+// const devUrl = "http://192.168.50.134:9000"; // 李航
 const proUrl = location.origin;
 //服务器
 export const requestContextPath =
@@ -223,6 +224,14 @@ export const URL = {
     dealStatisticTotal: '/deal-statistic/total',
     // 导出当日成交汇总
     dealStatisticTotalExport: '/deal-statistic/total/export',
+    // 分策略当日成交汇总查询web
+    dealStatisticRuleWeb: '/deal-statistic/rule/web',
+    // 分策略当日成交汇总导出web
+    dealStatisticRuleExportWeb: '/deal-statistic/rule/export/web',
+    // 当日成交汇总web
+    dealStatisticTotalWeb: '/deal-statistic/total/web',
+    // 导出当日成交汇总web
+    dealStatisticTotalExportWeb: '/deal-statistic/total/export/web',
 };
 export const sseUrl = {
     // 长链接SSE

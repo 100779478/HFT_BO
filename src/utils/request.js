@@ -260,7 +260,7 @@ axiosInstance.interceptors.response.use(
                         http.post(URL.clientLogin, {
                             username: sessionStorage.getItem('customerid'),
                             password: sessionStorage.getItem('pwd'),
-                            messageType: '登录成功',
+                            // messageType: '登录成功',
                         }, (res) => {
                             putToken(res.data.token); // 将 token 存储起来
                             // router.go(0)
