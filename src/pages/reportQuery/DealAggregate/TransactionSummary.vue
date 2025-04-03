@@ -33,6 +33,7 @@
 .top {
   margin: -10px 5px 5px 5px
 }
+
 </style>
 <template>
   <div class="bck" :style="{marginTop:isClientPage?'0': '-25px'}">
@@ -131,15 +132,17 @@
         </div>
         <Button type="primary" @click="refresh()" class="mr-3 client-button">
           查询
-        </Button
-        >
-        <Icon type="md-exit" @click="handleExportOrders()" class="mr-3 client-icon"/>
+        </Button>
+        <Button type="primary" @click="refresh()" class="mr-3 client-button">
+          <Icon type="ios-exit-outline" @click="handleExportOrders()" class="client-icon"/>
+        </Button>
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
               class="mr-3 input-form"
-              placeholder="债券代码"
               @on-change="refresh"
+              placeholder="债券代码"
+              :search="true"
           >
           </Input>
         </form>
@@ -148,15 +151,17 @@
 
     <Table
         :columns="columns1"
+        highlight-row
         size="small"
         style="clear: both"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
         ref="table"
-        row-key="instrumentId"
+        row-key="id"
         border
         @on-sort-change="e=>handleSort(e,this.getOrderData)"
+        @on-expand-tree="handleRowTree"
     >
     </Table>
     <template>
@@ -196,7 +201,7 @@ export default {
       },
       {
         title: "代码",
-        key: "instrumentId",
+        key: "id",
         minWidth: 150,
         resizable: true,
         width: null,
@@ -214,6 +219,9 @@ export default {
               click: () => this.toggleExpandAll(), // 绑定点击事件
             },
           }, '')])
+        },
+        render: (h, {row}) => {
+          return h('span', row.instrumentId)
         }
       },
       {
@@ -229,7 +237,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买成交笔数",
@@ -237,7 +245,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买成交均价",
@@ -245,12 +253,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidAveragePrice ? row.bidAveragePrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖成交均价",
@@ -258,12 +261,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerAveragePrice ? row.offerAveragePrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖成交笔数",
@@ -271,7 +269,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "卖成交量",
@@ -279,7 +277,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "成交差额",
@@ -287,7 +285,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买最低价",
@@ -295,12 +293,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidLowestPrice ? row.bidLowestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "买最高价",
@@ -308,12 +301,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidHighestPrice ? row.bidHighestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖最低价",
@@ -321,12 +309,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerLowestPrice ? row.offerLowestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖最高价",
@@ -334,12 +317,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerHighestPrice ? row.offerHighestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "数量单位",
@@ -363,6 +341,8 @@ export default {
       updateTime: null,
       showTree: false,
       timer: null,
+      selectedRow: null,
+      expandStates: [], // 存储展开状态的数组
       tableHeight: sessionStorage.getItem('isClientPage') ? window.innerHeight - 115 : window.innerHeight - 240,
       URL
     };
@@ -381,6 +361,19 @@ export default {
   },
   methods: {
     handleSort,
+    // table中单个点击树形解构
+    handleRowTree(id, isExpanded) {
+      // 更新展开状态数组
+      const existingState = this.expandStates.find(state => state.id === id);
+      // const existingState = this.expandStates.find(state => state.instrumentId === id);
+      // 将折叠状态添加到数组中
+      if (existingState) {
+        existingState.isExpanded = isExpanded;
+      } else {
+        // this.expandStates.push({instrumentId: id, isExpanded: isExpanded});
+        this.expandStates.push({id: id, isExpanded: isExpanded});
+      }
+    },
     // 监听窗口
     calculateTableHeight() {
       return this.isClientPage ? window.innerHeight - 115 : window.innerHeight - 240;
@@ -393,12 +386,6 @@ export default {
       this.searchParams.tradingDay = moment(this.searchParams.tradingDay).isValid()
           ? moment(this.searchParams.tradingDay).format("YYYYMMDD")
           : null;
-      // // 客户端不好处理
-      // if (this.searchParams.defaultValue !== 1) {
-      //   this.searchParams.commodityType = this.searchParams.defaultValue
-      // } else {
-      //   this.searchParams.commodityType = ""
-      // }
       const payload = {
         ...this.pagination,
         ...this.searchParams,
@@ -409,13 +396,19 @@ export default {
         this.pagination.total = res.data.total;
         this.updateTime = res.data.updateTime
         this.tableData = res.data.dataList.map(i => {
-          this.$set(i, '_showChildren', this.showTree);
+          // 找到对应项，如果当前债券单独展开，则不更改展开逻辑，否则根据 showTree 展示
+          const existingState = this.expandStates.find(state => state.id === i.id);
+          // const existingState = this.expandStates.find(state => state.instrumentId === i.instrumentId);
+          const isExpanded = existingState ? existingState.isExpanded : this.showTree;
+          this.$set(i, '_showChildren', isExpanded);
           return i
         });
       });
     },
     // 展开、收缩树形解构
     toggleExpandAll() {
+      // 点击全局收缩时清空缓存数组，确保状态一致
+      this.expandStates = []
       this.tableData.map(i => {
         this.$set(i, '_showChildren', !this.showTree);
       })
@@ -442,9 +435,11 @@ export default {
       const url = this.isClientPage ? URL.dealStatisticTotalExport : URL.dealStatisticTotalExportWeb;
       handleExport(url, payload, '成交汇总列表')
     },
-  },
+  }
+  ,
   beforeDestroy() {
     clearInterval(this.timer)
   }
-};
+}
+;
 </script>

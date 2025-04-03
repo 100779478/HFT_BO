@@ -57,16 +57,6 @@
   background-color: var(--select-hover-backcolor);
 }
 
-::v-deep .ivu-table td,
-::v-deep .ivu-table th {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  padding-top: 5px !important; /* 调整上边距 */
-  padding-bottom: 5px !important; /* 调整下边距 */
-  line-height: normal; /* 确保文本的行高正常 */
-  height: 12px !important;
-}
-
 ::v-deep .ivu-checkbox-inner, ::v-deep .ivu-page-next, .ivu-page-prev,
 ::v-deep .ivu-table, ::v-deep .ivu-page-item, ::v-deep .ivu-page-disabled,
 ::v-deep .ivu-select-dropdown, ::v-deep .ivu-select-selection, ::v-deep .ivu-page-prev,
@@ -74,7 +64,7 @@
   background-color: var(--background-color);
 }
 
-::v-deep .ivu-select-item-selected{
+::v-deep .ivu-select-item-selected {
   color: #2db7f5;
 }
 
@@ -91,8 +81,35 @@
   background: var(--date-hover-color);
 }
 
+::v-deep .ivu-table td,
+::v-deep .ivu-table th {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding-top: 5px !important; /* 调整上边距 */
+  padding-bottom: 5px !important; /* 调整下边距 */
+  line-height: normal; /* 确保文本的行高正常 */
+  height: 12px !important;
+}
+
+::v-deep .ivu-table-row-highlight td {
+  background: var(--table-highlight);
+}
+
+::v-deep .ivu-table-row-highlight:hover td {
+  background: var(--table-highlight);
+
+}
+
+//::v-deep .ivu-table-row-hover td {
+//  background-color: #32468E; /* 选中行的颜色 */
+//}
+
 ::v-deep .ivu-table-cell-tree {
   background-color: var(--background-color);
+}
+
+::v-deep .ivu-table-cell-tree-empty {
+  display: none;
 }
 
 ::v-deep .ivu-table th {
@@ -126,7 +143,6 @@
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
 }
-
 
 .mr {
   &-3 {

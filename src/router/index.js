@@ -302,6 +302,7 @@ router.beforeEach((to, from, next) => {
             '--border': '#2C4067',
             '--table-th': '#1D2B48',
             '--table-th-border': 'linear-gradient(to bottom, black, #5a5a5a, black)',
+            '--table-highlight': '#32468E',
         }
     } else {
         style = {
@@ -320,6 +321,7 @@ router.beforeEach((to, from, next) => {
             '--border': '#dadadd',
             '--table-th': '#fff',
             '--table-th-border': '',
+            '--table-highlight': '#d4d9e8',
         }
         sessionStorage.removeItem('isClientPage')
     }

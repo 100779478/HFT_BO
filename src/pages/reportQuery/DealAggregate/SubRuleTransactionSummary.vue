@@ -128,6 +128,7 @@
             </Option>
           </Select>
         </form>
+        <div style="color: #fff;margin:auto 5px">策略ID</div>
         <form autocomplete="off">
           <Input
               v-model="searchParams.ruleId"
@@ -145,19 +146,23 @@
           查询
         </Button
         >
-        <Icon type="md-exit" @click="handleExportOrders()" class="mr-3 client-icon"/>
+        <Button type="primary" @click="refresh()" class="mr-3 client-button">
+          <Icon type="ios-exit-outline" @click="handleExportOrders()" class="client-icon"/>
+        </Button>
         <form autocomplete="off">
           <Input
               v-model="searchParams.instrumentId"
               class="mr-3 input-form"
-              placeholder="债券代码"
               @on-change="refresh"
+              placeholder="债券代码"
+              :search="true"
           >
           </Input>
         </form>
       </Col>
     </Row>
     <Table
+        highlight-row
         :columns="columns1"
         size="small"
         :data="tableData"
@@ -227,7 +232,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买成交笔数",
@@ -235,7 +240,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买成交均价",
@@ -243,12 +248,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidAveragePrice ? row.bidAveragePrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖成交均价",
@@ -256,12 +256,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerAveragePrice ? row.offerAveragePrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖成交笔数",
@@ -269,7 +264,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "卖成交量",
@@ -277,7 +272,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "成交差额",
@@ -285,7 +280,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
+        align: 'center',
       },
       {
         title: "买最低价",
@@ -293,12 +288,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidLowestPrice ? row.bidLowestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "买最高价",
@@ -306,12 +296,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.bidHighestPrice ? row.bidHighestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖最低价",
@@ -319,12 +304,7 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerLowestPrice ? row.offerLowestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
       },
       {
         title: "卖最高价",
@@ -332,12 +312,14 @@ export default {
         minWidth: 100,
         resizable: true,
         width: null,
-        align: 'right',
-        render: (h, params) => {
-          const {row} = params
-          const txt = row.offerHighestPrice ? row.offerHighestPrice.toFixed(4) : null
-          return h('span', txt)
-        }
+        align: 'center',
+      },
+      {
+        title: "数量单位",
+        key: "unit",
+        minWidth: 90,
+        resizable: true,
+        width: null,
       },
     ];
     let searchParams = {
