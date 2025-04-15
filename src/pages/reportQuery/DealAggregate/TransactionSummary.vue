@@ -134,7 +134,7 @@
           查询
         </Button>
         <Button type="primary" @click="refresh()" class="mr-3 client-button">
-          <Icon type="ios-exit-outline" @click="handleExportOrders()" class="client-icon"/>
+          <img src="@/assets/export.svg" alt="导出"  @click="handleExportOrders()" class="client-icon">
         </Button>
         <form autocomplete="off">
           <Input
@@ -162,6 +162,7 @@
         border
         @on-sort-change="e=>handleSort(e,this.getOrderData)"
         @on-expand-tree="handleRowTree"
+        @on-column-width-resize="handleColumnResize"
     >
     </Table>
     <template>
@@ -190,13 +191,15 @@ import {tableMixin} from "@/mixins/tableMixin";
 export default {
   mixins: [tableMixin],
   data() {
+    const savedWidths = JSON.parse(localStorage.getItem('dealStatisticColumnWidths') || '{}');
+
     let columns1 = [
       {
         title: "交易所代码",
         key: "exchangeId",
         minWidth: 120,
         resizable: true,
-        width: null,
+        width: savedWidths.exchangeId || null,
         sortable: 'custom',
       },
       {
@@ -204,7 +207,7 @@ export default {
         key: "id",
         minWidth: 150,
         resizable: true,
-        width: null,
+        width: savedWidths.id || null,
         tree: true,
         renderHeader: (h, {column}) => {
           return h('span', [h('span', column.title), h('Icon', {
@@ -229,14 +232,14 @@ export default {
         key: "dealResource",
         minWidth: 150,
         resizable: true,
-        width: null,
+        width: savedWidths.dealResource || null,
       },
       {
         title: "买成交量",
         key: "bidVolume",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.bidVolume || null,
         align: 'center',
       },
       {
@@ -244,7 +247,7 @@ export default {
         key: "bidNumber",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.bidNumber || null,
         align: 'center',
       },
       {
@@ -252,7 +255,7 @@ export default {
         key: "bidAveragePrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.bidAveragePrice || null,
         align: 'center',
       },
       {
@@ -260,7 +263,7 @@ export default {
         key: "offerAveragePrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.offerAveragePrice || null,
         align: 'center',
       },
       {
@@ -268,7 +271,7 @@ export default {
         key: "offerNumber",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.offerNumber || null,
         align: 'center',
       },
       {
@@ -276,7 +279,7 @@ export default {
         key: "offerVolume",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.offerVolume || null,
         align: 'center',
       },
       {
@@ -284,7 +287,7 @@ export default {
         key: "dealSubtract",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.dealSubtract || null,
         align: 'center',
       },
       {
@@ -292,7 +295,7 @@ export default {
         key: "bidLowestPrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.bidLowestPrice || null,
         align: 'center',
       },
       {
@@ -300,7 +303,7 @@ export default {
         key: "bidHighestPrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.bidHighestPrice || null,
         align: 'center',
       },
       {
@@ -308,7 +311,7 @@ export default {
         key: "offerLowestPrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.offerLowestPrice || null,
         align: 'center',
       },
       {
@@ -316,7 +319,7 @@ export default {
         key: "offerHighestPrice",
         minWidth: 100,
         resizable: true,
-        width: null,
+        width: savedWidths.offerHighestPrice || null,
         align: 'center',
       },
       {
@@ -324,7 +327,7 @@ export default {
         key: "unit",
         minWidth: 90,
         resizable: true,
-        width: null,
+        width: savedWidths.unit || null,
       },
     ];
     let searchParams = {
@@ -435,6 +438,17 @@ export default {
       const url = this.isClientPage ? URL.dealStatisticTotalExport : URL.dealStatisticTotalExportWeb;
       handleExport(url, payload, '成交汇总列表')
     },
+    // 表头宽度持久化
+    handleColumnResize(newWidth, oldWidth, column, event) {
+      const key = column.key || column.slot; // 兜底取唯一 key
+
+      if (!key) return; // 防止无 key 的列参与
+
+      const savedWidths = JSON.parse(localStorage.getItem('dealStatisticColumnWidths') || '{}');
+      savedWidths[key] = newWidth;
+      localStorage.setItem('dealStatisticColumnWidths', JSON.stringify(savedWidths));
+    }
+
   }
   ,
   beforeDestroy() {

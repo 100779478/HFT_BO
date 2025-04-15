@@ -1,3 +1,8 @@
+:root {
+    --scroller: #8f959b; /* 滚动条的颜色 */
+    --scroller-hover: rgba(159, 158, 158, 0.8); /* 滚动条悬停时的颜色 */
+}
+
 html,
 body,
 #app {
@@ -20,11 +25,13 @@ body,
 ::-webkit-scrollbar {
     height: 9px;
     width: 8px;
-    background-color: #d8d8d8;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(159, 158, 158, 0.8);
+    /*background: rgba(159, 158, 158, 0.8);*/
+    background: var(--scroller-hover);
+
 }
 
 /* 滚动槽样式 */
@@ -34,7 +41,8 @@ body,
 
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
-    background-color: #8f959b;
+    /*background-color: #8f959b;*/
+    background-color: var(--scroller);
 }
 
 .demo-spin-icon-load {

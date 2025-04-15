@@ -303,6 +303,8 @@ router.beforeEach((to, from, next) => {
             '--table-th': '#1D2B48',
             '--table-th-border': 'linear-gradient(to bottom, black, #5a5a5a, black)',
             '--table-highlight': '#32468E',
+            '--scroller': '#34415c',
+            '--scroller-hover': '#5281B8',
         }
     } else {
         style = {
@@ -322,6 +324,8 @@ router.beforeEach((to, from, next) => {
             '--table-th': '#fff',
             '--table-th-border': '',
             '--table-highlight': '#d4d9e8',
+            '--scroller': '#8f959b',
+            '--scroller-hover': 'rgba(159, 158, 158, 0.8)',
         }
         sessionStorage.removeItem('isClientPage')
     }
