@@ -147,8 +147,8 @@
           查询
         </Button
         >
-        <Button type="primary" @click="refresh()" class="mr-3 client-button">
-          <img src="@/assets/export.svg" alt="导出"  @click="handleExportOrders()" class="client-icon">
+        <Button type="primary" @click="handleExportOrders()" class="mr-3 client-button">
+          <img src="@/assets/export.svg" alt="导出"   class="client-icon">
         </Button>
         <form autocomplete="off">
           <Input
