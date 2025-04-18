@@ -148,7 +148,7 @@
         </Button
         >
         <Button type="primary" @click="handleExportOrders()" class="mr-3 client-button">
-          <img src="@/assets/export.svg" alt="导出"   class="client-icon">
+          <img src="@/assets/export.svg" alt="导出" class="client-icon">
         </Button>
         <form autocomplete="off">
           <Input
@@ -219,6 +219,14 @@ export default {
         minWidth: 120,
         resizable: true,
         width: savedWidths.ruleId || null,
+        sortable: 'custom',
+      },
+      {
+        title: "策略名称",
+        key: "ruleName",
+        minWidth: 150,
+        resizable: true,
+        width: savedWidths.ruleName || null,
         sortable: 'custom',
       },
       {
