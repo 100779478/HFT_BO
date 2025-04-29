@@ -14,7 +14,7 @@
 import {Graph} from '@antv/x6'
 import '@antv/x6-vue-shape'
 import {register} from "@antv/x6-vue-shape";
-import MyNode from "@/components/nodes/MyNode.vue";
+import CustomNode from "@/components/nodes/CustomNode.vue";
 
 export default {
   name: 'GraphComponent',
@@ -330,7 +330,7 @@ export default {
       shape: 'custom-vue-node',  // 自定义节点名
       width: 100,
       height: 40,
-      component: MyNode
+      component: CustomNode
     })
     this.initGraph()  // 确保 DOM 渲染完成后再初始化图表
 

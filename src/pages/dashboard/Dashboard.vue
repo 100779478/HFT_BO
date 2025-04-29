@@ -8,7 +8,7 @@
       {{ item.title }}
     </div>
     <!-- X6 图容器，用于渲染流程图 -->
-    <div ref="container" style="width: 1900px; height: 88vh;overflow: scroll">
+    <div ref="container" style="width: 1900px; height: 88vh;overflow: scroll;">
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@
 import {Graph} from '@antv/x6'
 import '@antv/x6-vue-shape'
 import {register} from "@antv/x6-vue-shape";
-import MyNode from "@/components/nodes/MyNode.vue";
+import CustomNode from "@/components/nodes/CustomNode.vue";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 
@@ -29,7 +29,18 @@ export default {
       timer: null,           // 动画计时器
       edgeOffsets: [],       // 存储边的偏移与速度
       container: [],         // 容器区域数据
-      nodes: []              // 节点数据
+      nodes: [{
+        label: '上交所固收行情',
+        node: 'termFixMdReader',
+        to: [{target: 'ignore'}],
+        level: 1,
+        x: 0.1,
+        badge: Math.ceil(Math.random() * 10),
+        monitor: {
+          cpu: 10,
+          memory: []
+        }
+      }]              // 节点数据
     }
   },
   mounted() {
@@ -38,20 +49,20 @@ export default {
       shape: 'custom-vue-node',
       width: 100,
       height: 40,
-      component: MyNode
+      component: CustomNode
     })
+    this.initGraph()
 
     // 加载数据后初始化图或刷新
-    http.get(URL.dashboard, (res) => {
-      this.container = res.data?.container ?? []
-      this.nodes = res.data?.nodes ?? []
-      if (!this.graph) {
-        this.initGraph()
-      } else {
-        this.refreshGraphGracefully()
-      }
-    })
-
+    // http.get(URL.dashboard, (res) => {
+    //   this.container = res.data?.container ?? []
+    //   this.nodes = res.data?.nodes ?? []
+    //   if (!this.graph) {
+    //     this.initGraph()
+    //   } else {
+    //     this.refreshGraphGracefully()
+    //   }
+    // })
   },
   beforeDestroy() {
     // 清除定时器，防止内存泄漏
