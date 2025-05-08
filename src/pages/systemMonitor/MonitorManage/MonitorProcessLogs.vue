@@ -93,11 +93,11 @@
           <Icon type="md-search"/>
           查询
         </Button>
-<!--        <Button type="success" @click="()=>handleExport(URL.marketProcessExport, this.pagination, '进程监控列表')"-->
-<!--                class="mr3">-->
-<!--          <Icon type="md-download"/>-->
-<!--          导出-->
-<!--        </Button>-->
+        <!--        <Button type="success" @click="()=>handleExport(URL.marketProcessExport, this.pagination, '进程监控列表')"-->
+        <!--                class="mr3">-->
+        <!--          <Icon type="md-download"/>-->
+        <!--          导出-->
+        <!--        </Button>-->
       </Col>
     </Row>
     <Table
@@ -165,6 +165,10 @@ export default {
         resizable: true,
         width: null,
         minWidth: 120,
+        render: ((h, {row: {logErrorMessage}}) => {
+          const txt = logErrorMessage ? '当前日志存在错误日志，请及时检查！' : '无'
+          return h('span', txt)
+        })
       },
     ];
     let pagination = {
