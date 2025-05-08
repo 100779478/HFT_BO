@@ -155,6 +155,13 @@ export default {
         width: null,
         minWidth: 120,
       },
+      {
+        title: "更新时间",
+        key: "updateTime",
+        resizable: true,
+        width: null,
+        minWidth: 180,
+      },
     ];
     return {
       columns1,
