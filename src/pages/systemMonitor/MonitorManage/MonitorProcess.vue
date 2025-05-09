@@ -156,7 +156,6 @@ export default {
       {
         title: "进程名",
         key: "serviceName",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 190,
@@ -164,7 +163,6 @@ export default {
       {
         title: "进程ID",
         key: "pid",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 120,
@@ -234,7 +232,6 @@ export default {
       {
         title: "主机名",
         key: "localhost",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 190,
@@ -300,6 +297,7 @@ export default {
       serviceName: "",
       startDate: "",
       endDate: "",
+      pageSize: 50
     };
     let dateRange = {startDate: moment().format("YYYYMMDD"), endDate: moment().format("YYYYMMDD")};
     return {
