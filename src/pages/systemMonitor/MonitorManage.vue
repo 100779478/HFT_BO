@@ -4,10 +4,10 @@
       <div class="monitor-title">监控进程</div>
       <MonitorProcess/>
     </div>
-    <div class="monitor-item">
-      <div class="monitor-title">行情数据</div>
-      <MarketData/>
-    </div>
+<!--    <div class="monitor-item">-->
+<!--      <div class="monitor-title">行情数据</div>-->
+<!--      <MarketData/>-->
+<!--    </div>-->
     <div class="monitor-item">
       <div class="monitor-title">监控日志</div>
       <MonitorProcessLogs/>

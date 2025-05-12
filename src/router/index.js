@@ -149,7 +149,7 @@ const routes = [
             {
                 path: "/home/sys-monitor/monitor-manage",
                 name: "Monitor",
-                component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/MonitorManage.vue"),
+                component: () => import(/* webpackChunkName: "monitor-manage" */ "@/pages/systemMonitor/MonitorManage.vue"),
                 meta: {
                     title: "监控管理",
                 },
