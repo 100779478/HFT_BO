@@ -1,0 +1,496 @@
+{
+  "container": [
+    {
+      "width": 150,
+      "height": 120,
+      "left": 70,
+      "top": 20,
+      "title": "期货",
+      "background": "#0A1E57"
+    },
+    {
+      "width": 480,
+      "height": 120,
+      "left": 273,
+      "top": 20,
+      "title": "交易所",
+      "background": "#0A1E57"
+    },
+    {
+      "width": 615,
+      "height": 120,
+      "left": 770,
+      "top": 20,
+      "title": "CFETS",
+      "background": "#0A1E57"
+    }
+  ],
+  "nodes": [
+    {
+      "label": "上交所固收平台",
+      "node": "fixSh",
+      "to": [
+        {
+          "target": "termZjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.15
+    },
+    {
+      "label": "金证计算器",
+      "node": "jzc",
+      "to": [
+        {
+          "target": "calculatorTerminal"
+        }
+      ],
+      "level": 2,
+      "x": 0.71,
+      "arrow": true
+    },
+    {
+      "label": "期交所",
+      "node": "femas",
+      "to": [
+        {
+          "target": "pegasusCounter"
+        }
+      ],
+      "level": 1,
+      "x": 0.0445,
+      "speed": 0
+    },
+    {
+      "label": "BO后台管理",
+      "node": "hft-bo-server",
+      "to": [
+        {
+          "target": "db",
+          "route": [
+            "left",
+            "right"
+          ]
+        }
+      ],
+      "level": 4.6,
+      "status": 1,
+      "color": "#63A103",
+      "x": 0.68,
+      "arrow": true
+    },
+    {
+      "label": "BO监控",
+      "node": "hft-bo-monitor",
+      "to": [
+        {
+          "target": "hft-bo-server",
+          "route": [
+            "left",
+            "right"
+          ]
+        }
+      ],
+      "level": 4.6,
+      "status": 1,
+      "color": "#63A103",
+      "x": 0.78,
+      "arrow": true
+    },
+    {
+      "label": "初始化",
+      "node": "tinit",
+      "to": [
+        {
+          "target": "tkernel",
+          "route": [
+            "left",
+            "top"
+          ],
+          "offset": {
+            "tx": 20
+          }
+        }
+      ],
+      "level": 4.1,
+      "x": 0.49,
+      "status": 1,
+      "color": "#63A103",
+      "monitor": {
+        "memory": [
+          3.3,
+          3.3
+        ],
+        "cpu": 2
+      }
+    },
+    {
+      "label": "数据持久化",
+      "node": "m2db",
+      "to": [
+        {
+          "target": "db",
+          "route": [
+            "right",
+            "bottom"
+          ]
+        }
+      ],
+      "level": 5,
+      "x": 0.49,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "BO连接",
+      "node": "boConnector",
+      "to": [
+        {
+          "target": "hft-bo-server",
+          "route": [
+            "right",
+            "bottom"
+          ]
+        }
+      ],
+      "level": 6,
+      "x": 0.49,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "",
+      "node": "ignore",
+      "to": [
+        {
+          "target": "tkernel"
+        }
+      ],
+      "level": 3,
+      "x": 0.362,
+      "color": "#63A103",
+      "y": 0.5,
+      "width": 0,
+      "height": 0,
+      "hidden": true
+    },
+    {
+      "label": "客户端",
+      "node": "front",
+      "to": [],
+      "level": 7,
+      "x": 0.33
+    },
+    {
+      "label": "债券计算器",
+      "node": "calculatorTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.71,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "DB",
+      "node": "db",
+      "to": [
+        {
+          "target": "tinit",
+          "route": [
+            "top",
+            "right"
+          ]
+        }
+      ],
+      "level": 4.6,
+      "x": 0.58,
+      "shape": "elliptical"
+    },
+    {
+      "label": "银行间交易服务",
+      "node": "bondTernimal",
+      "to": [
+        {
+          "target": "CfetsTradeTerminal"
+        },
+        {
+          "target": "xQuantMarketTrade"
+        }
+      ],
+      "level": 2,
+      "width": 200,
+      "x": 0.54,
+      "badge": 0,
+      "arrow": true
+    },
+    {
+      "label": "CTP期货行情",
+      "node": "ctpMarketTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "status": 1,
+      "color": "#63A103",
+      "x": 0.08
+    },
+    {
+      "label": "交易核心",
+      "node": "tkernel",
+      "to": [
+        {
+          "target": "front"
+        },
+        {
+          "target": "m2db",
+          "route": [
+            "right",
+            "left"
+          ]
+        },
+        {
+          "target": "boConnector",
+          "route": [
+            "bottom",
+            "left"
+          ],
+          "offset": {
+            "sx": 30
+          }
+        }
+      ],
+      "level": 5,
+      "x": 0.33,
+      "status": 1,
+      "color": "#63A103",
+      "monitor": {
+        "memory": [
+          3.6
+        ],
+        "cpu": 6
+      }
+    },
+    {
+      "label": "金证行情对接服务",
+      "node": "HklhMarketTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.33,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "上交所新债平台",
+      "node": "debtSh",
+      "to": [
+        {
+          "target": "termZjOms"
+        },
+        {
+          "target": "zjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.24
+    },
+    {
+      "label": "Simnow",
+      "node": "pegasusCounter",
+      "to": [
+        {
+          "target": "ctpTradeTerminal",
+          "offset": {
+            "sx": -65
+          }
+        },
+        {
+          "target": "ctpMarketTerminal",
+          "offset": {
+            "sx": 67
+          }
+        }
+      ],
+      "level": 2,
+      "x": 0.01,
+      "width": 250
+    },
+    {
+      "label": "CTP期货交易",
+      "node": "ctpTradeTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.01,
+      "color": "#63A103",
+      "status": 1,
+      "monitor": {
+        "memory": null,
+        "cpu": null
+      }
+    },
+    {
+      "label": "交易所模拟撮合",
+      "node": "SimTradeTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.24,
+      "speed": 1,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "Cfets交易服务",
+      "node": "CfetsTradeTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.561,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "金证行情中台",
+      "node": "termZjOms",
+      "to": [
+        {
+          "target": "HklhMarketTerminal"
+        }
+      ],
+      "width": 300,
+      "level": 2,
+      "x": 0.283
+    },
+    {
+      "label": "银行间模拟撮合",
+      "node": "SimCfetsTradeTerminal",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.42,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "RDI信息",
+      "node": "rdi",
+      "to": [
+        {
+          "target": "tinit"
+        }
+      ],
+      "level": 2,
+      "x": 0.8,
+      "shape": "elliptical"
+    },
+    {
+      "label": "风控",
+      "node": "riskControl",
+      "to": [
+        {
+          "target": "tkernel",
+          "route": [
+            "right",
+            "left"
+          ]
+        }
+      ],
+      "level": 5,
+      "x": 0.21,
+      "status": 1,
+      "color": "#63A103",
+      "arrow": true
+    },
+    {
+      "label": "深交所平台",
+      "node": "exchangeSe",
+      "to": [
+        {
+          "target": "termZjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.33
+    },
+    {
+      "label": "XBOND",
+      "node": "xbond",
+      "to": [
+        {
+          "target": "termZjOms"
+        },
+        {
+          "target": "bondTernimal",
+          "offset": {
+            "sx": 30,
+            "tx": -85
+          }
+        }
+      ],
+      "level": 1,
+      "x": 0.5
+    },
+    {
+      "label": "双边",
+      "node": "bond",
+      "to": [
+        {
+          "target": "termZjOms"
+        },
+        {
+          "target": "bondTernimal",
+          "offset": {
+            "sx": 30,
+            "tx": 66
+          }
+        }
+      ],
+      "level": 1,
+      "x": 0.58
+    },
+    {
+      "label": "CMDM",
+      "node": "cmdm",
+      "to": [
+        {
+          "target": "termZjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.66
+    },
+    {
+      "label": "经纪报价",
+      "node": "economic",
+      "to": [
+        {
+          "target": "termZjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.42
+    }
+  ]
+}
