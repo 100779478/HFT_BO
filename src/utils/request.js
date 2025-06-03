@@ -37,6 +37,7 @@ export const http = {
      * @param {string} url - 请求地址
      * @param messageType - 提示消息
      * @param responseType - 请求类型
+     * @param headers
      * @param {object} data - 请求body参数
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
@@ -44,18 +45,39 @@ export const http = {
      */
     post: (
         url,
-        {messageType, responseType, ...data} = {},
-        thenHandler = () => {
-        },
-        errorHandler = defaultErrorHandler,
+        data = {},                  // 接收 FormData、普通对象 或数组
+        thenHandler = () => {},
+        errorHandler = defaultErrorHandler
     ) => {
-        // 创建一个 data 的副本
-        return axiosInstance.post(url, data, {responseType}).then((res) => {
-            thenHandler(res)
-            const msg = !res.okMessage ? messageType : res.okMessage
-            if (res?.code === '0' && messageType) Message.success(msg)
-        }).catch(errorHandler);
+        let headers = data?.headers || {};
+        let messageType = data?.messageType;
+        let responseType = data?.responseType;
+
+        const isFormData = data instanceof FormData;
+        const isArray = Array.isArray(data);
+
+        // ✅ 关键点：数组要直接传，不要扩展成对象
+        const payload = isFormData || isArray ? data : { ...data };
+
+        if (!isFormData && !isArray) {
+            delete payload.messageType;
+            delete payload.responseType;
+            delete payload.headers;
+        }
+
+        return axiosInstance
+            .post(url, payload, {
+                headers,
+                responseType
+            })
+            .then((res) => {
+                thenHandler(res);
+                const msg = !res.okMessage ? messageType : res.okMessage;
+                if (res?.code === '0' && messageType) Message.success(msg);
+            })
+            .catch(errorHandler);
     },
+
     uploadFile: (url, file, data = {}, cancelToken, progressCallBack = () => {
     }, thenHandler = () => {
     }, errorHandler = defaultErrorHandler,) => {
@@ -98,6 +120,7 @@ export const http = {
      * HTTP PUT 请求
      * @param {string} url - 请求地址
      * @param messageType - 提示消息
+     * @param headers
      * @param {object} data - 请求body参数
      * @param {Function=} thenHandler - 响应成功方法，可选项非必传，提供默认处理方式
      * @param {Function=} errorHandler - 错误处理方法，可选项非必传，提供默认处理方式
@@ -105,18 +128,29 @@ export const http = {
      */
     put: (
         url,
-        {messageType, ...data} = {},
-        thenHandler = () => {
-        },
+        data = {},                        // 支持 FormData 或普通对象
+        thenHandler = () => {},
         errorHandler = defaultErrorHandler,
     ) => {
-        return axiosInstance.put(url, data).then((res) => {
-            thenHandler(res)
-            const msg = !res.okMessage ? messageType : res.okMessage
-            if (res?.code === '0' && messageType) Message.success(msg)
+        const isFormData = data instanceof FormData;
+
+        const headers = isFormData
+            ? (data.headers || {})         // FormData 自带 headers 不处理
+            : (data.headers || {});
+        const messageType = isFormData ? data.messageType : data.messageType;
+
+        const payload = isFormData ? data : { ...data };
+        if (!isFormData) {
+            delete payload.headers;
+            delete payload.messageType;
+        }
+
+        return axiosInstance.put(url, payload, { headers }).then((res) => {
+            thenHandler(res);
+            const msg = !res.okMessage ? messageType : res.okMessage;
+            if (res?.code === '0' && messageType) Message.success(msg);
         }).catch(errorHandler);
     },
-
     /**
      * HTTP DELETE 请求
      * @param {string} url - 请求地址
@@ -197,8 +231,8 @@ axiosInstance.interceptors.request.use((config) => {
         return config;
     }
     // 自动刷新获取数据字典
-    // const excludedRoutes = ['Login', 'Dashboard', 'Home', 'MonitorStatus', 'MonitorHistory', 'TransactionSummary', 'SubRuleTransactionSummary'];
-    const excludedRoutes = ['Login', 'Dashboard', 'Home'].concat(Object.values(ClientRoutePage));
+    // const excludedRoutes = ['Login', 'HomePage', 'Home', 'MonitorStatus', 'MonitorHistory', 'TransactionSummary', 'SubRuleTransactionSummary'];
+    const excludedRoutes = ['Login', 'HomePage', 'Home'].concat(Object.values(ClientRoutePage));
     if (!localStorage.dictionaryList && (!excludedRoutes.includes(router.currentRoute.name))) {
         http.get(URL.dictionaryList, res => store.commit("dictionary/dictionaryList", res.data))
     }

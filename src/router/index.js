@@ -78,9 +78,9 @@ const routes = [
             // ===============================================主页===============================================
             // ====================================================================================================
             {
-                path: "/home/dashboard",
-                name: "Dashboard",
-                component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/dashboard/Dashboard"),
+                path: "/home/homepage",
+                name: "HomePage",
+                component: () => import(/* webpackChunkName: "homepage" */ "@/pages/dashboard/Dashboard.vue"),
                 meta: {
                     title: "主页",
                 },
@@ -193,7 +193,7 @@ const routes = [
             {
                 path: "/home/sys-monitor/make-market",
                 name: "MakeMarket",
-                component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/systemMonitor/MakeMarket.vue"),
+                component: () => import(/* webpackChunkName: "make-market" */ "@/pages/systemMonitor/MakeMarket.vue"),
                 meta: {
                     title: "系统监控/做市义务监控统计",
                 },
@@ -212,7 +212,16 @@ const routes = [
                 name: "Monitor",
                 component: () => import(/* webpackChunkName: "operating-log" */ "@/pages/systemMonitor/MonitorManage.vue"),
                 meta: {
-                    title: "监控管理",
+                    title: "系统监控/监控管理",
+                },
+            },
+            // 监控大屏
+            {
+                path: "/home/sys-monitor/dashboard",
+                name: "Dashboard",
+                component: () => import(/* webpackChunkName: "dashboard" */ "@/pages/systemMonitor/Dashboard.vue"),
+                meta: {
+                    title: "系统监控/监控大屏",
                 },
             },
             // ====================================================================================================

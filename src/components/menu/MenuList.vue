@@ -79,9 +79,9 @@ a.ivu-menu-item {
         theme="primary"
         width="auto"
         accordion
-        active-name="Dashboard"
+        active-name="HomePage"
     >
-      <MenuItem name="Dashboard" :to="{ name: 'Dashboard' }">
+      <MenuItem name="HomePage" :to="{ name: 'HomePage' }">
         <Icon type="md-home"/>
         首页
       </MenuItem>
@@ -129,7 +129,7 @@ export default {
     },
   },
   mounted() {
-    this.$router.push({name: "Dashboard"});
+    this.$router.push({name: "HomePage"});
     http.get(URL.menus, this.getMenuList);
   },
   methods: {

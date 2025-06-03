@@ -1,0 +1,485 @@
+{
+  "container": [
+    {
+      "width": 150,
+      "height": 120,
+      "left": 70,
+      "top": 20,
+      "title": "国债期货",
+      "background": "#0A1E57"
+    },
+    {
+      "width": 480,
+      "height": 120,
+      "left": 273,
+      "top": 20,
+      "title": "交易所",
+      "background": "#0A1E57"
+    },
+    {
+      "width": 750,
+      "height": 120,
+      "left": 850,
+      "top": 20,
+      "title": "CFETS",
+      "background": "#0A1E57"
+    }
+  ],
+  "nodes": [
+    {
+      "label": "上交所固收平台",
+      "node": "fixSh",
+      "to": [
+        {
+          "target": "zjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.15
+    },
+    {
+      "label": "中金北斗",
+      "node": "zjbd",
+      "to": [
+        {
+          "target": "Tinit"
+        }
+      ],
+      "level": 2,
+      "x": 0.8,
+      "shape": "elliptical",
+      "monitor": {
+        "memory": null,
+        "cpu": null
+      }
+    },
+    {
+      "label": "中金所",
+      "node": "femas",
+      "to": [
+        {
+          "target": "pegasusCounter"
+        }
+      ],
+      "level": 1,
+      "x": 0.0445,
+      "speed": 0
+    },
+    {
+      "label": "BO",
+      "node": "hft-bo-sevicer",
+      "to": [
+        {
+          "target": "db",
+          "route": [
+            "left",
+            "right"
+          ]
+        }
+      ],
+      "level": 5,
+      "status": 1,
+      "color": "#63A103",
+      "x": 0.78,
+      "y": 0.68,
+      "arrow": true
+    },
+    {
+      "label": "初始化",
+      "node": "Tinit",
+      "to": [
+        {
+          "target": "Tkernel",
+          "route": [
+            "left",
+            "top"
+          ],
+          "offset": {
+            "tx": 20
+          }
+        }
+      ],
+      "level": 4,
+      "x": 0.59,
+      "y": 0.6,
+      "status": 1,
+      "color": "#63A103",
+      "monitor": {
+        "memory": [3.3, 3.3],
+        "cpu": 2
+      }
+    },
+    {
+      "label": "数据持久化",
+      "node": "m2db",
+      "to": [
+        {
+          "target": "db",
+          "route": [
+            "right",
+            "bottom"
+          ]
+        }
+      ],
+      "level": 6,
+      "x": 0.59,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "",
+      "node": "ignore",
+      "to": [
+        {
+          "target": "Tkernel"
+        }
+      ],
+      "level": 3,
+      "x": 0.362,
+      "color": "#63A103",
+      "y": 0.5,
+      "width": 0,
+      "height": 0,
+      "hidden": true
+    },
+    {
+      "label": "客户端",
+      "node": "front",
+      "to": [],
+      "level": 7,
+      "x": 0.33,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "XSWAP",
+      "node": "xswap",
+      "to": [
+        {
+          "target": "gateWay"
+        }
+      ],
+      "level": 1,
+      "x": 0.78
+    },
+    {
+      "label": "上交所固收行情",
+      "node": "fixMdReader",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.26,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "CMDM行情",
+      "node": "xQuantCmdm",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.5,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "DB",
+      "node": "db",
+      "to": [
+        {
+          "target": "Tinit",
+          "route": [
+            "top",
+            "right"
+          ]
+        }
+      ],
+      "level": 5,
+      "x": 0.68,
+      "y": 0.68,
+      "shape": "elliptical"
+    },
+    {
+      "label": "CMDM",
+      "node": "cmdm",
+      "to": [
+        {
+          "target": "gateWay"
+        }
+      ],
+      "level": 1,
+      "x": 0.54
+    },
+    {
+      "label": "衡泰",
+      "node": "gateWay",
+      "to": [
+        {
+          "target": "xQuantCmdm",
+          "route": [
+            "left",
+            "top"
+          ]
+        },
+        {
+          "target": "xQuantMarketTrade"
+        }
+      ],
+      "level": 2,
+      "x": 0.62,
+      "badge": 0,
+      "arrow": true
+    },
+    {
+      "label": "期货行情",
+      "node": "femasMarket",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "status": 1,
+      "color": "#63A103",
+      "x": 0.08
+    },
+    {
+      "label": "交易核心",
+      "node": "Tkernel",
+      "to": [
+        {
+          "target": "front"
+        },
+        {
+          "target": "m2db",
+          "route": [
+            "right",
+            "left"
+          ]
+        }
+      ],
+      "level": 6,
+      "x": 0.33,
+      "status": 1,
+      "color": "#63A103",
+      "monitor": {
+        "memory": [3.6],
+        "cpu": 6
+      }
+    },
+    {
+      "label": "上交所新债行情",
+      "node": "mdReader",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.33,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "上交所新债平台",
+      "node": "debtSh",
+      "to": [
+        {
+          "target": "termZjOms"
+        },
+        {
+          "target": "zjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.24
+    },
+    {
+      "label": "飞马柜台",
+      "node": "pegasusCounter",
+      "to": [
+        {
+          "target": "femasTrade",
+          "offset": {
+            "sx": -65
+          }
+        },
+        {
+          "target": "femasMarket",
+          "offset": {
+            "sx": 67
+          }
+        }
+      ],
+      "level": 2,
+      "x": 0.01,
+      "width": 250
+    },
+    {
+      "label": "期货交易",
+      "node": "femasTrade",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.01,
+      "color": "#63A103",
+      "status": 1,
+      "monitor": {
+        "memory": null,
+        "cpu": null
+      }
+    },
+    {
+      "label": "交易所交易",
+      "node": "OMSTrade",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.15,
+      "speed": 1,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "衡泰行情及交易",
+      "node": "xQuantMarketTrade",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.62,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "双边",
+      "node": "bond",
+      "to": [
+        {
+          "target": "gateWay"
+        }
+      ],
+      "level": 1,
+      "x": 0.62
+    },
+    {
+      "label": "中金OMS",
+      "node": "zjOms",
+      "to": [
+        {
+          "target": "OMSTrade"
+        }
+      ],
+      "level": 2,
+      "x": 0.15,
+      "arrow": true
+    },
+    {
+      "label": "中金行情中心",
+      "node": "termZjOms",
+      "to": [
+        {
+          "target": "fixMdReader"
+        },
+        {
+          "target": "mdReader"
+        },
+        {
+          "target": "szseMarket"
+        }
+      ],
+      "level": 2,
+      "x": 0.33
+    },
+    {
+      "label": "深交所行情",
+      "node": "szseMarket",
+      "to": [
+        {
+          "target": "ignore"
+        }
+      ],
+      "level": 3,
+      "x": 0.4,
+      "status": 1,
+      "color": "#63A103"
+    },
+    {
+      "label": "XBOND",
+      "node": "xbond",
+      "to": [
+        {
+          "target": "gateWay"
+        }
+      ],
+      "level": 1,
+      "x": 0.7
+    },
+    {
+      "label": "RDI信息",
+      "node": "rdi",
+      "to": [
+        {
+          "target": "Tinit"
+        }
+      ],
+      "level": 2,
+      "x": 0.71,
+      "shape": "elliptical"
+    },
+    {
+      "label": "风控",
+      "node": "riskControl",
+      "to": [
+        {
+          "target": "Tkernel",
+          "route": [
+            "right",
+            "left"
+          ]
+        }
+      ],
+      "level": 6,
+      "x": 0.21,
+      "status": 1,
+      "color": "#63A103",
+      "arrow": true
+    },
+    {
+      "label": "深交所平台",
+      "node": "exchangeSe",
+      "to": [
+        {
+          "target": "termZjOms"
+        }
+      ],
+      "level": 1,
+      "x": 0.33
+    },
+    {
+      "label": "报价",
+      "node": "economic",
+      "to": [
+        {
+          "target": "gateWay"
+        }
+      ],
+      "level": 1,
+      "x": 0.46
+    }
+  ]
+}

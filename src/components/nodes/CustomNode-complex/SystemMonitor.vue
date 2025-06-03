@@ -91,7 +91,12 @@ export default {
           }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          min: 0, // 设置最小值为 0
+          max: 100, // 设置最大值为 100
+          axisLabel: {
+            formatter: '{value}%' // 在刻度标签后添加百分号
+          }
         },
         series: [{
           type: 'line',

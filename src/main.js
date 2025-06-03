@@ -90,7 +90,7 @@ new Vue({
             } else if (markIndex !== -1) {
                 location.replace(location.href)
             } else if (mark !== 'login' && mark) {
-                this.$router.replace({name: 'Dashboard'});
+                this.$router.replace({name: 'HomePage'});
             }
         }
         // 启动 SSE Worker

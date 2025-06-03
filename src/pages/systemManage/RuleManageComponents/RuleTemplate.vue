@@ -314,7 +314,7 @@
       </div>
       <div slot="footer">
         <Button type="text" @click="cancel">取消</Button>
-        <Button type="primary" @click="ok(isNew)">确定</Button>
+        <Button type="primary" @click="ok(isNew)" :loading="btnLoading">确定</Button>
       </div>
     </Modal>
     <Table
@@ -533,6 +533,7 @@ export default {
       ruleFileBytesStr: null
     }
     return {
+      btnLoading: false,
       activeList: ACTIVE_LIST,
       fileName: "",
       columns1,
@@ -612,7 +613,7 @@ export default {
             const data = {
               ruleId,
               productEnvId: this.selectedEnv,
-              messageType: SUCCESS_MSG.uploadSuccess
+              messageType: SUCCESS_MSG.uploadSuccess,
             }
             http.post(URL.ruleUploadProduct, data)
           },
@@ -695,12 +696,32 @@ export default {
           msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
           url: URL.ruleQuant
         };
-        http[config.method](config.url, {...this.userStrategyInfo, messageType: config.msg}, (res) => {
-          if (res.code === '0') {
-            this.getUserStrategyData();
-            this.cancel();
-          }
-        });
+        this.btnLoading = true; // 开始 loading
+        const formData = new FormData();
+        const {ruleFileBytesStr, ...restInfo} = this.userStrategyInfo;
+        formData.append('file', ruleFileBytesStr);
+        formData.append(
+            'param',
+            new Blob([JSON.stringify(restInfo)], {
+              type: 'application/json',
+            })
+        );
+
+        http[config.method](
+            config.url,
+            Object.assign(formData, {
+              messageType: config.msg,
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }),
+            (res) => {
+              if (res.code === '0') {
+                this.getUserStrategyData();
+                this.cancel();
+              }
+            }
+        );
       }
     },
     // 启用策略

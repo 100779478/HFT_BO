@@ -1,8 +1,6 @@
 const env = process.env.NODE_ENV;
-// const devUrl = "http://10.210.6.241:8888"; // POC
-// const devUrl = "http://58.250.164.226:31004"; // POC
-// const devUrl = "https://172.24.16.13:9888"; // 1.5.7
-const devUrl = "http://192.168.50.62:9000"; // 玺子哥
+const devUrl = "http://10.210.6.241:8888"; // POC
+// const devUrl = "http://192.168.50.27:9000"; // 玺子哥
 // const devUrl = "http://192.168.50.134:9000"; // 李航
 const proUrl = location.origin;
 //服务器
@@ -23,6 +21,9 @@ export const URL = {
     current: "/customer/current",
     // =============================================大屏监控接口=============================================
     dashboard: "/dashboard",
+    dashboardNode: "/dashboard/node",
+    dashboardNodeLogs: "/dashboard/node/logs",
+    readErrLog: "/dashboard/read",
     // =============================================登录页面=============================================
     // 用户登录
     login: "/customer/login",

@@ -1,128 +1,141 @@
 <template>
   <Badge :count="nodeData.badge" :offset="[0, nodeData.width ?? 120]" v-if="!nodeData.hidden">
-    <div class="my-node"
-         :style="{
-           borderRadius: nodeData.shape === 'elliptical' ? '50%' : '8px',
-           borderColor: nodeData.color,
-           width: nodeData.width!==undefined ? nodeData.width + 'px' : '120px',
-           height: nodeData.height!==undefined ? nodeData.height + 'px' : '50px'
-         }" @click="toggleDetail">
-      <div class="node-icons" v-if="nodeData.monitor">
-        <div class="battery-icon" :class="getBatteryClass()"></div>
-        <MiniSystemUsage v-if="nodeData.monitor.memory && nodeData.monitor.memory.length"
-                         :data="nodeData.monitor.memory"
-                         :color="getMemoryIconClass()"
+    <div
+        class="my-node"
+        :style="{
+        borderRadius: nodeData.shape === 'elliptical' ? '50%' : '3px',
+        borderColor: this.borderColor,
+        background: this.backgroundColor,
+        width: nodeData.width !== undefined ? nodeData.width + 'px' : '120px',
+        height: nodeData.height !== undefined ? nodeData.height + 'px' : '50px'
+      }"
+        @click="toggleDetail"
+    >
+      <div class="node-icons" v-if="nodeData.shape !== 'elliptical' && nodeData.monitor">
+        <BatteryIcon :cpuUsage="nodeData?.monitor?.cpu||0"/>
+        <MiniSystemUsage
+            v-if="nodeData.monitor.memory && nodeData.monitor.memory.length"
+            :data="nodeData.monitor.memory"
+            :color="getMemoryIconClass()"
         />
       </div>
       <div class="node-label">{{ nodeData.label }}</div>
     </div>
-
-    <Teleport to="#navtopTab">
-      <!-- 弹窗 -->
-      <transition name="fade">
-        <div v-if="showDetail" class="overlay">
-          <div class="system-monitor-popup" @click.stop>
-            <Icon type="md-close-circle" class="close-btn" @click="toggleDetail"/>
-            <div class="popup-content">
-              <div>
-                <h2>{{ nodeData.label }} {{ nodeData.node }}</h2>
+    <Modal
+        v-model="showDetail"
+        width="1000"
+        footer-hide
+        @on-visible-change="handleVisibleChange"
+    >
+      <div class="system-monitor-popup" @click.stop>
+        <div class="popup-content">
+          <div>
+            <h2>{{ nodeData.label }} {{ nodeData.node }}</h2>
+          </div>
+          <div class="charts-column">
+            <SystemMonitor :title="'CPU 占用率'" :data="cpu"/>
+            <SystemMonitor :title="'内存占用率'" :data="memory"/>
+          </div>
+          <div class="table-column">
+            <div class="table-column-header">
+              <div class="log-path-line" v-show="logPath">
+                日志路径：{{ logPath }}
               </div>
-              <div class="charts-column">
-                <SystemMonitor :title="'CPU 占用率'" :data="this.cpu"/>
-                <SystemMonitor :title="'内存占用率'" :data="this.memory"/>
+              <div class="table-column-actions">
+                <Button type="primary" size="small" @click="refresh" style="margin-right: 5px;">刷新</Button>
+                <Button type="success" size="small" @click="handleRead">已读</Button>
               </div>
-              <div class="table-column">
-                <div class="table-column-header">
-                  <Icon type="md-alert"/>
-                  每5秒刷新一次
-                  <Button type="primary" size="small" @click="getErrorLogList">刷新</Button>
-                </div>
-                <Table :columns="columns1" :data="data1" size="small" :border="true" :max-height="300"
-                       style="margin-top: 30px"
-                />
+            </div>
+            <Table
+                ref="scrollTable"
+                :columns="columns1"
+                :data="data1"
+                :loading="tableLoading"
+                size="small"
+                :border="true"
+                :max-height="300"
+            />
+            <div class="page-info">
+              <div class="page-info-content">
+                第 <span>{{ pagination.pageNumber }}</span> /
+                <span>{{ Math.ceil(pagination.total / pagination.pageSize) || 1 }}</span> 页，
+                共 <span>{{ pagination.total }}</span> 条
               </div>
             </div>
           </div>
         </div>
-      </transition>
-    </Teleport>
+      </div>
+    </Modal>
   </Badge>
 </template>
 
 <script>
-import SystemMonitor from "@/components/nodes/SystemMonitor.vue";
-import Teleport from "@/components/Teleport.vue";
-import MiniSystemUsage from "@/components/nodes/MiniSystemUsage.vue";
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
+import MiniSystemUsage from '@/components/nodes/CustomNode-complex/MiniSystemUsage.vue';
+import {http} from '@/utils/request';
+import {URL} from '@/api/serverApi';
+import BatteryIcon from "@/components/nodes/CustomNode-complex/BatteryIcon.vue";
 
 export default {
-  name: 'MyNode',
-  components: {MiniSystemUsage, SystemMonitor, Teleport},
+  name: 'CustomNode',
+  components: {
+    BatteryIcon,
+    MiniSystemUsage,
+    SystemMonitor: () => import('@/components/nodes/CustomNode-complex/SystemMonitor.vue'),
+  },
   inject: ['getNode'],
   data() {
     return {
+      logPath: '',
       nodeData: {},
       showDetail: false,
+      tableLoading: true,
+      finished: false,
+      firstOpen: true,
+      pagination: {
+        total: 0,
+        pageSize: 100,
+        pageNumber: 1
+      },
+      currentNumber: 1,
       cpu: [],
       memory: [],
       columns1: [
-        {
-          title: '时间',
-          key: 'time'
-        },
+        {title: '创建时间', width: 160, key: 'createTime'},
         {
           title: '状态',
-          key: 'status'
+          key: 'read',
+          width: 120,
+          render: (h, params) => {
+            return h('Tag', {
+              props: {
+                color: params.row.read ? 'green' : 'red'
+              }
+            }, params.row.read ? '已读' : '未读');
+          }
         },
-        {
-          title: '错误日志',
-          key: 'errorLog'
-        },
-        {
-          title: '错误日志上下文',
-          key: 'errorLogCtx'
-        },
-        {
-          title: '日志路径',
-          key: 'logPath'
-        },
+        {title: '日志信息', key: 'logMessage', ellipsis: true, tooltip: true},
       ],
-      data1: [
-        {
-          errorLog: 'TypeError: Cannot read property \'map\' of undefined\n' +
-              '    at renderList (http://localhost:8080/js/chunk-vendors.js:455:23)\n',
-          status: '未读',
-          time: '2025/4/5-13:21:00',
-          errorLogCtx: 'dddddddddddd',
-          logPath: 'C:/test/demo'
-        },
-        {
-          errorLog: 'TypeError: Cannot read property \'map\' of undefined\n' +
-              '    at renderList (http://localhost:8080/js/chunk-vendors.js:455:23)\n',
-          status: '未读',
-          time: '2025/4/5-13:21:00',
-          errorLogCtx: 'dddddddddddd',
-          logPath: 'C:/test/demo'
-        },
-        {
-          errorLog: 'TypeError: Cannot read property \'map\' of undefined\n' +
-              '    at renderList (http://localhost:8080/js/chunk-vendors.js:455:23)\n',
-          status: '未读',
-          time: '2025/4/5-13:21:00',
-          errorLogCtx: 'dddddddddddd',
-          logPath: 'C:/test/demo'
-        },
-        {
-          errorLog: 'TypeError: Cannot read property \'map\' of undefined\n' +
-              '    at renderList (http://localhost:8080/js/chunk-vendors.js:455:23)\n',
-          status: '未读',
-          time: '2025/4/5-13:21:00',
-          errorLogCtx: 'dddddddddddd',
-          logPath: 'C:/test/demo'
-        },
-      ]
+      data1: [],
     };
+  },
+  computed: {
+    borderColor() {
+      const status = this.nodeData.status;
+      const cpu = this.nodeData.monitor?.cpu ?? 0;
+      const memoryArr = this.nodeData.monitor?.memory ?? [];
+      const memory = memoryArr[memoryArr.length - 1] ?? 0;
+
+      if (status === 1) return '#D9001B';
+      if (status === 0 && cpu <= 80 && memory <= 80) return this.nodeData.color ?? '#4A9D0B';
+      if (status === 0 && (cpu > 80 || memory > 80)) return this.nodeData.color ?? '#276ED9';
+      return '#276ED9';
+    },
+    backgroundColor() {
+      const status = this.nodeData.status;
+      if (status === 1) return '#D9001B';
+      if (status === 0) return '#4A9D0B';
+      return '#276ED9';
+    },
   },
   mounted() {
     const node = this.getNode();
@@ -132,45 +145,133 @@ export default {
         this.nodeData = {...current};
       });
     }
+
+    this.$nextTick(() => {
+      const body = this.$refs.scrollTable?.$el?.querySelector('.ivu-table-body');
+      if (body) {
+        body.addEventListener('scroll', this.handleScroll);
+      }
+    });
+  },
+  beforeDestroy() {
+    const body = this.$refs.scrollTable?.$el?.querySelector('.ivu-table-body');
+    if (body) {
+      body.removeEventListener('scroll', this.handleScroll);
+    }
   },
   methods: {
     toggleDetail() {
-      this.showDetail = !this.showDetail;
-      if (this.showDetail) {
-        http.get(URL.dashboard + '/node?node=hft-bo-strategy-monitor', (res) => {
-          this.cpu = res.data.cpu
-          this.memory = res.data.memory
-          console.log(res, 111)
-        })
+      // 👇 重新打开弹窗
+      if (this.nodeData.status !== undefined) {
+        this.showDetail = true;
       }
     },
+    // 监听弹窗状态，关闭时销毁节点
+    handleVisibleChange(val) {
+      if (val) {
+        // 👈 弹窗打开时加载
+        this.firstOpen = true;
+        this.tableLoading = true;
+        this.getList();
+        this.getErrorLogList();
+      } else {
+        // 👈 弹窗关闭时清空
+        this.pagination = {
+          total: 0,
+          pageSize: 100,
+          pageNumber: 1
+        }
+        this.data1 = [];
+        this.cpu = [];
+        this.memory = [];
+        this.finished = false;
+        this.firstOpen = true;
+      }
+    },
+    // 虚拟滚动table，优化大数据时的卡顿问题
+    handleScroll(e) {
+      const el = e.target
+
+      // 防止正在加载时重复触发 or 数据已经加载完了
+      if (this.tableLoading || this.finished) return;
+
+      if (el.scrollTop + el.clientHeight > el.scrollHeight - 500) {
+        this.pagination.pageNumber++
+        this.getErrorLogList()
+      }
+    },
+    // 强制重置 scrollTop
+    resetScrollTop() {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          const body = this.$refs.scrollTable?.$el?.querySelector('.ivu-table-body');
+          if (body) {
+            body.scrollTop = 0;
+          }
+        }, 100); // ⏱ 延迟执行，确保 DOM 渲染完成
+      });
+    },
+    // 获取数据列表
+    getList() {
+      http.get(URL.dashboardNode + `?node=${this.nodeData?.node}`, (res) => {
+        this.cpu = res.data?.cpu;
+        this.memory = res.data?.memory;
+        this.tableLoading = false;
+      });
+    },
+    // 获取错误日志列表
     getErrorLogList() {
-      console.log("获取错误日志列表")
-    },
-    getBatteryClass() {
-      const cpuUsage = this.nodeData.monitor.cpu ?? 0;
-      if (cpuUsage === 0) {
-        return 'battery-empty';
-      } else if (cpuUsage < 70) {
-        return 'battery-low';
-      } else if (cpuUsage >= 70 && cpuUsage <= 80) {
-        return 'battery-medium';
-      } else if (cpuUsage > 80) {
-        return 'battery-high';
-      }
+      this.tableLoading = true;
+      http.post(URL.dashboardNodeLogs, {...this.pagination, node: this.nodeData?.node}, (res) => {
+        const newData = res.data?.dataList || [];
+        this.logPath = newData[0]?.logPath || ''
+        if (this.firstOpen) {
+          this.resetScrollTop()
+          this.firstOpen = false;
+        }
+        if (this.pagination.pageNumber === 1) {
+          this.data1 = newData;
+        } else {
+          this.data1 = [...this.data1, ...newData];
+        }
+
+        this.pagination.total = res.data?.total;
+
+        // 判断是否加载完全部数据
+        if (this.data1.length >= this.pagination.total) {
+          this.finished = true;
+        }
+
+        this.tableLoading = false;
+      });
     },
     getMemoryIconClass() {
       const memoryArray = this.nodeData.monitor.memory || [];
       const memoryUsage = memoryArray.length ? memoryArray[memoryArray.length - 1] : 0;
-
-      if (memoryUsage < 70) {
-        return '#156F9F';  // 蓝色
-      } else if (memoryUsage >= 70 && memoryUsage <= 80) {
-        return 'orange';   // 黄色
-      } else if (memoryUsage > 80) {
-        return 'red';      // 红色
-      }
-      return ''; // 默认灰色
+      if (memoryUsage < 70) return '#FFFFFF';
+      if (memoryUsage <= 80) return '#F7910B';
+      return '#FF0000';
+    },
+    // 已读操作
+    handleRead() {
+      const dashboardIds = this.data1.map(item => {
+        if (!item.read) {
+          return item.id
+        }
+      });
+      http.post(URL.readErrLog, dashboardIds, (res) => {
+        if (res?.code === '0') {
+          this.$Message.success('操作成功');
+          this.resetScrollTop();
+          this.pagination.pageNumber = 1
+          this.getErrorLogList()
+        }
+      });
+    },
+    refresh() {
+      this.resetScrollTop();
+      this.pagination.pageNumber = 1
+      this.getErrorLogList()
     }
   }
 };
@@ -182,14 +283,31 @@ h2 {
 }
 
 .my-node {
+  transform: translateZ(0); /* 预防 scale 模糊 */
   font-size: 16px;
-  border: 2px solid rgb(91, 143, 249);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
+  border: 2px solid transparent;
+  width: 120px;
+  height: 50px;
+  transition: all 0.3s ease-in-out;
+  will-change: transform, box-shadow, border-color;
+}
+
+.my-node:hover {
+  border-color: #409eff; /* 或任何你想要的高亮色 */
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+}
+
+
+.node-label {
+  font-size: 14px;
+  padding-bottom: 5px;
+  color: #ffffff;
 }
 
 .node-icons {
@@ -197,147 +315,9 @@ h2 {
   flex-direction: row;
   justify-content: space-between;
   font-size: 20px;
-  width: 70%;
-  margin-bottom: 4px;
-}
-
-.node-label {
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.battery-icon {
-  width: 20px;
-  height: 12px;
-  margin: auto 0;
-  border-radius: 1px;
-  border: 2px solid #989696;
-  position: relative;
-}
-
-.battery-empty::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 0;
-}
-
-.battery-low::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background-color: #34a046;
-  width: 33%;
-}
-
-.battery-medium::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background-color: orange;
-  width: 66%;
-}
-
-.battery-high::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  background-color: red;
   width: 80%;
-}
-
-.icon-blue {
-  font-size: 20px !important;
-  color: #156F9F;
-}
-
-.icon-yellow {
-  font-size: 20px;
-  color: orange;
-}
-
-.icon-red {
-  font-size: 20px;
-  color: red;
-}
-
-/* 动画扩散效果的样式 */
-.overlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  animation: fadeInOverlay 0.3s ease-out forwards;
-}
-
-.system-monitor-popup {
-  width: 1000px;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(0);
-  animation: popupAnimation 0.5s ease-in forwards;
-}
-
-@keyframes popupAnimation {
-  0% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* 关闭时的动画效果 */
-@keyframes fadeOutOverlay {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
-.close-btn {
-  position: absolute;
-  z-index: 999;
-  top: 0;
-  right: 0;
-  padding: 5px 10px;
-  font-size: 26px;
-  color: #ff4d4f;
-  border: none;
-  cursor: pointer;
-}
-
-.close-btn:hover {
-  opacity: 0.8;
-}
-
-/* 使用过渡动画 */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */
-{
-  opacity: 0;
-  transform: scale(0);
+  gap: 4px;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
 }
 
 .popup-content {
@@ -360,12 +340,44 @@ h2 {
   flex: 1;
   overflow: auto;
   position: relative;
-
-  .table-column-header {
-    height: 30px;
-    position: absolute;
-    right: 20px;
-  }
 }
 
+.table-column-header {
+  display: flex;
+  justify-content: space-between; /* 左右对齐 */
+  align-items: center;
+  height: 30px;
+}
+
+.log-path-line {
+  font-weight: bold;
+  color: #333;
+  flex-shrink: 0;
+}
+
+.table-column-actions {
+  display: flex;
+  margin-left: auto;
+  gap: 5px;
+}
+
+.page-info {
+  float: right;
+  font-weight: 500;
+  margin-top: 10px;
+  color: #06a0f3;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page-info-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+::v-deep .ivu-table-small td {
+  height: 27px;
+}
 </style>

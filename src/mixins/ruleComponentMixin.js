@@ -132,6 +132,7 @@ const ruleComponentMixin = {
         getUserResponse(res) {
             setTimeout(() => {
                 this.loading = false;
+                this.btnLoading = false
             }, 200);
             this.pagination.total = res.data.total;
             this.tableData = res.data.dataList || [];
@@ -222,16 +223,6 @@ const ruleComponentMixin = {
                     if (!this.userStrategyInfo.ruleId) {
                         this.showMessage('请先获取策略ID', 'error')
                     } else {
-                        // 取消之前的请求（如果有的话）
-                        // if (this.cancelTokenSource) {
-                        //     this.cancelTokenSource.cancel('已取消上传策略文件');
-                        // }
-                        // // 创建新的取消令牌源
-                        // this.cancelTokenSource = axios.CancelToken.source();
-                        // 使用注释逻辑
-                        // const url = `${path}/${this.userStrategyInfo.ruleId}`;
-                        // 创建一个取消令牌
-
                         // 将字节转换为 MB
                         let sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
 
@@ -242,25 +233,10 @@ const ruleComponentMixin = {
                             return
                         }
 
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            // 将文件内容转换为base64编码的字符串
-                            this.userStrategyInfo.ruleFileBytesStr = e.target.result.split(",")[1];  // 可以选择 base64 或 ArrayBuffer
-                        };
-                        reader.readAsDataURL(file);  // 读取为base64
-                        // reader.readAsArrayBuffer(file);  // 读取为ArrayBuffer
+                        // 直接保存为 Blob 对象
+                        this.userStrategyInfo.ruleFileBytesStr = file; // file 本身就是 Blob 类型
 
                         fakeUpload(fileName)
-
-                        // TODO: 调用上传操作的代码
-                        // http.uploadFile(url, file, {}, this.cancelTokenSource.token, // 传递取消令牌
-                        //     progressPercent => {
-                        //         this.fileUploadProgress = progressPercent
-                        //     },
-                        //     (response) => {
-                        //         // 处理上传成功后的逻辑
-                        //     }
-                        // );
                     }
                     document.getElementById('fileInput').value = '';
                 } else {
