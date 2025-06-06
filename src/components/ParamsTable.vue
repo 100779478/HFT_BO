@@ -36,16 +36,38 @@ export default {
         renderHeader: (h, params) => {
           return h('span', [
             params.column.title,
-            // h('Tooltip', {
-            //   props: {
-            //     content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent',
-            //     transfer: true,
-            //     maxWidth: 300,
-            //   }
-            // }, [
-            //   h('Icon', {props: {type: 'md-alert'}})
-            // ])
           ]);
+        }
+      },
+      {
+        title: "参数范围",
+        key: "range",
+        width: 220,
+        renderHeader: (h, params) => {
+          return h('span', [
+            params.column.title,
+            h('Tooltip', {
+              props: {
+                content: '参数类型为整数、小数时，输入格式：\n' +
+                    '1、使用英文的小括号或中括号包裹数字范围：( ) 、 [ ]或 [ )\n' +
+                    '2、数字间用英文逗号分隔，支持单数字，如：(2,)\n' +
+                    '3、示例：整数：(0,10)； 小数：[2.902,8.987)\n' +
+                    '参数类型为枚举时，录入枚举值后点击回车即可添加',
+                transfer: true,
+                maxWidth: 300,
+              }
+            }, [
+              h('Icon', {props: {type: 'md-alert'}})
+            ])
+          ])
+        },
+        render: (h, params) => {
+          const {row} = params;
+          // type 为 4 时使用特殊渲染
+          if (row.type === '4') {
+            return this.renderRangeCell(h, params);
+          }
+          return this.renderEditable(h, params);
         }
       },
       {
@@ -54,46 +76,21 @@ export default {
         width: 150,
         render: (h, params) => {
           const {row} = params
-          if (row.type !== "0") {
-            return this.renderEditable(h, params)
+          if (row.type === "0" || row.type === "4") {
+            // type 为 0 或 4 时使用下拉框
+            return this.renderSelectCell(h, params);
           } else {
-            // row.value = row.value || 0;
-            return this.renderSelectCell(h, params)
+            // 其他类型使用普通输入框
+            return this.renderEditable(h, params);
           }
         }
       },
-      // {
-      //   title: "参数分组",
-      //   key: "group",
-      //   width: 150,
-      //   render: this.renderEditable
-      // },
-      // {
-      //   title: "输入值范围",
-      //   key: "range",
-      //   width: 110,
-      //   render: this.renderEditable,
-      //   renderHeader: (h, params) => {
-      //     return h('span', [
-      //       params.column.title,
-      //       h('Tooltip', {
-      //         props: {
-      //           content: 'tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,tooltipContent,',
-      //           transfer: true,
-      //           maxWidth: 300,
-      //         },
-      //       }, [
-      //         h('Icon', {props: {type: 'md-alert'}})
-      //       ])
-      //     ]);
-      //   },
-      // },
-      // {
-      //   title: "只读",
-      //   key: "readOnly",
-      //   width: 100,
-      //   render: this.renderSelectCell
-      // },
+      {
+        title: "只读",
+        key: "readOnly",
+        width: 70,
+        render: this.renderCheckbox
+      },
       {
         title: "操作",
         slot: "operator",
@@ -117,7 +114,7 @@ export default {
     // 补全字段
     normalizeParamList() {
       // 定义所有可能的字段
-      const allFields = ['name', 'description', 'type', 'value'];
+      const allFields = ['name', 'description', 'type', 'range', 'value', 'readOnly'];
       // 遍历 paramList，确保每一行都包含完整的字段
       this.paramList.forEach((param) => {
         // 使用 Object.assign 为缺失的字段添加默认值
@@ -139,20 +136,23 @@ export default {
     renderEditable(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
+      const value = (row[column.key] !== undefined && row[column.key] !== null)
+          ? row[column.key].toString()
+          : '';
       if (this.readOnly) {
         // 只渲染 span 标签
-        return h("span", row[column.key].toString());
+        return h("span", value);
       }
       // 渲染输入框
       return h('Tooltip', {
         props: {
           maxWidth: 200,
           disabled: !this.paramList[rowIndex][column.key],
-          content: row[column.key].toString(), // Poptip 显示的提示内容
+          content: value, // Poptip 显示的提示内容
         },
       }, [h("Input", {
         props: {
-          value: row[column.key].toString(),
+          value: value,
           disabled: this.readOnly,
         },
         on: {
@@ -166,9 +166,11 @@ export default {
     renderSelectCell(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
+      const value = (row[column.key] !== undefined && row[column.key] !== null)
+          ? row[column.key].toString()
+          : '';
       if (this.readOnly) {
         // 只渲染 span 标签，同时判断展示
-        const value = row[column.key].toString();
         let options
         switch (column.key) {
           case "type":
@@ -181,10 +183,26 @@ export default {
             ];
             break
           case "value" :
-            options = [
-              {code: "1", description: "是"},
-              {code: "0", description: "否"},
-            ]
+            if (row.type !== '4') {
+              options = [
+                {code: "1", description: "是"},
+                {code: "0", description: "否"},
+              ]
+            } else {
+              // 这里处理 row.range，为字符串时转为数组
+              let rangeArray = [];
+              if (typeof row.range === 'string') {
+                rangeArray = row.range.split(',').map(item => item.trim()).filter(Boolean);
+                row.range = rangeArray; // 保证之后都是数组形式
+              } else if (Array.isArray(row.range)) {
+                rangeArray = row.range;
+              }
+
+              options = rangeArray.map(val => ({
+                code: val,
+                description: val
+              }));
+            }
             break
         }
         const displayValue = options.find(option => option.code === value)?.description || value;
@@ -195,8 +213,9 @@ export default {
           "Select",
           {
             props: {
-              value: row[column.key].toString(),
+              value: value,
               disabled: this.readOnly,
+              clearable: row.type === '4' && column.key === 'value'
             },
             on: {
               input: (event) => {
@@ -204,10 +223,10 @@ export default {
               },
             },
           },
-          this.renderSelectOptions(h, column.key)
+          this.renderSelectOptions(h, column.key, row)
       );
     },
-    renderSelectOptions(h, column) {
+    renderSelectOptions(h, column, row) {
       const readList = [
         {code: "true", description: "是"},
         {code: "false", description: "否"},
@@ -221,10 +240,26 @@ export default {
           options = readList;
           break
         case "value" :
-          options = [
-            {code: "1", description: "是"},
-            {code: "0", description: "否"},
-          ]
+          if (row.type !== '4') {
+            options = [
+              {code: "1", description: "是"},
+              {code: "0", description: "否"},
+            ]
+          } else {
+            // 这里处理 row.range，为字符串时转为数组
+            let rangeArray = [];
+            if (typeof row.range === 'string') {
+              rangeArray = row.range.split(',').map(item => item.trim()).filter(Boolean);
+              row.range = rangeArray; // 保证之后都是数组形式
+            } else if (Array.isArray(row.range)) {
+              rangeArray = row.range;
+            }
+
+            options = rangeArray.map(val => ({
+              code: val,
+              description: val
+            }));
+          }
           break
       }
       // 这里你可以根据需要动态生成 Options，例如从数据中获取选项列表
@@ -237,8 +272,69 @@ export default {
         });
       });
     },
+    renderCheckbox(h, params) {
+      const {row, column} = params;
+      const rowIndex = row._index;
+      const key = column.key;
+      const value = row[key]; // 例如是 "true" 字符串
+      return h("Checkbox", {
+        props: {
+          value: String(value) === 'true',
+          disabled: this.readOnly
+        },
+        on: {
+          input: (val) => {
+            this.paramList[rowIndex][key] = val
+            row[key] = val ? 'true' : 'false';
+            this.$forceUpdate();
+          },
+        },
+      });
+    },
+    renderRangeCell(h, params) {
+      const {row} = params;
+      const rowIndex = row._index;
 
+      // 如果当前行未初始化 range 为数组，默认初始化
+      if (!Array.isArray(row.range)) {
+        if (typeof row.range === 'string') {
+          row.range = row.range.split(',').map(s => s.trim()).filter(Boolean);
+        } else {
+          row.range = [];
+        }
+      }
 
+      return h('Select', {
+        props: {
+          value: row.range,
+          filterable: true,
+          multiple: true,
+          allowCreate: true,
+          maxTagCount: 1,
+        },
+        on: {
+          'on-create': (val) => {
+            if (!row.range.includes(val)) {
+              row.range.push(val);
+            }
+          },
+          input: (val) => {
+            // 当选中项减少时，清除无效项（只保留选中的）
+            row.range = val
+            this.paramList[rowIndex].range = val.join(',');
+            this.$forceUpdate();
+          },
+        }
+      }, row.range.map(item =>
+          h('Option', {
+            props: {
+              value: item,
+              label: item,
+            },
+            key: item
+          })
+      ));
+    },
   }
 }
 </script>

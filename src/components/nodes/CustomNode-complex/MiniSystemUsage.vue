@@ -44,17 +44,17 @@ export default {
     },
     size: {
       type: Number,
-      default: 25
+      default: 22
     },
     color: {
       type: String,
-      default: '#156F9F'  // 默认蓝色
+      default: '#FFFFFF'  // 默认蓝色
     }
   },
   computed: {
     option() {
       return {
-        grid: {left: 5, right: 0, top: 0, bottom: 5},
+        grid: {left: 5, right: 0, top: 2, bottom: 2},
         xAxis: {
           type: 'category',
           axisLine: {show: true},     // 显示坐标轴轴线
@@ -64,6 +64,8 @@ export default {
         },
         yAxis: {
           type: 'value',
+          // min: 0, // 设置最小值为 0
+          // max: 100, // 设置最大值为 100
           axisLine: {show: true},
           axisTick: {show: false},
           axisLabel: {show: false},
@@ -74,8 +76,8 @@ export default {
           data: this.data,
           smooth: true,
           symbol: 'none',
-          lineStyle: {width: 1, color: this.color === '#FFFFFF' ? '#156F9F' : this.color},
-          areaStyle: {color: this.color === '#FFFFFF' ? '#156F9F' : this.color, opacity: 0.2},
+          lineStyle: {width: 1, color: this.color},
+          areaStyle: {color: this.color, opacity: 0.2},
         }]
       };
     }

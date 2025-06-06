@@ -393,28 +393,18 @@
         <div style="white-space: nowrap">利率债</div>
         <div class="content-body-left-item">
           <div class="content-body-chart">
-            <div class="content-body-chart-item" v-for="item in Array.from({length:4})">
-              <div class="content-body-chart-title">利率债做市债券数量(30只)</div>
+            <div class="content-body-chart-item" v-for="item in Array.from({length:5})">
+              <div class="content-body-chart-title">做市债券数量(30只)</div>
               <MonitorEchart
                   :value="20"
                   :normal="29"
                   :warning="11"
                   :danger="0"/>
               <ul class="content-body-chart-font">
-                <li style="color:#4fffa1">已满足29只</li>
-                <li style="color: #ffe566">可满足11只</li>
-              </ul>
-            </div>
-            <div class="content-body-chart-item">
-              <div class="content-body-chart-title">做市债券数量(30只)</div>
-              <MonitorEchart
-                  :value="20"
-                  :normal="9"
-                  :warning="1"
-                  :danger="10"/>
-              <ul class="content-body-chart-font">
-                <li style="color:#4fffa1">已满足9只</li>
-                <li style="color: #ffe566">可满足1只</li>
+                <li>
+                  <i class="icon iconfont icon-chenggong"/>29只
+                </li>
+                <li><i class="icon iconfont icon-unFinished"/>11只</li>
               </ul>
             </div>
           </div>
@@ -556,32 +546,7 @@ export default {
   },
   methods: {
     getSecurityType,
-    // checkToken() {
-    //   // 获取查询字符串部分 (比如 ?customerid=test&pwd=123456&envid=2)
-    //   const params = queryParse(window.location.href);
-    //   sessionStorage.setItem('customerid', params.customerid);
-    //   sessionStorage.setItem('pwd', params.pwd);
-    //   sessionStorage.setItem('envid', params.envid);
-    //   // 检查是否有 token
-    //   const token = getToken();
-    //   if (!token) {
-    //     // 如果没有 token，先登录获取 token
-    //     http.post(URL.clientLogin, {
-    //       username: params.customerid,
-    //       password: params.pwd,
-    //       messageType: '登录成功',
-    //     }, (res) => {
-    //       putToken(res.data.token); // 将 token 存储起来
-    //       this.getMakeMarket(); // 获取数据接口
-    //     });
-    //   } else {
-    //     // 如果已经有 token，直接调用数据接口
-    //     this.getMakeMarket();
-    //   }
-    // },
     getMakeMarket() {
-      // const token = getToken(); // 获取 token
-      // const envId = sessionStorage.getItem('envid')
       // 构建请求 URL
       const url = this.isClientPage ? `${URL.makeMarketEnv}?envId=${sessionStorage.getItem('envid')}` : URL.makeMarket;
       http.get(url, (res) => {

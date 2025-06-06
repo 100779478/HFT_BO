@@ -279,6 +279,25 @@ const ruleComponentMixin = {
             // 在上传后添加以下代码
             document.getElementById('fileInput').value = '';
         },
+        validateRangeFormat(str) {
+            return /^[\[\(]\s*-?\d*(\.\d+)?\s*,\s*-?\d*(\.\d+)?\s*[\]\)]$/.test(str);
+        },
+        checkValueInRange(valueStr, rangeStr) {
+            const value = parseFloat(valueStr);
+            if (isNaN(value)) return false;
+
+            const match = rangeStr.match(/^([\[\(])\s*(-?\d*(?:\.\d+)?)?\s*,\s*(-?\d*(?:\.\d+)?)?\s*([\]\)])$/);
+            if (!match) return false;
+
+            const [, startSymbol, startStr, endStr, endSymbol] = match;
+            const start = startStr ? parseFloat(startStr) : -Infinity;
+            const end = endStr ? parseFloat(endStr) : Infinity;
+
+            const lowerValid = startSymbol === '[' ? value >= start : value > start;
+            const upperValid = endSymbol === ']' ? value <= end : value < end;
+
+            return lowerValid && upperValid;
+        },
     },
 }
 

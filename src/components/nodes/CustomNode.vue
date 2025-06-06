@@ -12,11 +12,11 @@
         @click="toggleDetail"
     >
       <div class="node-icons" v-if="nodeData.shape !== 'elliptical' && nodeData.monitor">
-        <BatteryIcon :cpuUsage="nodeData?.monitor?.cpu||0"/>
+        <BatteryIcon :cpuUse="nodeData?.monitor?.memory||0"/>
         <MiniSystemUsage
-            v-if="nodeData.monitor.memory && nodeData.monitor.memory.length"
-            :data="nodeData.monitor.memory"
-            :color="getMemoryIconClass()"
+            v-if="nodeData.monitor.cpu && nodeData.monitor.cpu.length"
+            :data="nodeData.monitor.cpu"
+            :color="getCpuIconClass()"
         />
       </div>
       <div class="node-label">{{ nodeData.label }}</div>
@@ -33,8 +33,8 @@
             <h2>{{ nodeData.label }} {{ nodeData.node }}</h2>
           </div>
           <div class="charts-column">
-            <SystemMonitor :title="'CPU 占用率'" :data="cpu"/>
             <SystemMonitor :title="'内存占用率'" :data="memory"/>
+            <SystemMonitor :title="'CPU 占用率'" :data="cpu"/>
           </div>
           <div class="table-column">
             <div class="table-column-header">
@@ -51,6 +51,7 @@
                 :columns="columns1"
                 :data="data1"
                 :loading="tableLoading"
+                :tooltip-max-width="500"
                 size="small"
                 :border="true"
                 :max-height="300"
@@ -121,19 +122,18 @@ export default {
   computed: {
     borderColor() {
       const status = this.nodeData.status;
-      const cpu = this.nodeData.monitor?.cpu ?? 0;
-      const memoryArr = this.nodeData.monitor?.memory ?? [];
-      const memory = memoryArr[memoryArr.length - 1] ?? 0;
-
-      if (status === 1) return '#D9001B';
-      if (status === 0 && cpu <= 80 && memory <= 80) return this.nodeData.color ?? '#4A9D0B';
-      if (status === 0 && (cpu > 80 || memory > 80)) return this.nodeData.color ?? '#276ED9';
+      const memory = this.nodeData.monitor?.memory ?? 0;
+      const cpuArr = this.nodeData.monitor?.cpu ?? [];
+      const cpu = cpuArr[cpuArr.length - 1] ?? 0;
+      if (status === 0) return '#D9001B';
+      if (status === 1 && cpu <= 50 && memory <= 50) return this.nodeData.color ?? '#4A9D0B';
+      if (status === 1 && (cpu > 50 || memory > 50)) return this.nodeData.color ?? '#D9001B';
       return '#276ED9';
     },
     backgroundColor() {
       const status = this.nodeData.status;
-      if (status === 1) return '#D9001B';
-      if (status === 0) return '#4A9D0B';
+      if (status === 0) return '#D9001B';
+      if (status === 1) return '#4A9D0B';
       return '#276ED9';
     },
   },
@@ -145,7 +145,6 @@ export default {
         this.nodeData = {...current};
       });
     }
-
     this.$nextTick(() => {
       const body = this.$refs.scrollTable?.$el?.querySelector('.ivu-table-body');
       if (body) {
@@ -162,7 +161,7 @@ export default {
   methods: {
     toggleDetail() {
       // 👇 重新打开弹窗
-      if (this.nodeData.status !== undefined) {
+      if (this.nodeData.status !== undefined && this.nodeData.status !== null) {
         this.showDetail = true;
       }
     },
@@ -245,11 +244,11 @@ export default {
         this.tableLoading = false;
       });
     },
-    getMemoryIconClass() {
-      const memoryArray = this.nodeData.monitor.memory || [];
-      const memoryUsage = memoryArray.length ? memoryArray[memoryArray.length - 1] : 0;
-      if (memoryUsage < 70) return '#FFFFFF';
-      if (memoryUsage <= 80) return '#F7910B';
+    getCpuIconClass() {
+      const cpuArray = this.nodeData.monitor.cpu || [];
+      const cpuUsage = cpuArray.length ? cpuArray[cpuArray.length - 1] : 0;
+      if (cpuUsage < 30) return '#FFFFFF';
+      if (cpuUsage <= 50) return '#F7910B';
       return '#FF0000';
     },
     // 已读操作

@@ -18,14 +18,14 @@
           <div class="usage-block">
             <div class="title">内存占用比率</div>
             <div class="item">
-              <BatteryIcon :cpu-usage="20"/>
-              <span>&lt;70%</span></div>
+              <BatteryIcon :cpu-use="20"/>
+              <span>&lt;30%</span></div>
             <div class="item">
-              <BatteryIcon :cpu-usage="75"/>
-              <span>70%~80%</span></div>
+              <BatteryIcon :cpu-use="40"/>
+              <span>30%~50%</span></div>
             <div class="item">
-              <BatteryIcon :cpu-usage="81"/>
-              <span>&gt;80%</span></div>
+              <BatteryIcon :cpu-use="60"/>
+              <span>&gt;50%</span></div>
           </div>
 
           <!-- CPU占用比率 -->
@@ -33,15 +33,15 @@
             <div class="title">CPU占用比率</div>
             <div class="item">
               <MiniSystemUsage :data="[11,14,44,56,32,20,14]" :color="'#FFFFFF'"/>
-              <span>&lt;70%</span>
+              <span>&lt;30%</span>
             </div>
             <div class="item">
-              <MiniSystemUsage :data="[11,14,44,56,32,20,74]" :color="'#F7910B'"/>
-              <span>70%~80%</span>
+              <MiniSystemUsage :data="[11,14,44,56,32,20,44]" :color="'#F7910B'"/>
+              <span>30%~50%</span>
             </div>
             <div class="item">
               <MiniSystemUsage :data="[11,14,44,56,32,20,81]" :color="'#FF0000'"/>
-              <span>&gt;80%</span>
+              <span>&gt;50%</span>
             </div>
           </div>
         </div>
@@ -248,9 +248,9 @@ export default {
                 endDirections: Array.isArray(targetNode.route) ? targetNode.route[1] : 'top',
               },
             }
-            if (node.status === 0) {
+            if (node.status === 1) {
               node.color = '#4A9D0B'
-            } else if (node.status === 1) {
+            } else if (node.status === 0) {
               node.color = '#D9001B'
             } else if (node.label === '') {
               node.color = '#4A9D0B'
@@ -299,14 +299,14 @@ export default {
         const node = nodesMap[newNode.node]
         if (node) {
           // 根据最新 status 更新颜色
-          if (node.status === 0) {
-            node.color = '#4A9D0B'
-          } else if (node.status === 1) {
-            node.color = '#D9001B'
-          } else if (node.label === '') {
-            node.color = '#4A9D0B'
+          if (newNode.status === 1) {
+            newNode.color = '#4A9D0B'
+          } else if (newNode.status === 0) {
+            newNode.color = '#D9001B'
+          } else if (newNode.label === '') {
+            newNode.color = '#4A9D0B'
           } else {
-            node.color = '#797979'
+            newNode.color = '#797979'
           }
           node.setAttrByPath('label/text', newNode.label ?? '')
           // const pos = node.getPosition()

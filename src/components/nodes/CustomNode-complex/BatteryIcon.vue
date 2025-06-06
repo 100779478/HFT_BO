@@ -6,17 +6,17 @@
 export default {
   name: 'BatteryIcon',
   props: {
-    cpuUsage: {
+    cpuUse: {
       type: Number,
       required: true,
     },
   },
   computed: {
     batteryClass() {
-      const usage = this?.cpuUsage;
+      const usage = this?.cpuUse;
       if (usage === 0) return 'battery-empty';
-      if (usage < 70) return 'battery-low';
-      if (usage <= 80) return 'battery-medium';
+      if (usage < 30) return 'battery-low';
+      if (usage <= 50) return 'battery-medium';
       return 'battery-high';
     },
   },

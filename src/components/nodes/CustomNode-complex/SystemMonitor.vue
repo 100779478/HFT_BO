@@ -80,20 +80,28 @@ export default {
         xAxis: {
           type: 'time',
           axisLabel: {
-            // formatter: function (value) {
-            //   const date = new Date(value);
-            //   const hours = date.getHours().toString().padStart(2, '0');
-            //   const minutes = date.getMinutes().toString().padStart(2, '0');
-            //   return `${hours}:${minutes}`; // 只显示到分钟
-            // },
+            formatter: function (value) {
+              const date = new Date(value);
+              const hours = date.getHours().toString().padStart(2, '0');
+              const minutes = date.getMinutes().toString().padStart(2, '0');
+              const day = date.getDate();
+              const month = date.getMonth() + 1; // getMonth() 返回的月份是从0开始的
+
+              // 如果是当天的0点，显示日期，否则只显示时间
+              if (hours === '00' && minutes === '00') {
+                return `${month}月${day}日`;
+              } else {
+                return `${hours}:${minutes}`;
+              }
+            },
             interval: 'auto', // 自动优化间隔，防止挤爆
             hideOverlap: true, // 隐藏重叠的label
           }
         },
         yAxis: {
           type: 'value',
-          min: 0, // 设置最小值为 0
-          max: 100, // 设置最大值为 100
+          // min: 0, // 设置最小值为 0
+          // max: 100, // 设置最大值为 100
           axisLabel: {
             formatter: '{value}%' // 在刻度标签后添加百分号
           }

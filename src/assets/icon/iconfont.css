@@ -32,7 +32,13 @@
 .icon-chenggong:before {
     content: "\e671";
     font-size: 16px;
-    color: #0cbb18;
+    color: #4fffa1;
+}
+
+.icon-unFinished:before {
+    content: "\e671";
+    font-size: 16px;
+    color: #ffe566;
 }
 
 .icon-weichenggong:before {
