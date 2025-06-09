@@ -2,22 +2,42 @@
   <div class="quantify">
     <div class="quantify-template">
       <div class="quantify-title">策略模板</div>
-      <RuleTemplate/>
+      <RuleTemplate :visible="showTemplate"/>
     </div>
     <div class="quantify-instance">
-      <div class="quantify-title" style="margin-top: 15px">策略实例</div>
-      <RuleInstance/>
+      <div class="quantify-title" style="margin-top: 0">
+        策略实例
+        <Button @click="toggleTemplate" style="width: 30px" size="small">
+          <template v-if="showTemplate">
+            <Icon type="ios-arrow-down"/>
+          </template>
+          <template v-else>
+            <Icon type="ios-arrow-up"/>
+          </template>
+        </Button>
+      </div>
+      <RuleInstance v-show="showTemplate"/>
     </div>
   </div>
 </template>
 
 <script>
-import RuleTemplate from "@/pages/systemManage/RuleManageComponents/RuleTemplate.vue";
-import RuleInstance from "@/pages/systemManage/RuleManageComponents/RuleInstance.vue";
+import RuleTemplate from "@/pages/systemManage/RuleManageComponents/QuantifyManageComponents/RuleTemplate.vue";
+import RuleInstance from "@/pages/systemManage/RuleManageComponents/QuantifyManageComponents/RuleInstance.vue";
 
 export default {
   name: "QuantifyManage",
-  components: {RuleInstance, RuleTemplate}
+  components: {RuleInstance, RuleTemplate},
+  data() {
+    return {
+      showTemplate: true // 控制是否展示策略模板
+    };
+  },
+  methods: {
+    toggleTemplate() {
+      this.showTemplate = !this.showTemplate;
+    }
+  }
 }
 </script>
 
@@ -25,10 +45,11 @@ export default {
 .quantify {
   display: flex;
   flex-direction: column;
-  //justify-content: space-between;
+
   .quantify-title {
+    margin-top: -10px;
     padding: 0 0 10px 10px;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
   }
 

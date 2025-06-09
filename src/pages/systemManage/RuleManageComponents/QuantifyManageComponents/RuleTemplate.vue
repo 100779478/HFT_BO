@@ -45,7 +45,7 @@
 
 ::v-deep .ivu-table-row-highlight td {
   background-color: #cdcecf !important; /* 自定义选中行的背景色 */
-  font-weight: bolder;
+  height: 12px !important;
 }
 </style>
 <template>
@@ -318,7 +318,8 @@
       </div>
     </Modal>
     <Table
-        :columns="columns1" style="clear: both"
+        :columns="columns1"
+        style="clear: both"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -387,6 +388,12 @@ import {showParamList} from "@/utils/paramList";
 export default {
   components: {ParamsTable},
   mixins: [tableMixin, ruleComponentMixin],
+  props: {
+    visible: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     let columns1 = [
       {
@@ -400,7 +407,7 @@ export default {
       {
         title: "策略文件类型",
         key: "ruleFileType",
-        minWidth: 140,
+        minWidth: 130,
         resizable: true,
         width: null,
         sortable: 'custom',
@@ -415,7 +422,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 220,
+        minWidth: 320,
       },
       {
         title: "策略文件名称",
@@ -423,7 +430,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 140,
+        minWidth: 200,
       },
       {
         title: "策略版本",
@@ -439,7 +446,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 200,
       },
       {
         title: "用户代码",
@@ -474,7 +481,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 110,
         render: (h, {row}) => {
           const result = getRuleQuantType(row.ruleType, true);
           return h("span", result.description);
@@ -520,7 +527,7 @@ export default {
           ]);
         },
       },
-      {title: "操作", slot: "operator", width: 180},
+      {title: "操作", slot: "operator", width: 180, fixed: 'right'},
     ];
     let pagination = {
       ruleName: "",
@@ -550,13 +557,18 @@ export default {
     this.getUserList();
     this.getRuleMonitorNodesList()
   },
+  watch: {
+    visible(newValue) {
+      this.updateTableHeight()
+    }
+  },
   methods: {
     getRuleQuantType,
     handleClickRow(row) {
       this.$store.commit('rule/setRuleId', row)
     },
     calculateTableHeight() {
-      return window.innerHeight * 0.245;
+      return window.innerHeight * (this.visible ? 0.45 : 0.68);
     },
     // 更多操作
     doOperate(name, row) {
