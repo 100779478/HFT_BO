@@ -174,14 +174,6 @@ export default {
         width: null,
       },
       {
-        title: "业务编号",
-        key: "tid",
-        minWidth: 100,
-        resizable: true,
-        sortable: 'custom',
-        width: null,
-      },
-      {
         title: "操作业务",
         key: "transactionName",
         minWidth: 200,
