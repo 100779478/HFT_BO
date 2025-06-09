@@ -242,7 +242,7 @@ export default {
         width: null,
         minWidth: 180,
       },
-      {title: "操作", slot: "operator", width: 180},
+      {title: "操作", slot: "operator", width: 180, fixed: 'right'},
     ];
     return {
       pagination,
