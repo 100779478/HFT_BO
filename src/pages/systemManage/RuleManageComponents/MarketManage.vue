@@ -36,10 +36,10 @@
       <Col>
         <form autocomplete="off" class="top">
           <Input
-              v-model="pagination.ruleName"
+              v-model="pagination.ruleFileName"
               style=" width: 120px; border-radius: 20px"
               class="mr-3"
-              placeholder="策略名称"
+              placeholder="策略文件名称"
               @on-change="handleSearch"
           > </Input>
           <Input
@@ -387,7 +387,7 @@ export default {
       {title: "操作", slot: "operator", width: 180},
     ];
     let pagination = {
-      ruleName: "",
+      ruleFileName: "",
       ruleType: "",
       customerId: "",
       active: "",

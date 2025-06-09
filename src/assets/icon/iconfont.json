@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "13638703",
+      "name": "图形",
+      "font_class": "tuxing",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
       "icon_id": "6204096",
       "name": "失败",
       "font_class": "shibai1",
@@ -57,7 +64,7 @@
     {
       "icon_id": "1166030",
       "name": "NEW",
-      "font_class": "xinzeng",
+      "font_class": "iconfontzhizuobiaozhun023113",
       "unicode": "e673",
       "unicode_decimal": 58995
     }

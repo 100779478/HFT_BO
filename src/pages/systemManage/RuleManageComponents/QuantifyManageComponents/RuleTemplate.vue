@@ -45,7 +45,7 @@
 
 ::v-deep .ivu-table-row-highlight td {
   background-color: #cdcecf !important; /* 自定义选中行的背景色 */
-  font-weight: bolder;
+  height: 12px !important;
 }
 </style>
 <template>
@@ -314,11 +314,12 @@
       </div>
       <div slot="footer">
         <Button type="text" @click="cancel">取消</Button>
-        <Button type="primary" @click="ok(isNew)">确定</Button>
+        <Button type="primary" @click="ok(isNew)" :loading="btnLoading">确定</Button>
       </div>
     </Modal>
     <Table
-        :columns="columns1" style="clear: both"
+        :columns="columns1"
+        style="clear: both"
         :data="tableData"
         class="table-content"
         :height="tableHeight"
@@ -387,6 +388,12 @@ import {showParamList} from "@/utils/paramList";
 export default {
   components: {ParamsTable},
   mixins: [tableMixin, ruleComponentMixin],
+  props: {
+    visible: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     let columns1 = [
       {
@@ -400,7 +407,7 @@ export default {
       {
         title: "策略文件类型",
         key: "ruleFileType",
-        minWidth: 140,
+        minWidth: 130,
         resizable: true,
         width: null,
         sortable: 'custom',
@@ -415,7 +422,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 220,
+        minWidth: 320,
       },
       {
         title: "策略文件名称",
@@ -423,7 +430,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 140,
+        minWidth: 200,
       },
       {
         title: "策略版本",
@@ -439,7 +446,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 200,
       },
       {
         title: "用户代码",
@@ -474,7 +481,7 @@ export default {
         sortable: 'custom',
         resizable: true,
         width: null,
-        minWidth: 120,
+        minWidth: 110,
         render: (h, {row}) => {
           const result = getRuleQuantType(row.ruleType, true);
           return h("span", result.description);
@@ -499,7 +506,7 @@ export default {
         key: "active",
         resizable: true,
         width: null,
-        minWidth: 95,
+        minWidth: 105,
         sortable: 'custom',
         render: (h, params) => {
           const iconOpen = h("Icon", {
@@ -520,7 +527,7 @@ export default {
           ]);
         },
       },
-      {title: "操作", slot: "operator", width: 180},
+      {title: "操作", slot: "operator", width: 180, fixed: 'right'},
     ];
     let pagination = {
       ruleName: "",
@@ -533,6 +540,7 @@ export default {
       ruleFileBytesStr: null
     }
     return {
+      btnLoading: false,
       activeList: ACTIVE_LIST,
       fileName: "",
       columns1,
@@ -549,13 +557,18 @@ export default {
     this.getUserList();
     this.getRuleMonitorNodesList()
   },
+  watch: {
+    visible(newValue) {
+      this.updateTableHeight()
+    }
+  },
   methods: {
     getRuleQuantType,
     handleClickRow(row) {
       this.$store.commit('rule/setRuleId', row)
     },
     calculateTableHeight() {
-      return window.innerHeight * 0.245;
+      return window.innerHeight * (this.visible ? 0.45 : 0.68);
     },
     // 更多操作
     doOperate(name, row) {
@@ -612,7 +625,7 @@ export default {
             const data = {
               ruleId,
               productEnvId: this.selectedEnv,
-              messageType: SUCCESS_MSG.uploadSuccess
+              messageType: SUCCESS_MSG.uploadSuccess,
             }
             http.post(URL.ruleUploadProduct, data)
           },
@@ -674,6 +687,26 @@ export default {
         // 有重复的 name 字段，显示警告消息
         this.showMessage('error', message, 6)
       } else {
+        // 校验 range 格式和值合法性
+        const invalidParams = [];
+        this.paramList.forEach((param, index) => {
+          if (param.type === '2' || param.type === '1') {
+            const range = param.range?.toString().trim();
+            const value = param.value?.toString().trim();
+
+            if (!this.validateRangeFormat(range)) {
+              invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
+            } else if (!this.checkValueInRange(value, range)) {
+              invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
+            }
+          }
+        });
+
+        if (invalidParams.length > 0) {
+          this.showMessage('error', invalidParams.join('；'), 6);
+          return;
+        }
+
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly))
@@ -695,12 +728,34 @@ export default {
           msg: isNew ? SUCCESS_MSG.addSuccess : SUCCESS_MSG.modifySuccess,
           url: URL.ruleQuant
         };
-        http[config.method](config.url, {...this.userStrategyInfo, messageType: config.msg}, (res) => {
-          if (res.code === '0') {
-            this.getUserStrategyData();
-            this.cancel();
-          }
-        });
+        this.btnLoading = true; // 开始 loading
+        const formData = new FormData();
+        const {ruleFileBytesStr, ...restInfo} = this.userStrategyInfo;
+        formData.append('file', ruleFileBytesStr);
+        formData.append(
+            'param',
+            new Blob([JSON.stringify(restInfo)], {
+              type: 'application/json',
+            })
+        );
+
+        http[config.method](
+            config.url,
+            Object.assign(formData, {
+              messageType: config.msg,
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }),
+            (res) => {
+              if (res.code === '0') {
+                this.getUserStrategyData();
+                this.cancel();
+              } else {
+                this.btnLoading = false
+              }
+            },
+        );
       }
     },
     // 启用策略

@@ -4,6 +4,7 @@
     <div v-if="showFlash" :class="['flash-overlay',overlayClass]"></div>
     <!-- 下层内容 -->
     <router-view style="height: 100%"></router-view>
+    <div id="navtopTab"></div>
   </div>
 </template>
 

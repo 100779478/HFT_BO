@@ -177,11 +177,11 @@ export default {
       // 当 ruleId 变化时，执行一些操作
       this.pagination.ruleId = newValue
       this.getUserStrategyData()
-    }
+    },
   },
   methods: {
     calculateTableHeight() {
-      return window.innerHeight * 0.33;
+      return window.innerHeight * 0.15;
     },
     // 获取策略实例列表
     getUserStrategyData() {

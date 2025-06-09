@@ -252,26 +252,8 @@ export default {
         key: "roleName",
         resizable: true,
         width: 240,
-        render: (h, params) => {
-          return h(
-              "Tooltip",
-              {
-                attrs: {
-                  content: params.row.roleName,
-                  maxWidth: 200,
-                },
-                style: {
-                  // whiteSpace: "nowrap",
-                },
-              },
-              [
-                // 省略号展示
-                params.row.roleName.length > 30
-                    ? params.row.roleName.slice(0, 15) + "..."
-                    : params.row.roleName,
-              ]
-          );
-        },
+        ellipsis:true,
+        tooltip:true,
       },
       {
         title: "状态",

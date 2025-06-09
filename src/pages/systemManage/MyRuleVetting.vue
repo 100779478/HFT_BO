@@ -270,7 +270,7 @@
           </div>
           <div slot="footer">
             <Button type="text" @click="cancel">取消</Button>
-            <Button type="primary" @click="ok()">确定</Button>
+            <Button type="primary" @click="ok()" :loading="btnLoading">确定</Button>
           </div>
         </Modal>
       </Col>
@@ -451,7 +451,7 @@ export default {
         width: null,
         minWidth: 180,
       },
-      {title: "操作", slot: "operator", width: 180},
+      {title: "操作", slot: "operator", width: 180, fixed: 'right'},
     ];
     let pagination = {
       ruleVettingStatus: '',
@@ -464,6 +464,7 @@ export default {
     return {
       pagination,
       columns1,
+      btnLoading: false,
       showAddModal: false,
       fileName: "",
       userStrategyInfo
@@ -521,6 +522,26 @@ export default {
         // 有重复的 name 字段，显示警告消息
         this.showMessage('error', message, 6)
       } else {
+        // 校验 range 格式和值合法性
+        const invalidParams = [];
+        this.paramList.forEach((param, index) => {
+          if (param.type === '2' || param.type === '1') {
+            const range = param.range?.toString().trim();
+            const value = param.value?.toString().trim();
+
+            if (!this.validateRangeFormat(range)) {
+              invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
+            } else if (!this.checkValueInRange(value, range)) {
+              invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
+            }
+          }
+        });
+
+        if (invalidParams.length > 0) {
+          this.showMessage('error', invalidParams.join('；'), 6);
+          return;
+        }
+
         // 没有重复的 name 字段，执行提交操作
         // 将 paramList 中的 readOnly 属性值从字符串转换为布尔值
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly));

@@ -167,7 +167,7 @@ export default {
       http.get(URL.environmentCurrent, (res) => {
         if (res.code === '0') {
           this.environmentId = res.data.id;
-          // 存储到vuex，在dashboard展示当前环境
+          // 存储到vuex，在homepage展示当前环境
           this.$store.commit('environment/getCurrentEnv', res.data.name)
           if (!res.data.id && res.data.enable) {
             // 新手引导执行

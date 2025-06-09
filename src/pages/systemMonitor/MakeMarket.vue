@@ -1,4 +1,6 @@
 <style lang="less">
+@import "@/style/variables.less";
+
 .bck {
   height: 100%;
   position: relative;
@@ -39,12 +41,37 @@
 
     .content-body-left, .content-body-right {
       //background-color: #f1f1f5;
-      background-color: var(--content-background-color);
+      //background-color: var(--content-background-color);
+      background-color: var(--background-color);
+      border: 1px solid var(--date-hover-color);
       display: flex;
       flex-direction: column;
       border-radius: 8px;
       transition: width 0.5s ease, height 1s ease;
       overflow: hidden;
+    }
+  }
+
+  .content-body-chart {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    height: 300px;
+
+    .content-body-chart-item {
+      flex: 0 0 33%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      .content-body-chart-title {
+        font-size: 12px;
+      }
+
+      .content-body-chart-font {
+        font-size: 12px;
+        list-style: none;
+      }
     }
   }
 
@@ -343,9 +370,9 @@
                 <li>双击滚动提醒可查看详细内容。</li>
                 <li>双击债券可查看详细信息。</li>
               </ol>
-              <p><strong v-show="data.logicDescription">业务说明：</strong></p>
+              <p><strong v-show="data?.logicDescription">业务说明：</strong></p>
               <div>
-                {{ data.logicDescription }}
+                {{ data?.logicDescription }}
                 <br>
               </div>
             </div>
@@ -353,69 +380,64 @@
         </Tooltip>
       </div>
       <div class="title-info" @dblclick="viewRemindMessage">
-        {{ data.remindMessage }}
+        {{ data?.remindMessage }}
       </div>
       <div class="market-data">
-        已报：{{ data.madeCount ?? '--' }}
-        已达标：{{ data.successCount ?? '--' }}
+        已报：{{ data?.madeCount ?? '--' }}
+        已达标：{{ data?.successCount ?? '--' }}
       </div>
     </div>
     <div class="content-body">
       <div class="content-body-left"
            :style="{ width: getWidth('left')}">
         <div style="white-space: nowrap">利率债</div>
-<!--        <div style="font-size: 14px;font-weight: normal;text-align: left;padding: 0 50px">-->
-<!--          <ul style="list-style: none;white-space: nowrap;height: 50px">-->
-<!--            <li><i class="icon iconfont icon-chenggong"/>利率债不足30只</li>-->
-<!--            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年-->
-<!--              6 个关键期限中至少 5-->
-<!--              个关键期限的新发国债进行做市-->
-<!--            </li>-->
-<!--            <li style="white-space: normal"><i class="icon iconfont icon-shibai"/>应对 1 年、2 年、3 年、5 年、7 年和 10 年-->
-<!--              6 个关键期限中至少 5-->
-<!--              个关键期限的新发国债进行做市-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
         <div class="content-body-left-item">
-          <div class="type-left-item" v-for="item in data.rates" :key="item.securityType">
+          <div class="content-body-chart">
+            <div class="content-body-chart-item" v-for="item in Array.from({length:5})">
+              <div class="content-body-chart-title">做市债券数量(30只)</div>
+              <MonitorEchart
+                  :value="20"
+                  :normal="29"
+                  :warning="11"
+                  :danger="0"/>
+              <ul class="content-body-chart-font">
+                <li>
+                  <i class="icon iconfont icon-chenggong"/>29只
+                </li>
+                <li><i class="icon iconfont icon-unFinished"/>11只</li>
+              </ul>
+            </div>
+          </div>
+          <div class="type-left-item" v-for="item in data?.rates" :key="item.securityType">
             <div style="display: flex;flex-direction: column">
               <div class="debt-info">
                 <div class="debt-item">
                   <span> {{ getSecurityType(item.securityType).description }}</span>
                   <div class="debt-item-value">
                     <div class="debt-item-self">
-                      <span class="debt-value">已报:{{ item.madeCount }}</span>
-                      <span class="debt-value">已达标:{{ item.successCount }}</span>
+                      <span class="debt-value">已报:{{ item?.madeCount }}</span>
+                      <span class="debt-value">已达标:{{ item?.successCount }}</span>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="graph-section" :style="{ height: graphSectionHeight }">
                 <div class="graph-item">
-                  <div class="graph-item-inner" v-for="itemChild in item.items" :key="itemChild.securityId"
+                  <div class="graph-item-inner" v-for="itemChild in item.items" :key="itemChild?.securityId"
                        @dblclick="openModal(itemChild)">
                     <div class="graph-item-icon">
-                      <i :style="{ visibility: itemChild.status ? 'visible' : 'hidden' ,width:'20px'}"
+                      <i :style="{ visibility: itemChild?.status ? 'visible' : 'hidden' ,width:'20px'}"
                          :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
                       ></i>
-                      <!--                      <div style=" position: relative;margin-right: 25px">-->
-                      <!--                        <i :style="{ visibility: 1 ? 'visible' : 'hidden' , position: 'absolute',top: '-18px',left: '6px',zIndex:999}"-->
-                      <!--                           :class="['icon','iconfont',iconList[1]]"-->
-                      <!--                        ></i>-->
-                      <!--                        <i :style="{ visibility: 1 ? 'visible' : 'hidden' , position: 'absolute',top: '-12px',left: '5px'}"-->
-                      <!--                           :class="['icon','iconfont',iconList[2]]"-->
-                      <!--                        ></i>-->
-                      <!--                      </div>-->
                       <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
                                placement="right-start">
-                        <span class="graph-item-inner-font">{{ itemChild.securityId }}</span>
+                        <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
                       </Tooltip>
                     </div>
                     <div class="progress-container">
                       <div class="progress-bar"
-                           :style="{ width: itemChild.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild.makeMarketProgress) }"></div>
-                      <span class="progress-label">{{ itemChild.makeMarketProgress }}</span>
+                           :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
+                      <span class="progress-label">{{ itemChild?.makeMarketProgress }}</span>
                     </div>
                   </div>
                 </div>
@@ -434,15 +456,15 @@
            :style="{ width: getWidth('right')}">
         <div style="white-space: nowrap">信用债</div>
         <div class="content-body-right-item">
-          <div class="type-right-item" v-for="item in data.credits" :key="item.type">
+          <div class="type-right-item" v-for="item in data?.credits" :key="item.type">
             <div style="display: flex;flex-direction: column">
               <div class="debt-info">
                 <div class="debt-item">
                   <span> {{ getSecurityType(item.securityType).description }}</span>
                   <div class="debt-item-value">
                     <div class="debt-item-self">
-                      <span class="debt-value">已报:{{ item.madeCount }}</span>
-                      <span class="debt-value">已达标:{{ item.successCount }}</span>
+                      <span class="debt-value">已报:{{ item?.madeCount }}</span>
+                      <span class="debt-value">已达标:{{ item?.successCount }}</span>
                     </div>
                   </div>
                 </div>
@@ -457,7 +479,7 @@
                       ></i>
                       <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
                                placement="right-start">
-                        <span class="graph-item-inner-font">{{ itemChild.securityId }}</span>
+                        <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
                       </Tooltip>
                     </div>
                     <div class="progress-container">
@@ -481,8 +503,10 @@ import {URL} from "@/api/serverApi";
 import {ICON_LIST} from "@/common/constant";
 import {getSecurityType, secondsToHMS} from "@/common/common";
 import {getToken} from "@/utils/token";
+import MonitorEchart from "@/components/monitorEchart/MonitorEchart.vue";
 
 export default {
+  components: {MonitorEchart},
   data() {
     const data = {
       logicDescription: "",
@@ -522,32 +546,7 @@ export default {
   },
   methods: {
     getSecurityType,
-    // checkToken() {
-    //   // 获取查询字符串部分 (比如 ?customerid=test&pwd=123456&envid=2)
-    //   const params = queryParse(window.location.href);
-    //   sessionStorage.setItem('customerid', params.customerid);
-    //   sessionStorage.setItem('pwd', params.pwd);
-    //   sessionStorage.setItem('envid', params.envid);
-    //   // 检查是否有 token
-    //   const token = getToken();
-    //   if (!token) {
-    //     // 如果没有 token，先登录获取 token
-    //     http.post(URL.clientLogin, {
-    //       username: params.customerid,
-    //       password: params.pwd,
-    //       messageType: '登录成功',
-    //     }, (res) => {
-    //       putToken(res.data.token); // 将 token 存储起来
-    //       this.getMakeMarket(); // 获取数据接口
-    //     });
-    //   } else {
-    //     // 如果已经有 token，直接调用数据接口
-    //     this.getMakeMarket();
-    //   }
-    // },
     getMakeMarket() {
-      // const token = getToken(); // 获取 token
-      // const envId = sessionStorage.getItem('envid')
       // 构建请求 URL
       const url = this.isClientPage ? `${URL.makeMarketEnv}?envId=${sessionStorage.getItem('envid')}` : URL.makeMarket;
       http.get(url, (res) => {
@@ -557,7 +556,7 @@ export default {
     },
     // 查看消息提醒
     viewRemindMessage() {
-      const content = this.data.remindMessage.split(';')
+      const content = this.data?.remindMessage.split(';')
       content.pop()
       this.$Modal.info({
         render: h => {
