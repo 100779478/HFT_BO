@@ -242,13 +242,8 @@ const ruleComponentMixin = {
                             return
                         }
 
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            // 将文件内容转换为base64编码的字符串
-                            this.userStrategyInfo.ruleFileBytesStr = e.target.result.split(",")[1];  // 可以选择 base64 或 ArrayBuffer
-                        };
-                        reader.readAsDataURL(file);  // 读取为base64
-                        // reader.readAsArrayBuffer(file);  // 读取为ArrayBuffer
+                        // 直接保存为 Blob 对象
+                        this.userStrategyInfo.ruleFileBytesStr = file; // file 本身就是 Blob 类型
 
                         fakeUpload(fileName)
 

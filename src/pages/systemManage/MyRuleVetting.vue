@@ -270,7 +270,7 @@
           </div>
           <div slot="footer">
             <Button type="text" @click="cancel">取消</Button>
-            <Button type="primary" @click="ok()">确定</Button>
+            <Button type="primary" @click="ok()" :loading="btnLoading">确定</Button>
           </div>
         </Modal>
       </Col>
@@ -464,6 +464,7 @@ export default {
     return {
       pagination,
       columns1,
+      btnLoading: false,
       showAddModal: false,
       fileName: "",
       userStrategyInfo

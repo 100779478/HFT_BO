@@ -1,5 +1,22 @@
 import {http} from "@/utils/request";
 import {time} from "@/common/common";
+import {Message} from "view-design";
+
+const isBlobJson = async (blob) => {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const text = reader.result;
+                const json = JSON.parse(text);
+                resolve(json); // 如果成功解析为 JSON，则返回 json 对象
+            } catch (e) {
+                resolve(null); // 不是 JSON
+            }
+        };
+        reader.readAsText(blob); // 把 blob 当作文本读出来
+    });
+};
 
 /**
  * 下载ZIP文件
@@ -10,7 +27,13 @@ import {time} from "@/common/common";
  */
 export function downLoadZip(url, params, name) {
     return new Promise((resolve, reject) => {
-        http.post(url, params, (res) => {
+        http.post(url, params, async (res) => {
+            const json = await isBlobJson(res);
+            if (json) {
+                console.log(json);
+                Message.error(json.errorMessage);
+                return;
+            }
             const blob = new Blob([res], {type: 'application/zip'});
             const link = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
