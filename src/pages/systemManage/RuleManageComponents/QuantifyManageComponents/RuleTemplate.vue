@@ -645,6 +645,7 @@ export default {
     },
     // 策略弹窗
     modalUser(type, row) {
+      this.btnLoading = false
       // 清除表单验证信息（初始化）
       this.$refs.ruleForm.resetFields();
       this.paramList = []
