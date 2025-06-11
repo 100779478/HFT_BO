@@ -23,7 +23,7 @@ body,
 }
 
 ::-webkit-scrollbar {
-    height: 9px;
+    height: 10px;
     width: 8px;
     background-color: transparent;
 }
