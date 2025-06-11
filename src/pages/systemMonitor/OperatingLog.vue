@@ -142,7 +142,7 @@ export default {
         sortable: 'custom'
       },
       {
-        title: "用户编号",
+        title: "用户代码",
         key: "customerId",
         minWidth: 100,
         resizable: true,
