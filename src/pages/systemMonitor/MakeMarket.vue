@@ -26,6 +26,7 @@
       .content-body-left-item {
         display: flex;
         justify-content: space-around;
+        flex-direction: column;
       }
 
     }
@@ -36,6 +37,7 @@
       .content-body-right-item {
         display: flex;
         justify-content: space-around;
+        flex-direction: column;
       }
     }
 
@@ -71,6 +73,10 @@
       .content-body-chart-font {
         font-size: 12px;
         list-style: none;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: 75px;
       }
     }
   }
@@ -170,17 +176,9 @@
     border-radius: 50%;
   }
 
-  .debt-info {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    font-weight: normal;
-  }
-
   .debt-item {
-    background-color: var(--debt-backcolor);
-    border-radius: 8px;
-    font-size: 1rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    color: var(--text-color);
   }
 
   .debt-item span {
@@ -202,7 +200,7 @@
 
   .debt-value {
     width: 50%;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: var(--debt-text-color);
     white-space: nowrap;
   }
@@ -230,7 +228,7 @@
     background-color: var(--graph-item-backcolor);
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
     overflow-y: scroll;
     padding-bottom: 5px;
   }
@@ -242,23 +240,20 @@
 
   .graph-item-inner {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     font-size: 0.8rem;
-    padding: 0 5px;
-    height: 22px;
+    height: 40px;
+    border-bottom: 1px solid rgba(106, 106, 108, 0.48);
     flex: 1 1 20%;
     align-items: center;
-    margin-top: 5px;
+    margin-top: -5px;
     white-space: nowrap;
   }
 
   .graph-item-inner:hover {
-    //background-color: #ceced0;
     background-color: var(--graph-hover-color);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    font-weight: bolder;
-    //font-size: 0.8rem;
   }
 
   /* 定制滚动条样式 */
@@ -280,29 +275,34 @@
     border-radius: 3px; /* 设置轨道圆角 */
   }
 
+  .quote-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 5px;
+    margin-bottom: 5px;
+    font-size: 12px
+  }
+
   .progress-container {
     position: relative;
     width: 35px !important;
-    height: 16px;
+    height: 13px;
     box-shadow: 0 0 3px black;
     background-color: #e6e6e6;
     border-radius: 4px;
     overflow: hidden;
+    padding: 2px;
   }
 
   .progress-bar {
     height: 100%;
+    border-radius: 5px;
     transition: width 0.3s ease;
   }
 
   .progress-label {
-    position: absolute;
-    font-size: 12px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: black;
-    font-weight: bold;
+    font-size: 0.8rem;
   }
 }
 
@@ -351,7 +351,7 @@
   <div class="bck">
     <div class="header-content">
       <div class="market-info">
-        <Tooltip theme="light" max-width="800" :transfer="true" placement="right">
+        <Tooltip theme="light" max-width="800" :transfer="true" placement="right" :theme="'dark'">
           <Icon type="md-settings" size="18" style="margin-right: 5px;cursor: pointer" @click="showWarning"/>
           <Icon type="md-alert" size="18"/>
           做市说明
@@ -359,10 +359,10 @@
             <div class="color-info">
               <p><strong>图标说明：</strong></p>
               <ol style="margin-left: 20px;">
-                <li><i class="icon iconfont icon-new"/>今日新上市的债券</li>
-                <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：失败</li>
-                <li><i class="icon iconfont icon-tishi"/>当前债券做市情况为：警告</li>
-                <li><i class="icon iconfont icon-yidu"/>当前债券做市情况为：已报</li>
+                <li><i class="icon iconfont icon-NEW-copy"/>今日新上市的债券</li>
+                <li><i class="icon iconfont icon-shibai"/>当前债券做市情况为：失败</li>
+                <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：警告</li>
+                <li><i class="icon iconfont icon-kedabiao"/>当前债券做市情况为：已报</li>
                 <li><i class="icon iconfont icon-chenggong"/>当前债券做市情况为：已达标</li>
               </ol>
               <p><strong>操作说明：</strong></p>
@@ -393,51 +393,61 @@
         <div style="white-space: nowrap">利率债</div>
         <div class="content-body-left-item">
           <div class="content-body-chart">
-            <div class="content-body-chart-item" v-for="item in Array.from({length:5})">
-              <div class="content-body-chart-title">做市债券数量(30只)</div>
+            <div class="content-body-chart-item"
+                 v-for="chartItem in data.entries.filter(t=>t.securitySuperType==='InterestRate')"
+                 :key="chartItem.title">
+              <div class="content-body-chart-title">{{ chartItem.title }}</div>
               <MonitorEchart
-                  :value="20"
-                  :normal="29"
-                  :warning="11"
-                  :danger="0"/>
+                  :target="chartItem.targetCount??0"
+                  :normal="chartItem.successCount"
+                  :warning="chartItem.reachableCount"
+                  :danger="chartItem.failedCount"
+              />
               <ul class="content-body-chart-font">
-                <li>
-                  <i class="icon iconfont icon-chenggong"/>29只
+                <li v-for="(i,key) in chartItem.items" :key="key">
+                  <i v-if="i.name" :class="['icon','iconfont',MADE_ICON[i.status]]"/>{{ i.name }}
                 </li>
-                <li><i class="icon iconfont icon-unFinished"/>11只</li>
               </ul>
             </div>
           </div>
-          <div class="type-left-item" v-for="item in data?.rates" :key="item.securityType">
-            <div style="display: flex;flex-direction: column">
-              <div class="debt-info">
-                <div class="debt-item">
-                  <span> {{ getSecurityType(item.securityType).description }}</span>
-                  <div class="debt-item-value">
-                    <div class="debt-item-self">
-                      <span class="debt-value">已报:{{ item?.madeCount }}</span>
-                      <span class="debt-value">已达标:{{ item?.successCount }}</span>
+          <div style="display: flex;justify-content: space-around">
+            <div class="type-left-item" v-for="item in data?.rates" :key="item.securityType">
+              <div style="display: flex;flex-direction: column">
+                <div class="graph-section" :style="{ height: graphSectionHeight }">
+                  <div class="graph-item">
+                    <div class="debt-item">
+                      <span> {{ item.securityType }}</span>
+                      <div class="debt-item-value">
+                        <div class="debt-item-self">
+                          <span class="debt-value">已报:{{ item?.madeCount }}</span>
+                          <span class="debt-value">已达标:{{ item?.successCount }}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="graph-section" :style="{ height: graphSectionHeight }">
-                <div class="graph-item">
-                  <div class="graph-item-inner" v-for="itemChild in item.items" :key="itemChild?.securityId"
-                       @dblclick="openModal(itemChild)">
-                    <div class="graph-item-icon">
-                      <i :style="{ visibility: itemChild?.status ? 'visible' : 'hidden' ,width:'20px'}"
-                         :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
-                      ></i>
-                      <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
-                               placement="right-start">
-                        <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
-                      </Tooltip>
-                    </div>
-                    <div class="progress-container">
-                      <div class="progress-bar"
-                           :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
-                      <span class="progress-label">{{ itemChild?.makeMarketProgress }}</span>
+                    <div class="graph-item-inner" v-for="itemChild in item.items" :key="itemChild?.securityId"
+                         @dblclick="openModal(itemChild)">
+                      <div class="graph-item-icon">
+                        <i :style="{ visibility: itemChild?.status ? 'visible' : 'hidden' ,width:'20px'}"
+                           :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
+                        ></i>
+                        <div class="quote-item">
+                          <i class="icon iconfont icon-NEW-copy"/>
+                          <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
+                                   placement="right-start">
+                            <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div style="display: flex;flex-direction: column;align-items: center;">
+                        <div class="progress-label" :style="{color:showPercentColor(itemChild?.makeMarketProgress)}">{{
+                            itemChild?.makeMarketProgress
+                          }}%
+                        </div>
+                        <div class="progress-container">
+                          <div class="progress-bar"
+                               :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -456,36 +466,61 @@
            :style="{ width: getWidth('right')}">
         <div style="white-space: nowrap">信用债</div>
         <div class="content-body-right-item">
-          <div class="type-right-item" v-for="item in data?.credits" :key="item.type">
-            <div style="display: flex;flex-direction: column">
-              <div class="debt-info">
-                <div class="debt-item">
-                  <span> {{ getSecurityType(item.securityType).description }}</span>
-                  <div class="debt-item-value">
-                    <div class="debt-item-self">
-                      <span class="debt-value">已报:{{ item?.madeCount }}</span>
-                      <span class="debt-value">已达标:{{ item?.successCount }}</span>
+          <div class="content-body-chart">
+            <div class="content-body-chart-item"
+                 v-for="chartItem in data.entries.filter(t=>t.securitySuperType!=='InterestRate')"
+                 :key="chartItem.title">
+              <div class="content-body-chart-title">{{ chartItem.title }}</div>
+              <MonitorEchart
+                  :target="chartItem.targetCount??0"
+                  :normal="chartItem.successCount"
+                  :warning="chartItem.reachableCount"
+                  :danger="chartItem.failedCount"/>
+              <ul class="content-body-chart-font">
+                <li v-for="(i,key) in chartItem.items" :key="key">
+                  <i :class="['icon','iconfont',MADE_ICON[i.status]]"/>{{ i.name }}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div style="display: flex;justify-content: space-around">
+            <div class="type-right-item" v-for="item in data?.credits" :key="item.type">
+              <div style="display: flex;flex-direction: column">
+                <div class="graph-section" :style="{ height: graphSectionHeight }">
+                  <div class="graph-item">
+                    <div class="debt-item">
+                      <span> {{ item.securityType }}</span>
+                      <div class="debt-item-value">
+                        <div class="debt-item-self">
+                          <span class="debt-value">已报:{{ item?.madeCount }}</span>
+                          <span class="debt-value">已达标:{{ item?.successCount }}</span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div class="graph-section" :style="{ height: graphSectionHeight }">
-                <div class="graph-item">
-                  <div class="graph-item-inner" v-for="(itemChild,index) in item.items" :key="item.securityId"
-                       @dblclick="openModal(itemChild)">
-                    <div class="graph-item-icon">
-                      <i :style="{ visibility: itemChild.status ? 'visible' : 'hidden' ,width:'20px'}"
-                         :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
-                      ></i>
-                      <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
-                               placement="right-start">
-                        <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
-                      </Tooltip>
-                    </div>
-                    <div class="progress-container">
-                      <div class="progress-bar"
-                           :style="{ width: itemChild.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild.makeMarketProgress) }"></div>
-                      <span class="progress-label">{{ itemChild.makeMarketProgress }}</span>
+                    <div class="graph-item-inner" v-for="(itemChild,index) in item.items" :key="item.securityId"
+                         @dblclick="openModal(itemChild)">
+                      <div class="graph-item-icon">
+                        <i :style="{ visibility: itemChild.status ? 'visible' : 'hidden' ,width:'20px'}"
+                           :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
+                        ></i>
+                        <div class="quote-item">
+                          <i class="icon iconfont icon-NEW-copy"/>
+                          <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
+                                   placement="right-start">
+                            <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
+                          </Tooltip>
+                        </div>
+                      </div>
+                      <div style="display: flex;flex-direction: column;align-items: center;">
+                        <div class="progress-label" :style="{color:showPercentColor(itemChild?.makeMarketProgress)}">{{
+                            itemChild?.makeMarketProgress
+                          }}%
+                        </div>
+                        <div class="progress-container">
+                          <div class="progress-bar"
+                               :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -500,9 +535,8 @@
 <script>
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {ICON_LIST} from "@/common/constant";
+import {ICON_LIST, MADE_ICON} from "@/common/constant";
 import {getSecurityType, secondsToHMS} from "@/common/common";
-import {getToken} from "@/utils/token";
 import MonitorEchart from "@/components/monitorEchart/MonitorEchart.vue";
 
 export default {
@@ -513,6 +547,7 @@ export default {
       remindMessage: "",
       madeCount: 0,
       successCount: 0,
+      entries: [],
       rates: [],
       credits: [],
     }
@@ -532,13 +567,16 @@ export default {
   created() {
   },
   mounted() {
-    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 140px)' : 'calc(100vh - 220px)';
+    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 410px)' : 'calc(100vh - 500px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },
   computed: {
     ICON_LIST() {
       return ICON_LIST
+    },
+    MADE_ICON() {
+      return MADE_ICON
     },
     isClientPage() {
       return sessionStorage.getItem('isClientPage')
@@ -567,7 +605,7 @@ export default {
       })
     },
     showPercentColor(progress) {
-      const colors = ['red', 'orange', '#0cbb18'];
+      const colors = ['red', 'orange', '#0CBB18'];
       let code = null
       if (progress >= 0 && progress < 50) {
         code = colors[0];  // 红色

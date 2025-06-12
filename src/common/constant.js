@@ -74,12 +74,22 @@ const SUCCESS_MSG = {
  */
 
 const ICON_LIST = {
-    '1': 'icon-yidu',// MADE 已报
-    '2': 'icon-chenggong',// SUCCESS 已达标
-    '3': 'icon-tishi',// WARN 警告
-    '4': 'icon-warn',// FAILED 失败
-    // '5': 'icon-iconfontzhizuobiaozhun023113',// 新增
+    '1': 'icon-kedabiao',// 已报
+    '2': 'icon-chenggong',// 已达标
+    '3': 'icon-warn',// 警告
+    '4': 'icon-shibai',// 失败
     '5': 'icon-xinzeng',// 新增
+}
+
+/**
+ * 做市监控展示图标
+ */
+
+const MADE_ICON = {
+    '1': 'icon-unFinished',//  已报
+    '2': 'icon-chenggong',//  已达标
+    '4': 'icon-shibai',//  失败
+    '5': 'icon-yk_yuanquan_fill',//  未报
 }
 
 /**
@@ -92,4 +102,4 @@ const ClientRoutePage = {
     'sub-deal': 'SubRuleTransactionSummary', // 分策略成交汇总
 }
 
-export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, ClientRoutePage}
+export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, ClientRoutePage, MADE_ICON}

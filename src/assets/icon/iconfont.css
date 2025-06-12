@@ -1,8 +1,8 @@
 @font-face {
     font-family: "iconfont"; /* Project id 4804564 */
-    src: url('iconfont.woff2?t=1745478546968') format('woff2'),
-    url('iconfont.woff?t=1745478546968') format('woff'),
-    url('iconfont.ttf?t=1745478546968') format('truetype');
+    src: url('iconfont.woff2?t=1749712936809') format('woff2'),
+    url('iconfont.woff?t=1749712936809') format('woff'),
+    url('iconfont.ttf?t=1749712936809') format('truetype');
 }
 
 .iconfont {
@@ -20,7 +20,18 @@
 .icon-shibai:before {
     content: "\e60b";
     font-size: 16px;
-    color: red;
+    color: #ff7875;
+}
+
+.icon-kedabiao:before {
+    content: "\e671";
+    font-size: 16px;
+    color: #ffe566;
+}
+
+.icon-yk_yuanquan_fill:before {
+    content: "\e602";
+    color: #4B5A78;
 }
 
 .icon-yidu:before {
@@ -63,7 +74,8 @@
 
 .icon-warn:before {
     content: "\e6d0";
-    color: red;
+    color: #ffe566;
+    /*color: red;*/
     font-weight: normal;
     font-size: 15px;
 }
@@ -87,4 +99,12 @@
     color: #0CBB18;
     font-weight: normal;
     font-size: 15px;
+}
+
+.icon-NEW-copy:before {
+    content: "\e889";
+    color: #0CBB18;
+    /*color: #4fffa1;*/
+    font-size: 30px;
+    line-height: 1;
 }

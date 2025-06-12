@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6141084",
+      "name": "AK-YK_圆圈_fill",
+      "font_class": "yk_yuanquan_fill",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
       "icon_id": "13638703",
       "name": "图形",
       "font_class": "tuxing",
@@ -67,6 +74,13 @@
       "font_class": "iconfontzhizuobiaozhun023113",
       "unicode": "e673",
       "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "9009443",
+      "name": "NEW",
+      "font_class": "NEW-copy",
+      "unicode": "e889",
+      "unicode_decimal": 59529
     }
   ]
 }
