@@ -1,7 +1,7 @@
 <template>
   <!-- 外层容器可横向滚动，内部是节点布局 -->
   <div
-      style="overflow: scroll;width: 85vw;height:90vh;position: relative;background: #1c3077; will-change: transform; transform: translateZ(0)">
+      style="overflow-x:scroll;width: 100%;height:100%;position: relative;background: #1c3077; will-change: transform; transform: translateZ(0)">
     <!-- 后端返回的 container 数据，用于绘制布局背景框 -->
     <div v-for="item in container" :key="item.title"
          :style="{background: item.background,width: item.width+'px',height: item.height+'px',left: item.left+'px',top: item.top+'px'}"
@@ -10,7 +10,7 @@
     </div>
     <div style="position: relative; height: 800px">
       <!-- X6 图容器，用于渲染流程图 -->
-      <div ref="container" style="width: 1900px; height: 800px;overflow: scroll;">
+      <div ref="container" style="width: 1900px; height: 800px">
       </div>
       <div class="dashboard-box">
         <div class="usage-section">
@@ -94,7 +94,7 @@ export default {
       shape: 'custom-vue-node',
       width: 100,
       height: 40,
-      component: CustomNode
+      component: CustomNode,
     })
 
     // 加载数据后初始化图或刷新
@@ -230,7 +230,16 @@ export default {
           height: node.height ?? 50,
           label: node.label ?? '',
           node: node.node,
-          data: node
+          data: {
+            ...node,
+            onUpdate: () => {
+              http.get(URL.dashboard, (res) => {
+                this.container = res.data?.container ?? []
+                this.nodes = res.data?.nodes ?? []
+                this.refreshGraphGracefully()
+              })
+            }
+          },
         })
       })
 

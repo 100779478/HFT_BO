@@ -172,8 +172,8 @@ export default {
 }
 
 .system-status-chart {
-  width: 5rem;
-  height: 5rem;
+  width: 7.2vh;
+  height: 7.2vh;
   position: relative;
 }
 

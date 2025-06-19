@@ -16,9 +16,9 @@
 </template>
 
 <script>
-import MarketData from "@/pages/systemMonitor/MonitorManage/MarketData.vue";
-import MonitorProcess from "@/pages/systemMonitor/MonitorManage/MonitorProcess.vue";
-import MonitorProcessLogs from "@/pages/systemMonitor/MonitorManage/MonitorProcessLogs.vue";
+import MarketData from "@/pages/systemMonitor/MonitorManage-complex/MarketData.vue";
+import MonitorProcess from "@/pages/systemMonitor/MonitorManage-complex/MonitorProcess.vue";
+import MonitorProcessLogs from "@/pages/systemMonitor/MonitorManage-complex/MonitorProcessLogs.vue";
 
 export default {
   name: "MonitorManage",

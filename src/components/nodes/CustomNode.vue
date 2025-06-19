@@ -56,13 +56,6 @@
                 :border="true"
                 :max-height="300"
             />
-            <div class="page-info">
-              <div class="page-info-content">
-                第 <span>{{ pagination.pageNumber }}</span> /
-                <span>{{ Math.ceil(pagination.total / pagination.pageSize) || 1 }}</span> 页，
-                共 <span>{{ pagination.total }}</span> 条
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -105,7 +98,7 @@ export default {
         {
           title: '状态',
           key: 'read',
-          width: 120,
+          width: 85,
           render: (h, params) => {
             return h('Tag', {
               props: {
@@ -253,18 +246,14 @@ export default {
     },
     // 已读操作
     handleRead() {
-      const dashboardIds = this.data1.map(item => {
-        if (!item.read) {
-          return item.id
-        }
-      });
-      http.post(URL.readErrLog, dashboardIds, (res) => {
+      http.post(`${URL.readErrLog}/${this.nodeData.node}`, {}, (res) => {
         if (res?.code === '0') {
           this.$Message.success('操作成功');
           this.resetScrollTop();
           this.pagination.pageNumber = 1
           this.getErrorLogList()
         }
+        this.nodeData.onUpdate()
       });
     },
     refresh() {
@@ -357,22 +346,6 @@ h2 {
 .table-column-actions {
   display: flex;
   margin-left: auto;
-  gap: 5px;
-}
-
-.page-info {
-  float: right;
-  font-weight: 500;
-  margin-top: 10px;
-  color: #06a0f3;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.page-info-content {
-  display: flex;
-  align-items: center;
   gap: 5px;
 }
 
