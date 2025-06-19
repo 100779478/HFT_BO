@@ -126,8 +126,8 @@ export default {
       const cpuArr = this.nodeData.monitor?.cpu ?? [];
       const cpu = cpuArr[cpuArr.length - 1] ?? 0;
       if (status === 0) return '#D9001B';
-      if (status === 1 && cpu <= 50 && memory <= 50) return this.nodeData.color ?? '#4A9D0B';
-      if (status === 1 && (cpu > 50 || memory > 50)) return this.nodeData.color ?? '#D9001B';
+      if (status === 1 && cpu <= 50 && memory <= 50) return '#4A9D0B';
+      if (status === 1 && (cpu > 50 || memory > 50)) return '#D9001B';
       return '#276ED9';
     },
     backgroundColor() {

@@ -13,11 +13,11 @@
   .content-body {
     display: flex;
     flex-wrap: nowrap;
-    font-weight: bolder;
     justify-content: space-around;
     text-align: center;
     font-size: 1.2rem;
     margin-bottom: 10px;
+    padding: 0 5px;
     color: var(--text-color);
 
     .content-body-left {
@@ -27,6 +27,7 @@
         display: flex;
         justify-content: space-around;
         flex-direction: column;
+        white-space: nowrap;
       }
 
     }
@@ -38,10 +39,12 @@
         display: flex;
         justify-content: space-around;
         flex-direction: column;
+        white-space: nowrap;
       }
     }
 
     .content-body-left, .content-body-right {
+      position: relative;
       //background-color: #f1f1f5;
       //background-color: var(--content-background-color);
       background-color: var(--background-color);
@@ -58,16 +61,19 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    height: 300px;
+    align-items: center;
+    height: 340px;
+    margin-top: 5px;
 
     .content-body-chart-item {
-      flex: 0 0 33%;
+      //flex: 0 0 33%;
+      width: calc(50% - 10px); /* 第一行两个 */
       display: flex;
-      justify-content: center;
       flex-direction: column;
 
       .content-body-chart-title {
-        font-size: 12px;
+        font-size: 14px;
+        font-weight: bolder;
       }
 
       .content-body-chart-font {
@@ -76,7 +82,42 @@
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        height: 75px;
+        height: 72px;
+        align-items: flex-start; /* 确保每一项左对齐 */
+        margin: 0 auto; /* 水平居中 */
+      }
+    }
+
+    .content-body-chart-item:nth-child(1) {
+      width: calc(63% - 10px);
+    }
+
+    .content-body-chart-item:nth-child(2) {
+      width: calc(14% - 10px);
+    }
+
+    .content-body-chart-item:nth-child(n + 3) {
+      width: calc(33.33%); /* 从第三项起三个一行 */
+    }
+
+    .content-body-chart-item-right {
+      //flex: 0 0 33%;
+      display: flex;
+      flex-direction: column;
+
+      .content-body-chart-title {
+        font-size: 14px;
+        font-weight: bolder;
+      }
+
+      .content-body-chart-font {
+        font-size: 12px;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        height: 72px;
+        align-items: flex-start; /* 确保每一项左对齐 */
+        margin: 0 auto; /* 水平居中 */
       }
     }
   }
@@ -151,11 +192,16 @@
     font-size: 14px;
     min-width: 170px; /* 最小宽度 */
     width: auto; /* 宽度自适应 */
+    font-weight: normal; /* 默认字体不加粗 */
     z-index: 999;
     white-space: nowrap;
     text-align: right;
     padding: 0 10px 0 30px;
     background-color: var(--background-color);
+
+    .market-data-value {
+      font-weight: bold; /* 数据加粗 */
+    }
   }
 
   .title-info:hover {
@@ -228,7 +274,9 @@
     background-color: var(--graph-item-backcolor);
     width: 100%;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+    margin-top: 15px;
+    //box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 0px 4px rgba(179, 179, 179, 0.94);
     overflow-y: scroll;
     padding-bottom: 5px;
   }
@@ -236,17 +284,18 @@
   .graph-item-icon {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    width: 50%;
   }
 
   .graph-item-inner {
     display: flex;
     justify-content: space-around;
     font-size: 0.8rem;
-    height: 40px;
+    height: 34px;
     border-bottom: 1px solid rgba(106, 106, 108, 0.48);
     flex: 1 1 20%;
     align-items: center;
-    margin-top: -5px;
     white-space: nowrap;
   }
 
@@ -280,14 +329,13 @@
     flex-direction: column;
     align-items: center;
     line-height: 5px;
-    margin-bottom: 5px;
     font-size: 12px
   }
 
   .progress-container {
     position: relative;
-    width: 35px !important;
-    height: 13px;
+    width: 28px !important;
+    height: 12px;
     box-shadow: 0 0 3px black;
     background-color: #e6e6e6;
     border-radius: 4px;
@@ -297,12 +345,13 @@
 
   .progress-bar {
     height: 100%;
-    border-radius: 5px;
+    border-radius: 1px;
     transition: width 0.3s ease;
   }
 
   .progress-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
+    max-width: 28px;
   }
 }
 
@@ -351,15 +400,16 @@
   <div class="bck">
     <div class="header-content">
       <div class="market-info">
-        <Tooltip theme="light" max-width="800" :transfer="true" placement="right" :theme="'dark'">
+        <Tooltip theme="light" max-width="800" :transfer="true" placement="right">
           <Icon type="md-settings" size="18" style="margin-right: 5px;cursor: pointer" @click="showWarning"/>
           <Icon type="md-alert" size="18"/>
-          做市说明
+          <span style="font-weight: normal">做市说明</span>
           <div slot="content">
             <div class="color-info">
               <p><strong>图标说明：</strong></p>
               <ol style="margin-left: 20px;">
                 <li><i class="icon iconfont icon-NEW-copy"/>今日新上市的债券</li>
+                <li><i class="icon iconfont icon-yk_yuanquan_fill"/>当前债券做市情况为：未报</li>
                 <li><i class="icon iconfont icon-shibai"/>当前债券做市情况为：失败</li>
                 <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：警告</li>
                 <li><i class="icon iconfont icon-kedabiao"/>当前债券做市情况为：已报</li>
@@ -369,6 +419,10 @@
               <ol style="margin-left: 20px;">
                 <li>双击滚动提醒可查看详细内容。</li>
                 <li>双击债券可查看详细信息。</li>
+                <li>点击标题旁的
+                  <Icon type='ios-arrow-down'/>
+                  可收缩或展开做市面板。
+                </li>
               </ol>
               <p><strong v-show="data?.logicDescription">业务说明：</strong></p>
               <div>
@@ -379,20 +433,22 @@
           </div>
         </Tooltip>
       </div>
-      <div class="title-info" @dblclick="viewRemindMessage">
-        {{ data?.remindMessage }}
-      </div>
+      <!--      <div class="title-info" @dblclick="viewRemindMessage">-->
+      <!--        {{ data?.remindMessage }}-->
+      <!--      </div>-->
       <div class="market-data">
-        已报：{{ data?.madeCount ?? '--' }}
-        已达标：{{ data?.successCount ?? '--' }}
+        已报：<span class="market-data-value">{{ data?.madeCount ?? '--' }}</span>
+        已达标：<span class="market-data-value">{{ data?.successCount ?? '--' }}</span>
       </div>
     </div>
     <div class="content-body">
       <div class="content-body-left"
            :style="{ width: getWidth('left')}">
-        <div style="white-space: nowrap">利率债</div>
+        <div style="white-space: nowrap;font-weight: bolder;position: absolute;left: 10px">利率债
+          <Icon :type="showRate?'ios-arrow-down':'ios-arrow-up'" @click="showRate=!showRate"/>
+        </div>
         <div class="content-body-left-item">
-          <div class="content-body-chart">
+          <div class="content-body-chart" v-if="showRate">
             <div class="content-body-chart-item"
                  v-for="chartItem in data.entries.filter(t=>t.securitySuperType==='InterestRate')"
                  :key="chartItem.title">
@@ -413,7 +469,8 @@
           <div style="display: flex;justify-content: space-around">
             <div class="type-left-item" v-for="item in data?.rates" :key="item.securityType">
               <div style="display: flex;flex-direction: column">
-                <div class="graph-section" :style="{ height: graphSectionHeight }">
+                <div class="graph-section"
+                     :style="{ height: `calc(${graphSectionHeight} + ${showRate ? '0px' : '340px'})` }">
                   <div class="graph-item">
                     <div class="debt-item">
                       <span> {{ item.securityType }}</span>
@@ -431,7 +488,8 @@
                            :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
                         ></i>
                         <div class="quote-item">
-                          <i class="icon iconfont icon-NEW-copy"/>
+                          <i v-show="itemChild.newBond"
+                             class="icon iconfont icon-NEW-copy"/>
                           <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
                                    placement="right-start">
                             <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
@@ -440,12 +498,12 @@
                       </div>
                       <div style="display: flex;flex-direction: column;align-items: center;">
                         <div class="progress-label" :style="{color:showPercentColor(itemChild?.makeMarketProgress)}">{{
-                            itemChild?.makeMarketProgress
+                            Math.min(itemChild?.makeMarketProgress, 100)
                           }}%
                         </div>
                         <div class="progress-container">
                           <div class="progress-bar"
-                               :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
+                               :style="{ width: Math.min(itemChild?.makeMarketProgress,100) + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
                         </div>
                       </div>
                     </div>
@@ -464,10 +522,12 @@
       </div>
       <div class="content-body-right"
            :style="{ width: getWidth('right')}">
-        <div style="white-space: nowrap">信用债</div>
+        <div style="white-space: nowrap;font-weight: bolder;position: absolute;left: 10px">信用债
+          <Icon :type="showCredit?'ios-arrow-down':'ios-arrow-up'" @click="showCredit=!showCredit"/>
+        </div>
         <div class="content-body-right-item">
-          <div class="content-body-chart">
-            <div class="content-body-chart-item"
+          <div class="content-body-chart" style="justify-content: space-evenly" v-if="showCredit">
+            <div class="content-body-chart-item-right"
                  v-for="chartItem in data.entries.filter(t=>t.securitySuperType!=='InterestRate')"
                  :key="chartItem.title">
               <div class="content-body-chart-title">{{ chartItem.title }}</div>
@@ -486,7 +546,8 @@
           <div style="display: flex;justify-content: space-around">
             <div class="type-right-item" v-for="item in data?.credits" :key="item.type">
               <div style="display: flex;flex-direction: column">
-                <div class="graph-section" :style="{ height: graphSectionHeight }">
+                <div class="graph-section"
+                     :style="{ height: `calc(${graphSectionHeight} + ${showCredit ? '0px' : '340px'})` }">
                   <div class="graph-item">
                     <div class="debt-item">
                       <span> {{ item.securityType }}</span>
@@ -504,7 +565,8 @@
                            :class="['icon','iconfont',ICON_LIST[itemChild.status]]"
                         ></i>
                         <div class="quote-item">
-                          <i class="icon iconfont icon-NEW-copy"/>
+                          <i v-show="itemChild.newBond"
+                             class="icon iconfont icon-NEW-copy"/>
                           <Tooltip theme="light" :width="100" :content="itemChild.securityName" :transfer="true"
                                    placement="right-start">
                             <span class="graph-item-inner-font">{{ itemChild?.securityId }}</span>
@@ -513,12 +575,12 @@
                       </div>
                       <div style="display: flex;flex-direction: column;align-items: center;">
                         <div class="progress-label" :style="{color:showPercentColor(itemChild?.makeMarketProgress)}">{{
-                            itemChild?.makeMarketProgress
+                            Math.min(itemChild?.makeMarketProgress, 100)
                           }}%
                         </div>
                         <div class="progress-container">
                           <div class="progress-bar"
-                               :style="{ width: itemChild?.makeMarketProgress + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
+                               :style="{ width: Math.min(itemChild?.makeMarketProgress,100) + '%',backgroundColor:showPercentColor(itemChild?.makeMarketProgress) }"></div>
                         </div>
                       </div>
                     </div>
@@ -560,6 +622,8 @@ export default {
       data,
       toggle,
       sysSetting,
+      showRate: true,
+      showCredit: true,
       timer: null,
       graphSectionHeight: 'calc(100vh - 200px)', // 默认高度
     }
@@ -567,7 +631,7 @@ export default {
   created() {
   },
   mounted() {
-    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 410px)' : 'calc(100vh - 500px)';
+    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 380px)' : 'calc(100vh - 480px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },
@@ -583,6 +647,27 @@ export default {
     },
   },
   methods: {
+    generateData(count = 5) {
+      return Array.from({length: count}, (_, i) => ({
+        securityType: 100 + i,
+        successCount: 0,
+        madeCount: 4,
+        items: [
+          {
+            securityId: 4000000 + i,
+            securityName: null,
+            makeTime: 160 + i * 5,
+            blankTime: i,
+            maxBlankTime: 12000 + i * 100,
+            makeMarketProgress: 1,
+            newBond: false,
+            status: 4,
+            termToMaturityString: 9.0 + i * 0.1,
+            securityTerm: 30
+          }
+        ]
+      }));
+    },
     getSecurityType,
     getMakeMarket() {
       // 构建请求 URL
@@ -594,15 +679,29 @@ export default {
     },
     // 查看消息提醒
     viewRemindMessage() {
-      const content = this.data?.remindMessage.split(';')
-      content.pop()
+      const content = this.data?.remindMessage.split(';');
+      content.pop(); // 去掉最后一个空项（由最后一个 ; 产生）
+
       this.$Modal.info({
         render: h => {
           return h('ol', {style: {fontWeight: 'bolder'}}, content.map(i => {
-            return h('li', {class: 'modal-li'}, i)
-          }))
+            const index = i.indexOf('还差');
+            if (index !== -1) {
+              // 分成“正常部分”和“高亮部分”
+              const normal = i.slice(0, index);
+              const highlight = i.slice(index); // 从“还差”到末尾
+
+              return h('li', {class: 'modal-li'}, [
+                h('span', normal),
+                h('span', {style: {color: 'red'}}, highlight)
+              ]);
+            } else {
+              // 没有“还差”的，正常显示
+              return h('li', {class: 'modal-li'}, i);
+            }
+          }));
         }
-      })
+      });
     },
     showPercentColor(progress) {
       const colors = ['red', 'orange', '#0CBB18'];
@@ -611,7 +710,7 @@ export default {
         code = colors[0];  // 红色
       } else if (progress >= 50 && progress < 100) {
         code = colors[1];  // 橙色
-      } else if (progress === 100) {
+      } else if (progress >= 100) {
         code = colors[2];  // 绿色
       }
       return code
@@ -628,7 +727,7 @@ export default {
     },
     getWidth(type) {
       if (type === 'left') {
-        if (this.toggle === '0') return '32%';
+        if (this.toggle === '0') return '34%';
         if (this.toggle === '1') return '0%';
         if (this.toggle === '2') return '100%';
       }

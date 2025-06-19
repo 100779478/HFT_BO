@@ -82,7 +82,7 @@ const ICON_LIST = {
 }
 
 /**
- * 做市监控展示图标
+ * 做市监控进度展示图标
  */
 
 const MADE_ICON = {

@@ -8,8 +8,6 @@
 <script>
 import ECharts from 'vue-echarts';
 import 'echarts';
-import {http} from "@/utils/request";
-import {URL} from "@/api/serverApi";
 
 export default {
   name: 'SystemMonitor',
@@ -118,6 +116,8 @@ export default {
             show: true,
             xAxisIndex: [0],
             showDetail: false, // <<< 关掉顶部那个小提示框
+            start: this.getToday8amTimestamp(), // 设置起始位置
+            endValue: this.getLatestTimestamp()
             // start: 92, // 起始位置（百分比）
             // end: 100, // 每次显示10%的数据（比如，显示1万个数据点）
             // startValue: '2024-01-01',
@@ -131,40 +131,70 @@ export default {
           {
             type: 'inside', // 支持通过鼠标滚轮缩放
             xAxisIndex: [0],
-            // start: 92,
+            start: this.getToday8amTimestamp(),
+            endValue: this.getLatestTimestamp()
             // end: 100
           }
         ]
       };
     },
+    getToday8amTimestamp(data = this.data) {
+      const today = new Date();
+      today.setHours(8, 0, 0, 0);
+      const today8 = today.getTime();
+      const first = data[0]?.[0] ?? today8;
+      // 比较第一项的时间与8点钟
+      // 第一项可能为空，或者从当日8点后才统计数据(比如8点15、9点等情况)
+      return Math.max(today8, first);
+    },
+    getLatestTimestamp() {
+      if (!this.data || this.data.length === 0) return new Date().getTime();
+      return Number(this.data[this.data.length - 1][0]);
+    },
   },
   watch: {
     data(val) {
-      // 确保数据格式：每个数据点应该是 [时间戳, 数值]
-      const formattedData = val.map(item => {
-        if (Array.isArray(item) && item.length === 2) {
-          // 将时间戳从字符串转换为数字
-          return [Number(item[0]), item[1]]; // 时间戳（数字）和数值
+      if (!val || val.length === 0) return;
+
+      const formattedData = val.map(item => [Number(item[0]), item[1]]);
+
+      const today8am = this.getToday8amTimestamp(formattedData);
+      const latest = formattedData[formattedData.length - 1][0];
+
+      this.chartOption = {
+        ...this.chartOption,
+        series: [{
+          type: 'line',
+          showSymbol: false,
+          large: true,
+          data: formattedData
+        }],
+        dataZoom: [
+          {
+            type: 'slider',
+            show: true,
+            xAxisIndex: [0],
+            showDetail: false,
+            startValue: today8am,
+            endValue: latest
+          },
+          {
+            type: 'inside',
+            xAxisIndex: [0],
+            startValue: today8am,
+            endValue: latest
+          }
+        ]
+      };
+
+      this.$nextTick(() => {
+        if (this.$refs.chart) {
+          this.$refs.chart.setOption(this.chartOption, true);
         }
-        return item; // 如果格式不对，则不做处理
       });
-
-      if (this.chartOption.series && this.chartOption.series.length > 0) {
-        // 更新数据
-        this.chartOption.series[0].data = formattedData;
-      } else {
-        // 如果chartOption没有series，重新初始化
-        this.initChartOption(formattedData);
-      }
-
-      // 手动刷新echarts
-      // this.$nextTick(() => {
-      //   if (this.$refs.chart) {
-      //     this.$refs.chart.setOption(this.chartOption, true);
-      //   }
-      // });
     }
-  },
+  }
+
 };
 </script>
 

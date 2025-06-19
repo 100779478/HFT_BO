@@ -108,11 +108,11 @@ new Vue({
         //                 localStorage.setItem('timeStamp', res.timeStamp);
         //                 // 将 `updateContent` 中的换行符替换为 `<br>` 标签
         //                 // 同时去除 Markdown 的标题 `#` 和空格
-        //                 const formattedContent = res.updateContent
-        //                     .replace(/#{1,6}\s?/g, '')  // 去除 Markdown 标题的 `#`
-        //                     .replace(/\n/g, '<br>');     // 将换行符替换为 `<br>`
+        //                 // const formattedContent = res.updateContent
+        //                 //     .replace(/#{1,6}\s?/g, '')  // 去除 Markdown 标题的 `#`
+        //                 //     .replace(/\n/g, '<br>');     // 将换行符替换为 `<br>`
         //                 this.$Notice.info({
-        //                     title: "检测到有新版本，请刷新页面",
+        //                     // title: "检测到有新版本，请刷新页面",
         //                     duration: 0,
         //                     render: h => {
         //                         return h(
@@ -120,7 +120,7 @@ new Vue({
         //                             [
         //                                 h('div', {
         //                                     domProps: {
-        //                                         innerHTML: `${formattedContent}`
+        //                                         innerHTML: `检测到有新版本，请刷新页面！`
         //                                     },
         //                                 }),
         //                                 h(

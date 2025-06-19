@@ -19,42 +19,43 @@
 
 .icon-shibai:before {
     content: "\e60b";
-    font-size: 16px;
+    font-size: 14px;
     color: #ff7875;
 }
 
 .icon-kedabiao:before {
     content: "\e671";
-    font-size: 16px;
-    color: #ffe566;
+    font-size: 14px;
+    color: #f7b500;
 }
 
 .icon-yk_yuanquan_fill:before {
     content: "\e602";
     color: #4B5A78;
+    font-size: 14px;
 }
 
 .icon-yidu:before {
     content: "\e63e";
-    font-size: 13px;
+    font-size: 14px;
     color: blue;
 }
 
 .icon-chenggong:before {
     content: "\e671";
-    font-size: 16px;
-    color: #4fffa1;
+    font-size: 14px;
+    color: #00c97d;
 }
 
 .icon-unFinished:before {
     content: "\e671";
-    font-size: 16px;
-    color: #ffe566;
+    font-size: 14px;
+    color: #f7b500;
 }
 
 .icon-weichenggong:before {
     content: "\e671";
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .icon-youjiantou:before {
@@ -74,7 +75,7 @@
 
 .icon-warn:before {
     content: "\e6d0";
-    color: #ffe566;
+    color: #f7b500;
     /*color: red;*/
     font-weight: normal;
     font-size: 15px;
@@ -105,6 +106,6 @@
     content: "\e889";
     color: #0CBB18;
     /*color: #4fffa1;*/
-    font-size: 30px;
-    line-height: 1;
+    font-size: 25px;
+    line-height: 18px;
 }
