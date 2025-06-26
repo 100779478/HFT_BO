@@ -40,7 +40,7 @@
 </style>
 <template>
   <div>
-    <Row style="margin: -5px 5px 5px 5px" justify="space-between" align="top">
+    <Row ref="headerArea" style="margin: -5px 5px 5px 5px" justify="space-between" align="top">
       <Col
           span="22"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 180px)"
@@ -93,7 +93,7 @@
         @on-sort-change="e=>handleSort(e,this.getUserStrategyData)"
     />
     <template>
-      <div class="page-bottom">
+      <div ref="footerArea" class="page-bottom">
         <Page
             :total="pagination.total"
             :current="pagination.pageNumber"
@@ -165,7 +165,15 @@ export default {
       pagination,
       loading: false,
       activeList: ACTIVE_LIST,
+      headerArea: null,
+      footerArea: null
     };
+  },
+  props: {
+    templateVisible: {
+      type: Boolean,
+      default: true
+    }
   },
   computed: {
     ruleId() {
@@ -181,7 +189,7 @@ export default {
   },
   methods: {
     calculateTableHeight() {
-      return window.innerHeight * 0.15;
+      return window.innerHeight * (this.templateVisible ? 0.15 : 0);
     },
     // 获取策略实例列表
     getUserStrategyData() {

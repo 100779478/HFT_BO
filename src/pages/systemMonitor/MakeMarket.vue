@@ -40,6 +40,11 @@
       width: 65%;
     }
 
+    .content-body-right .content-body-chart-font {
+      flex-direction: column;
+      flex-wrap: nowrap; /* 禁止换行 */
+    }
+
     .content-body-left-item,
     .content-body-right-item {
       display: flex;
@@ -53,7 +58,7 @@
       justify-content: flex-start;
       flex-wrap: wrap;
       align-items: center;
-      height: 340px;
+      height: 370px;
       margin-top: 5px;
     }
 
@@ -291,8 +296,8 @@
           :width="getWidth('left')"
           :showSection="showRate"
           :chartItems="data.entries.filter(t => t.securitySuperType === 'InterestRate')"
-          :graphItems="data.rates.concat(generateData(3))"
-          :sectionHeight="`calc(${graphSectionHeight} + ${showRate ? '0px' : '340px'})`"
+          :graphItems="data.rates"
+          :sectionHeight="`calc(${graphSectionHeight} + ${showRate ? '0px' : '370px'})`"
           :MADE_ICON="MADE_ICON"
           :ICON_LIST="ICON_LIST"
           :onToggleSection="() => showRate = !showRate"
@@ -312,8 +317,8 @@
           :width="getWidth('right')"
           :showSection="showCredit"
           :chartItems="data.entries.filter(t => t.securitySuperType !== 'InterestRate')"
-          :graphItems="data.credits.concat(generateData(6))"
-          :sectionHeight="`calc(${graphSectionHeight} + ${showCredit ? '0px' : '340px'})`"
+          :graphItems="data.credits"
+          :sectionHeight="`calc(${graphSectionHeight} + ${showCredit ? '0px' : '370px'})`"
           :MADE_ICON="MADE_ICON"
           :ICON_LIST="ICON_LIST"
           :onToggleSection="() => showCredit = !showCredit"
@@ -366,7 +371,7 @@ export default {
   created() {
   },
   mounted() {
-    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 380px)' : 'calc(100vh - 470px)';
+    this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 410px)' : 'calc(100vh - 500px)';
     this.getMakeMarket()
     this.timer = setInterval(this.getMakeMarket, 30000)
   },

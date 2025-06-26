@@ -178,7 +178,6 @@
                   <FormItem label="策略文件名称" prop="ruleFileName">
                     <Input
                         v-model="userStrategyInfo.ruleFileName"
-                        disabled
                         placeholder="c++策略文件名称以.so结尾"
                         autocomplete="off"
                         :maxlength="32"
@@ -459,6 +458,11 @@ export default {
     ok(isNew) {
       if (!this.userStrategyInfo.ruleLocation) {
         this.$Message.warning(ERROR_MSG.storagePathEmpty)
+        return
+      }
+      // ruleFileType：0为C++策略，1为python策略
+      if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
+        this.$Message.error(ERROR_MSG.fileTypeCPlusPlus)
         return
       }
       const config = {

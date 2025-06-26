@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%">
     <Tabs size="default" :value="activeTab" :animated="false" @on-click="handleChangeTab" style="height: 49px">
       <TabPane name="1" label="做市策略" icon="ios-calendar"></TabPane>
       <TabPane name="2" label="量化策略" icon="ios-hammer"></TabPane>

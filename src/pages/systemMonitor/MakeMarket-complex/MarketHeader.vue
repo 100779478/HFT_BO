@@ -129,8 +129,8 @@ export default {
 }
 
 .color-info {
-  //color: black;
-  color: var(--text-color);
+  //color: var(--text-color);
+  color: #3c4860;
   margin-top: 10px;
 }
 

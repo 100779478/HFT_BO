@@ -18,7 +18,12 @@ export const tableMixin = {
         };
     },
     mounted() {
-        window.addEventListener('resize', this.updateTableHeight);
+        this.updateTableHeight(); // ✅ 初始化表格高度
+        window.addEventListener('resize', () => {
+            console.log(window.screen.height,window.innerHeight)
+
+            this.updateTableHeight()
+        });
     },
     beforeDestroy() {
         window.removeEventListener('resize', this.updateTableHeight);

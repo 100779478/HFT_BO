@@ -143,6 +143,16 @@ export default {
         // 只渲染 span 标签
         return h("span", value);
       }
+
+      // 只针对 range 字段特殊处理
+      if (column.key === 'range') {
+        // 字符串和布尔类型禁用编辑
+        if (row.type === '0' || row.type === '3') {
+          // 只读显示span，不允许编辑
+          return h('span', value);
+        }
+      }
+
       // 渲染输入框
       return h('Tooltip', {
         props: {
@@ -158,9 +168,17 @@ export default {
         on: {
           input: (event) => {
             this.paramList[rowIndex][column.key] = event;
-            this.$forceUpdate()
+            this.$forceUpdate();
           },
         },
+        nativeOn: {
+          keydown: (e) => {
+            // 如果是整数类型，去掉输入中的所有小数点
+            if (row.type === '1' && e.key === '.') {
+              e.preventDefault(); // 阻止输入小数点
+            }
+          }
+        }
       })]);
     },
     renderSelectCell(h, params) {
@@ -417,4 +435,12 @@ export default {
     cursor: pointer;
   }
 }
+
+::v-deep .ivu-select-multiple .ivu-select-item-selected:after {
+  font-size: 14px;
+  content: '\00D7';
+  color: rgba(221, 17, 24, 0.9);
+  top: 7px;
+}
+
 </style>

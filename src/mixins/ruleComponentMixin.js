@@ -160,6 +160,7 @@ const ruleComponentMixin = {
                 'a': {path: './Rules/', fileName: 'libmm_strategy_rate.so'},      // 交易所新债平台做市策略
                 'b': {path: './Rules/', fileName: 'libmm_strategy_fi.so'},        // 交易所固收平台做市策略
                 'c': {path: './Rules/', fileName: 'libBond_Spread.so'},           // 套利策略
+                'd': {path: './Rules/', fileName: 'ibRFQ_strategy.so'},           // RFQ策略
             };
             // 判断 e 是否在 strategyConfig 中存在对应的配置
             if (strategyConfig[e]) {
@@ -284,6 +285,7 @@ const ruleComponentMixin = {
         },
         checkValueInRange(valueStr, rangeStr) {
             const value = parseFloat(valueStr);
+            if (valueStr.includes('。')) return false
             if (isNaN(value)) return false;
 
             const match = rangeStr.match(/^([\[\(])\s*(-?\d*(?:\.\d+)?)?\s*,\s*(-?\d*(?:\.\d+)?)?\s*([\]\)])$/);

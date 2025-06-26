@@ -525,14 +525,17 @@ export default {
         // 校验 range 格式和值合法性
         const invalidParams = [];
         this.paramList.forEach((param, index) => {
+          if (param.type === '4' && !param.range) {
+            invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`)
+          }
           if (param.type === '2' || param.type === '1') {
             const range = param.range?.toString().trim();
             const value = param.value?.toString().trim();
 
             if (!this.validateRangeFormat(range)) {
-              invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
+              range && invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
             } else if (!this.checkValueInRange(value, range)) {
-              invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
+              value && invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
             }
           }
         });

@@ -50,7 +50,7 @@
 </style>
 <template>
   <div>
-    <Row style="margin:-5px 5px 5px 5px" justify="space-between" align="top">
+    <Row ref="headerArea" style="margin:-5px 5px 5px 5px" justify="space-between" align="top">
       <Col
           span="14"
           style="display: flex; flex-wrap: wrap; flex-basis: calc(100% - 280px)"
@@ -360,7 +360,7 @@
       </template>
     </Table>
     <template>
-      <div class="page-bottom">
+      <div ref="footerArea" class="page-bottom">
         <Page
             :total="pagination.total"
             :current="pagination.pageNumber"
@@ -550,6 +550,8 @@ export default {
       selectedEnv: null,
       selectedRowId: null,
       userStrategyInfo,
+      headerArea: null,
+      footerArea: null
     };
   },
   mounted() {
@@ -690,14 +692,17 @@ export default {
         // 校验 range 格式和值合法性
         const invalidParams = [];
         this.paramList.forEach((param, index) => {
+          if (param.type === '4' && !param.range) {
+            invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`)
+          }
           if (param.type === '2' || param.type === '1') {
             const range = param.range?.toString().trim();
             const value = param.value?.toString().trim();
 
             if (!this.validateRangeFormat(range)) {
-              invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
+              range && invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
             } else if (!this.checkValueInRange(value, range)) {
-              invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
+              value && invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
             }
           }
         });
@@ -715,6 +720,7 @@ export default {
           this.$Message.error(ERROR_MSG.filePathEmpty)
           return
         }
+        // ruleFileType：0为C++策略，1为python策略
         if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
           this.$Message.error(ERROR_MSG.fileTypeCPlusPlus)
           return

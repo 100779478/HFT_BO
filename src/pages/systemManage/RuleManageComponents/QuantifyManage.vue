@@ -16,7 +16,7 @@
           </template>
         </Button>
       </div>
-      <RuleInstance v-show="showTemplate"/>
+      <RuleInstance v-show="showTemplate" :templateVisible="showTemplate"/>
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
 .quantify {
   display: flex;
   flex-direction: column;
+  height: calc(100% - 49px);
 
   .quantify-title {
     margin-top: -10px;
@@ -62,7 +63,5 @@ export default {
   .quantify-instance {
     //width: 49%;
   }
-
-
 }
 </style>

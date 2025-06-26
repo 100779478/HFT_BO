@@ -67,19 +67,22 @@ export default {
       };
 
       push(this.normal, '正常', [
-        {offset: 0, color: '#00a86b'},
-        {offset: 0.5, color: '#00c97d'},
-        {offset: 1, color: '#4fffa1'}
+        {offset: 0, color: '#23DA72'},
+        // {offset: 0, color: '#00a86b'},
+        // {offset: 0.5, color: '#00c97d'},
+        // {offset: 1, color: '#4fffa1'}
       ]);
 
       push(this.warning, '警告', [
-        {offset: 0, color: '#cc9900'},
-        {offset: 1, color: '#ffe566'}
+        {offset: 0, color: '#FEC16E'},
+        // {offset: 0, color: '#cc9900'},
+        // {offset: 1, color: '#ffe566'}
       ]);
 
       push(this.danger, '危险', [
-        {offset: 0, color: '#c0392b'},
-        {offset: 1, color: '#ff7875'}
+        {offset: 0, color: '#FE5050'},
+        // {offset: 0, color: '#c0392b'},
+        // {offset: 1, color: '#ff7875'}
       ]);
 
       const remaining = max - used;
@@ -92,8 +95,8 @@ export default {
               type: 'linear',
               x: 0, y: 0, x2: 1, y2: 1,
               colorStops: [
-                {offset: 0, color: '#3a3f51'},
-                {offset: 1, color: '#4B5A78'}
+                {offset: 0, color: '#8A8A8A'},
+                {offset: 1, color: '#8A8A8A'}
               ]
             }
           }
@@ -124,8 +127,8 @@ export default {
                   r: 1,
                   colorStops: [
                     {offset: 0, color: 'rgba(255,255,255,0.25)'},
-                    {offset: 0.5, color: 'rgba(255,255,255,0.05)'},
-                    {offset: 1, color: 'rgba(0,0,0,0.15)'}
+                    {offset: 0.5, color: 'rgba(211,207,207,0.4)'},
+                    {offset: 1, color: 'rgba(177,174,174,0.15)'}
                   ]
                 }
               }
@@ -172,8 +175,8 @@ export default {
 }
 
 .system-status-chart {
-  width: 7.2vh;
-  height: 7.2vh;
+  width: 75px;
+  height: 75px;
   position: relative;
 }
 
