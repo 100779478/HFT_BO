@@ -56,10 +56,10 @@
                   <i v-show="bond.newBond" class="icon iconfont icon-NEW-copy"/>
                   <Tooltip
                       theme="light"
-                      :width="100"
-                      :content="bond.securityName"
+                      :content="`债券简称：${bond.securityName || ''}\n已报时长：${secondsToHMS(bond.makeTime)}\n最大空白时长：${secondsToHMS(bond.maxBlankTime)}`"
                       :transfer="true"
                       placement="right-start"
+                      :max-width="220"
                   >
                     <span class="graph-item-inner-font">{{ bond.securityId }}</span>
                   </Tooltip>
@@ -92,9 +92,11 @@
 
 <script>
 import MonitorEchart from "@/pages/systemMonitor/MakeMarket-complex/MonitorEchart.vue";
+import {secondsToHMS} from "@/common/common";
 
 export default {
   name: "MarketSection",
+  methods: {secondsToHMS},
   components: {MonitorEchart},
   props: {
     sectionTitle: String,
@@ -175,10 +177,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 4px;
 }
 
 .progress-label {
-  margin-bottom: 4px;
+  margin-bottom: -1px;
 }
 
 .progress-container {
