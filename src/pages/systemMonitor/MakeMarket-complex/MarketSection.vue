@@ -68,7 +68,7 @@
               <div class="progress-section">
                 <div
                     class="progress-label"
-                    :style="{ color: showPercentColor(bond.makeMarketProgress) }"
+                    :style="{ color: showPercentColor(bond.status) }"
                 >
                   {{ Math.min(bond.makeMarketProgress, 100) }}%
                 </div>
@@ -77,7 +77,7 @@
                       class="progress-bar"
                       :style="{
                       width: Math.min(bond.makeMarketProgress, 100) + '%',
-                      backgroundColor: showPercentColor(bond.makeMarketProgress),
+                      backgroundColor: showPercentColor(bond.status),
                     }"
                   />
                 </div>

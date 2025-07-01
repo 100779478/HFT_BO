@@ -91,7 +91,15 @@
         :loading="loading"
         border
         @on-sort-change="e=>handleSort(e,this.getUserStrategyData)"
-    />
+    >
+      <template v-slot:operator="{ row }">
+        <div @click.stop style="display: flex; justify-content: flex-start">
+          <div @click="() => handleRuleParams(row?.ruleInstanceProps)" class="table-operate">
+            查看策略参数
+          </div>
+        </div>
+      </template>
+    </Table>
     <template>
       <div ref="footerArea" class="page-bottom">
         <Page
@@ -138,6 +146,14 @@ export default {
         minWidth: 120,
       },
       {
+        title: "策略运行状态",
+        key: "runStatus",
+        sortable: 'custom',
+        resizable: true,
+        width: null,
+        minWidth: 100,
+      },
+      {
         title: "用户代码",
         key: "customerId",
         sortable: 'custom',
@@ -152,6 +168,12 @@ export default {
         resizable: true,
         width: null,
         minWidth: 120,
+      },
+      {
+        title: "操作",
+        slot: "operator",
+        width: 150,
+        resizable: true,
       },
     ];
     let pagination = {
@@ -201,6 +223,38 @@ export default {
       this.pagination.pageNumber = 1;
       this.getUserStrategyData();
     },
+    // 查看策略参数
+    handleRuleParams(params) {
+      const data = Object.entries(params).map(([key, val]) => ({
+        name: key,
+        value: val != null ? String(val) : '-'
+      }));
+      // 生成表格列
+      const columns = [
+        {
+          title: '参数名',
+          key: 'name',
+        },
+        {
+          title: '参数值',
+          key: 'value',
+        }
+      ];
+      this.$Modal.info({
+        title: '策略参数',
+        width: 600,
+        render: h => {
+          return h('Table', {
+            props: {
+              columns,
+              data,
+              bordered: true,
+              size: 'small',
+            }
+          })
+        }
+      })
+    }
   },
 }
 ;

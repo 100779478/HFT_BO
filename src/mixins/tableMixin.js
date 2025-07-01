@@ -20,8 +20,6 @@ export const tableMixin = {
     mounted() {
         this.updateTableHeight(); // ✅ 初始化表格高度
         window.addEventListener('resize', () => {
-            console.log(window.screen.height,window.innerHeight)
-
             this.updateTableHeight()
         });
     },

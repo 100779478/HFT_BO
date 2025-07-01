@@ -260,7 +260,6 @@
   display: flex;
   margin-bottom: 10px;
   align-items: center;
-  justify-content: space-evenly;
   color: var(--text-color);
 }
 
@@ -287,7 +286,8 @@
         :logicDescription="data.logicDescription"
         :madeCount="data.madeCount"
         :successCount="data.successCount"
-        @showWarning="showWarning"
+        :update-time="data.currentTime"
+        @marketSetting="marketSetting"
     />
 
     <div class="content-body">
@@ -363,9 +363,10 @@ export default {
       showRate: true,
       showCredit: true,
       timer: null,
+      frequency: 10,
       graphSectionHeight: 'calc(100vh - 200px)', // 默认高度
       ICON_LIST,
-      MADE_ICON
+      MADE_ICON,
     }
   },
   created() {
@@ -373,7 +374,7 @@ export default {
   mounted() {
     this.graphSectionHeight = sessionStorage.getItem('isClientPage') ? 'calc(100vh - 410px)' : 'calc(100vh - 500px)';
     this.getMakeMarket()
-    this.timer = setInterval(this.getMakeMarket, 30000)
+    this.startTimer()
   },
   computed: {
     isClientPage() {
@@ -403,6 +404,10 @@ export default {
       }));
     },
     getSecurityType,
+    startTimer() {
+      clearInterval(this.timer);
+      this.timer = setInterval(this.getMakeMarket, this.frequency * 1000);
+    },
     getMakeMarket() {
       // 构建请求 URL
       const url = this.isClientPage ? `${URL.makeMarketEnv}?envId=${sessionStorage.getItem('envid')}` : URL.makeMarket;
@@ -415,7 +420,6 @@ export default {
     viewRemindMessage() {
       const content = this.data?.remindMessage.split(';');
       content.pop(); // 去掉最后一个空项（由最后一个 ; 产生）
-
       this.$Modal.info({
         render: h => {
           return h('ol', {style: {fontWeight: 'bolder'}}, content.map(i => {
@@ -437,14 +441,14 @@ export default {
         }
       });
     },
-    showPercentColor(progress) {
-      const colors = ['red', 'orange', '#0CBB18'];
+    showPercentColor(status) {
+      const colors = ['#fe5050', '#FEC16E', '#23DA72'];
       let code = null
-      if (progress >= 0 && progress < 50) {
+      if (status === '4') {
         code = colors[0];  // 红色
-      } else if (progress >= 50 && progress < 100) {
+      } else if (status === '1' || status === '3') {
         code = colors[1];  // 橙色
-      } else if (progress >= 100) {
+      } else if (status === '2') {
         code = colors[2];  // 绿色
       }
       return code
@@ -471,7 +475,7 @@ export default {
         if (this.toggle === '2') return '0%';
       }
     },
-    showWarning() {
+    marketSetting() {
       this.$Modal.info({
         render: (h) => {
           return h('div', {class: 'modal-content'}, [
@@ -490,10 +494,32 @@ export default {
                 },
               }),
             ]),
+            h('div', {class: 'modal-item'}, [
+              h('span', {class: 'modal-label'}, '做市监控刷新频率：'),
+              h('Select', {
+                props: {
+                  value: this.frequency,  // 控制全屏提醒开关
+                  size: 'small',
+                },
+                style: {width: '80px'},
+                on: {
+                  input: (value) => {
+                    // 处理输入事件
+                    this.frequency = value;
+                  },
+                },
+              }, [
+                h('Option', {props: {value: 10}}, '10秒'),
+                h('Option', {props: {value: 30}}, '30秒'),
+                h('Option', {props: {value: 60}}, '60秒'),
+              ])
+            ]),
           ]);
         },
         onOk: () => {
           this.$store.commit('makeStatus/setSystemSetting', this.sysSetting);
+          this.getMakeMarket()
+          this.startTimer()
         },
       });
     },

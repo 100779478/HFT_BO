@@ -3,7 +3,7 @@
     <div class="market-info">
       <Tooltip theme="light" max-width="800" :transfer="true" placement="right">
         <Icon type="md-settings" size="18" style="margin-right: 5px;cursor: pointer"
-              @click="$emit('showWarning')"/>
+              @click="$emit('marketSetting')"/>
         <Icon type="md-alert" size="18"/>
         <span style="font-weight: normal">做市说明</span>
         <div slot="content">
@@ -14,12 +14,11 @@
               <li><i class="icon iconfont icon-yk_yuanquan_fill"/>当前债券做市情况为：未报</li>
               <li><i class="icon iconfont icon-shibai"/>当前债券做市情况为：失败</li>
               <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：警告</li>
-              <li><i class="icon iconfont icon-kedabiao"/>当前债券做市情况为：已报</li>
+              <li><i class="icon iconfont icon-kedabiao"/>当前债券做市情况为：可达标</li>
               <li><i class="icon iconfont icon-chenggong"/>当前债券做市情况为：已达标</li>
             </ol>
             <p><strong>操作说明：</strong></p>
             <ol style="margin-left: 20px;">
-              <li>双击滚动提醒可查看详细内容。</li>
               <li>双击债券可查看详细信息。</li>
               <li>点击标题旁的
                 <Icon type='ios-arrow-down'/>
@@ -39,6 +38,7 @@
     <!--        {{ data?.remindMessage }}-->
     <!--      </div>-->
     <div class="market-data">
+      更新时间：<span class="market-data-value">{{ updateTime ?? '--:--:--' }}</span>
       已报：<span class="market-data-value">{{ madeCount ?? '--' }}</span>
       已达标：<span class="market-data-value">{{ successCount ?? '--' }}</span>
     </div>
@@ -51,7 +51,8 @@ export default {
   props: {
     logicDescription: String,
     madeCount: Number,
-    successCount: Number
+    successCount: Number,
+    updateTime:String,
   }
 }
 </script>

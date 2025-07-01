@@ -74,7 +74,7 @@ const SUCCESS_MSG = {
  */
 
 const ICON_LIST = {
-    '1': 'icon-kedabiao',// 已报
+    '1': 'icon-kedabiao',// 可达标
     '2': 'icon-chenggong',// 已达标
     '3': 'icon-warn',// 警告
     '4': 'icon-shibai',// 失败
