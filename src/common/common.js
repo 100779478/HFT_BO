@@ -174,11 +174,6 @@ export function getMakeMarketStatisticsStatus(code) {
     return findDictionaryList('MakeMarketStatisticsStatus', code)
 }
 
-// 做市义务债券类型枚举
-export function getSecurityType(code) {
-    return findDictionaryList('SecurityType', code)
-}
-
 // 交易品种类型
 export function getCommodityType(code) {
     return findDictionaryList('CommodityType', code)

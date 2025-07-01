@@ -197,7 +197,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getSecurityType, handleExport, handleSort,} from "@/common/common";
+import {handleExport, handleSort,} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {

@@ -334,7 +334,7 @@
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
 import {ICON_LIST, MADE_ICON} from "@/common/constant";
-import {getSecurityType, secondsToHMS} from "@/common/common";
+import {secondsToHMS} from "@/common/common";
 import MonitorEchart from "@/pages/systemMonitor/MakeMarket-complex/MonitorEchart.vue";
 import MarketHeader from "./MakeMarket-complex/MarketHeader.vue"
 import MarketSection from "@/pages/systemMonitor/MakeMarket-complex/MarketSection.vue";
@@ -403,7 +403,6 @@ export default {
         ]
       }));
     },
-    getSecurityType,
     startTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(this.getMakeMarket, this.frequency * 1000);

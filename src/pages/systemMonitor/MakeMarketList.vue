@@ -9,6 +9,7 @@
   overflow: auto;
   width: 100%;
 }
+
 .input-form {
   float: right;
   width: 145px;
@@ -110,7 +111,7 @@
 import moment from "moment";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import {getSecurityType, handleExport, handleSort,} from "@/common/common";
+import {handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 
 export default {
@@ -140,10 +141,6 @@ export default {
         resizable: true,
         width: null,
         sortable: 'custom',
-        render: (h, {row}) => {
-          const result = getSecurityType(row.securityDesc);
-          return h("span", result.description);
-        },
       },
       {
         title: "当天有效做市时间",
