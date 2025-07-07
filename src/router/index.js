@@ -4,6 +4,8 @@ import {getToken, putToken} from "@/utils/token";
 import {URL} from "@/api/serverApi";
 import {http} from "@/utils/request";
 import {ClientRoutePage} from "@/common/constant";
+import {lightThemeVars} from "@/style/theme/light";
+import {darkThemeVars} from "@/style/theme/dark";
 
 vue.use(VueRouter);
 
@@ -270,18 +272,6 @@ const routes = [
             },
         ],
     },
-// 刷新页面 必须保留
-// {
-//     path: '/refresh',
-//     name: 'Refresh',
-//     hidden: true,
-//     component: {
-//         beforeRouteEnter(to, from, next) {
-//             next(instance => instance.$router.replace(from.fullPath));
-//         },
-//         render: h => h()
-//     }
-// },
 ]
 const router = new VueRouter({
     routes,
@@ -295,47 +285,9 @@ router.beforeEach((to, from, next) => {
     // 特定路由为客户端
     if (Object.values(ClientRoutePage).includes(to.name)) {
         sessionStorage.setItem('isClientPage', 'true')
-        style = {
-            '--background-color': '#0C1A36',
-            '--content-background-color': '#233450',
-            '--modal-backcolor': '#17315d',
-            '--select-hover-backcolor': '#17315d',
-            '--text-color': '#fff',
-            '--graph-item-backcolor': '#0C1A36',
-            '--debt-backcolor': '#0C1A36',
-            '--debt-text-color': '#fff',
-            '--graph-hover-color': '#4e5363',
-            '--checked-color': '#0C1A36',
-            '--table-hover': '#4e5363',
-            '--date-hover-color': '#697a89',
-            '--border': '#2C4067',
-            '--table-th': '#1D2B48',
-            '--table-th-border': 'linear-gradient(to bottom, black, #5a5a5a, black)',
-            '--table-highlight': '#32468E',
-            '--scroller': '#34415c',
-            '--scroller-hover': '#5281B8',
-        }
+        style = darkThemeVars
     } else {
-        style = {
-            '--background-color': '#fff',
-            '--content-background-color': '#f4f7fa',
-            '--modal-backcolor': '#FFFFFF',
-            '--select-hover-backcolor': '#F3F3F3',
-            '--text-color': '#515a6e',
-            '--checked-color': '#007BFF',
-            '--date-hover-color': '#E1F0FE',
-            '--graph-item-backcolor': '#f4f7fa',
-            '--debt-backcolor': '#f4f7fa',
-            '--debt-text-color': '#133685',
-            '--graph-hover-color': '#ceced0',
-            '--table-hover': '#EBF7FF',
-            '--border': '#dadadd',
-            '--table-th': '#fff',
-            '--table-th-border': '',
-            '--table-highlight': '#d4d9e8',
-            '--scroller': '#8f959b',
-            '--scroller-hover': 'rgba(159, 158, 158, 0.8)',
-        }
+        style = lightThemeVars
         sessionStorage.removeItem('isClientPage')
     }
     // 动态修改 :root 中的 CSS 变量

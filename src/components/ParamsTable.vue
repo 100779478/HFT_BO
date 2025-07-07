@@ -4,10 +4,12 @@ import {RulePropType} from "@/common/common";
 export default {
   name: "ParamsTable",
   props: {
+    // 参数列表，外部传入
     paramList: {
       type: Array,
       default: []
     },
+    // 是否为只读模式，控制输入项是否可编辑
     readOnly: {
       type: Boolean,
       default: 'false'
@@ -103,7 +105,7 @@ export default {
   },
   computed: {
     dynamicColumns() {
-      // 根据 readOnly 决定是否包含操作列
+      // 根据 readOnly 状态动态移除“操作”列
       return this.readOnly ? this.columns2.filter(column => column.slot !== 'operator') : this.columns2;
     },
   },
@@ -111,9 +113,34 @@ export default {
     paramList: 'normalizeParamList',
   },
   methods: {
+    /**
+     * 枚举列表说明
+     * [
+     *     {
+     *         "code": "0",
+     *         "description": "布尔值",
+     *     },
+     *     {
+     *         "code": "1",
+     *         "description": "整数",
+     *     },
+     *     {
+     *         "code": "2",
+     *         "description": "小数",
+     *     },
+     *     {
+     *         "code": "3",
+     *         "description": "字符串",
+     *     },
+     *     {
+     *         "code": "4",
+     *         "description": "枚举",
+     *     }
+     * ]
+     */
     // 补全字段
     normalizeParamList() {
-      // 定义所有可能的字段
+      // 初始化定义所有的字段
       const allFields = ['name', 'description', 'type', 'range', 'value', 'readOnly'];
       // 遍历 paramList，确保每一行都包含完整的字段
       this.paramList.forEach((param) => {
@@ -132,7 +159,7 @@ export default {
         this.paramList.splice(paramIndex, 1);
       }
     },
-    // 渲染table列表
+    // 渲染可编辑单元格（含整数类型禁止输入小数点）
     renderEditable(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
@@ -181,6 +208,7 @@ export default {
         }
       })]);
     },
+    // 渲染下拉选择项
     renderSelectCell(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
@@ -237,6 +265,11 @@ export default {
             },
             on: {
               input: (event) => {
+                // 如果切换枚举类型，参数范围及默认值置空
+                if (column.key === 'type') {
+                  this.paramList[rowIndex].range = '';
+                  this.paramList[rowIndex].value = '';
+                }
                 this.paramList[rowIndex][column.key] = event;
               },
             },
@@ -244,6 +277,7 @@ export default {
           this.renderSelectOptions(h, column.key, row)
       );
     },
+    // 渲染 Select 下拉选项列表
     renderSelectOptions(h, column, row) {
       const readList = [
         {code: "true", description: "是"},
@@ -290,6 +324,7 @@ export default {
         });
       });
     },
+    // 渲染只读勾选框
     renderCheckbox(h, params) {
       const {row, column} = params;
       const rowIndex = row._index;
@@ -309,6 +344,7 @@ export default {
         },
       });
     },
+    // 渲染枚举值选择器
     renderRangeCell(h, params) {
       const {row} = params;
       const rowIndex = row._index;

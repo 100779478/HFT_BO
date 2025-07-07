@@ -160,7 +160,7 @@ const ruleComponentMixin = {
                 'a': {path: './Rules/', fileName: 'libmm_strategy_rate.so'},      // 交易所新债平台做市策略
                 'b': {path: './Rules/', fileName: 'libmm_strategy_fi.so'},        // 交易所固收平台做市策略
                 'c': {path: './Rules/', fileName: 'libBond_Spread.so'},           // 套利策略
-                'd': {path: './Rules/', fileName: 'ibRFQ_strategy.so'},           // RFQ策略
+                'd': {path: './Rules/', fileName: 'libRFQ_strategy.so'},           // RFQ策略
             };
             // 判断 e 是否在 strategyConfig 中存在对应的配置
             if (strategyConfig[e]) {
@@ -283,23 +283,52 @@ const ruleComponentMixin = {
         validateRangeFormat(str) {
             return /^[\[\(]\s*-?\d*(\.\d+)?\s*,\s*-?\d*(\.\d+)?\s*[\]\)]$/.test(str);
         },
+        /**
+         * 校验给定的字符串数值 valueStr 是否在区间 rangeStr 表示的范围内。
+         * 支持的 rangeStr 格式如：(1,2]、[-1.5, 3.2)、(2.5,)、[,5] 等。
+         *
+         * @param {string} valueStr - 待校验的数值（字符串形式）
+         * @param {string} rangeStr - 区间字符串，格式如：(1,2]，[含）或（开）
+         * @returns {boolean} - 返回 true 表示 valueStr 在 rangeStr 表示的范围内
+         */
         checkValueInRange(valueStr, rangeStr) {
+            // 将字符串转为浮点数
             const value = parseFloat(valueStr);
-            if (valueStr.includes('。')) return false
+
+
+            // 参数范围包含空格，视为非法
+            if (rangeStr.includes(' ')) {
+                this.$Message.error('参数范围不允许包含空格')
+                return false
+            }
+
+            // 特殊处理：中文全角“。”，视为非法
+            if (valueStr.includes('。')) return false;
+
+            // 非数字直接判定非法
             if (isNaN(value)) return false;
 
+            // 正则匹配区间格式，如：[1.2, 5)、(,10]、[-1.1,] 等
             const match = rangeStr.match(/^([\[\(])\s*(-?\d*(?:\.\d+)?)?\s*,\s*(-?\d*(?:\.\d+)?)?\s*([\]\)])$/);
-            if (!match) return false;
+            if (!match) return false; // 格式不合法直接返回 false
 
+            // 解构获取区间的起始符号、起始值、结束值、结束符号
             const [, startSymbol, startStr, endStr, endSymbol] = match;
+
+            // 起始和结束值为空时，视为无限范围
             const start = startStr ? parseFloat(startStr) : -Infinity;
             const end = endStr ? parseFloat(endStr) : Infinity;
 
+            // 判断是否满足下界（闭区间用 >=，开区间用 >）
             const lowerValid = startSymbol === '[' ? value >= start : value > start;
+
+            // 判断是否满足上界（闭区间用 <=，开区间用 <）
             const upperValid = endSymbol === ']' ? value <= end : value < end;
 
+            // 同时满足上下界则合法
             return lowerValid && upperValid;
-        },
+        }
+
     },
 }
 
