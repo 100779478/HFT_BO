@@ -20,10 +20,9 @@
     </div>
   </div>
 </template>
-
 <script>
-import RuleTemplate from "@/pages/systemManage/RuleManageComponents/QuantifyManageComponents/RuleTemplate.vue";
-import RuleInstance from "@/pages/systemManage/RuleManageComponents/QuantifyManageComponents/RuleInstance.vue";
+import RuleTemplate from "@/pages/systemManage/RuleManageComponents/QuantifyManage-complex/RuleTemplate.vue";
+import RuleInstance from "@/pages/systemManage/RuleManageComponents/QuantifyManage-complex/RuleInstance.vue";
 
 export default {
   name: "QuantifyManage",

@@ -295,13 +295,6 @@ const ruleComponentMixin = {
             // 将字符串转为浮点数
             const value = parseFloat(valueStr);
 
-
-            // 参数范围包含空格，视为非法
-            if (rangeStr.includes(' ')) {
-                this.$Message.error('参数范围不允许包含空格')
-                return false
-            }
-
             // 特殊处理：中文全角“。”，视为非法
             if (valueStr.includes('。')) return false;
 

@@ -368,16 +368,25 @@ export default {
         },
         on: {
           'on-create': (val) => {
+            console.log(row)
+            // 空格非法，报错且不加入
+            if (val.includes(' ')) {
+              this.$Message.error(`第${rowIndex + 1}行参数“${row.name}”参数范围的枚举值不允许包含空格`);
+              return;
+            }
             if (!row.range.includes(val)) {
               row.range.push(val);
+              this.paramList[rowIndex].range = row.range.join(',');
             }
           },
           input: (val) => {
-            // 当选中项减少时，清除无效项（只保留选中的）
-            row.range = val
-            this.paramList[rowIndex].range = val.join(',');
+            // 过滤掉含空格的值
+            const cleanValues = val.filter(v => !v.includes(' '));
+            row.range = cleanValues;
+            this.paramList[rowIndex].range = cleanValues.join(',');
             this.$forceUpdate();
-          },
+          }
+
         }
       }, row.range.map(item =>
           h('Option', {
@@ -397,7 +406,7 @@ export default {
   <Table
       :columns="dynamicColumns"
       :data="paramList"
-      :width="!this.readOnly?665:590"
+      :width="!this.readOnly?960:890"
       class="table-content"
       style="position: unset"
       :height="450"

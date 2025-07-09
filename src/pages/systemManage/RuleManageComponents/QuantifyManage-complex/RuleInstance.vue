@@ -148,7 +148,6 @@ export default {
       {
         title: "策略运行状态",
         key: "runStatus",
-        sortable: 'custom',
         resizable: true,
         width: null,
         minWidth: 100,

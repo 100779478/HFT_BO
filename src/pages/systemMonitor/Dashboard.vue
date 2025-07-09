@@ -69,11 +69,11 @@
 import {Graph} from '@antv/x6'
 import '@antv/x6-vue-shape'
 import {register} from "@antv/x6-vue-shape";
-import CustomNode from "@/components/nodes/CustomNode.vue";
+import CustomNode from "@/pages/systemMonitor/Dashboard-complex/CustomNode.vue";
 import {http} from "@/utils/request";
 import {URL} from "@/api/serverApi";
-import MiniSystemUsage from "@/components/nodes/CustomNode-complex/MiniSystemUsage.vue";
-import BatteryIcon from "@/components/nodes/CustomNode-complex/BatteryIcon.vue";
+import MiniSystemUsage from "@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/MiniSystemUsage.vue";
+import BatteryIcon from "@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/BatteryIcon.vue";
 
 export default {
   name: 'GraphComponent',

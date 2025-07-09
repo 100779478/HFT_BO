@@ -64,17 +64,17 @@
 </template>
 
 <script>
-import MiniSystemUsage from '@/components/nodes/CustomNode-complex/MiniSystemUsage.vue';
+import MiniSystemUsage from '@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/MiniSystemUsage.vue';
 import {http} from '@/utils/request';
 import {URL} from '@/api/serverApi';
-import BatteryIcon from "@/components/nodes/CustomNode-complex/BatteryIcon.vue";
+import BatteryIcon from "@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/BatteryIcon.vue";
 
 export default {
   name: 'CustomNode',
   components: {
     BatteryIcon,
     MiniSystemUsage,
-    SystemMonitor: () => import('@/components/nodes/CustomNode-complex/SystemMonitor.vue'),
+    SystemMonitor: () => import('@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/SystemMonitor.vue'),
   },
   inject: ['getNode'],
   data() {

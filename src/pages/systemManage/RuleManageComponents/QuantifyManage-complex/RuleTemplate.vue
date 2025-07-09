@@ -6,7 +6,8 @@
 }
 
 .modal__content-left {
-  flex-grow: 0.8; /* 占据60%的空间 */
+  //flex-grow: 0.8; /* 占据60%的空间 */
+  margin-right: 30px;
   /* 其他样式，如宽度、背景等 */
 }
 
@@ -117,206 +118,31 @@
         </Button>
       </Col>
     </Row>
-    <Modal
-        v-model="showAddModal"
-        draggable
-        sticky
-        mask
-        :width="chooseRule ? 1300 : 600"
-        :mask-closable="false"
-        :title="isNew ? '新增策略模板' : '编辑策略模板'"
-    >
-      <div :class="[chooseRule ? 'modal__content' : '']">
-        <div class="modal__content-left">
-          <Form
-              ref="ruleForm"
-              :model="userStrategyInfo"
-              :label-width="210"
-              label-colon
-              :rules="userValidRules"
-              autocomplete="off"
-          >
-            <Col :span="18">
-              <FormItem label="策略文件类型" prop="ruleFileType">
-                <Select
-                    v-model="userStrategyInfo.ruleFileType"
-                    placeholder="请选择策略文件类型"
-                    :maxlength="32"
-                    @on-change="fetchNewPolicyInfo"
-                    :disabled="!isNew"
-                >
-                  <Option
-                      v-for="item in getRuleFileType()"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.description }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略类型" prop="ruleType">
-                <Select
-                    v-model="userStrategyInfo.ruleType"
-                    placeholder="请选择策略类型"
-                    :disabled="!isNew"
-                    :maxlength="32"
-                    @on-change="handleShowParamsTable"
-                >
-                  <Option
-                      v-for="item in getRuleQuantType()"
-                      :key="item.code"
-                      :value="item.code"
-                  >{{ item.description }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-
-            <Col :span="18">
-              <FormItem label="策略ID" prop="ruleId">
-                <Input
-                    v-model="userStrategyInfo.ruleId"
-                    disabled
-                    placeholder="请输入策略ID"
-                    :maxlength="20"
-                    show-message="false"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略文件路径" prop="ruleLocation">
-                <Tooltip :disabled="!userStrategyInfo.ruleLocation" :content="userStrategyInfo.ruleLocation"
-                         max-width="300"
-                         style="width: 100%;">
-                  <Input
-                      disabled
-                      v-model="userStrategyInfo.ruleLocation"
-                      placeholder="请输入策略文件路径"
-                      @change="handleChangeRulePath"
-                      autocomplete="off"
-                      :maxlength="256"
-                  />
-                </Tooltip>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略文件名称" prop="ruleFileName">
-                <Input
-                    v-model="userStrategyInfo.ruleFileName"
-                    :disabled="userStrategyInfo.ruleFileType==='1'"
-                    placeholder="c++策略文件名称以.so结尾"
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略版本" prop="ruleVersion">
-                <Input
-                    v-model="userStrategyInfo.ruleVersion"
-                    placeholder="请输入策略版本"
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略名称" prop="ruleName">
-                <Input
-                    v-model="userStrategyInfo.ruleName"
-                    placeholder="请输入策略名称"
-                    autocomplete="off"
-                    :maxlength="32"
-                ></Input>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="用户代码" prop="customerIds">
-                <Select
-                    v-model="userStrategyInfo.customerIds"
-                    placeholder="请选择用户代码"
-                    :maxlength="32"
-                    multiple
-                    filterable
-                    :max-tag-count="1"
-                >
-                  <Option
-                      v-for="item in userList"
-                      :key="item.customerId"
-                      :value="item.customerId"
-                  >{{ item.customerId + `(${item.customerName})` }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="18">
-              <FormItem label="策略服务节点名称" prop="ruleNodeName">
-                <Select
-                    v-model="userStrategyInfo.ruleNodeName"
-                    placeholder="请选择策略服务节点"
-                    :maxlength="32"
-                >
-                  <Option
-                      v-for="item in ruleMonitorNodes"
-                      :key="item.ruleNodeName"
-                      :value="item.ruleNodeName"
-                  >{{ item.ruleNodeName }}
-                  </Option>
-                </Select>
-              </FormItem>
-            </Col>
-            <Col :span="20">
-              <FormItem label="">
-                <input type="file" id="fileInput" style="display: none;"
-                       @change="handleFileChange($event,fileType,URL.ruleUploadQuant)">
-                <div class="progress-content" v-show="chooseRule">
-                  <Tooltip>
-                    <div slot="content">
-                      <p>C++策略文件格式必须为.so</p>
-                      <p>Python策略文件格式必须为.zip</p>
-                    </div>
-                    <Button @click="uploadFile('strategy')" class="btn"
-                            style="margin-right: 5px"
-                            type="success">
-                      <Icon type="md-cloud-upload"/>
-                      上传策略文件
-                    </Button>
-                  </Tooltip>
-                  <Circle v-if="fileUploadProgress" :percent="fileUploadProgress-1"
-                          :size="30"
-                          :stroke-color="'#19be6b'"
-                          :trail-width="10"
-                          :stroke-width="13"
-                  >
-                    <Icon v-if="this.fileName" type="ios-checkmark" size="25"
-                          style="font-weight: bold;color: #19be6b"></Icon>
-                    <span v-else class="demo-Circle-inner"
-                          style="font-size:11px">{{ fileUploadProgress - 1 }}%</span>
-                  </Circle>
-                </div>
-                <div style="height: 20px">
-                  {{ this.fileName }}
-                </div>
-              </FormItem>
-            </Col>
-          </Form>
-        </div>
-        <div class="modal__content-right"
-             v-show="chooseRule"
-        >
-          <Button @click="uploadFile('param')" class="btn" type="info">导入参数</Button>
-          <Button @click="addRow" class="btn" type="success">添加参数</Button>
-          <Button @click="clearParamList" class="btn" type="error">清空列表</Button>
-          <Button @click="exportParamList" class="btn" type="primary">导出参数</Button>
-          <ParamsTable :paramList="paramList" :readOnly="false"/>
-        </div>
-      </div>
-      <div slot="footer">
-        <Button type="text" @click="cancel">取消</Button>
-        <Button type="primary" @click="ok(isNew)" :loading="btnLoading">确定</Button>
-      </div>
-    </Modal>
+    <RuleModal
+        ref="ruleModal"
+        :visible="showAddModal"
+        :chooseRule="chooseRule"
+        :isNew="isNew"
+        :userStrategyInfo="userStrategyInfo"
+        :userValidRules="userValidRules"
+        :paramList="paramList"
+        :userList="userList"
+        :ruleMonitorNodes="ruleMonitorNodes"
+        :btnLoading="btnLoading"
+        :fileName="fileName"
+        :fileUploadProgress="fileUploadProgress"
+        @cancel="cancel"
+        @confirm="ok(isNew)"
+        @upload-param="uploadFile('param')"
+        @add-param="addRow"
+        @clear-param="clearParamList"
+        @export-param="exportParamList"
+        @upload-strategy="uploadFile('strategy')"
+        @file-change="handleFileChange($event, fileType, URL.ruleUploadQuant)"
+        @change-rule-path="handleChangeRulePath"
+        @fetch-new-policy="fetchNewPolicyInfo"
+        @show-params-table="handleShowParamsTable"
+    />
     <Table
         :columns="columns1"
         style="clear: both"
@@ -384,9 +210,10 @@ import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
 import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 import {showParamList} from "@/utils/paramList";
+import RuleModal from "./RuleTemplate-complex/RuleModal";
 
 export default {
-  components: {ParamsTable},
+  components: {ParamsTable, RuleModal},
   mixins: [tableMixin, ruleComponentMixin],
   props: {
     visible: {
@@ -648,7 +475,7 @@ export default {
     // 策略弹窗
     modalUser(type, row) {
       // 清除表单验证信息（初始化）
-      this.$refs.ruleForm.resetFields();
+      this.$refs.ruleModal.resetFormFields();
       this.paramList = []
       this.fileName = ""
       this.fileUploadProgress = 0
@@ -703,6 +530,8 @@ export default {
               range && invalidParams.push(`第${index + 1}行参数“${param.name}”的范围格式非法`);
             } else if (!this.checkValueInRange(value, range)) {
               value && invalidParams.push(`第${index + 1}行参数“${param.name}”的默认值不在范围内`);
+            } else if (range.includes(' ')) {
+              invalidParams.push(`第${index + 1}行参数“${param.name}”的参数范围不允许包含空格`)
             }
           }
         });
