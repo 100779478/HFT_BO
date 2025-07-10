@@ -25,7 +25,7 @@
                   v-model="userStrategyInfo.ruleFileType"
                   placeholder="请选择策略文件类型"
                   :maxlength="32"
-                  @on-change="$emit('fetch-new-policy')"
+                  @on-change="e=>$emit('fetch-new-policy',e)"
                   :disabled="!isNew"
               >
                 <Option
@@ -45,7 +45,7 @@
                   placeholder="请选择策略类型"
                   :disabled="!isNew"
                   :maxlength="32"
-                  @on-change="$emit('show-params-table')"
+                  @on-change="e=>$emit('show-params-table',e)"
               >
                 <Option
                     v-for="item in getRuleQuantType()"
@@ -81,7 +81,7 @@
                     disabled
                     v-model="userStrategyInfo.ruleLocation"
                     placeholder="请输入策略文件路径"
-                    @change="$emit('change-rule-path')"
+                    @change="e=>$emit('change-rule-path',e)"
                     autocomplete="off"
                     :maxlength="256"
                 />

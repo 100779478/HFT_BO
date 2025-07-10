@@ -13,13 +13,8 @@ body,
     width: 100%;
 }
 
-/* span{
-    cursor: default;
-} */
-
-.ivu-table-overflowX {
-    /*overflow-x: hidden !important;*/
-    /*overflow-x: unset;*/
+.demo-spin-icon-load {
+    animation: ani-demo-spin 1s linear infinite;
 }
 
 ::-webkit-scrollbar {
@@ -45,6 +40,3 @@ body,
     background-color: var(--scroller);
 }
 
-.demo-spin-icon-load {
-    animation: ani-demo-spin 1s linear infinite;
-}
