@@ -14,12 +14,12 @@
         <Form
             ref="ruleForm"
             :model="userStrategyInfo"
-            :label-width="150"
+            :label-width="chooseRule?150:210"
             label-colon
             :rules="userValidRules"
             autocomplete="off"
         >
-          <Col :span="20">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略文件类型" prop="ruleFileType">
               <Select
                   v-model="userStrategyInfo.ruleFileType"
@@ -38,7 +38,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略类型" prop="ruleType">
               <Select
                   v-model="userStrategyInfo.ruleType"
@@ -57,7 +57,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略ID" prop="ruleId">
               <Input
                   v-model="userStrategyInfo.ruleId"
@@ -69,7 +69,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略文件路径" prop="ruleLocation">
               <Tooltip
                   :disabled="!userStrategyInfo.ruleLocation"
@@ -89,7 +89,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略文件名称" prop="ruleFileName">
               <Input
                   v-model="userStrategyInfo.ruleFileName"
@@ -101,7 +101,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略版本" prop="ruleVersion">
               <Input
                   v-model="userStrategyInfo.ruleVersion"
@@ -112,7 +112,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略名称" prop="ruleName">
               <Input
                   v-model="userStrategyInfo.ruleName"
@@ -123,7 +123,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="用户代码" prop="customerIds">
               <Select
                   v-model="userStrategyInfo.customerIds"
@@ -143,7 +143,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="策略服务节点名称" prop="ruleNodeName">
               <Select
                   v-model="userStrategyInfo.ruleNodeName"
@@ -160,7 +160,7 @@
             </FormItem>
           </Col>
 
-          <Col :span="24">
+          <Col :span="chooseRule?24:18">
             <FormItem label="">
               <input type="file" id="fileInput" style="display: none;" @change="$emit('file-change', $event)"/>
               <div class="progress-content" v-show="chooseRule">
