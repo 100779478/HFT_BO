@@ -364,7 +364,8 @@ export default {
           filterable: true,
           multiple: true,
           allowCreate: true,
-          maxTagCount: 1,
+          disabled: this.readOnly,
+          // maxTagCount: 1,
         },
         on: {
           'on-create': (val) => {
@@ -386,7 +387,6 @@ export default {
             this.paramList[rowIndex].range = cleanValues.join(',');
             this.$forceUpdate();
           }
-
         }
       }, row.range.map(item =>
           h('Option', {

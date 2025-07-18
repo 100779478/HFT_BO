@@ -198,6 +198,24 @@ const ruleComponentMixin = {
                 duration,
             });
         },
+        // 校验 JSON 文件内容的函数
+        validateJsonContent(jsonContent) {
+            const errors = [];
+            jsonContent.forEach(item => {
+                if (item.type === '0') {
+                    // type 为 0 时，value 必须为0或1
+                    if (item.value !== '0' && item.value !== '1') {
+                        errors.push(`参数 ${item.name} 的 value 必须为0或1`);
+                    }
+                } else if (item.type === '4') {
+                    // type 为 4 时，value 必须在 range 范围内
+                    if (!item.range.includes(item.value)) {
+                        errors.push(`参数 ${item.name} 的 value 不在参数范围内`);
+                    }
+                }
+            });
+            return errors;
+        },
         handleFileChange(event, type, path) {
             // 获取用户选择的文件
             const file = event.target.files[0];
@@ -240,7 +258,7 @@ const ruleComponentMixin = {
                         fakeUpload(fileName)
                     }
                     document.getElementById('fileInput').value = '';
-                } else {
+                } else if (type === 'param') {
                     // 使用处理 JSON 文件的逻辑
                     // 检查文件类型是否为 JSON
                     if (file.type === 'application/json') {
@@ -251,19 +269,27 @@ const ruleComponentMixin = {
                             try {
                                 // event.target.result 包含文件内容，这里假设文件内容是 JSON 格式的
                                 const jsonContent = JSON.parse(event.target.result).param;
-                                // 检查重复的 name 字段
-                                const duplicateNames = this.checkDuplicateNames(jsonContent);
-                                if (duplicateNames.length > 0) {
-                                    const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
-                                    const message = `参数名重复：${messages.join('、')}`;
-                                    // 有重复的 name 字段，显示警告消息
-                                    this.showMessage('error', message, 6)
+                                // 校验 JSON 文件格式
+                                const validationErrors = this.validateJsonContent(jsonContent);
+                                if (validationErrors.length > 0) {
+                                    // 校验失败，显示错误信息
+                                    const errorMessages = validationErrors.join('；');
+                                    this.showMessage('error', `JSON 文件格式校验失败：${errorMessages}`, 6);
                                 } else {
-                                    // 没有重复的 name 字段，显示成功消息
-                                    this.$Message.success(SUCCESS_MSG.importSuccess);
+                                    // 检查重复的 name 字段
+                                    const duplicateNames = this.checkDuplicateNames(jsonContent);
+                                    if (duplicateNames.length > 0) {
+                                        const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
+                                        const message = `参数名重复：${messages.join('、')}`;
+                                        // 有重复的 name 字段，显示警告消息
+                                        this.showMessage('error', message, 6)
+                                    } else {
+                                        // 没有重复的 name 字段，显示成功消息
+                                        this.$Message.success(SUCCESS_MSG.importSuccess);
+                                    }
+                                    // 更新 paramList
+                                    this.paramList = jsonContent;
                                 }
-                                // 更新 paramList
-                                this.paramList = jsonContent;
                             } catch (error) {
                                 this.$Message.error('导入参数列表失败');
                                 console.error('读取 JSON 文件时发生错误：', error);
