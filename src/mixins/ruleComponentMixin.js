@@ -208,8 +208,11 @@ const ruleComponentMixin = {
                         errors.push(`参数 ${item.name} 的 value 必须为0或1`);
                     }
                 } else if (item.type === '4') {
+                    if (item.range.length <= 0) {
+                        errors.push(`参数 ${item.name} 的 range 不能为空`);
+                    }
                     // type 为 4 时，value 必须在 range 范围内
-                    if (!item.range.includes(item.value)) {
+                    else if (!item.range.includes(item.value)) {
                         errors.push(`参数 ${item.name} 的 value 不在参数范围内`);
                     }
                 }
