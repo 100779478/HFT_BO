@@ -10,7 +10,7 @@
           <div class="color-info">
             <p><strong>图标说明：</strong></p>
             <ol style="margin-left: 20px;">
-              <li><i class="icon iconfont icon-NEW-copy"/>今日新上市的债券</li>
+              <li><i class="icon iconfont icon-NEW-copy"/>关键期限新发国债。</li>
               <li><i class="icon iconfont icon-yk_yuanquan_fill"/>当前债券做市情况为：未报</li>
               <li><i class="icon iconfont icon-shibai"/>当前债券做市情况为：失败</li>
               <li><i class="icon iconfont icon-warn"/>当前债券做市情况为：警告</li>
