@@ -530,7 +530,7 @@ export default {
             this.renderModalItem(h, '债券简称:', item.securityName),
             this.renderModalItem(h, '当前进度:', `${item.makeMarketProgress}%`),
             this.renderModalItem(h, '关键期限:', item.securityTerm),
-            this.renderModalItem(h, '代偿期:', item.termToMaturityString),
+            this.renderModalItem(h, '待偿期:', item.termToMaturityString),
             this.renderModalItem(h, '已报时长:', `${secondsToHMS(item.makeTime)}`),
             this.renderModalItem(h, '空白时长:', `${secondsToHMS(item.blankTime)}`),
             this.renderModalItem(h, '最大空白时长:', `${secondsToHMS(item.maxBlankTime)}`),
