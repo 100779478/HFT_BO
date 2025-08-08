@@ -74,6 +74,7 @@ import {URL} from "@/api/serverApi";
 import {putToken} from "@/utils/token";
 import {Message} from "view-design";
 import {checkPwdExpiredTime, encryptionModePassword} from "@/common/common";
+import showMessage from "@/utils/message";
 
 export default {
   data() {
@@ -137,7 +138,7 @@ export default {
       putToken(token);
       http.get(URL.loginProtect, (res) => {
             if (!checkPwdExpiredTime(res.data.expiredTime, res.data.serverTime)) {
-              Message.success("登录成功！");
+              showMessage('登录成功！')
               this.$router.push({name: "Home"});
             }
           }

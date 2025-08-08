@@ -231,6 +231,7 @@ import {URL} from "@/api/serverApi";
 import {getLogicType, handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   props: ["userId"],
@@ -480,9 +481,9 @@ export default {
           this.showLabel = false;
           break;
         case '5': // ufx
-          // this.assetLabel = '资产单元';
-          // this.positionLabel = '投资组合';
-          // this.foundationLabel = '基金账户';
+                  // this.assetLabel = '资产单元';
+                  // this.positionLabel = '投资组合';
+                  // this.foundationLabel = '基金账户';
           this.traderLabel = '股东代码';
           break;
           // case '4':
@@ -507,7 +508,7 @@ export default {
     // 检查字段是否为空
     checkField(field, message) {
       if (!this.channelInfo[field]) {
-        this.$Message.error(message);
+        showMessage(message, {type: 'error'})
         return false;
       }
       return true;

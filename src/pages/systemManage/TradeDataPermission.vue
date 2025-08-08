@@ -138,6 +138,7 @@ import {handleExport, handleSort} from "@/common/common";
 import {Message} from "view-design";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   props: ["userId"],
@@ -248,10 +249,10 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.tradeInfo.managerId) {
-        Message.error(ERROR_MSG.adminUserEmpty)
+        showMessage(ERROR_MSG.adminUserEmpty,{type:'error'})
         return
       } else if (!this.tradeInfo.traderIds.length) {
-        Message.error(ERROR_MSG.traderEmpty)
+        showMessage(ERROR_MSG.traderEmpty,{type:'error'})
         return
       }
       const config = {

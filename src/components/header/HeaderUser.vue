@@ -117,6 +117,7 @@ import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import InputPassword from "@/components/InputPassword.vue";
 import {encryptionModePassword} from "@/common/common";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 
 export default {
@@ -190,7 +191,7 @@ export default {
         if (res.code === "0") {
           this.getCurrentEnv()
           this.exitIntro()
-          this.$Message.success(SUCCESS_MSG.envSetupSuccess);
+          showMessage(SUCCESS_MSG.envSetupSuccess)
           // 重载当前路由页面
           this.reload();
         }
@@ -258,33 +259,34 @@ export default {
     modificationPasswordSuccess(res) {
       if (res.code === '0') {
         this.show = false;
-        this.$Message.success(SUCCESS_MSG.modifySuccess);
+        showMessage(SUCCESS_MSG.modifySuccess)
       }
     }
     ,
     ok() {
       if (this.oldPassword === "") {
-        this.$Message.error(ERROR_MSG.oldPasswordEmpty);
+        showMessage(ERROR_MSG.oldPasswordEmpty, {type: 'error'})
         return;
       }
       if (this.newPassword === "") {
-        this.$Message.error(ERROR_MSG.newPasswordEmpty);
+        showMessage(ERROR_MSG.newPasswordEmpty, {type: 'error'})
         return;
       }
       if (this.confirmPassword === "") {
-        this.$Message.error(ERROR_MSG.confirmPasswordEmpty);
+        showMessage(ERROR_MSG.confirmPasswordEmpty, {type: 'error'})
+
         return;
       }
       if (this.newPassword.includes(' ')) {
-        this.$Message.warning(ERROR_MSG.passwordContainsSpace)
+        showMessage(ERROR_MSG.passwordContainsSpace, {type: 'warning'})
         return;
       }
       if (this.strength < 3) {
-        this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
+        showMessage(ERROR_MSG.passwordStrengthInsufficient, {type: 'error'})
         return;
       }
       if (this.newPassword !== this.confirmPassword) {
-        this.$Message.warning(ERROR_MSG.passwordsMismatch);
+        showMessage(ERROR_MSG.passwordsMismatch, {type: 'warning'})
         return;
       }
       const passType = sessionStorage.getItem('passType')

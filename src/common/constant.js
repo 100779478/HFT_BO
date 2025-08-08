@@ -100,6 +100,7 @@ const ClientRoutePage = {
     'monitor-history': 'MonitorHistory', // 做市监控历史
     'deal': 'TransactionSummary', // 成交汇总
     'sub-deal': 'SubRuleTransactionSummary', // 分策略成交汇总
+    'portfolio': 'PortfolioClient',// 投组汇总
 }
 
 export {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG, ICON_LIST, ClientRoutePage, MADE_ICON}

@@ -1,5 +1,7 @@
 <script>
 import {RulePropType} from "@/common/common";
+import showMessage from "@/utils/message";
+import {ERROR_MSG} from "@/common/constant";
 
 export default {
   name: "ParamsTable",
@@ -372,7 +374,7 @@ export default {
             console.log(row)
             // 空格非法，报错且不加入
             if (val.includes(' ')) {
-              this.$Message.error(`第${rowIndex + 1}行参数“${row.name}”参数范围的枚举值不允许包含空格`);
+              showMessage(`第${rowIndex + 1}行参数“${row.name}”参数范围的枚举值不允许包含空格`,{type:'error'})
               return;
             }
             if (!row.range.includes(val)) {

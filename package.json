@@ -1,6 +1,6 @@
 {
   "name": "hft-bo-web",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "private": true,
   "scripts": {
     "start": "npm run version && vue-cli-service serve",

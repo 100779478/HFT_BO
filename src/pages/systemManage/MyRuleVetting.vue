@@ -169,6 +169,7 @@ import {showParamList} from "@/utils/paramList";
 import {renderRuleApprovalStatus} from "@/utils/renderRuleApprovalStatus";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 import RuleModal from "./RuleManageComponents/QuantifyManage-complex/RuleTemplate-complex/RuleModal.vue";
+import showMessage from "@/utils/message";
 
 export default {
   components: {ParamsTable, RuleModal},
@@ -351,7 +352,7 @@ export default {
         const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
         const message = `参数名重复：${messages.join('、')}`;
         // 有重复的 name 字段，显示警告消息
-        this.showMessage('error', message, 6)
+        showMessage(message, {type: "error"})
       } else {
         // 校验 range 格式和值合法性
         const invalidParams = [];
@@ -374,7 +375,7 @@ export default {
         });
 
         if (invalidParams.length > 0) {
-          this.showMessage('error', invalidParams.join('；'), 6);
+          showMessage(invalidParams.join('；'), {type: "error"})
           return;
         }
 
@@ -383,7 +384,7 @@ export default {
         // this.paramList.forEach(param => param.readOnly = String(param.readOnly));
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.ruleLocation) {
-          this.$Message.warning(ERROR_MSG.storagePathEmpty)
+          showMessage(ERROR_MSG.storagePathEmpty, {type: 'warning'})
           return
         }
         http.post(URL.updateVetting, {...this.userStrategyInfo, messageType: SUCCESS_MSG.modifySuccess}, (res) => {

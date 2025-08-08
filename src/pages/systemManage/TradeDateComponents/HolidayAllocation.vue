@@ -188,6 +188,7 @@ import moment from "moment/moment";
 import tradeExchangeMixin from "@/mixins/tradeExchangeMixin";
 import {tableMixin} from "@/mixins/tableMixin";
 import {SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   mixins: [tradeExchangeMixin, tableMixin],
@@ -281,7 +282,7 @@ export default {
       this.holidaySetting.startDate = formatDate(this.holidaySetting.startDate)
       this.holidaySetting.endDate = formatDate(this.holidaySetting.endDate)
       if (this.holidaySetting.startDate > this.holidaySetting.endDate) {
-        this.$Message.warning('起始日期不能大于结束日期')
+        showMessage('起始日期不能大于结束日期', {type: 'warning'})
         return
       }
       const config = {

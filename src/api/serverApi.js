@@ -1,6 +1,6 @@
 const env = process.env.NODE_ENV;
-const devUrl = "http://10.210.6.241:8888"; // POC
-// const devUrl = "http://192.168.50.27:9000"; // 玺子哥
+// const devUrl = "http://10.210.6.241:8888"; // POC
+const devUrl = "http://192.168.50.30:9000"; // 玺子哥
 // const devUrl = "http://192.168.50.134:9000"; // 李航
 const proUrl = location.origin;
 //服务器
@@ -24,6 +24,15 @@ export const URL = {
     dashboardNode: "/dashboard/node",
     dashboardNodeLogs: "/dashboard/node/logs",
     readErrLog: "/dashboard/read",
+    // =============================================客户端接口=============================================
+    // 投组列表
+    portfolio: '/portfolio',
+    // 汇总投组
+    portfolioSum: '/portfolio/sum',
+    // 包含的投组
+    portfolioSumRel: '/portfolio/sum/rel',
+    // 投组用户列表
+    portfolioList: '/portfolio/customer/list',
     // =============================================登录页面=============================================
     // 用户登录
     login: "/customer/login",

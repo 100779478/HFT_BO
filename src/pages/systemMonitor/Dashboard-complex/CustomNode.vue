@@ -68,6 +68,7 @@ import MiniSystemUsage from '@/pages/systemMonitor/Dashboard-complex/CustomNode-
 import {http} from '@/utils/request';
 import {URL} from '@/api/serverApi';
 import BatteryIcon from "@/pages/systemMonitor/Dashboard-complex/CustomNode-complex/BatteryIcon.vue";
+import showMessage from "@/utils/message";
 
 export default {
   name: 'CustomNode',
@@ -248,7 +249,7 @@ export default {
     handleRead() {
       http.post(`${URL.readErrLog}/${this.nodeData.node}`, {}, (res) => {
         if (res?.code === '0') {
-          this.$Message.success('操作成功');
+          showMessage('操作成功')
           this.resetScrollTop();
           this.pagination.pageNumber = 1
           this.getErrorLogList()

@@ -13,6 +13,7 @@ import '@/assets/icon/iconfont.css'
 import {http} from "@/utils/request";
 import {queryParse} from "@/common/common";
 import {ClientRoutePage} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 // // 获取当前脚本的路径
 // const scriptElement = document.currentScript || (function () {
@@ -43,7 +44,8 @@ function startSSE(url) {
             if (type === 'dictionaryList') {
                 store.commit('dictionary/dictionaryList', data);
             } else if (type === 'error') {
-                ViewUI.Message.error(message);
+                // ViewUI.Message.error(message);
+                showMessage(message, {type: 'error'})
             }
         });
     } else {

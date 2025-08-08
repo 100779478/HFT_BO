@@ -4,6 +4,7 @@ import {http} from "@/utils/request";
 import moment from "moment/moment";
 import router from "@/router";
 import {Message} from "view-design";
+import showMessage from "@/utils/message";
 
 /**
  * 用0填充数字，使其达到指定的长度
@@ -290,7 +291,7 @@ export function checkPwdExpiredTime(expiredTime, serverTime) {
     const expiredTimeDate = new Date(expiredTime);
     const serverTimeDate = new Date(serverTime);
     if (expiredTimeDate <= serverTimeDate) {
-        Message.warning('密码已过期,请修改')
+        showMessage('密码已过期,请修改',{type:'warning'})
         router.push({name: 'LoginProtect'})
     }
     return expiredTimeDate <= serverTimeDate
@@ -321,7 +322,7 @@ export function handleExport(url, params, name) {
         link.click();
         // 移除链接元素
         document.body.removeChild(link);
-        Message.success(`导出${name}成功`)
+        showMessage(`导出${name}成功`)
     });
 }
 

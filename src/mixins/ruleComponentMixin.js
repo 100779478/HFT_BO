@@ -3,6 +3,7 @@ import {getRuleFileType, getRuleMakeMarketType, handleExport, handleSort} from "
 import {URL} from "@/api/serverApi";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 const ruleComponentMixin = {
     mixins: [tableMixin],
@@ -186,18 +187,6 @@ const ruleComponentMixin = {
             //     this.cancelTokenSource.cancel('已取消上传策略文件');
             // }
         },
-        /**
-         * 消息提示
-         * @param type - 消息提示类型，默认INFO
-         * @param content - 消息内容
-         * @param duration - 提示延迟关闭时间，默认6秒
-         */
-        showMessage(type = 'info', content, duration = 6) {
-            this.$Message[type]({
-                content,
-                duration,
-            });
-        },
         // 校验 JSON 文件内容的函数
         validateJsonContent(jsonContent) {
             const errors = [];
@@ -231,7 +220,7 @@ const ruleComponentMixin = {
                         this.fileUploadProgress = Math.min(Math.round(progress), 100); // 更新进度条（最大100%）
                     } else {
                         clearInterval(interval); // 上传完成
-                        this.$Message.success(SUCCESS_MSG.uploadSuccess);
+                        showMessage(SUCCESS_MSG.uploadSuccess)
                         this.fileName = fileName;
                     }
                 }, 300); // 每300ms更新一次进度
@@ -243,7 +232,7 @@ const ruleComponentMixin = {
                     this.fileUploadProgress = 0
                     this.fileName = ""
                     if (!this.userStrategyInfo.ruleId) {
-                        this.showMessage('请先获取策略ID', 'error')
+                        showMessage('请先获取策略ID', {type: "error"})
                     } else {
                         // 将字节转换为 MB
                         let sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
@@ -251,7 +240,7 @@ const ruleComponentMixin = {
                         console.log('选择的文件：', sizeInMB, file, event);
 
                         if (sizeInMB >= 50) {
-                            this.$Message.error(ERROR_MSG.fileExceedsLimit)
+                            showMessage(ERROR_MSG.fileExceedsLimit, {type: 'error'})
                             return
                         }
 
@@ -277,7 +266,7 @@ const ruleComponentMixin = {
                                 if (validationErrors.length > 0) {
                                     // 校验失败，显示错误信息
                                     const errorMessages = validationErrors.join('；');
-                                    this.showMessage('error', `JSON 文件格式校验失败：${errorMessages}`, 6);
+                                    showMessage(`JSON 文件格式校验失败：${errorMessages}`, {type: "error"})
                                 } else {
                                     // 检查重复的 name 字段
                                     const duplicateNames = this.checkDuplicateNames(jsonContent);
@@ -285,16 +274,16 @@ const ruleComponentMixin = {
                                         const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
                                         const message = `参数名重复：${messages.join('、')}`;
                                         // 有重复的 name 字段，显示警告消息
-                                        this.showMessage('error', message, 6)
+                                        showMessage(message, {type: "error"})
                                     } else {
                                         // 没有重复的 name 字段，显示成功消息
-                                        this.$Message.success(SUCCESS_MSG.importSuccess);
+                                        showMessage(SUCCESS_MSG.importSuccess)
                                     }
                                     // 更新 paramList
                                     this.paramList = jsonContent;
                                 }
                             } catch (error) {
-                                this.$Message.error('导入参数列表失败');
+                                showMessage('导入参数列表失败', {type: 'error'})
                                 console.error('读取 JSON 文件时发生错误：', error);
                             }
                         };
@@ -302,7 +291,7 @@ const ruleComponentMixin = {
                         reader.readAsText(file);
                     } else {
                         // 文件不是 JSON 类型，进行相应的处理
-                        this.$Message.error(ERROR_MSG.fileNotJson);
+                        showMessage(ERROR_MSG.fileNotJson, {type: 'error'})
                     }
                 }
             }

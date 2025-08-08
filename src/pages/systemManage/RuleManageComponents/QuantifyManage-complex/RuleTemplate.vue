@@ -211,6 +211,7 @@ import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
 import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
 import {showParamList} from "@/utils/paramList";
 import RuleModal from "./RuleTemplate-complex/RuleModal";
+import showMessage from "@/utils/message";
 
 export default {
   components: {ParamsTable, RuleModal},
@@ -514,7 +515,7 @@ export default {
         const messages = duplicateNames.map(({name, count}) => `${name} 有${count}条`);
         const message = `参数名重复：${messages.join('、')}`;
         // 有重复的 name 字段，显示警告消息
-        this.showMessage('error', message, 6)
+        showMessage(message, {type: 'error'})
       } else {
         // 校验 range 格式和值合法性
         const invalidParams = [];
@@ -537,7 +538,7 @@ export default {
         });
 
         if (invalidParams.length > 0) {
-          this.showMessage('error', invalidParams.join('；'), 6);
+          showMessage(invalidParams.join('；'), {type: 'error'})
           return;
         }
 
@@ -546,16 +547,16 @@ export default {
 
         this.userStrategyInfo.ruleParams = this.paramList;
         if (!this.userStrategyInfo.ruleLocation) {
-          this.$Message.error(ERROR_MSG.filePathEmpty)
+          showMessage(ERROR_MSG.filePathEmpty, {type: 'error'})
           return
         }
         // ruleFileType：0为C++策略，1为python策略
         if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-          this.$Message.error(ERROR_MSG.fileTypeCPlusPlus)
+          showMessage(ERROR_MSG.fileTypeCPlusPlus, {type: 'error'})
           return
         }
         if (this.userStrategyInfo.customerIds.length <= 0) {
-          this.$Message.error(ERROR_MSG.userCodeEmpty)
+          showMessage(ERROR_MSG.userCodeEmpty, {type: 'error'})
           return
         }
         const config = {
@@ -596,10 +597,10 @@ export default {
     // 启用策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
-        this.$Message.error(ERROR_MSG.enableFail + res.msg);
+        showMessage(ERROR_MSG.enableFail + res.msg, {type: 'error'})
         return;
       }
-      this.$Message.success(SUCCESS_MSG.ruleIsActive);
+      showMessage(SUCCESS_MSG.ruleIsActive)
       this.getUserStrategyData();
     },
     // 🈲用策略
@@ -607,7 +608,7 @@ export default {
       if (res.code !== "0") {
         return;
       }
-      this.$Message.success(ERROR_MSG.ruleDisabled);
+      showMessage(ERROR_MSG.ruleDisabled,{type:'error'})
       this.getUserStrategyData();
     },
     changeUserStatus(row) {

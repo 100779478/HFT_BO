@@ -230,6 +230,7 @@ import {URL} from "@/api/serverApi";
 import {decryptPassword, encryptPassword, getApiType, getChannelType, handleExport, handleSort} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   props: ["userId"],
@@ -425,15 +426,15 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.channelInfo.channelId) {
-        this.$Message.error(ERROR_MSG.channelIdEmpty);
+        showMessage(ERROR_MSG.channelIdEmpty,{type:'error'})
         return;
       }
       if (!this.channelInfo.apiType) {
-        this.$Message.error(ERROR_MSG.externalInterfaceTypeEmpty);
+        showMessage(ERROR_MSG.externalInterfaceTypeEmpty,{type:'error'})
         return;
       }
       if (!this.channelInfo.channelType) {
-        this.$Message.error(ERROR_MSG.channelTypeEmpty);
+        showMessage(ERROR_MSG.channelTypeEmpty,{type:'error'})
         return;
       }
       if (this.encryptionPwd && null !== this.channelInfo.password) {

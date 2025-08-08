@@ -1,10 +1,11 @@
 import axios from "axios";
-import {getToken, putToken} from "./token";
+import {getToken, getUserInfo, putToken} from "./token";
 import {Message} from "view-design";
 import {requestContextPath, URL} from "@/api/serverApi";
 import router from "@/router/index";
 import store from "@/store";
-import {ClientRoutePage} from "@/common/constant";
+import {ClientRoutePage, ERROR_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 let is403MessageShown = false;
 const axiosInstance = axios.create({
@@ -46,7 +47,8 @@ export const http = {
     post: (
         url,
         data = {},                  // 接收 FormData、普通对象 或数组
-        thenHandler = () => {},
+        thenHandler = () => {
+        },
         errorHandler = defaultErrorHandler
     ) => {
         let headers = data?.headers || {};
@@ -57,7 +59,7 @@ export const http = {
         const isArray = Array.isArray(data);
 
         // ✅ 关键点：数组要直接传，不要扩展成对象
-        const payload = isFormData || isArray ? data : { ...data };
+        const payload = isFormData || isArray ? data : {...data};
 
         if (!isFormData && !isArray) {
             delete payload.messageType;
@@ -73,7 +75,7 @@ export const http = {
             .then((res) => {
                 thenHandler(res);
                 const msg = !res.okMessage ? messageType : res.okMessage;
-                if (res?.code === '0' && messageType) Message.success(msg);
+                if (res?.code === '0' && messageType) showMessage(msg);
             })
             .catch(errorHandler);
     },
@@ -109,7 +111,7 @@ export const http = {
                 if (axios.isCancel(err)) {
                     console.log('Request canceled:', err.message); // 如果请求被取消，记录取消信息
                     // 可以在这里执行取消请求后的操作，比如显示一个提示
-                    Message.error(err.message)
+                    showMessage(err.message, {type: 'error'})
                 } else {
                     errorHandler(err); // 处理其他类型的错误
                 }
@@ -129,7 +131,8 @@ export const http = {
     put: (
         url,
         data = {},                        // 支持 FormData 或普通对象
-        thenHandler = () => {},
+        thenHandler = () => {
+        },
         errorHandler = defaultErrorHandler,
     ) => {
         const isFormData = data instanceof FormData;
@@ -139,16 +142,16 @@ export const http = {
             : (data.headers || {});
         const messageType = isFormData ? data.messageType : data.messageType;
 
-        const payload = isFormData ? data : { ...data };
+        const payload = isFormData ? data : {...data};
         if (!isFormData) {
             delete payload.headers;
             delete payload.messageType;
         }
 
-        return axiosInstance.put(url, payload, { headers }).then((res) => {
+        return axiosInstance.put(url, payload, {headers}).then((res) => {
             thenHandler(res);
             const msg = !res.okMessage ? messageType : res.okMessage;
-            if (res?.code === '0' && messageType) Message.success(msg);
+            if (res?.code === '0' && messageType) showMessage(msg)
         }).catch(errorHandler);
     },
     /**
@@ -168,11 +171,11 @@ export const http = {
         errorHandler = defaultErrorHandler
     ) => {
         return axiosInstance
-            .delete(url, data)
+            .delete(url, {data})
             .then((res) => {
                 thenHandler(res)
                 const msg = !res.okMessage ? messageType : res.okMessage
-                if (res?.code === '0' && messageType) Message.success(msg)
+                if (res?.code === '0' && messageType) showMessage(msg)
             })
             .catch(errorHandler);
     },
@@ -188,17 +191,17 @@ export function defaultErrorHandler(error) {
         if (undefined === errorResponse) {
             console.log("Error ====> ", error);
             if (error?.errorMessage) {
-                Message.error(error?.errorMessage);
+                showMessage(error?.errorMessage, {type: 'error'})
             }
             return;
         }
         let errorMessage = errorResponse?.errorMessage;
         if (null == errorMessage || "" === errorMessage) {
             console.log("ErrorResponse ====> ", errorResponse);
-            Message.error(errorResponse?.data?.errorMessage);
+            showMessage(errorResponse?.data?.errorMessage, {type: 'error'})
             return;
         }
-        Message.error(errorMessage);
+        showMessage(errorMessage, {type: 'error'})
     } catch (e) {
         // 如果服务器返回的错误是JSON格式
         if (error.response && error.response.data) {
@@ -207,7 +210,7 @@ export function defaultErrorHandler(error) {
                 reader.onload = () => {
                     try {
                         const errorData = JSON.parse(reader.result);
-                        Message.error(errorData.errorMessage)
+                        showMessage(errorData?.errorMessage, {type: 'error'})
                         // 处理错误信息
                     } catch (e) {
                     }
@@ -260,13 +263,13 @@ axiosInstance.interceptors.response.use(
         if (response.status === 200) {
             is403MessageShown = false;
             if (response.data.errorMessage) {
-                Message.error(response.data.errorMessage);
+                showMessage(response.data.errorMessage, {type: 'error'})
             }
             return response.data;
         }
         if (response.status === 403) {
             if (response.data.errorMessage) {
-                Message.error(response.data.errorMessage);
+                showMessage(response.data.errorMessage, {type: 'error'})
             }
         }
         throw response.data;
@@ -282,7 +285,7 @@ axiosInstance.interceptors.response.use(
         }
         switch (httpStatus) {
             case 0:
-                Message.error('网络错误')
+                showMessage('网络错误', {type: 'error'})
                 return Promise.reject(error);
             case 403:
                 if (!is403MessageShown) {
@@ -292,7 +295,7 @@ axiosInstance.interceptors.response.use(
                         router.push({name: "Login"});
                     } else {
                         http.post(URL.clientLogin, {
-                            username: sessionStorage.getItem('customerid'),
+                            username: getUserInfo(),
                             password: sessionStorage.getItem('pwd'),
                             // messageType: '登录成功',
                         }, (res) => {
@@ -306,7 +309,7 @@ axiosInstance.interceptors.response.use(
             case 401:
                 return Promise.reject(error);
             case 413:
-                Message.error("策略文件超出最大限制")
+                showMessage('策略文件超出最大限制', {type: 'error'})
                 return
             case 503:
             case 500:

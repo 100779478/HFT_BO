@@ -289,7 +289,6 @@
         :update-time="data.currentTime"
         @marketSetting="marketSetting"
     />
-
     <div class="content-body">
       <MarketSection
           :sectionTitle="'利率债'"
@@ -516,11 +515,14 @@ export default {
           ]);
         },
         onOk: () => {
-          this.$store.commit('makeStatus/setSystemSetting', this.sysSetting);
-          this.getMakeMarket()
-          this.startTimer()
+        this.onConfirm()
         },
       });
+    },
+    onConfirm(){
+      this.$store.commit('makeStatus/setSystemSetting', this.sysSetting);
+      this.getMakeMarket()
+      this.startTimer()
     },
     openModal(item) {
       this.$Modal.info({

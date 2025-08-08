@@ -1,5 +1,5 @@
 const tokenKey = "token"
-const userInfo = "userInfo"
+const userInfo = "customerid"
 
 /**
  * 将Token存入LocalStorage
@@ -11,7 +11,7 @@ export function putToken(token) {
 
 //存入user信息
 export function setUserInfo(token) {
-    localStorage.setItem(userInfo, token)
+    sessionStorage.setItem(userInfo, token)
 }
 
 /**
@@ -23,7 +23,7 @@ export function getToken() {
 }
 
 export function getUserInfo() {
-    return localStorage.getItem(userInfo)
+    return sessionStorage.getItem(userInfo)
 }
 
 /**

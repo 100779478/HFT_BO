@@ -212,6 +212,7 @@ import InputPassword from "@/components/InputPassword.vue";
 import ResetPwdModal from "@/components/ResetPwdModal.vue";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   components: {InputPassword, ResetPwdModal},
@@ -252,8 +253,8 @@ export default {
         key: "roleName",
         resizable: true,
         width: 240,
-        ellipsis:true,
-        tooltip:true,
+        ellipsis: true,
+        tooltip: true,
       },
       {
         title: "状态",
@@ -432,18 +433,18 @@ export default {
       this.userInfo.roleIds = list;
       delete (this.userInfo.roles)
       if (!this.userInfo.customerId) {
-        this.$Message.warning(ERROR_MSG.userAccountEmpty)
+        showMessage(ERROR_MSG.userAccountEmpty, {type: "warning"})
       }
       if (isNew) {
         const passType = sessionStorage.getItem('passType')
         if (this.userInfo.password.includes(' ')) {
-          this.$Message.warning(ERROR_MSG.passwordContainsSpace)
+          showMessage(ERROR_MSG.passwordContainsSpace, {type: "warning"})
         } else if (this.userInfo.customerId.includes(' ')) {
-          this.$Message.warning(ERROR_MSG.customerIdContainsSpace)
+          showMessage(ERROR_MSG.customerIdContainsSpace, {type: "warning"})
         } else if (!this.userInfo.password) {
-          this.$Message.warning(ERROR_MSG.passwordEmpty)
+          showMessage(ERROR_MSG.passwordEmpty, {type: "warning"})
         } else if (this.pwdStrengthLevel < 3) {
-          this.$Message.error(ERROR_MSG.passwordStrengthInsufficient)
+          showMessage(ERROR_MSG.passwordStrengthInsufficient, {type: "error"})
         } else {
           const encryptedPassword = encryptionModePassword(passType, this.userInfo.password);
           http.put(URL.userEdit, {
@@ -476,7 +477,7 @@ export default {
         // this.$Message.error("启用失败：" + res.msg);
         return;
       }
-      this.$Message.success(SUCCESS_MSG.userEnabled);
+      showMessage(SUCCESS_MSG.userEnabled)
       this.getUserData();
     },
     // 🈲用用户
@@ -485,7 +486,7 @@ export default {
         // this.$Message.error("禁用失败：" + res.msg);
         return;
       }
-      this.$Message.success(ERROR_MSG.userDisabled);
+      showMessage(ERROR_MSG.userDisabled, {type: "error"})
       this.getUserData();
     },
     changeUserStatus(row) {
@@ -493,7 +494,7 @@ export default {
       // let customerName = row.customerName;
       let customerId = Number(getUserInfo());
       if (data === customerId) {
-        this.$Message.error(ERROR_MSG.unableToDisableYourself);
+        showMessage(ERROR_MSG.unableToDisableYourself, {type: "error"})
         return;
       }
       if (!row.active) {
@@ -518,11 +519,11 @@ export default {
     },
     sureModifyImg() {
       if (this.resetPassword === '' || this.confirmPassword === '') {
-        this.$Message.error(ERROR_MSG.passwordEmpty)
+        showMessage(ERROR_MSG.passwordEmpty, {type: "error"})
       } else if (this.resetPassword !== this.confirmPassword) {
-        this.$Message.error(ERROR_MSG.passwordsMismatch)
+        showMessage(ERROR_MSG.passwordsMismatch, {type: "error"})
       } else if (this.strength < 3) {
-        this.$Message.warning(ERROR_MSG.passwordStrengthInsufficient)
+        showMessage(ERROR_MSG.passwordStrengthInsufficient, {type: "warning"})
       } else {
         this.moreOperations(this.row, 'resetPassword')
         this.showPwdModal = false

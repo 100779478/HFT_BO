@@ -296,6 +296,7 @@ import {getRuleFileType, getRuleMakeMarketType} from "@/common/common";
 import {tableMixin} from "@/mixins/tableMixin";
 import {ruleComponentMixin} from "@/mixins/ruleComponentMixin";
 import {ACTIVE_LIST, ERROR_MSG, SUCCESS_MSG} from "@/common/constant";
+import showMessage from "@/utils/message";
 
 export default {
   mixins: [tableMixin, ruleComponentMixin],
@@ -457,12 +458,12 @@ export default {
     // 新增弹窗确认按键
     ok(isNew) {
       if (!this.userStrategyInfo.ruleLocation) {
-        this.$Message.warning(ERROR_MSG.storagePathEmpty)
+        showMessage(ERROR_MSG.storagePathEmpty, {type: 'warning'})
         return
       }
       // ruleFileType：0为C++策略，1为python策略
       if (this.userStrategyInfo.ruleFileName.slice(-3) !== '.so' && this.userStrategyInfo.ruleFileType === '0') {
-        this.$Message.error(ERROR_MSG.fileTypeCPlusPlus)
+        showMessage(ERROR_MSG.fileTypeCPlusPlus)
         return
       }
       const config = {
@@ -480,19 +481,19 @@ export default {
     // 启用策略
     handleActiveEnable(res) {
       if (res.code !== "0") {
-        this.$Message.error(ERROR_MSG.enableFail + res.msg);
+        showMessage(ERROR_MSG.enableFail + res.msg, {type: 'error'})
         return;
       }
-      this.$Message.success(SUCCESS_MSG.ruleIsActive);
+      showMessage(SUCCESS_MSG.ruleIsActive)
       this.getUserStrategyData();
     },
     // 🈲用策略
     handleActiveDisable(res) {
       if (res.code !== "0") {
-        this.$Message.error("禁用失败：" + res.msg);
+        showMessage("禁用失败：" + res.msg, {type: 'error'})
         return;
       }
-      this.$Message.success(ERROR_MSG.ruleDisabled);
+      showMessage(ERROR_MSG.ruleDisabled,{type:'error'})
       this.getUserStrategyData();
     },
     changeUserStatus(row) {

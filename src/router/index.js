@@ -1,6 +1,6 @@
 import vue from "vue";
 import VueRouter from "vue-router";
-import {getToken, putToken} from "@/utils/token";
+import {getToken, putToken, setUserInfo} from "@/utils/token";
 import {URL} from "@/api/serverApi";
 import {http} from "@/utils/request";
 import {ClientRoutePage} from "@/common/constant";
@@ -64,6 +64,15 @@ const routes = [
         component: () => import(/* webpackChunkName: "sub-deal" */ "@/pages/reportQuery/DealAggregate/SubRuleTransactionSummary.vue"),
         meta: {
             title: "成交汇总",
+        },
+    },
+    // 投组管理页面
+    {
+        path: "/portfolio",
+        name: "PortfolioClient",
+        component: () => import(/* webpackChunkName: "portfolio" */ "@/pages/client/Portfolio.vue"),
+        meta: {
+            title: "投组管理",
         },
     },
     {
@@ -171,6 +180,14 @@ const routes = [
                 component: () => import(/* webpackChunkName: "trade-calendar" */ "@/pages/systemManage/TradeCalendar.vue"),
                 meta: {
                     title: "系统管理/交易日历",
+                },
+            },
+            {
+                path: "/home/sys-manage/portfolio",
+                name: "Portfolio",
+                component: () => import(/* webpackChunkName: "portfolio-manage" */ "@/pages/systemManage/PortfolioManage.vue"),
+                meta: {
+                    title: "系统管理/投组管理",
                 },
             },
             // ====================================================================================================
@@ -285,8 +302,10 @@ router.beforeEach((to, from, next) => {
     // 特定路由为客户端
     if (Object.values(ClientRoutePage).includes(to.name)) {
         sessionStorage.setItem('isClientPage', 'true')
+        document.body.style.backgroundColor = '#0C1A36';
         style = darkThemeVars
     } else {
+        document.body.style.backgroundColor = '#fff';
         style = lightThemeVars
         sessionStorage.removeItem('isClientPage')
     }
@@ -305,7 +324,7 @@ router.beforeEach((to, from, next) => {
         next({path: '/login'});
     } else {
         if (!isAuthenticated && Object.values(ClientRoutePage).includes(to.name)) {
-            sessionStorage.setItem('customerid', to.query.customerid);
+            setUserInfo(to.query.customerid);
             sessionStorage.setItem('pwd', to.query.pwd);
             sessionStorage.setItem('envid', to.query.envid);
             http.post(URL.clientLogin, {
